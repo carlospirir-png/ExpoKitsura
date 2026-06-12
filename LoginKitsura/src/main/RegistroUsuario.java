@@ -9,7 +9,7 @@ public class RegistroUsuario extends JFrame {
     private FondoPanel fondo;
     private Font fuente1, fuente2;
 
-    private JLabel logo, mascota, lblNombre, lblCorreo, lblPassword;
+    private JLabel logo, mascota, lblNombre, lblCorreo, lblPassword, lblIniciarSesion;
     private JTextField txtNombre, txtCorreo;
     private JPasswordField txtPassword;
     private JButton btnJugar;
@@ -102,6 +102,22 @@ public class RegistroUsuario extends JFrame {
         btnJugar.setBounds(820, 815, 285, 60);
         btnJugar.addActionListener(e -> registrarUsuario());
         fondo.add(btnJugar);
+
+        // LABEL INICIAR SESIÓN
+        lblIniciarSesion = new JLabel("<html><u>Iniciar sesión</u></html>");
+        lblIniciarSesion.setFont(fuente2.deriveFont(18f));
+        lblIniciarSesion.setForeground(Color.WHITE);
+        lblIniciarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblIniciarSesion.setBounds(400, 900, 150, 30);
+
+        lblIniciarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                IniciarSesion();
+            }
+        });
+        fondo.add(lblIniciarSesion);
     }
 
     private void registrarUsuario() {
@@ -153,5 +169,10 @@ public class RegistroUsuario extends JFrame {
                     "Error: " + ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    private void IniciarSesion() {
+        new IniciarSesion();
+        dispose();
     }
 }

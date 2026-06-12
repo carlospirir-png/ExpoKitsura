@@ -4,13 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 public class PantallaImagenPerfil extends JFrame {
-
     private FondoPanelSemi fondo;
-
-    private JLabel lblTitulo;
-    private JLabel lblMascota;
-    private JLabel lblLogo;
-
+    private JLabel lblTitulo,lblLogo,lblMascota;
     private JButton btnVolver;
 
     private JPanel panelImagenes;

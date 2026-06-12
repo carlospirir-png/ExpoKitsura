@@ -1,4 +1,3 @@
-
 package main;
 
 import java.awt.*;
@@ -95,15 +94,15 @@ public class MenuPrincipal extends JFrame {
 
         // BOTÓN SALIR
         btnSalir = new JButton("SALIR");
-        btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(820, 680, 285, 65);
-        btnSalir.setIconTextGap(5);
+        btnSalir.addActionListener(e -> salir());
+        fondo.add(btnSalir);
 
         ImageIcon icoSalir = new ImageIcon(
                 getClass().getResource("/Multimedia/utiles/salir.png"));
 
         Image imgSalir = icoSalir.getImage().getScaledInstance(
-                35, 35, Image.SCALE_SMOOTH); 
+                35, 35, Image.SCALE_SMOOTH);
 
         btnSalir.setIcon(new ImageIcon(imgSalir));
         fondo.add(btnSalir);
@@ -122,4 +121,17 @@ public class MenuPrincipal extends JFrame {
 
         fondo.add(mascota);
     }
+
+    private void salir() {
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Desea salir del juego?",
+                "Confirmar salida",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }
+}
