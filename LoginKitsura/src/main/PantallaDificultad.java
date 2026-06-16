@@ -190,7 +190,5 @@ public class PantallaDificultad extends JFrame {
         panelTexto.repaint();
     }
 
-    public static void main(String[] args) {
-        new PantallaDificultad();
-    }
+
 }

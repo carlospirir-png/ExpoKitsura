@@ -87,8 +87,5 @@ public class PantallaImagenPerfil extends JFrame {
         panelImagenes.add(imagen);
     }
 
-    public static void main(String[] args) {
 
-        new PantallaImagenPerfil();
-    }
 }

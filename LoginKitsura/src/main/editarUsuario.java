@@ -30,7 +30,7 @@ public class editarUsuario extends JFrame {
 
     public editarUsuario() {
 
-        fondo = new FondoPanelSemi("/img/fondoDosK.png");
+        fondo = new FondoPanelSemi("/multimedia/utiles/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Editar Usuario");
@@ -145,7 +145,7 @@ public class editarUsuario extends JFrame {
         lblPreview = new JLabel();
 
         ImageIcon previewIcon =
-                new ImageIcon(getClass().getResource("/img/Victoria.png"));
+                new ImageIcon(getClass().getResource("/multimedia/utiles/Victoria.png"));
 
         Image previewEscalada =
                 previewIcon.getImage().getScaledInstance(
@@ -167,7 +167,7 @@ public class editarUsuario extends JFrame {
         lblMascota = new JLabel();
 
         ImageIcon mascotaIcon =
-                new ImageIcon(getClass().getResource("/img/ZorroControl.png"));
+                new ImageIcon(getClass().getResource("/multimedia/utiles/ZorroControl.png"));
 
         Image mascotaEscalada =
                 mascotaIcon.getImage().getScaledInstance(
@@ -181,8 +181,5 @@ public class editarUsuario extends JFrame {
         fondo.add(lblMascota);
     }
 
-    public static void main(String[] args) {
-
-        new editarUsuario();
-    }
+ 
 }

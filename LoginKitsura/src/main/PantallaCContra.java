@@ -134,8 +134,5 @@ public class PantallaCContra extends JFrame {
         fondo.add(lblLogo);
     }
 
-    public static void main(String[] args) {
 
-        new PantallaCContra();
-    }
 }

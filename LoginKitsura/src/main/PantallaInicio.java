@@ -65,8 +65,5 @@ public class PantallaInicio extends JFrame {
         fondo.setComponentZOrder(lblFrase,0);
     }
 
-    public static void main(String[] args) {
-
-        new PantallaInicio();
-    }
+ 
 }

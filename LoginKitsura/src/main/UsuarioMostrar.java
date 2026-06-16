@@ -20,7 +20,7 @@ public class UsuarioMostrar extends JFrame {
 
     public UsuarioMostrar() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utilesfondoDosK.png");
+        fondo = new FondoPanelSemi("/multimedia/utiles/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Usuarios");
@@ -142,8 +142,5 @@ public class UsuarioMostrar extends JFrame {
         panelTabla.add(scrollTabla);
     }
 
-    public static void main(String[] args) {
 
-        new UsuarioMostrar();
-    }
 }

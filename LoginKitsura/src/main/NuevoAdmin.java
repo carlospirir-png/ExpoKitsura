@@ -24,7 +24,7 @@ public class NuevoAdmin extends JFrame {
 
     public NuevoAdmin() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/multimedia/utiles/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Añadir Administrador");
@@ -118,8 +118,5 @@ public class NuevoAdmin extends JFrame {
         fondo.add(lblMascota);
     }
 
-    public static void main(String[] args) {
-
-        new NuevoAdmin();
-    }
+ 
 }

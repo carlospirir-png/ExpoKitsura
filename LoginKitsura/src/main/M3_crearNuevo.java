@@ -219,8 +219,4 @@ public class M3_crearNuevo extends JFrame {
         fondo.add(lblMascota);
     }
 
-    public static void main(String[] args) {
-
-        new M3_crearNuevo();
-    }
 }
