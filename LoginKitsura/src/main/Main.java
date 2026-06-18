@@ -8,7 +8,7 @@ public class Main {
         Conexion conectar = new Conexion();
 
         if (conectar.getConnection() != null) {
-            RegistroUsuario nuevo = new RegistroUsuario();
+            RegistroUsuario nuevo = new RegistroUsuario ();
             nuevo.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(
