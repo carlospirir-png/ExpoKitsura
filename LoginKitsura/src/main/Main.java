@@ -1,6 +1,8 @@
 package main;
 
 import javax.swing.JOptionPane;
+import main.Usuario.RegistroUsuario;
+import main.conexion.Conexion;
 
 public class Main {
 
