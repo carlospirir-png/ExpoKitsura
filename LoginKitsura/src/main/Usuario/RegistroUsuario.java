@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.sql.*;
 import main.Menu.FondoPanel;
+import main.Menu.SalirDelJuego;
 import main.conexion.Conexion;
 
 public class RegistroUsuario extends JFrame {
@@ -15,7 +16,7 @@ public class RegistroUsuario extends JFrame {
     private JTextField txtNombre, txtCorreo;
     private JPasswordField txtPassword;
 
-    private JButton btnJugar;
+    private JButton btnJugar, btnSalir;
 
     private JLabel logo, mascota;
     private JLabel lblNombre, lblCorreo, lblPassword, lblInvitado;
@@ -145,6 +146,18 @@ public class RegistroUsuario extends JFrame {
 
         fondo.add(btnJugar);
 
+
+        //---------------- BOTON SALIR ----------------
+        btnSalir = new JButton("SALIR");
+        btnSalir.setFont(fuente2.deriveFont(15f));
+        btnSalir.setBounds(1750, 950, 120, 40);
+
+         btnSalir.addActionListener(e -> abrirSalirDelJuego());
+
+        fondo.add(btnSalir);
+        
+    
+
         //---------------- LABEL INVITADO ----------------
         lblInvitado = new JLabel("<html><u>Invitado</u></html>");
 
@@ -187,6 +200,9 @@ public class RegistroUsuario extends JFrame {
         fondo.add(lblIniciarSesion);
     }
 
+        private void abrirSalirDelJuego() {
+    new SalirDelJuego();
+}
     private boolean registrarUsuario() {
 
         try {
