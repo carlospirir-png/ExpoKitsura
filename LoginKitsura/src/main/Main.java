@@ -1,10 +1,24 @@
 package main;
 
+import javax.swing.JOptionPane;
+import main.Usuario.RegistroUsuario;
+import main.conexion.Conexion;
+
 public class Main {
 
     public static void main(String[] args) {
         Conexion conectar = new Conexion();
-        conectar.getConnection();
-        IniciarSesion uevo = new IniciarSesion();
-    }   
+
+        if (conectar.getConnection() != null) {
+            RegistroUsuario nuevo = new RegistroUsuario ();
+            nuevo.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error al conectar con la base de datos",
+                    "Error de conexión",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
 }
