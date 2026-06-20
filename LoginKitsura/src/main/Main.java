@@ -1,7 +1,7 @@
 package main;
 
 import javax.swing.JOptionPane;
-import main.Usuario.RegistroUsuario;
+import main.Usuario.*;
 import main.conexion.Conexion;
 
 public class Main {
@@ -10,7 +10,7 @@ public class Main {
         Conexion conectar = new Conexion();
 
         if (conectar.getConnection() != null) {
-            RegistroUsuario nuevo = new RegistroUsuario ();
+            RegistroUsuario nuevo = new RegistroUsuario();
             nuevo.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(
