@@ -20,5 +20,8 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+            
+        
+        HiddenFox_Codigo hiddenfox = new HiddenFox_Codigo();
     }
 }

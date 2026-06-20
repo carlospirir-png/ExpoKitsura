@@ -2,6 +2,7 @@ package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
+import java.net.URL;
 
 public class HiddenFox extends JFrame {
 
@@ -13,10 +14,13 @@ public class HiddenFox extends JFrame {
 
     private JLabel vida1, vida2, vida3, titulo, tiempoTexto, tiempo, nivel, dificultad, categoria, mascota, imagenSombra;
 
+    JLabel fondoPapel;
+
+    Image fondoPapelEscalado;
+
     private JButton btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
 
     public HiddenFox() {
-
         try {
 
             fuente1 = Font.createFont(
@@ -48,8 +52,16 @@ public class HiddenFox extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        crearComponentes();
+        crearComponentes();      
+        
+        //----------------- PANEL --------------
+        imagenSombra = new JLabel();
 
+        imagenSombra.setBounds(350, 60, 350, 320);
+
+        fondoPapel.add(imagenSombra);
+
+        fondo.add(fondoPapel);
         setVisible(true);
     }
 
@@ -132,40 +144,12 @@ public class HiddenFox extends JFrame {
         fondoPapelIcon = new ImageIcon(
                 getClass().getResource("/Multimedia/utiles/FondoPapel.png"));
 
-        Image fondoPapelEscalado = fondoPapelIcon.getImage().getScaledInstance(
+        fondoPapelEscalado = fondoPapelIcon.getImage().getScaledInstance(
                 1050, 450, Image.SCALE_SMOOTH);
 
-        JLabel fondoPapel = new JLabel(new ImageIcon(fondoPapelEscalado));
+        fondoPapel = new JLabel(new ImageIcon(fondoPapelEscalado));
         fondoPapel.setLayout(null);
         fondoPapel.setBounds(420, 250, 1050, 450);
-
-        //---------------- IMAGEN SOMBRA ----------------
-        imagenSombra = new JLabel();
-
-        try {
-
-            iconoSombra = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/mascota7.png"));
-
-            Image sombraEscalada = iconoSombra.getImage().getScaledInstance(
-                    350, 320, Image.SCALE_SMOOTH);
-
-            imagenSombra.setIcon(new ImageIcon(sombraEscalada));
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            imagenSombra.setText("ERROR AL CARGAR IMAGEN");
-            imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
-            imagenSombra.setForeground(Color.RED);
-        }
-
-        imagenSombra.setBounds(350, 60, 350, 320);
-
-        fondoPapel.add(imagenSombra);
-
-        fondo.add(fondoPapel);
 
         //---------------- RESPUESTA 1 ----------------
         btnRespuesta1 = new JButton("RESPUESTA 1");
@@ -232,6 +216,51 @@ public class HiddenFox extends JFrame {
         mascota.setBounds(1450, 480, 450, 450);
 
         fondo.add(mascota);
+    }
+
+    //-------------------GETS Y SETS
+    public ImageIcon getIconoSombra() {
+        return iconoSombra;
+    }
+
+    public JLabel getImagenSombra() {
+        return imagenSombra;
+    }
+
+    public void setIconoSombra(ImageIcon iconoSombra) {
+        this.iconoSombra = iconoSombra;
+    }
+
+    public void setImagenSombra(JLabel imagenSombra) {
+        this.imagenSombra = imagenSombra;
+    }
+
+    public void CambiarImagen(String linkImagen) {
+        //---------------- IMAGEN SOMBRA ----------------
+        
+        URL link = getClass().getResource(linkImagen);
+        
+        try {
+               
+            if (link == null){
+                throw new RuntimeException("No se encontró la imagen: " + linkImagen);
+            }
+            
+            iconoSombra = new ImageIcon(link);
+
+            Image sombraEscalada = iconoSombra.getImage().getScaledInstance(
+                    350, 320, Image.SCALE_SMOOTH);
+
+            imagenSombra.setIcon(new ImageIcon(sombraEscalada));
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            imagenSombra.setText("ERROR AL CARGAR IMAGEN");
+            imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
+            imagenSombra.setForeground(Color.RED);
+        }
     }
 
 }
