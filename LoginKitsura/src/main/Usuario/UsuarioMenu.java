@@ -92,6 +92,4 @@ public class UsuarioMenu extends JFrame {
 
         fondo.add(lblMascota);
     }
-
-
 }

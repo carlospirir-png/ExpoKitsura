@@ -2,8 +2,11 @@ package main.Menu;
 
 import java.awt.*;
 import javax.swing.*;
+import main.Usuario.MenuPrincipal;
+import main.Usuario.RegistroUsuario;
 
 public class SalirDelJuego extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
@@ -72,10 +75,11 @@ public class SalirDelJuego extends JFrame {
         lblPregunta2.setBounds(10, 100, 500, 35);
         fondo.add(lblPregunta2);
 
+        
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
         ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota4.png"));
-        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH);
+        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(345, 200, 200, 200);
         fondo.add(mascota);
@@ -85,7 +89,10 @@ public class SalirDelJuego extends JFrame {
         btnSi.setFont(fuente1.deriveFont(20f));
         btnSi.setForeground(Color.BLACK);
         btnSi.setBounds(60, 200, 140, 45);
-        btnSi.addActionListener(e -> System.exit(0));
+           btnSi.addActionListener(e -> {
+            new PantallaInicio();
+            dispose();
+        });
         fondo.add(btnSi);
 
         //---------------- BOTON REGRESAR ----------------
@@ -93,7 +100,12 @@ public class SalirDelJuego extends JFrame {
         btnRegresar.setFont(fuente1.deriveFont(20f));
         btnRegresar.setForeground(Color.BLACK);
         btnRegresar.setBounds(280, 200, 140, 45);
-        btnRegresar.addActionListener(e -> dispose());
+        btnRegresar.addActionListener(e -> {
+            new RegistroUsuario();
+            dispose();
+                    }
+        );
         fondo.add(btnRegresar);
     }
+
 }

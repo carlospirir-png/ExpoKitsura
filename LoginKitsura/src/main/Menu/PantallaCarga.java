@@ -30,7 +30,8 @@ public class PantallaCarga extends JFrame {
 
         setVisible(true);
     }
-
+    
+    
     private void crearComponentes() {
 
         panelOscuro2 = new FondoPanelSemi(new Color(0, 0, 0, 170));

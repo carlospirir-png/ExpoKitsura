@@ -3,6 +3,7 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
+import main.Menu.VolverMenu;
 
 public class PantallaPerfil extends JFrame {
 
@@ -190,9 +191,10 @@ public class PantallaPerfil extends JFrame {
         btnVolver = new JButton("VOLVER");
         btnVolver.setFont(new Font("Arial", Font.BOLD, 26));
         btnVolver.setBounds(450, 860, 220, 60);
-
+        btnVolver.addActionListener(e -> {
+            new MenuPrincipal();
+            dispose();
+        });
         fondo.add(btnVolver);
-    }
-
-
+    }    
 }

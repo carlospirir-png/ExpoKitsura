@@ -4,6 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import main.Menu.FondoPanelSemi;
+import main.Menu.SalirDelJuego;
+import main.Menu.VolverMenu;
 
 public class PantallaEstadisticas extends JFrame {
 
@@ -142,7 +144,10 @@ public class PantallaEstadisticas extends JFrame {
         btnVolver = new JButton("Volver");
         btnVolver.setFont(new Font("Arial", Font.BOLD, 40));
         btnVolver.setBounds(1540, 900, 240, 50);
-
+        btnVolver.addActionListener(e -> {
+            new MenuPrincipal();
+            dispose();
+        });
         fondo.add(btnVolver);
 
         lblMascota = new JLabel();
@@ -169,5 +174,6 @@ public class PantallaEstadisticas extends JFrame {
         fondo.add(panelFondo);
     }
 
+    
 
 }

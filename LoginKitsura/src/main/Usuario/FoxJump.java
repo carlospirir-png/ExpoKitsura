@@ -328,4 +328,7 @@ public class FoxJump extends JFrame {
 
         fondo.add(mascota);
     }
+    
+     
+ 
 }

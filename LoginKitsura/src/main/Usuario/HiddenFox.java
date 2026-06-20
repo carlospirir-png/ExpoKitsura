@@ -233,5 +233,6 @@ public class HiddenFox extends JFrame {
 
         fondo.add(mascota);
     }
-
+ 
+ 
 }

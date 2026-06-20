@@ -243,4 +243,6 @@ public class MaulwurfRennt extends JFrame {
         mascota.setBounds(1470, 555, 435, 580);
         fondo.add(mascota);
     }
+    
+   
 }

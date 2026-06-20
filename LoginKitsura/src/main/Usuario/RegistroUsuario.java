@@ -146,17 +146,18 @@ public class RegistroUsuario extends JFrame {
 
         fondo.add(btnJugar);
 
-
         //---------------- BOTON SALIR ----------------
         btnSalir = new JButton("SALIR");
         btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(1750, 950, 120, 40);
 
-         btnSalir.addActionListener(e -> abrirSalirDelJuego());
+        btnSalir.addActionListener(e -> {
+            new SalirDelJuego();
+            dispose();
+        });
+ 
 
         fondo.add(btnSalir);
-        
-    
 
         //---------------- LABEL INVITADO ----------------
         lblInvitado = new JLabel("<html><u>Invitado</u></html>");
@@ -200,9 +201,6 @@ public class RegistroUsuario extends JFrame {
         fondo.add(lblIniciarSesion);
     }
 
-        private void abrirSalirDelJuego() {
-    new SalirDelJuego();
-}
     private boolean registrarUsuario() {
 
         try {
