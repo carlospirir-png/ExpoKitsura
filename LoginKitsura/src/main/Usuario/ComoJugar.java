@@ -92,5 +92,7 @@ public class ComoJugar extends JFrame{
         btnVolver.addActionListener(e -> dispose()); 
         fondo.add(btnVolver);
     }
+    
+  
 
 }

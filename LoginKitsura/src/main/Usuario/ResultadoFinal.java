@@ -72,4 +72,5 @@ public class ResultadoFinal extends JFrame {
             mascota.setBounds(370, 210, 300, 300);
             fondo.add(mascota);
     }
+    
 }

@@ -2,6 +2,7 @@ package main.Menu;
 
 import java.awt.*;
 import javax.swing.*;
+import main.Usuario.RegistroUsuario;
 
 public class PantallaInicio extends JFrame {
 
@@ -11,13 +12,30 @@ public class PantallaInicio extends JFrame {
 
     private JLabel lblLogo;
     private JLabel lblFrase;
+    private JButton btnJugar;
+    private Font fuente1;
+    private Font fuente2;
 
     public PantallaInicio() {
+
+        try {
+            // LettersForLearners
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
 
         fondo = new FondoPanelSemi("/Multimedia/utiles/FondoPrincipal2.png");
         setContentPane(fondo);
         setTitle("Kitsura");
-        setSize(1920,1080);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -29,37 +47,51 @@ public class PantallaInicio extends JFrame {
     private void crearComponentes() {
 
         panelDecoracion = new PanelDecoracion();
-        panelDecoracion.setBounds(590,0,700,700);
+        panelDecoracion.setBounds(590, 0, 700, 700);
 
         fondo.add(panelDecoracion);
 
-        FondoPanelSemi panelFrase = new FondoPanelSemi(new Color(0,0,0,140));
-        panelFrase.setBounds(550,690,800,70);
+        FondoPanelSemi panelFrase = new FondoPanelSemi(new Color(0, 0, 0, 140));
+        panelFrase.setBounds(550, 690, 800, 70);
         panelFrase.setLayout(null);
 
         fondo.add(panelFrase);
 
         lblLogo = new JLabel();
 
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logoKitsura3.png"));
-        Image logoEscalado = logoIcon.getImage().getScaledInstance(570,600,Image.SCALE_SMOOTH);
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/LogoKitsura3.png"));
+        Image logoEscalado = logoIcon.getImage().getScaledInstance(570, 600, Image.SCALE_SMOOTH);
 
         lblLogo.setIcon(new ImageIcon(logoEscalado));
-        lblLogo.setBounds(650,100,570,600);
+        lblLogo.setBounds(650, 100, 570, 600);
 
         fondo.add(lblLogo);
 
-        fondo.setComponentZOrder(lblLogo,0);
+        fondo.setComponentZOrder(lblLogo, 0);
 
         lblFrase = new JLabel("\"No es magia, es mente\"", SwingConstants.CENTER);
-        lblFrase.setFont(new Font("Arial",Font.BOLD,40));
-        lblFrase.setForeground(new Color(196,221,227));
-        lblFrase.setBounds(530,690,850,60);
+        lblFrase.setFont(new Font("Arial", Font.BOLD, 40));
+        lblFrase.setForeground(new Color(196, 221, 227));
+        lblFrase.setBounds(530, 690, 850, 60);
 
         fondo.add(lblFrase);
 
-        fondo.setComponentZOrder(lblFrase,0);
-    }
+        //---------------- BOTON JUGAR ----------------
+        JButton btnJugar = new JButton("JUGAR");
+        btnJugar.setFont(fuente2.deriveFont(15f));
+        btnJugar.setBounds(850, 800, 180, 60);
 
- 
+        btnJugar.addActionListener(e -> {
+            new RegistroUsuario();
+            dispose(); // Cierra PantallaInicio
+        });
+
+        fondo.add(btnJugar);
+        fondo.setComponentZOrder(btnJugar, 0);
+
+        fondo.setComponentZOrder(lblFrase, 0);
+
+        fondo.add(btnJugar);
+
+    }
 }

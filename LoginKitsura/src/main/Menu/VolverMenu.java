@@ -3,25 +3,27 @@ package main.Menu;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Usuario.MenuPrincipal;
 
 public class VolverMenu extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
 
     public VolverMenu() {
-        try{
+        try {
             // LettersForLearners
             fuente1 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
             // KGPerfectPenmanship
             fuente2 = Font.createFont(Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-        } catch (Exception e){
-            e.printStackTrace();            
-        fuente1 = new Font("Arial", Font.PLAIN,20);
-        fuente2 = new Font("Arial", Font.PLAIN,20);
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
         fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png");
@@ -41,7 +43,7 @@ public class VolverMenu extends JFrame {
         barra.setBackground(new Color(255, 255, 255));
         barra.setBounds(0, 0, 600, 40);
         fondo.add(barra);
-        
+
         JLabel titulo = new JLabel(" ");
         titulo.setFont(fuente1.deriveFont(10f));
         titulo.setForeground(new Color(60, 60, 60));
@@ -57,7 +59,7 @@ public class VolverMenu extends JFrame {
         btnCerrar.setForeground(new Color(180, 50, 50));
         btnCerrar.addActionListener(e -> dispose());
         barra.add(btnCerrar);
-        
+
         JSeparator linea = new JSeparator();
         linea.setBounds(0, 39, 600, 1);
         barra.add(linea);
@@ -81,13 +83,16 @@ public class VolverMenu extends JFrame {
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(390, 245, 250, 250);
         fondo.add(mascota);
-        
+
         //---------------- BOTON SI ----------------
         JButton btnSi = new JButton("SI");
         btnSi.setFont(fuente1.deriveFont(20f));
         btnSi.setForeground(Color.BLACK);
         btnSi.setBounds(100, 220, 160, 45);
-        btnSi.addActionListener(e -> dispose());
+        btnSi.addActionListener(e -> {
+            new PantallaInicio();
+            dispose();
+        });
         fondo.add(btnSi);
 
         //---------------- BOTON MENÚ ----------------
@@ -95,7 +100,10 @@ public class VolverMenu extends JFrame {
         btnMenu.setFont(fuente1.deriveFont(20f));
         btnMenu.setForeground(Color.BLACK);
         btnMenu.setBounds(340, 220, 160, 45);
-        btnMenu.addActionListener(e -> dispose());
+        btnMenu.addActionListener(e -> {
+             new MenuPrincipal();
+            dispose();});
         fondo.add(btnMenu);
     }
+
 }

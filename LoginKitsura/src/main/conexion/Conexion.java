@@ -13,7 +13,7 @@ public class Conexion {
             conx = (Connection) DriverManager.getConnection(Url, User, Password);
             System.out.println("Conexion Establecida");
         } catch (SQLException e) {
-            System.out.println("Error en la Conexion");
+            System.out.println("Error en la Conexion "+e);
         }
         return conx;
     }
