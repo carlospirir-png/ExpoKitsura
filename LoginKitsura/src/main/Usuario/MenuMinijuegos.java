@@ -94,4 +94,8 @@ public class MenuMinijuegos extends JFrame {
         mascota.setBounds(1245, 300, 600, 600);
         fondo.add(mascota);
     }
+    
+    public static void main(String[] args) {
+        new MenuMinijuegos();
+    }
 }

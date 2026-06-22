@@ -12,7 +12,7 @@ public class PantallaInicio extends JFrame {
 
     private JLabel lblLogo;
     private JLabel lblFrase;
-    private JButton btnJugar;
+    private DecoracionBotones btnJugar;
     private Font fuente1;
     private Font fuente2;
 
@@ -70,28 +70,26 @@ public class PantallaInicio extends JFrame {
         fondo.setComponentZOrder(lblLogo, 0);
 
         lblFrase = new JLabel("\"No es magia, es mente\"", SwingConstants.CENTER);
-        lblFrase.setFont(new Font("Arial", Font.BOLD, 40));
+        lblFrase.setFont(fuente1.deriveFont(35f));
         lblFrase.setForeground(new Color(196, 221, 227));
         lblFrase.setBounds(530, 690, 850, 60);
 
         fondo.add(lblFrase);
 
         //---------------- BOTON JUGAR ----------------
-        JButton btnJugar = new JButton("JUGAR");
-        btnJugar.setFont(fuente2.deriveFont(15f));
-        btnJugar.setBounds(850, 800, 180, 60);
-
+        btnJugar = new DecoracionBotones("JUGAR");      
+        btnJugar.setFont(fuente2.deriveFont(18f)); 
+        btnJugar.setBounds(850, 910, 200, 45);
         btnJugar.addActionListener(e -> {
             new RegistroUsuario();
             dispose(); // Cierra PantallaInicio
         });
-
         fondo.add(btnJugar);
         fondo.setComponentZOrder(btnJugar, 0);
-
         fondo.setComponentZOrder(lblFrase, 0);
-
-        fondo.add(btnJugar);
-
+        
+    }
+    public static void main(String[] args) {
+        new PantallaInicio();
     }
 }

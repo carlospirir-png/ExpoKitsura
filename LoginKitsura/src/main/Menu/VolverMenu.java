@@ -63,25 +63,30 @@ public class VolverMenu extends JFrame {
         JSeparator linea = new JSeparator();
         linea.setBounds(0, 39, 600, 1);
         barra.add(linea);
+        
+        FondoPanelSemi panelPregunta = new FondoPanelSemi(new Color(0, 0, 0, 120)); // 120 de transparencia
+        panelPregunta.setBounds(50, 65, 500, 100); // Posicionado al centro
+        panelPregunta.setLayout(null);
+        fondo.add(panelPregunta);
 
         JLabel lblPregunta1 = new JLabel("¿Deseas regresar a la", JLabel.CENTER);
         lblPregunta1.setFont(fuente2.deriveFont(25f));
         lblPregunta1.setForeground(Color.WHITE);
-        lblPregunta1.setBounds(50, 75, 500, 35);
-        fondo.add(lblPregunta1);
+        lblPregunta1.setBounds(0, 15, 500, 35);
+        panelPregunta.add(lblPregunta1);
 
         JLabel lblPregunta2 = new JLabel("Pantalla Principal?", JLabel.CENTER);
         lblPregunta2.setFont(fuente2.deriveFont(25f));
         lblPregunta2.setForeground(Color.WHITE);
-        lblPregunta2.setBounds(50, 110, 500, 35);
-        fondo.add(lblPregunta2);
+        lblPregunta2.setBounds(0, 50, 500, 35);
+        panelPregunta.add(lblPregunta2);
 
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
         ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota4.png"));
-        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(145, 145, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(390, 245, 250, 250);
+        mascota.setBounds(440, 255, 145, 145);
         fondo.add(mascota);
 
         //---------------- BOTON SI ----------------
@@ -105,5 +110,7 @@ public class VolverMenu extends JFrame {
             dispose();});
         fondo.add(btnMenu);
     }
-
+    public static void main(String[] args) {
+        new VolverMenu();
+    }
 }

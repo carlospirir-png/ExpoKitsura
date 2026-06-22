@@ -22,7 +22,6 @@ public class Main {
             );
         }
             
-        
-        HiddenFox_Codigo hiddenfox = new HiddenFox_Codigo();
+       
     }
 }
