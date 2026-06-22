@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class Conexion {
     private static String User = "root";
-    private static String Password = "admin";
+    private static String Password = "123456789";
     private static String Url = "jdbc:mysql://localhost:3306/KITSURA_DB";
 
     public Connection getConnection() {
@@ -13,7 +13,7 @@ public class Conexion {
             conx = (Connection) DriverManager.getConnection(Url, User, Password);
             System.out.println("Conexion Establecida");
         } catch (SQLException e) {
-            System.out.println("Error en la Conexion");
+            System.out.println("Error en la Conexion "+e);
         }
         return conx;
     }

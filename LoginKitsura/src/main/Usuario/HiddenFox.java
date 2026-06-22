@@ -217,10 +217,7 @@ public class HiddenFox extends JFrame {
 
         fondo.add(mascota);
     }
-<<<<<<< HEAD
- 
- 
-=======
+
 
     //-------------------GETS Y SETS
     public ImageIcon getIconoSombra() {
@@ -267,5 +264,5 @@ public class HiddenFox extends JFrame {
         }
     }
 
->>>>>>> e34ae20a093d7f647cca3a6211fb85761d992598
+
 }

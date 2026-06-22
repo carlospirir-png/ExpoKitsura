@@ -59,7 +59,7 @@ public class PantallaInicio extends JFrame {
 
         lblLogo = new JLabel();
 
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logoKitsura3.png"));
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/LogoKitsura3.png"));
         Image logoEscalado = logoIcon.getImage().getScaledInstance(570, 600, Image.SCALE_SMOOTH);
 
         lblLogo.setIcon(new ImageIcon(logoEscalado));
