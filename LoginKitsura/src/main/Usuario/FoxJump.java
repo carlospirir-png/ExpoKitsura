@@ -79,18 +79,18 @@ public class FoxJump extends JFrame {
             vida2 = new JLabel("♥");
             vida3 = new JLabel("♥");
 
-            vida1.setFont(new Font("Arial", Font.BOLD, 55));
-            vida2.setFont(new Font("Arial", Font.BOLD, 55));
-            vida3.setFont(new Font("Arial", Font.BOLD, 55));
+            vida1.setFont(fuente1.deriveFont(55f));
+            vida2.setFont(fuente1.deriveFont(55f));
+            vida3.setFont(fuente1.deriveFont(55f));
 
-            vida1.setForeground(Color.GRAY);
-            vida2.setForeground(Color.GRAY);
-            vida3.setForeground(Color.GRAY);
+            vida1.setForeground(Color.RED);
+            vida2.setForeground(Color.RED);
+            vida3.setForeground(Color.RED);
         }
 
-        vida1.setBounds(80, 40, 60, 60);
-        vida2.setBounds(150, 40, 60, 60);
-        vida3.setBounds(220, 40, 60, 60);
+        vida1.setBounds(70, 25, 60, 60);
+        vida2.setBounds(135, 25, 60, 60);
+        vida3.setBounds(200, 25, 60, 60);
 
         fondo.add(vida1);
         fondo.add(vida2);
@@ -98,7 +98,7 @@ public class FoxJump extends JFrame {
 
         //---------------- AYUDA ----------------
         btnAyuda = new JButton("¿Necesitas ayuda?");
-        btnAyuda.setBounds(60, 140, 270, 50);
+        btnAyuda.setBounds(60, 120, 280, 55);
 
         btnAyuda.setFocusPainted(false);
         btnAyuda.setFont(fuente2.deriveFont(18f));
@@ -107,36 +107,32 @@ public class FoxJump extends JFrame {
 
         //---------------- TITULO ----------------
         titulo = new JLabel("PREGUNTA", SwingConstants.CENTER);
-
-        titulo.setBounds(600, 40, 700, 80);
-
-        titulo.setFont(fuente1.deriveFont(Font.BOLD, 50f));
+        titulo.setBounds(500, 20, 900, 150);
+        titulo.setFont(fuente1.deriveFont(Font.BOLD, 40f));
+        titulo.setForeground(Color.BLACK);
 
         fondo.add(titulo);
 
         //---------------- TIEMPO ----------------
         tiempoTexto = new JLabel("Tiempo restante:");
-
         tiempoTexto.setBounds(1450, 70, 300, 40);
-
-        tiempoTexto.setFont(fuente2.deriveFont(28f));
+        tiempoTexto.setFont(fuente2.deriveFont(25f));
+        tiempoTexto.setForeground(Color.BLACK);
 
         fondo.add(tiempoTexto);
 
         tiempo = new JLabel("00:00:00", SwingConstants.CENTER);
-
         tiempo.setBounds(1440, 120, 320, 60);
-
         tiempo.setOpaque(true);
-        tiempo.setBackground(new Color(150, 150, 150));
-
+        tiempo.setBackground(Color.WHITE);
+        tiempo.setForeground(Color.BLACK);
         tiempo.setFont(fuente2.deriveFont(28f));
 
         fondo.add(tiempo);
 
         //---------------- PANEL LAGO ----------------
         panelLago = new JLabel();
-        panelLago.setBounds(420, 250, 1050, 550);
+        panelLago.setBounds(420, 250, 1050, 450);
         panelLago.setLayout(null);
 
         try {
@@ -146,7 +142,7 @@ public class FoxJump extends JFrame {
                             "/Multimedia/utiles/fonso/interfaces/FondoLago.png"));
 
             Image lagoEscalado = lagoIcon.getImage()
-                    .getScaledInstance(1050, 550, Image.SCALE_SMOOTH);
+                    .getScaledInstance(1050, 450, Image.SCALE_SMOOTH);
 
             panelLago.setIcon(
                     new ImageIcon(lagoEscalado));
@@ -217,7 +213,7 @@ public class FoxJump extends JFrame {
 
         nenufarVerdadero.add(lblVerdadero);
 
-        nenufarVerdadero.setBounds(180, 170, 240, 180);
+        nenufarVerdadero.setBounds(180, 140, 240, 180);
 
         panelLago.add(nenufarVerdadero);
 
@@ -254,33 +250,38 @@ public class FoxJump extends JFrame {
 
         nenufarFalso.add(lblFalso);
 
-        nenufarFalso.setBounds(650, 170, 240, 180);
+        nenufarFalso.setBounds(650, 140, 240, 180);
 
         panelLago.add(nenufarFalso);
 
         //---------------- NIVEL ----------------
         nivel = new JLabel("Nivel: ***");
-        nivel.setBounds(80, 860, 250, 40);
+        nivel.setBounds(80, 740, 250, 40);
         nivel.setFont(fuente2.deriveFont(25f));
+        nivel.setForeground(Color.BLACK);
 
         fondo.add(nivel);
 
         //---------------- DIFICULTAD ----------------
         dificultad = new JLabel("Dificultad: ***");
-        dificultad.setBounds(80, 910, 300, 40);
+        dificultad.setBounds(80, 790, 250, 40);
         dificultad.setFont(fuente2.deriveFont(25f));
+        dificultad.setForeground(Color.BLACK);
 
         fondo.add(dificultad);
 
         //---------------- CATEGORIA ----------------
         categoria = new JLabel("Categoría: ***");
-        categoria.setBounds(80, 960, 300, 40);
+        categoria.setBounds(80, 840, 250, 40);
         categoria.setFont(fuente2.deriveFont(25f));
+        categoria.setForeground(Color.BLACK);
 
         fondo.add(categoria);
 
         //---------------- MASCOTA ----------------
         mascota = new JLabel();
+        mascota.setBounds(1450, 480, 450, 450);
+        mascota.setLayout(null);
 
         try {
 
@@ -289,7 +290,7 @@ public class FoxJump extends JFrame {
                             "/Multimedia/utiles/mascotaKitsura/imagen/KitsuraFlotador.png"));
 
             Image img = icono.getImage()
-                    .getScaledInstance(420, 420, Image.SCALE_SMOOTH);
+                    .getScaledInstance(450, 450, Image.SCALE_SMOOTH);
 
             mascota.setIcon(
                     new ImageIcon(img));
@@ -298,9 +299,6 @@ public class FoxJump extends JFrame {
 
             mascota.setText("Mascota");
         }
-
-        mascota.setBounds(1500, 470, 450, 450);
-        mascota.setLayout(null);
 
         //---------------- FLOR MASCOTA ----------------
         florMascota = new JLabel();
@@ -328,7 +326,4 @@ public class FoxJump extends JFrame {
 
         fondo.add(mascota);
     }
-    
-     
- 
 }

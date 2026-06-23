@@ -16,7 +16,7 @@ public class Main {
                 throw new Exception("No se pudo establecer la conexión con la base de datos.");
             }
 
-            PantallaInicio nuevo = new PantallaInicio();
+            MaulwurfRennt nuevo = new MaulwurfRennt();
             nuevo.setVisible(true);
 
         } catch (Exception e) {
@@ -27,6 +27,9 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e9c8b9b (Redimension de interfaces de juegos)
     }
 }
