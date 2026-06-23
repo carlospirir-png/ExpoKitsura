@@ -15,10 +15,8 @@ public class Main {
             if (conectar.getConnection() == null) {
                 throw new Exception("No se pudo establecer la conexión con la base de datos.");
             }
-
-            MaulwurfRennt nuevo = new MaulwurfRennt();
-            nuevo.setVisible(true);
-
+            HiddenFox_Codigo hiddenfox = new HiddenFox_Codigo();
+            hiddenfox.setVisible(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(
                     null,
@@ -27,9 +25,6 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE
             );
         }
-<<<<<<< HEAD
 
-=======
->>>>>>> e9c8b9b (Redimension de interfaces de juegos)
     }
 }

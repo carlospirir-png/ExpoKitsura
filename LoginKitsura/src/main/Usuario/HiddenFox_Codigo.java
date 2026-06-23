@@ -5,10 +5,10 @@ import javax.swing.*;
 
 public class HiddenFox_Codigo extends HiddenFox {
 
-    
-
     public HiddenFox_Codigo() {
-        CambiarImagen("/Multimedia/utiles/ZorroLapiz.png");
+        CambiarFondo(3);
+        CambiarFondoPapel("/Multimedia/utiles/fondos/interfaces/FondoPapel.png");
+        CambiarImagen("/Multimedia/utiles/MascotaKitsura/imagen/Zorro_kimono_azul.png");
     }
 
 }

@@ -52,17 +52,13 @@ public class HiddenFox extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        crearComponentes();      
-        
-        //----------------- PANEL --------------
-        imagenSombra = new JLabel();
+        crearComponentes();
 
-        imagenSombra.setBounds(350, 60, 350, 320);
+        //------------------- SOMBRA ---------
+        imagenSombra = new JLabel(); //Se crea el label de la imagen sombra
 
-        fondoPapel.add(imagenSombra);
+        imagenSombra.setBounds(350, 60, 350, 320); //Se posiciona y configura el tamaño de la sombra
 
-        fondo.add(fondoPapel);
-        setVisible(true);
     }
 
     private void crearComponentes() {
@@ -140,17 +136,6 @@ public class HiddenFox extends JFrame {
 
         fondo.add(tiempo);
 
-        //---------------- PANEL SOMBRA ----------------
-        fondoPapelIcon = new ImageIcon(
-                getClass().getResource("/Multimedia/utiles/fondos/interfaces/FondoPapel.png"));
-
-        fondoPapelEscalado = fondoPapelIcon.getImage().getScaledInstance(
-                1050, 450, Image.SCALE_SMOOTH);
-
-        fondoPapel = new JLabel(new ImageIcon(fondoPapelEscalado));
-        fondoPapel.setLayout(null);
-        fondoPapel.setBounds(420, 250, 1050, 450);
-
         //---------------- RESPUESTA 1 ----------------
         btnRespuesta1 = new JButton("RESPUESTA 1");
         btnRespuesta1.setFont(fuente2.deriveFont(20f));
@@ -218,41 +203,26 @@ public class HiddenFox extends JFrame {
         fondo.add(mascota);
     }
 
-
-    //-------------------GETS Y SETS
-    public ImageIcon getIconoSombra() {
-        return iconoSombra;
-    }
-
-    public JLabel getImagenSombra() {
-        return imagenSombra;
-    }
-
-    public void setIconoSombra(ImageIcon iconoSombra) {
-        this.iconoSombra = iconoSombra;
-    }
-
-    public void setImagenSombra(JLabel imagenSombra) {
-        this.imagenSombra = imagenSombra;
-    }
-
+    //-------------------- CAMBIAR FONDOS -----------
     public void CambiarImagen(String linkImagen) {
         //---------------- IMAGEN SOMBRA ----------------
-        
+
         URL link = getClass().getResource(linkImagen);
-        
+
         try {
-               
-            if (link == null){
+
+            if (link == null) {
                 throw new RuntimeException("No se encontró la imagen: " + linkImagen);
             }
-            
+
             iconoSombra = new ImageIcon(link);
 
             Image sombraEscalada = iconoSombra.getImage().getScaledInstance(
                     350, 320, Image.SCALE_SMOOTH);
 
             imagenSombra.setIcon(new ImageIcon(sombraEscalada));
+            
+            fondoPapel.add(imagenSombra); //Se añade la sombra al fondo papel
 
         } catch (Exception e) {
 
@@ -264,5 +234,52 @@ public class HiddenFox extends JFrame {
         }
     }
 
+    public void CambiarFondoPapel(String linkImagen) {
+        //----------------- FONDO PAPEL  --------------
+
+        URL link = getClass().getResource(linkImagen);
+
+        try {
+
+            if (link == null) {
+                throw new RuntimeException("No se encontró la imagen: " + linkImagen);
+            }
+
+            fondoPapelIcon = new ImageIcon(link);
+
+            fondoPapelEscalado = fondoPapelIcon.getImage().getScaledInstance(
+                    1050, 450, Image.SCALE_SMOOTH);
+
+            fondoPapel = new JLabel(new ImageIcon(fondoPapelEscalado));
+            fondoPapel.setLayout(null);
+            fondoPapel.setBounds(420, 250, 1050, 450);
+            fondo.add(fondoPapel); //Se añade el fondo papel al fondo
+            setVisible(true); //Se vuelve visible
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            imagenSombra.setText("ERROR AL CARGAR IMAGEN");
+            imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
+            imagenSombra.setForeground(Color.RED);
+        }
+
+    }
+
+    public void CambiarFondo(int dificultad) {
+        Color verde = new Color(178, 197, 178);
+        Color amarillo = new Color(239, 218, 154);
+        Color rojo = new Color(218, 77, 88);
+
+        if (dificultad == 1) {
+            fondo.setBackground(verde);
+        } else if (dificultad == 2) {
+            fondo.setBackground(amarillo);
+        } else if (dificultad == 3) {
+            fondo.setBackground(rojo);
+        } else {
+            System.out.println("Error en la colocación de color.");
+        }
+
+    }
 
 }
