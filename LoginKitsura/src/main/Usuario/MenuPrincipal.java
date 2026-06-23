@@ -19,7 +19,7 @@ public class MenuPrincipal extends JFrame {
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
-        fondo = new FondoPanel("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
         setTitle("Página Principal");
         setSize(1880, 1080);
@@ -44,7 +44,7 @@ public class MenuPrincipal extends JFrame {
         btnPerfil.setFont(fuente2.deriveFont(15f));
         btnPerfil.setBounds(820, 320, 285, 65);
         btnPerfil.setIconTextGap(5);
-        ImageIcon icoPerfil = new ImageIcon(getClass().getResource("/Multimedia/utiles/pencil.png"));
+        ImageIcon icoPerfil = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/pencil.png"));
         Image imgPerfil = icoPerfil.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         btnPerfil.setIcon(new ImageIcon(imgPerfil));
         btnPerfil.addActionListener(e -> {
@@ -58,7 +58,7 @@ public class MenuPrincipal extends JFrame {
         btnMinijuegos.setFont(fuente2.deriveFont(15f));
         btnMinijuegos.setBounds(820, 440, 285, 65);
         btnMinijuegos.setIconTextGap(5);
-        ImageIcon icoMinijuegos = new ImageIcon(getClass().getResource("/Multimedia/utiles/mandoo.png"));
+        ImageIcon icoMinijuegos = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/mandoo.png"));
         Image imgMinijuegos = icoMinijuegos.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         btnMinijuegos.setIcon(new ImageIcon(imgMinijuegos));
         btnMinijuegos.addActionListener(e -> {
@@ -72,7 +72,7 @@ public class MenuPrincipal extends JFrame {
         btnLogIn.setFont(fuente2.deriveFont(15f));
         btnLogIn.setBounds(820, 560, 285, 65);
         btnLogIn.setIconTextGap(5);
-        ImageIcon icoLogIn = new ImageIcon(getClass().getResource("/Multimedia/utiles/abaco.png"));
+        ImageIcon icoLogIn = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/abaco.png"));
         Image imgAbaco = icoLogIn.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         btnLogIn.setIcon(new ImageIcon(imgAbaco));
         btnLogIn.addActionListener(e -> {
@@ -87,7 +87,7 @@ public class MenuPrincipal extends JFrame {
         btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(820, 680, 285, 65);
         btnSalir.setIconTextGap(5);
-        ImageIcon icoSalir = new ImageIcon(getClass().getResource("/Multimedia/utiles/salir.png"));
+        ImageIcon icoSalir = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/salir.png"));
         Image imgSalir = icoSalir.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         btnSalir.setIcon(new ImageIcon(imgSalir));
         btnSalir.addActionListener(e -> {
@@ -97,7 +97,7 @@ public class MenuPrincipal extends JFrame {
 
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota3.png"));
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(240, 300, 600, 600);

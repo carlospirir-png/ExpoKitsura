@@ -21,7 +21,7 @@ public class UsuarioMostrar extends JFrame {
 
     public UsuarioMostrar() {
 
-        fondo = new FondoPanelSemi("/multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Usuarios");
@@ -88,7 +88,7 @@ public class UsuarioMostrar extends JFrame {
 
         lblMascota = new JLabel();
 
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/multimedia/utiles/ZorroControl.png"));
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(520, 520, Image.SCALE_SMOOTH);
 

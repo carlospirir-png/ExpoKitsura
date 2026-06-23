@@ -14,7 +14,7 @@ public class PantallaImagenPerfil extends JFrame {
 
     public PantallaImagenPerfil() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Imagen de Perfil");
@@ -38,7 +38,7 @@ public class PantallaImagenPerfil extends JFrame {
         fondo.add(lblTitulo);
 
         lblMascota = new JLabel();
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ZorroPerfil.png"));
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VENTANITA.png"));
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(130,130,Image.SCALE_SMOOTH);
         lblMascota.setIcon(new ImageIcon(mascotaEscalada));
         lblMascota.setBounds(450,0,130,130);
@@ -48,15 +48,15 @@ public class PantallaImagenPerfil extends JFrame {
         panelImagenes.setLayout(null);
         panelImagenes.setPreferredSize(new java.awt.Dimension(500,220));
 
-        agregarImagen("/Multimedia/utiles/ejemplo.png",10,10);
-        agregarImagen("/Multimedia/utiles/ejemplo.png",130,10);
-        agregarImagen("/Multimedia/utiles/ejemplo.png",250,10);
-        agregarImagen("/Multimedia/utiles/ejemplo.png",370,10);
+        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",10,10);
+        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",130,10);
+        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",250,10);
+        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",370,10);
 
-        agregarImagen("/Multimedia/utiles/ejemplo.png",10,110);
-        agregarImagen("/Multimedia/utiles/ejemplo.png",130,110);
-        agregarImagen("/Multimedia/utiles/ejemplo.png",250,110);
-        agregarImagen("/Multimedia/utiles/ejemplo.png",370,110);
+        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",10,110);
+        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",130,110);
+        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",250,110);
+        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",370,110);
 
         scrollImagenes = new JScrollPane(panelImagenes);
         scrollImagenes.setBounds(40,70,500,220);
@@ -68,7 +68,7 @@ public class PantallaImagenPerfil extends JFrame {
         fondo.add(btnVolver);
 
         lblLogo = new JLabel();
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logoKitsura2.png"));
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/logoKitsura2.png"));
         Image logoEscalado = logoIcon.getImage().getScaledInstance(100,40,Image.SCALE_SMOOTH);
         lblLogo.setIcon(new ImageIcon(logoEscalado));
         lblLogo.setBounds(450,310,100,40);

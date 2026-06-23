@@ -26,7 +26,7 @@ public class RecuperarContrasena extends JFrame {
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png");
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane (fondo);
         setUndecorated(true);
         setSize(600, 400);
@@ -82,7 +82,7 @@ public class RecuperarContrasena extends JFrame {
 
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota3.png")); 
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png")); 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(330, 90, 300, 300);

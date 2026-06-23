@@ -40,7 +40,7 @@ public class PantallaPerfil extends JFrame {
 
     public PantallaPerfil() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Gestión de Cuenta");
@@ -59,7 +59,7 @@ public class PantallaPerfil extends JFrame {
 
         lblLogo = new JLabel();
 
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logoKitsura.png"));
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/logoKitsura.png"));
         Image logoEscalado = logoIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
 
         lblLogo.setIcon(new ImageIcon(logoEscalado));
@@ -69,7 +69,7 @@ public class PantallaPerfil extends JFrame {
 
         lblMascota = new JLabel();
 
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ZorroPerfil.png"));
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VENTANITA.png"));
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH);
 
         lblMascota.setIcon(new ImageIcon(mascotaEscalada));
@@ -153,7 +153,7 @@ public class PantallaPerfil extends JFrame {
 
         lblFotoPerfil = new JLabel();
 
-        ImageIcon fotoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/Victoria.png"));
+        ImageIcon fotoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Imperfecta.png"));
         Image fotoEscalada = fotoIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
 
         lblFotoPerfil.setIcon(new ImageIcon(fotoEscalada));

@@ -36,7 +36,7 @@ public class PantallaEstadisticas extends JFrame {
 
     public PantallaEstadisticas() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Tabla Global");
@@ -154,7 +154,7 @@ public class PantallaEstadisticas extends JFrame {
 
         ImageIcon mascotaIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/ZorroTrofeo.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/ESTADÍSTICAS-TROFEO.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(

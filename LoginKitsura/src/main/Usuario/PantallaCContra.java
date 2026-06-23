@@ -26,7 +26,7 @@ public class PantallaCContra extends JFrame {
 
     public PantallaCContra() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Editar Contraseña");
@@ -104,7 +104,7 @@ public class PantallaCContra extends JFrame {
 
         ImageIcon mascotaIcon =
                 new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/ZorroLapiz.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/INICIAR_SESIÓN-REGISTRARSE_INVITADO-EDITAR_CONTRASENA.png"));
 
         Image mascotaEscalada =
                 mascotaIcon.getImage().getScaledInstance(
@@ -121,7 +121,7 @@ public class PantallaCContra extends JFrame {
 
         ImageIcon logoIcon =
                 new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/logoKitsura2.png"));
+                        getClass().getResource("/Multimedia/utiles/logotiopo/logoKitsura2.png"));
 
         Image logoEscalado =
                 logoIcon.getImage().getScaledInstance(

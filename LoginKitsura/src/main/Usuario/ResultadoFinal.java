@@ -66,7 +66,7 @@ public class ResultadoFinal extends JFrame {
 
         //---------------- MASCOTA SALIENDO DESDE ABAJO (Derecha) ----------------
             JLabel mascota = new JLabel();
-            ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota4.png")); 
+            ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VENTANITA.png")); 
             Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             mascota.setIcon(new ImageIcon(mascotaEscalada));
             mascota.setBounds(370, 210, 300, 300);

@@ -25,7 +25,7 @@ public class HaPerdido extends JFrame {
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoCuatroK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png"); 
         setContentPane(fondo);
         
         setTitle("Ha perdido");
@@ -62,7 +62,7 @@ public class HaPerdido extends JFrame {
         fondo.add(lblCita);
 
         JLabel mascotaCorazones = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota7.png")); 
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroLupa.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         mascotaCorazones.setIcon(new ImageIcon(imgEscalada));
         mascotaCorazones.setBounds(150, 250, 600, 600);

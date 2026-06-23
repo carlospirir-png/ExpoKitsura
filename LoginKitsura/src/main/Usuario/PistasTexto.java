@@ -24,7 +24,7 @@ public class PistasTexto extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png");
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
         setUndecorated(true);
         setSize(600, 440);
@@ -85,7 +85,7 @@ public class PistasTexto extends JFrame {
 
         //---------------- MASCOTA ----------------
         JLabel mascotaLector = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaUno.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascotaLector.setIcon(new ImageIcon(imgEscalada));
         mascotaLector.setBounds(335, 140, 300, 300);

@@ -71,7 +71,7 @@ public class HiddenFox extends JFrame {
         try {
 
             ImageIcon corazonIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/corazon.png"));
+                    getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"));
 
             Image corazonEscalado = corazonIcon.getImage().getScaledInstance(
                     60, 60, Image.SCALE_SMOOTH);
@@ -142,7 +142,7 @@ public class HiddenFox extends JFrame {
 
         //---------------- PANEL SOMBRA ----------------
         fondoPapelIcon = new ImageIcon(
-                getClass().getResource("/Multimedia/utiles/FondoPapel.png"));
+                getClass().getResource("/Multimedia/utiles/fondos/interfaces/FondoPapel.png"));
 
         fondoPapelEscalado = fondoPapelIcon.getImage().getScaledInstance(
                 1050, 450, Image.SCALE_SMOOTH);
@@ -207,7 +207,7 @@ public class HiddenFox extends JFrame {
         mascota = new JLabel();
 
         ImageIcon mascotaIcon = new ImageIcon(
-                getClass().getResource("/Multimedia/utiles/mascota7.png"));
+                getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroLupa.png"));
 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(
                 450, 450, Image.SCALE_SMOOTH);

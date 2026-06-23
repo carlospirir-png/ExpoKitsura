@@ -16,7 +16,7 @@ public class UsuarioMenu extends JFrame {
 
     public UsuarioMenu() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Usuario");
@@ -83,7 +83,7 @@ public class UsuarioMenu extends JFrame {
 
         lblMascota = new JLabel();
 
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ZorroTablet.png"));
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(850, 850, Image.SCALE_SMOOTH);
 

@@ -36,21 +36,21 @@ public class SalirDelJuego extends JFrame {
     }
 
     private void crearComponentes() {
-        //---------------- BARRA SUPERIOR ----------------
         JPanel barra = new JPanel();
         barra.setLayout(null);
-        barra.setBackground(Color.WHITE);
+        barra.setBackground(new Color(255, 255, 255));
         barra.setBounds(0, 0, 520, 40);
         fondo.add(barra);
 
         JLabel titulo = new JLabel(" ");
         titulo.setFont(fuente1.deriveFont(10f));
+        titulo.setForeground(new Color(60, 60, 60));
         titulo.setBounds(15, 0, 220, 40);
         barra.add(titulo);
 
         JButton btnCerrar = new JButton("X");
         btnCerrar.setFont(fuente1.deriveFont(15f));
-        btnCerrar.setBounds(470, 5, 40, 30);
+        btnCerrar.setBounds(475, 5, 40, 30);
         btnCerrar.setFocusable(false);
         btnCerrar.setBorderPainted(false);
         btnCerrar.setBackground(new Color(245, 245, 245));
@@ -59,30 +59,34 @@ public class SalirDelJuego extends JFrame {
         barra.add(btnCerrar);
 
         JSeparator linea = new JSeparator();
-        linea.setBounds(0, 39, 520, 1);
+        linea.setBounds(0, 39, 600, 1);
         barra.add(linea);
-
-        //---------------- PREGUNTA ----------------
-        JLabel lblPregunta1 = new JLabel("¿Deseas salir", JLabel.CENTER);
-        lblPregunta1.setFont(fuente2.deriveFont(25f));
-        lblPregunta1.setForeground(Color.WHITE);
-        lblPregunta1.setBounds(10, 65, 500, 35);
-        fondo.add(lblPregunta1);
-
-        JLabel lblPregunta2 = new JLabel("del juego?", JLabel.CENTER);
-        lblPregunta2.setFont(fuente2.deriveFont(25f));
-        lblPregunta2.setForeground(Color.WHITE);
-        lblPregunta2.setBounds(10, 100, 500, 35);
-        fondo.add(lblPregunta2);
-
+        
+        FondoPanelSemi panelPregunta = new FondoPanelSemi(new Color(0, 0, 0, 120)); // 120 de transparencia
+        panelPregunta.setBounds(30, 55, 460, 95); // Posicionado al centro
+        panelPregunta.setLayout(null);
+        fondo.add(panelPregunta);
         
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
         ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota4.png"));
-        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(130, 130, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(345, 200, 200, 200);
+        mascota.setBounds(380, 195, 130, 130);
         fondo.add(mascota);
+        
+        //---------------- PREGUNTA ----------------
+        JLabel lblPregunta1 = new JLabel("¿Deseas salir", JLabel.CENTER);
+        lblPregunta1.setFont(fuente2.deriveFont(25f));
+        lblPregunta1.setForeground(Color.WHITE);
+        lblPregunta1.setBounds(0, 12, 460, 35);
+        panelPregunta.add(lblPregunta1);
+
+        JLabel lblPregunta2 = new JLabel("del juego?", JLabel.CENTER);
+        lblPregunta2.setFont(fuente2.deriveFont(25f));
+        lblPregunta2.setForeground(Color.WHITE);
+        lblPregunta2.setBounds(0, 47, 460, 35);
+        panelPregunta.add(lblPregunta2);
 
         //---------------- BOTON SI ----------------
         JButton btnSi = new JButton("SI");
@@ -107,5 +111,7 @@ public class SalirDelJuego extends JFrame {
         );
         fondo.add(btnRegresar);
     }
-
+    public static void main(String[] args) {
+        new SalirDelJuego();
+    }
 }

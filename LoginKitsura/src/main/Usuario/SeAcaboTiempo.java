@@ -25,7 +25,7 @@ public class SeAcaboTiempo extends JFrame {
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/utilidades/fondoCuatroK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png"); 
         setContentPane(fondo);
         setTitle("Se acabo el tiempo");
         setSize(1980, 1060); 
@@ -61,7 +61,7 @@ public class SeAcaboTiempo extends JFrame {
 
         //---------------- MASCOTA  ----------------
             JLabel mascotaReloj = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/utilidades/mascota6.png")); 
+            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/DERROTA-por-tiempo.png")); 
             Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
             mascotaReloj.setIcon(new ImageIcon(imgEscalada));
             mascotaReloj.setBounds(150, 250, 600, 600);

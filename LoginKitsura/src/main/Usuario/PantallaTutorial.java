@@ -23,7 +23,7 @@ public class PantallaTutorial extends JFrame {
 
     public PantallaTutorial() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Tutorial");
@@ -68,7 +68,7 @@ public class PantallaTutorial extends JFrame {
 
         lblMascota = new JLabel();
 
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ZorroLeerV.png"));
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroLeerVolteado.png"));
 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 
@@ -91,7 +91,7 @@ public class PantallaTutorial extends JFrame {
 
         lblImagen1 = new JLabel();
 
-        ImageIcon imagen1 = new ImageIcon(getClass().getResource("/Multimedia/utiles/ejemplo.png"));
+        ImageIcon imagen1 = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png"));
 
         Image imgEscalada1 = imagen1.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
 
@@ -101,7 +101,7 @@ public class PantallaTutorial extends JFrame {
         panelContenido.add(lblImagen1);
         lblImagen2 = new JLabel();
 
-        ImageIcon imagen2 = new ImageIcon(getClass().getResource("/Multimedia/utiles/ejemplo.png"));
+        ImageIcon imagen2 = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png"));
 
         Image imgEscalada2 = imagen2.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
 

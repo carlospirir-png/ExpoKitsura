@@ -43,7 +43,7 @@ public class RegistroUsuario extends JFrame {
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
-        fondo = new FondoPanel("/Multimedia/utiles/fondoUnoK.png");
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
 
         setContentPane(fondo);
         setTitle("Registro");
@@ -64,7 +64,7 @@ public class RegistroUsuario extends JFrame {
         logo = new JLabel();
 
         ImageIcon logoIcon
-                = new ImageIcon(getClass().getResource("/Multimedia/utiles/logofK.png"));
+                = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/logofK.png"));
 
         Image logoEscalado
                 = logoIcon.getImage().getScaledInstance(
@@ -79,7 +79,7 @@ public class RegistroUsuario extends JFrame {
         mascota = new JLabel();
 
         ImageIcon mascotaIcon
-                = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota1.png"));
+                = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
