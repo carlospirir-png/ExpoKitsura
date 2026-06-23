@@ -59,7 +59,7 @@ public class MaulwurfRennt extends JFrame {
         //---------------- VIDAS ----------------
         try {
             corazonIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/corazon.png"));
+                    getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"));
 
             Image corazonEscalado = corazonIcon.getImage().getScaledInstance(
                     78, 78, Image.SCALE_SMOOTH);
@@ -128,7 +128,7 @@ public class MaulwurfRennt extends JFrame {
         tablero = new JLabel();
         try {
             ImageIcon tableroIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/FondoTopos.png"));
+                    getClass().getResource("/Multimedia/utiles/fondos/interfacesFondoTopos.png"));
 
             Image tableroEscalado = tableroIcon.getImage().getScaledInstance(
                     1000, 650, Image.SCALE_SMOOTH);
@@ -149,7 +149,7 @@ public class MaulwurfRennt extends JFrame {
         topoCasco = new JLabel();
         try {
             ImageIcon iconoCasco = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/topoCasco.png"));
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/topoCasco.png"));
 
             Image imgCasco = iconoCasco.getImage().getScaledInstance(
                     200, 280, Image.SCALE_SMOOTH);
@@ -176,7 +176,7 @@ public class MaulwurfRennt extends JFrame {
         topoLentes = new JLabel();
         try {
             ImageIcon iconoLentes = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/TopoLentes.png"));
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/TopoLentes.png"));
 
             Image imgLentes = iconoLentes.getImage().getScaledInstance(
                     200, 275, Image.SCALE_SMOOTH);
@@ -229,7 +229,7 @@ public class MaulwurfRennt extends JFrame {
         mascota = new JLabel();
         try {
             mascotaIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/mascota11.png"));
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroMartillo.png"));
 
             Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(
                     435, 580, Image.SCALE_SMOOTH);

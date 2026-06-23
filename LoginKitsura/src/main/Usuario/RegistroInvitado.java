@@ -36,7 +36,7 @@ public class RegistroInvitado extends JFrame {
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
-        fondo = new FondoPanel("/Multimedia/utiles/fondoUnoK.png");
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
 
         setContentPane(fondo);
         setTitle("Registro (Invitado)");
@@ -57,7 +57,7 @@ public class RegistroInvitado extends JFrame {
         logo = new JLabel();
 
         ImageIcon logoIcon = new ImageIcon(
-                getClass().getResource("/Multimedia/utiles/logofK.png"));
+                getClass().getResource("/Multimedia/utiles/logotipo/logofK.png"));
 
         Image logoEscalado = logoIcon.getImage().getScaledInstance(
                 150, 150, Image.SCALE_SMOOTH);
@@ -115,7 +115,7 @@ public class RegistroInvitado extends JFrame {
         mascota = new JLabel();
 
         ImageIcon mascotaIcon = new ImageIcon(
-                getClass().getResource("/Multimedia/utiles/mascota1.png"));
+                getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(
                 191, 264, Image.SCALE_SMOOTH);

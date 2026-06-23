@@ -27,10 +27,6 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE
             );
         }
-<<<<<<< HEAD
-            
-       
-=======
->>>>>>> 36eb63ecb53c37b4fad5ededdde233ec84260af0
+
     }
 }

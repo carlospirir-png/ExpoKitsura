@@ -28,7 +28,7 @@ public class MenuMinijuegos extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
         setTitle("Minijuegos");
         setSize(1880, 1080);
@@ -88,7 +88,7 @@ public class MenuMinijuegos extends JFrame {
 
         //---------------- M A S C O T A S ----------------
         JLabel mascota = new JLabel();
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota3.png"));
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(1245, 300, 600, 600);

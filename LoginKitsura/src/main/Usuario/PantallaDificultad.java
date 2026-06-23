@@ -20,7 +20,7 @@ public class PantallaDificultad extends JFrame {
 
     public PantallaDificultad() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoUnoK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
         setContentPane(fondo);
 
         setTitle("Aumento de Dificultad");
@@ -42,7 +42,7 @@ public class PantallaDificultad extends JFrame {
         JLabel mascota = new JLabel();
 
         ImageIcon mascotaIcon
-                = new ImageIcon(getClass().getResource("/Multimedia/utiles/ZorroAlerta.png"));
+                = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/CAMBIO_DE_DIFICULTAD.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
@@ -76,7 +76,7 @@ public class PantallaDificultad extends JFrame {
         lblFlecha = new JLabel();
 
         ImageIcon flechaicon
-                = new ImageIcon(getClass().getResource("/Multimedia/utiles/FlechaAvanzar.png"));
+                = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/FlechaAvanzar.png"));
 
         Image flechaEscalada
                 = flechaicon.getImage().getScaledInstance(
@@ -90,7 +90,7 @@ public class PantallaDificultad extends JFrame {
         lblAlerta = new JLabel();
 
         ImageIcon alertaIcon
-                = new ImageIcon(getClass().getResource("/Multimedia/utiles/alerta.png"));
+                = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficoa/imagenes/alerta.png"));
 
         Image alertaEscalada
                 = alertaIcon.getImage().getScaledInstance(

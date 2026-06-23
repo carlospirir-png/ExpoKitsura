@@ -62,7 +62,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon icono = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/corazon.png"));
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"));
 
             Image imagen = icono.getImage()
                     .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
@@ -143,7 +143,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon lagoIcon = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/FondoLago.png"));
+                            "/Multimedia/utiles/fonso/interfaces/FondoLago.png"));
 
             Image lagoEscalado = lagoIcon.getImage()
                     .getScaledInstance(1050, 550, Image.SCALE_SMOOTH);
@@ -167,7 +167,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon icono = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/nenufarFlor.png"));
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/nenufarFlor.png"));
 
             Image img = icono.getImage()
                     .getScaledInstance(95, 95, Image.SCALE_SMOOTH);
@@ -192,7 +192,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon icono = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/Nenufar.png"));
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/nenufar.png"));
 
             Image img = icono.getImage()
                     .getScaledInstance(240, 180, Image.SCALE_SMOOTH);
@@ -229,7 +229,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon icono = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/Nenufar.png"));
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/nenufar.png"));
 
             Image img = icono.getImage()
                     .getScaledInstance(240, 180, Image.SCALE_SMOOTH);
@@ -286,7 +286,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon icono = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/mascota10.png"));
+                            "/Multimedia/utiles/mascotaKitsura/imagen/KitsuraFlotador.png"));
 
             Image img = icono.getImage()
                     .getScaledInstance(420, 420, Image.SCALE_SMOOTH);
@@ -309,7 +309,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon iconoFlor = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/florMascota.png"));
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/flor.png"));
 
             Image imgFlor = iconoFlor.getImage()
                     .getScaledInstance(120, 120, Image.SCALE_SMOOTH);

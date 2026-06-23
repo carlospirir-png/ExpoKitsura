@@ -26,7 +26,7 @@ public class ComoJugar extends JFrame{
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
         
-        fondo = new FondoPanel("/Multimedia/utiles/fondoDosK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondosfondoDosK.png"); 
         setContentPane(fondo);     
         setTitle("¿Cómo Jugar?");
         setSize(1980, 1060); 
@@ -78,7 +78,7 @@ public class ComoJugar extends JFrame{
 
         //---------------- MASCOTA ----------------
             JLabel mascotaLector = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota9.png")); 
+            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTA_TEXTUAL.png")); 
             Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
             mascotaLector.setIcon(new ImageIcon(imgEscalada));
             mascotaLector.setBounds(85, 250, 600, 600);
