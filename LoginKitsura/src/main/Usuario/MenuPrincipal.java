@@ -103,4 +103,8 @@ public class MenuPrincipal extends JFrame {
         mascota.setBounds(240, 300, 600, 600);
         fondo.add(mascota);
     }
+    
+    public static void main(String[] args) {
+        new MenuPrincipal();
+    }
 }

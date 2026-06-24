@@ -1,4 +1,4 @@
-package main.Usuario;
+package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;

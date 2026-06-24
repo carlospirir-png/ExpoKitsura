@@ -23,7 +23,7 @@ public class FoxJump extends JFrame {
 
         setContentPane(fondo);
 
-        setTitle("Hidden Fox");
+        setTitle("Fox Jump!");
         setSize(1880, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -139,7 +139,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon lagoIcon = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/fonso/interfaces/FondoLago.png"));
+                            "/Multimedia/utiles/fondo/interfaces/FondoLago.png"));
 
             Image lagoEscalado = lagoIcon.getImage()
                     .getScaledInstance(1050, 450, Image.SCALE_SMOOTH);
@@ -325,5 +325,9 @@ public class FoxJump extends JFrame {
         mascota.add(florMascota);
 
         fondo.add(mascota);
+    }
+    
+    public static void main(String[] args) {
+        new FoxJump();
     }
 }

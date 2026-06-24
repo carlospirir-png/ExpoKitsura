@@ -54,7 +54,7 @@ public class VictoriaPerfecta extends JFrame {
 
         //---------------- MASCOTA ----------------
             JLabel mascotaCongrats = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Imperfecta.png")); 
+            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Perfecta.png")); 
             Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
             mascotaCongrats.setIcon(new ImageIcon(imgEscalada));
             mascotaCongrats.setBounds(225, 270, 600, 600);
@@ -81,5 +81,8 @@ public class VictoriaPerfecta extends JFrame {
         btnVolver.setBounds(1225, 790, 200, 50);
         btnVolver.addActionListener(e -> dispose());
         fondo.add(btnVolver);
+    }
+    public static void main(String[] args) {
+        new VictoriaPerfecta();
     }
 }

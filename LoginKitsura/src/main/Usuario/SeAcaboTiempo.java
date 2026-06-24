@@ -75,4 +75,8 @@ public class SeAcaboTiempo extends JFrame {
         btnVolver.addActionListener(e -> dispose()); 
         fondo.add(btnVolver);
     }
+    
+    public static void main(String[] args) {
+        new SeAcaboTiempo();
+    }
 }

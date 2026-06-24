@@ -240,4 +240,8 @@ public class IniciarSesion extends JFrame {
             return false;
         }
     }
+    
+    public static void main(String[] args) {
+        new IniciarSesion();
+    }
 }

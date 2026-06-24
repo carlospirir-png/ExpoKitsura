@@ -1,4 +1,4 @@
-package main.Usuario;
+package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
@@ -91,5 +91,8 @@ public class UsuarioMenu extends JFrame {
         lblMascota.setBounds(1050, 100, 850, 850);
 
         fondo.add(lblMascota);
+    }
+    public static void main(String[] args) {
+        new UsuarioMenu();
     }
 }

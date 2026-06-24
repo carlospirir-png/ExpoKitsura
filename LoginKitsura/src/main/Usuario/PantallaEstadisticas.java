@@ -173,7 +173,9 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo.add(panelFondo);
     }
-
+    public static void main(String[] args) {
+        new PantallaEstadisticas();
+    }
     
 
 }

@@ -1,4 +1,4 @@
-package main.Usuario;
+package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
@@ -73,6 +73,10 @@ public class PistasMenu extends JFrame{
         btnVolver.setBounds(1600, 945, 220, 55);
         btnVolver.addActionListener(e -> dispose());
         fondo.add(btnVolver);
+    }
+    
+    public static void main(String[] args) {
+        new PistasMenu();
     }
 
 }

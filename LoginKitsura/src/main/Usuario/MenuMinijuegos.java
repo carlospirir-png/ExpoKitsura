@@ -54,7 +54,7 @@ public class MenuMinijuegos extends JFrame {
         btnHiddenFox.setFont(fuente1.deriveFont(25f));
         btnHiddenFox.setBounds(780, 340, 400, 55);
         btnHiddenFox.addActionListener(e -> {
-            new HiddenFox();
+            MenuMinijuegosC HiddenFox = new MenuMinijuegosC();
             dispose();
         });
         fondo.add(btnHiddenFox);
@@ -94,7 +94,7 @@ public class MenuMinijuegos extends JFrame {
         mascota.setBounds(1245, 300, 600, 600);
         fondo.add(mascota);
     }
-    
+
     public static void main(String[] args) {
         new MenuMinijuegos();
     }

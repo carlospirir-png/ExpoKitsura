@@ -320,4 +320,8 @@ public class RegistroUsuario extends JFrame {
             return false;
         }
     }
+    
+    public static void main(String[] args) {
+        new RegistroUsuario();
+    }
 }
