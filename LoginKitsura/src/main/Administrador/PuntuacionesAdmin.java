@@ -25,7 +25,7 @@ public class PuntuacionesAdmin extends JFrame{
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/utilidades/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondo/imagen/fondoTresK.png"); 
         setContentPane(fondo);
         
         setTitle("Puntuaciones");
@@ -94,7 +94,7 @@ public class PuntuacionesAdmin extends JFrame{
         recuadroPuntos.add(lblInfoJuego);
 
             JLabel mascotaLapiz = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/utilidades/mascotaUno.png"));
+            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/INICIAR_SESIÓN-REGISTRARSE_INVITADO-EDITAR_CONTRASENA.png"));
             Image imgEscalada = iconMascota.getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
             mascotaLapiz.setIcon(new ImageIcon(imgEscalada));
             mascotaLapiz.setBounds(1250, 220, 500, 500);

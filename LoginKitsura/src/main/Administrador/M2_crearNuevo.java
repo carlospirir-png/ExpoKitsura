@@ -29,7 +29,7 @@ public class M2_crearNuevo extends JFrame {
 
     public M2_crearNuevo() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Crear Nuevo - Minijuego 2");
@@ -77,7 +77,7 @@ public class M2_crearNuevo extends JFrame {
 
         ImageIcon checkIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/check.png"));
+                        getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/check.png"));
 
         Image checkEscalado
                 = checkIcon.getImage().getScaledInstance(
@@ -110,7 +110,7 @@ public class M2_crearNuevo extends JFrame {
 
         ImageIcon incorrectoIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/incorrecto.png"));
+                        getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/incorrecto.png"));
 
         Image incorrectoEscalado
                 = incorrectoIcon.getImage().getScaledInstance(
@@ -149,7 +149,7 @@ public class M2_crearNuevo extends JFrame {
 
         ImageIcon mascotaIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/ZorroLeer.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTA_TEXTUAL.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(

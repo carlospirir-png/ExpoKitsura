@@ -26,7 +26,7 @@ public class PistasAudioAdmin extends JFrame {
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
         setContentPane(fondo);
          
         setTitle("Pistas: Audio");
@@ -98,7 +98,7 @@ public class PistasAudioAdmin extends JFrame {
         fondo.add(scrollPaneTabla);
 
         JLabel staticMascotaLibro = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaUno.png")); 
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTAS_TEXTUAL.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH);
         staticMascotaLibro.setIcon(new ImageIcon(imgEscalada));
         staticMascotaLibro.setBounds(1320, 320, 550, 550);

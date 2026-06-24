@@ -25,7 +25,7 @@ public class M1 extends JFrame {
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
         setContentPane(fondo);        
         setTitle("M1-Crear nuevo");
         setSize(1980, 1080); 
@@ -45,7 +45,7 @@ public class M1 extends JFrame {
         fondo.add(lblTituloSeccion);
 
         JLabel staticMascotaTablet = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaUno.png")); 
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         staticMascotaTablet.setIcon(new ImageIcon(imgEscalada));
         staticMascotaTablet.setBounds(20, 240, 600, 600);

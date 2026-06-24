@@ -19,7 +19,7 @@ public class EditarStages extends JFrame {
 
     public EditarStages() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Editar Existente");
@@ -83,7 +83,7 @@ public class EditarStages extends JFrame {
 
         ImageIcon mascotaIcon =
                 new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/ZorroPrincipal.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MENÚ-PRINCIPAL-LINTERNA.png"));
 
         Image mascotaEscalada =
                 mascotaIcon.getImage().getScaledInstance(
@@ -95,7 +95,7 @@ public class EditarStages extends JFrame {
         lblMascota.setBounds(1150, 140, 750, 750);
 
         fondo.add(lblMascota);
+        
     }
-
 
 }

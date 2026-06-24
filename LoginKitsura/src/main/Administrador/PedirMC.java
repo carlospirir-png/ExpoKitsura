@@ -25,7 +25,7 @@ public class PedirMC extends JFrame {
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
         setContentPane(fondo);   
         setTitle("Pedir M, C");
         setSize(1980, 1080); 
@@ -77,7 +77,7 @@ public class PedirMC extends JFrame {
         
         // MASCOTA
             JLabel mascotaControl = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota3.png"));
+            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
             Image imgEscalada = iconMascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH);
             mascotaControl.setIcon(new ImageIcon(imgEscalada));
             mascotaControl.setBounds(200, 240, 650, 650);
