@@ -26,7 +26,7 @@ public class PistasTxtAdmin extends JFrame{
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/utilidades/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/imagen/fondoTresK.png"); 
         setContentPane(fondo);
         
         setTitle("Pistas: TXT");
@@ -92,7 +92,7 @@ public class PistasTxtAdmin extends JFrame{
         fondo.add(scrollPaneTabla);
 
         JLabel staticMascotaLibro = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/utilidades/mascotaUno.png")); 
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTA_TEXTUAL.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         staticMascotaLibro.setIcon(new ImageIcon(imgEscalada));
         staticMascotaLibro.setBounds(1320, 310, 600, 600);

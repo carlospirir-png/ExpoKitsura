@@ -38,7 +38,7 @@ public class M3_crearNuevo extends JFrame {
 
     public M3_crearNuevo() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/FondoTopos.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/FondoTopos.png");
         setContentPane(fondo);
 
         setTitle("Crear Nuevo - Minijuego 3");
@@ -86,7 +86,7 @@ public class M3_crearNuevo extends JFrame {
 
         ImageIcon checkIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/check.png"));
+                        getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/check.png"));
 
         Image checkEscalado
                 = checkIcon.getImage().getScaledInstance(
@@ -127,7 +127,7 @@ public class M3_crearNuevo extends JFrame {
 
         ImageIcon incorrectoIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/incorrecto.png"));
+                        getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/incorrecto.png"));
 
         Image incorrectoEscalado
                 = incorrectoIcon.getImage().getScaledInstance(

@@ -1,4 +1,3 @@
-
 package main.Administrador;
 
 import java.awt.*;
@@ -26,7 +25,7 @@ public class MenuAdmin extends JFrame{
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoDosK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png"); 
         setContentPane(fondo);      
         setTitle("Menú Administrador");
         setSize(1980, 1080); 
@@ -77,7 +76,7 @@ public class MenuAdmin extends JFrame{
 
         // MASCOTA 
         JLabel mascotaLampara = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota2.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MENÚ-PRINCIPAL-LINTERNA.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH);
         mascotaLampara.setIcon(new ImageIcon(imgEscalada));
         mascotaLampara.setBounds(1200, 230, 650, 650);

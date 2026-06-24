@@ -25,7 +25,7 @@ public class NuevoAdmin extends JFrame {
 
     public NuevoAdmin() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/utiles/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Añadir Administrador");
@@ -105,7 +105,7 @@ public class NuevoAdmin extends JFrame {
 
         ImageIcon mascotaIcon =
                 new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/ZorroControl.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
 
         Image mascotaEscalada =
                 mascotaIcon.getImage().getScaledInstance(

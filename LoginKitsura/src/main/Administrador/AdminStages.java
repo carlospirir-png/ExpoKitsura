@@ -24,7 +24,7 @@ public class AdminStages extends JFrame{
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoDosK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png"); 
         setContentPane(fondo);       
         setTitle("Administrar Stages");
         setSize(1980, 1080); 
@@ -59,7 +59,7 @@ public class AdminStages extends JFrame{
         fondo.add(btnEditarExistente);
         
         JLabel staticMascotaControl = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota3.png")); 
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         staticMascotaControl.setIcon(new ImageIcon(imgEscalada));
         staticMascotaControl.setBounds(700, 290, 600, 600);

@@ -25,7 +25,7 @@ public class VidasAdmin extends JFrame {
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/imagen/fondoTresK.png"); 
         setContentPane(fondo);
         
         setTitle("Vidas");
@@ -86,7 +86,7 @@ public class VidasAdmin extends JFrame {
         
         // MASCOTA 
         JLabel staticMascotaLapiz = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaUno.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/INICIAR_SESIÓN-REGISTRARSE_INVITADO-EDITAR_CONTRASENA.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         staticMascotaLapiz.setIcon(new ImageIcon(imgEscalada));
         staticMascotaLapiz.setBounds(1250, 220, 600, 600);
