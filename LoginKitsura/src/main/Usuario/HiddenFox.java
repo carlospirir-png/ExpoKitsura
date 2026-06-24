@@ -3,6 +3,8 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import java.net.URL;
+import main.conexion.Conexion;
+import java.sql.*;
 
 public class HiddenFox extends JFrame {
 
@@ -42,7 +44,7 @@ public class HiddenFox extends JFrame {
         //---------------- FONDO ----------------
         fondo = new JPanel();
         fondo.setLayout(null);
-        fondo.setBackground(new Color(178, 197, 178));
+        fondo.setBackground(Color.WHITE);
 
         setContentPane(fondo);
 
@@ -221,7 +223,7 @@ public class HiddenFox extends JFrame {
                     350, 320, Image.SCALE_SMOOTH);
 
             imagenSombra.setIcon(new ImageIcon(sombraEscalada));
-            
+
             fondoPapel.add(imagenSombra); //Se añade la sombra al fondo papel
 
         } catch (Exception e) {
@@ -281,7 +283,74 @@ public class HiddenFox extends JFrame {
         }
 
     }
-    
+
+    public void CargarRespuestas(int numRespuesta, String Respuesta) {
+        switch (numRespuesta) {
+            case 1:
+                btnRespuesta1.setText(Respuesta);
+                break;
+            case 2:
+                btnRespuesta2.setText(Respuesta);
+                break;
+            case 3:
+                btnRespuesta3.setText(Respuesta);
+                break;
+            case 4:
+                btnRespuesta4.setText(Respuesta);
+                break;
+            default:
+                System.out.println("Número de botón inválido.");
+                break;
+        }
+    }
+
+    public void ModificarNivel(int n) {
+        //Rango del 1 al 5
+        if (n>= 1 && n<=5){
+            nivel.setText("Nivel: " + n);
+        }else{
+            System.out.println("Número de nivel inválido.");
+        }
+    }
+
+    public void ModificarDificultad(int d) {
+        switch (d) {
+            case 1:
+                dificultad.setText("Dificultad: Fácil");
+                break;
+            case 2:
+                dificultad.setText("Dificultad: Intermedio");
+                break;
+            case 3:
+                dificultad.setText("Dificultad: Difícil");
+                break;
+            default:
+                System.out.println("Número de dificultad inválido.");
+                break;
+        }
+    }
+
+    public void ModificarCategoria(int id_categoria) {
+        String sql = "SELECT nombre FROM Categoria WHERE id_categoria = ?";
+        
+        try (Connection con = new Conexion().getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id_categoria);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                categoria.setText("Categoría: " + rs.getString("nombre"));
+            } else {
+                categoria.setText("Categoría no encontrada");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al obtener categoría: " + e.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
         new HiddenFox();
     }

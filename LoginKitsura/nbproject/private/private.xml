@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroInvitado.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/RecuperarContrasena.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasTexto.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasAudio.java</file>
+            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
+            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox.java</file>
+            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
+            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Menu/VolverMenu.java</file>
+            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Menu/SalirDelJuego.java</file>
         </group>
     </open-files>
 </project-private>
