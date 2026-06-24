@@ -197,4 +197,9 @@ public class PantallaPerfil extends JFrame {
         });
         fondo.add(btnVolver);
     }    
+    
+    public static void main(String[] args) {
+        new PantallaPerfil();
+    }
+    
 }

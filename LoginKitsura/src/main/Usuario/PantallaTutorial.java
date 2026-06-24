@@ -178,6 +178,9 @@ public class PantallaTutorial extends JFrame {
 
         fondo.add(scrollPane);
     }
-
+    
+    public static void main(String[] args) {
+        new PantallaTutorial();
+    }
 
 }

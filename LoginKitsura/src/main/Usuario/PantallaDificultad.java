@@ -90,7 +90,7 @@ public class PantallaDificultad extends JFrame {
         lblAlerta = new JLabel();
 
         ImageIcon alertaIcon
-                = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficoa/imagenes/alerta.png"));
+                = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/alerta.png"));
 
         Image alertaEscalada
                 = alertaIcon.getImage().getScaledInstance(
@@ -182,5 +182,7 @@ public class PantallaDificultad extends JFrame {
         panelTexto.repaint();
     }
 
-
+    public static void main(String[] args) {
+        new PantallaDificultad();
+    }
 }

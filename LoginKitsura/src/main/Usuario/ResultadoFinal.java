@@ -10,7 +10,7 @@ public class ResultadoFinal extends JFrame {
     private Font fuente2;
     
     public ResultadoFinal() {
-        fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
         setContentPane(fondo);
         setUndecorated(true);
         setSize(600, 400); 
@@ -73,4 +73,7 @@ public class ResultadoFinal extends JFrame {
             fondo.add(mascota);
     }
     
+    public static void main(String[] args) {
+        new ResultadoFinal();
+    }
 }

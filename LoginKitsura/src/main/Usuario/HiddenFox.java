@@ -281,5 +281,9 @@ public class HiddenFox extends JFrame {
         }
 
     }
+    
+    public static void main(String[] args) {
+        new HiddenFox();
+    }
 
 }

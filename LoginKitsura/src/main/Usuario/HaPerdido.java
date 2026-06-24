@@ -76,4 +76,8 @@ public class HaPerdido extends JFrame {
         btnVolver.addActionListener(e -> dispose()); 
         fondo.add(btnVolver);
     }
+    
+    public static void main(String[] args) {
+        new HaPerdido();
+    }
 }

@@ -89,4 +89,8 @@ public class RecuperarContrasena extends JFrame {
         fondo.add(mascota);
 
     }
+    
+    public static void main(String[] args) {
+        new RecuperarContrasena();
+    }
 }

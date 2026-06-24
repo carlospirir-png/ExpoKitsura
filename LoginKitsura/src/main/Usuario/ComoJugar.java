@@ -26,7 +26,7 @@ public class ComoJugar extends JFrame{
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
         
-        fondo = new FondoPanel("/Multimedia/utiles/fondosfondoDosK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png"); 
         setContentPane(fondo);     
         setTitle("¿Cómo Jugar?");
         setSize(1980, 1060); 
@@ -93,6 +93,7 @@ public class ComoJugar extends JFrame{
         fondo.add(btnVolver);
     }
     
-  
-
+  public static void main(String[] args) {
+        new ComoJugar();
+    }
 }

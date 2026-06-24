@@ -169,4 +169,8 @@ public class RegistroInvitado extends JFrame {
     public String getNombreInvitado() {
         return nombreInvitado;
     }
+    
+    public static void main(String[] args) {
+        new RegistroInvitado();
+    }
 }

@@ -25,7 +25,7 @@ public class Victoria extends JFrame {
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/utilidades/fondoCincoK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png"); 
         setContentPane(fondo);
         setTitle("Victoria");
         setSize(1980, 1060); 
@@ -54,7 +54,7 @@ public class Victoria extends JFrame {
 
         //---------------- MASCOTA ----------------
             JLabel mascotaCongrats = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/utilidades/mascota5.png")); 
+            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Imperfecta.png")); 
             Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
             mascotaCongrats.setIcon(new ImageIcon(imgEscalada));
             mascotaCongrats.setBounds(225, 270, 600, 600);
@@ -75,7 +75,7 @@ public class Victoria extends JFrame {
         fondo.add(lblUsuario);
 
             JLabel fotoPerfil = new JLabel();
-            ImageIcon paisajeIcon = new ImageIcon(getClass().getResource("/utilidades/logofK.png"));
+            ImageIcon paisajeIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/logofK.png"));
             Image paisajeEscalado = paisajeIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
             fotoPerfil.setIcon(new ImageIcon(paisajeEscalado));
             fotoPerfil.setBounds(1030, 115, 150, 150);
@@ -87,6 +87,10 @@ public class Victoria extends JFrame {
         btnVolver.setBounds(1320, 710, 200, 50);
         btnVolver.addActionListener(e -> dispose());
         fondo.add(btnVolver);
+    }
+    
+    public static void main(String[] args) {
+        new Victoria();
     }
 }
 

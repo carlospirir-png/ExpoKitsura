@@ -121,7 +121,7 @@ public class PantallaCContra extends JFrame {
 
         ImageIcon logoIcon =
                 new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/logotiopo/logoKitsura2.png"));
+                        getClass().getResource("/Multimedia/utiles/logotipo/LogoKitsura2.png"));
 
         Image logoEscalado =
                 logoIcon.getImage().getScaledInstance(
@@ -134,6 +134,9 @@ public class PantallaCContra extends JFrame {
 
         fondo.add(lblLogo);
     }
-
+    
+    public static void main(String[] args) {
+        new PantallaCContra();
+    }
 
 }

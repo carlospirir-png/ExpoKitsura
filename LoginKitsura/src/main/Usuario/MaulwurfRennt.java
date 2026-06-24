@@ -240,4 +240,8 @@ public class MaulwurfRennt extends JFrame {
         mascota.setBounds(1450, 480, 450, 450);
         fondo.add(mascota);
     }
+    
+    public static void main(String[] args) {
+        new MaulwurfRennt();
+    }
 }
