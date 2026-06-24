@@ -127,7 +127,7 @@ public class MaulwurfRennt extends JFrame {
         tablero = new JLabel();
         try {
             ImageIcon tableroIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/fondos/interfacesFondoTopos.png"));
+                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Fondo.png"));
 
             // Se aumentó la altura a 500 para mejorar la perspectiva de las filas
             Image tableroEscalado = tableroIcon.getImage().getScaledInstance(
@@ -148,7 +148,7 @@ public class MaulwurfRennt extends JFrame {
         topoCasco = new JLabel();
         try {
             ImageIcon iconoCasco = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/topoCasco.png"));
+                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png"));
 
             Image imgCasco = iconoCasco.getImage().getScaledInstance(
                     200, 280, Image.SCALE_SMOOTH);
@@ -175,7 +175,7 @@ public class MaulwurfRennt extends JFrame {
         topoLentes = new JLabel();
         try {
             ImageIcon iconoLentes = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/TopoLentes.png"));
+                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png"));
 
             Image imgLentes = iconoLentes.getImage().getScaledInstance(
                     200, 275, Image.SCALE_SMOOTH);

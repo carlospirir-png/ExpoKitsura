@@ -8,6 +8,8 @@ import java.sql.*;
 
 public class HiddenFox extends JFrame {
 
+    Connection con = new Conexion().getConnection();
+
     private final JPanel fondo;
 
     ImageIcon fondoPapelIcon, iconoSombra;
@@ -207,7 +209,7 @@ public class HiddenFox extends JFrame {
 
     //-------------------- CAMBIAR FONDOS -----------
     public void CambiarImagen(String linkImagen) {
-        //---------------- IMAGEN SOMBRA ----------------
+        //---------------- IMAGEN SOMBRA Y A COLOR ----------------    
 
         URL link = getClass().getResource(linkImagen);
 
@@ -233,6 +235,28 @@ public class HiddenFox extends JFrame {
             imagenSombra.setText("ERROR AL CARGAR IMAGEN");
             imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
             imagenSombra.setForeground(Color.RED);
+        }
+    }
+    
+    //boolean imagen:   false = sombra      |       true = color
+    public void CargarImagen(int id_pregunta, boolean imagen) {
+        String sql = "SELECT imagen_sombra, imagen_color FROM Pregunta WHERE id_pregunta = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id_pregunta);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String rutaSombra = rs.getString("imagen_sombra");
+                String rutaColor = rs.getString("imagen_color");
+                if (imagen == true){
+                    CambiarImagen(rutaColor);
+                }else{
+                    CambiarImagen(rutaSombra);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -284,31 +308,39 @@ public class HiddenFox extends JFrame {
 
     }
 
-    public void CargarRespuestas(int numRespuesta, String Respuesta) {
-        switch (numRespuesta) {
-            case 1:
-                btnRespuesta1.setText(Respuesta);
-                break;
-            case 2:
-                btnRespuesta2.setText(Respuesta);
-                break;
-            case 3:
-                btnRespuesta3.setText(Respuesta);
-                break;
-            case 4:
-                btnRespuesta4.setText(Respuesta);
-                break;
-            default:
-                System.out.println("Número de botón inválido.");
-                break;
+    public void CargarRespuestas(int id_pregunta) {
+        String sql = "SELECT texto_opcion FROM Opcion_respuesta WHERE id_pregunta = ? ORDER BY id_opcion";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id_pregunta);
+
+            ResultSet rs = ps.executeQuery();
+
+            JButton[] botones = {
+                btnRespuesta1,
+                btnRespuesta2,
+                btnRespuesta3,
+                btnRespuesta4
+            };
+
+            int i = 0;
+
+            while (rs.next() && i < botones.length) {
+                botones[i].setText(rs.getString("texto_opcion"));
+                i++;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
+    //-------------------- CAMBIAR DATOS -----------
     public void ModificarNivel(int n) {
         //Rango del 1 al 5
-        if (n>= 1 && n<=5){
+        if (n >= 1 && n <= 5) {
             nivel.setText("Nivel: " + n);
-        }else{
+        } else {
             System.out.println("Número de nivel inválido.");
         }
     }
@@ -332,9 +364,8 @@ public class HiddenFox extends JFrame {
 
     public void ModificarCategoria(int id_categoria) {
         String sql = "SELECT nombre FROM Categoria WHERE id_categoria = ?";
-        
-        try (Connection con = new Conexion().getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id_categoria);
 
@@ -349,10 +380,6 @@ public class HiddenFox extends JFrame {
         } catch (SQLException e) {
             System.out.println("Error al obtener categoría: " + e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        new HiddenFox();
     }
 
 }

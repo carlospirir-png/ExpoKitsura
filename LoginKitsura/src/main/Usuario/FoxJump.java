@@ -139,7 +139,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon lagoIcon = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/fondo/interfaces/FondoLago.png"));
+                            "/Multimedia/Minijuegos/Minijuego_2/Fondo.png"));
 
             Image lagoEscalado = lagoIcon.getImage()
                     .getScaledInstance(1050, 450, Image.SCALE_SMOOTH);
@@ -163,7 +163,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon icono = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/ElementosGraficos/imagenes/nenufarFlor.png"));
+                            "/Multimedia/Minijuegos/Minijuego_2/Nenufar_Flor.png"));
 
             Image img = icono.getImage()
                     .getScaledInstance(95, 95, Image.SCALE_SMOOTH);
@@ -188,7 +188,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon icono = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/ElementosGraficos/imagenes/nenufar.png"));
+                            "/Multimedia/Minijuegos/Minijuego_2/Nenufar.png"));
 
             Image img = icono.getImage()
                     .getScaledInstance(240, 180, Image.SCALE_SMOOTH);
@@ -225,7 +225,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon icono = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/ElementosGraficos/imagenes/nenufar.png"));
+                            "/Multimedia/Minijuegos/Minijuego_2/Nenufar.png"));
 
             Image img = icono.getImage()
                     .getScaledInstance(240, 180, Image.SCALE_SMOOTH);
@@ -307,7 +307,7 @@ public class FoxJump extends JFrame {
 
             ImageIcon iconoFlor = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/ElementosGraficos/imagenes/flor.png"));
+                            "/Multimedia/Minijuegos/Minijuego_2/Flor.png"));
 
             Image imgFlor = iconoFlor.getImage()
                     .getScaledInstance(120, 120, Image.SCALE_SMOOTH);
