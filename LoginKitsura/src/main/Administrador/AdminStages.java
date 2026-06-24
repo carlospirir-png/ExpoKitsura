@@ -71,4 +71,5 @@ public class AdminStages extends JFrame{
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);
     }
+    
 }

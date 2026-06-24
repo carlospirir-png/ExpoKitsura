@@ -98,7 +98,7 @@ public class PistasAudioAdmin extends JFrame {
         fondo.add(scrollPaneTabla);
 
         JLabel staticMascotaLibro = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTAS_TEXTUAL.png")); 
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTA_TEXTUAL.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH);
         staticMascotaLibro.setIcon(new ImageIcon(imgEscalada));
         staticMascotaLibro.setBounds(1320, 320, 550, 550);
@@ -109,5 +109,7 @@ public class PistasAudioAdmin extends JFrame {
         btnSalir.setBounds(1450, 850, 270, 45);
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);
+ 
     }
+    
 }

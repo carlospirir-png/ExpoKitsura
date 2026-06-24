@@ -118,6 +118,6 @@ public class NuevoAdmin extends JFrame {
 
         fondo.add(lblMascota);
     }
-
+  
  
 }
