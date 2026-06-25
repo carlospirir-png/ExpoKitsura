@@ -100,10 +100,14 @@ public class HiddenFox extends JFrame {
         vida1.setBounds(70, 25, 60, 60);
         vida2.setBounds(135, 25, 60, 60);
         vida3.setBounds(200, 25, 60, 60);
-
-        fondo.add(vida1);
-        fondo.add(vida2);
-        fondo.add(vida3);
+        // --------------- PANEL -----------------
+        JPanel panelv = new JPanel();
+        panelv.setBounds(60, 20, 200, 70);
+        panelv.setBackground(Color.WHITE);  
+        panelv.add(vida1);
+        panelv.add(vida2);
+        panelv.add(vida3);
+        fondo.add(panelv);
 
         //---------------- AYUDA ----------------
         btnAyuda = new JButton("¿Necesitas ayuda?");
@@ -137,7 +141,7 @@ public class HiddenFox extends JFrame {
         tiempo.setBackground(Color.WHITE);
         tiempo.setForeground(Color.BLACK);
         tiempo.setBounds(1440, 120, 320, 60);
-
+        
         fondo.add(tiempo);
 
         //---------------- RESPUESTA 1 ----------------
@@ -290,6 +294,53 @@ public class HiddenFox extends JFrame {
         }
 
     }
+    
+    public void CargarFondoPapel(int nivel){
+        /*
+        NIVELES: 
+        1. Animales - Fácil
+        2. Animales - Intermedio
+        3. Animales - Difícil
+        4. Territorios - Fácil
+        5. Territorios - Intermedio
+        6. Territorios - Difícil
+        7. Caricaturas - Fácil
+        8. Caricaturas - Intermedio
+        9. Caricaturas - Difícil
+        */
+        
+        switch (nivel){
+            case 1:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N1_FONDO.png");
+                break;
+            case 2:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N2_FONDO.png");
+                break;
+            case 3:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N3_FONDO.png");
+                break;
+            case 4:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N1_FONDO.png");
+                break;
+            case 5:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N2_FONDO.png");
+                break;
+            case 6:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N3_FONDO.png");
+                break;
+            case 7:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N1_FONDO.png");
+                break;
+            case 8:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N2_FONDO.png");
+                break;
+            case 9:
+                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N3_FONDO.png");
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "ERROR: No se pudo cargar el fondo.", "ERROR.", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     public void CambiarFondo(int dificultad) {
         Color verde = new Color(178, 197, 178);
@@ -307,25 +358,26 @@ public class HiddenFox extends JFrame {
         }
 
     }
-
+    
+    //Cargar respuestas por medio de la base de datos.
     public void CargarRespuestas(int id_pregunta) {
-        String sql = "SELECT texto_opcion FROM Opcion_respuesta WHERE id_pregunta = ? ORDER BY id_opcion";
+        String sql = "SELECT texto_opcion FROM Opcion_respuesta WHERE id_pregunta = ? ORDER BY RAND()";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id_pregunta);
 
             ResultSet rs = ps.executeQuery();
-
+            
             JButton[] botones = {
                 btnRespuesta1,
                 btnRespuesta2,
                 btnRespuesta3,
                 btnRespuesta4
-            };
-
+            };                   
+            
             int i = 0;
-
+            
             while (rs.next() && i < botones.length) {
                 botones[i].setText(rs.getString("texto_opcion"));
                 i++;
@@ -380,6 +432,90 @@ public class HiddenFox extends JFrame {
         } catch (SQLException e) {
             System.out.println("Error al obtener categoría: " + e.getMessage());
         }
+    }
+    
+    //---------- UNIFICAR -----------
+    public void ConfiguracionNivel(int nivel){
+        /*
+        NIVELES: 
+        1. Animales - Fácil
+        2. Animales - Intermedio
+        3. Animales - Difícil
+        4. Territorios - Fácil
+        5. Territorios - Intermedio
+        6. Territorios - Difícil
+        7. Caricaturas - Fácil
+        8. Caricaturas - Intermedio
+        9. Caricaturas - Difícil
+        */       
+        switch (nivel){
+            case 1:
+                CambiarFondo(1);
+                ModificarDificultad(1);
+                CargarFondoPapel(1);
+                ModificarCategoria(1);
+                
+                break;
+            case 2:
+                CambiarFondo(2);
+                ModificarDificultad(2);
+                CargarFondoPapel(2);
+                ModificarCategoria(1);
+                
+                
+                break;
+            case 3:
+                CambiarFondo(3);
+                ModificarDificultad(3);
+                CargarFondoPapel(3);
+                ModificarCategoria(1);
+                
+                break;
+            case 4:
+                CambiarFondo(1);
+                ModificarDificultad(1);
+                CargarFondoPapel(4);
+                ModificarCategoria(2);
+                
+                break;
+            case 5:
+                CambiarFondo(2);
+                ModificarDificultad(2);
+                CargarFondoPapel(5);
+                ModificarCategoria(2);
+                
+                break;
+            case 6:
+                CambiarFondo(3);
+                ModificarDificultad(3);
+                CargarFondoPapel(6);
+                ModificarCategoria(2);
+                
+                break;
+            case 7:
+                CambiarFondo(1);
+                ModificarDificultad(1);
+                CargarFondoPapel(7);
+                ModificarCategoria(3);
+                
+                break;
+            case 8:
+                CambiarFondo(2);
+                ModificarDificultad(2);
+                CargarFondoPapel(8);
+                ModificarCategoria(3);
+                
+                break;
+            case 9:
+                CambiarFondo(3);
+                ModificarDificultad(3);
+                CargarFondoPapel(9);
+                ModificarCategoria(3);
+                
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
+        } 
     }
 
 }

@@ -109,5 +109,8 @@ public class PedirMCN extends JFrame{
         fondo.add(btnRegresar);
     }
     
+    public static void main(String[] args) {
+        new PedirMCN();
+    }
     
 }

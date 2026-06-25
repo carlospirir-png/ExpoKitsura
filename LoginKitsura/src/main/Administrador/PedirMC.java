@@ -90,6 +90,8 @@ public class PedirMC extends JFrame {
         btnRegresar.addActionListener(e -> dispose()); 
         fondo.add(btnRegresar);
     }
-    
+    public static void main(String[] args) {
+        new PedirMC();
+    }
      
 }

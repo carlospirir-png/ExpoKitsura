@@ -97,6 +97,8 @@ public class EditarStages extends JFrame {
         fondo.add(lblMascota);
         
     }
-   
+   public static void main(String[] args) {
+        new EditarStages();
+    }
 
 }
