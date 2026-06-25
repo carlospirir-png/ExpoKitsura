@@ -38,7 +38,7 @@ public class M3_crearNuevo extends JFrame {
 
     public M3_crearNuevo() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/FondoTopos.png");
+        fondo = new FondoPanelSemi("/Multimedia/Minijuegos/Minijuego_3/Fondo.png");
         setContentPane(fondo);
 
         setTitle("Crear Nuevo - Minijuego 3");
@@ -200,7 +200,7 @@ public class M3_crearNuevo extends JFrame {
 
         ImageIcon mascotaIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/TopoPala.png"));
+                        getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Topo_pala.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
@@ -213,5 +213,5 @@ public class M3_crearNuevo extends JFrame {
 
         fondo.add(lblMascota);
     }
-
+ 
 }

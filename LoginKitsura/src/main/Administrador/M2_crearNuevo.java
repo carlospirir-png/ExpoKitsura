@@ -163,5 +163,5 @@ public class M2_crearNuevo extends JFrame {
         fondo.add(lblMascota);
     }
 
-
+  
 }

@@ -31,7 +31,7 @@ public class editarUsuario extends JFrame {
 
     public editarUsuario() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/imagen/fondoDosK.png");
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Editar Usuario");

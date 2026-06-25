@@ -26,7 +26,7 @@ public class PistasTxtAdmin extends JFrame{
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondos/imagen/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
         setContentPane(fondo);
         
         setTitle("Pistas: TXT");
@@ -104,4 +104,6 @@ public class PistasTxtAdmin extends JFrame{
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);
     }
+    
+    
 }

@@ -108,4 +108,6 @@ public class PedirMCN extends JFrame{
         btnRegresar.addActionListener(e -> dispose()); 
         fondo.add(btnRegresar);
     }
+    
+    
 }

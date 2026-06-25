@@ -142,6 +142,6 @@ public class UsuarioMostrar extends JFrame {
 
         panelTabla.add(scrollTabla);
     }
-
+  
 
 }

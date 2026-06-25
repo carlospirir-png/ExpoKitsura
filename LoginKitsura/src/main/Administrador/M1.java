@@ -132,4 +132,5 @@ public class M1 extends JFrame {
         txtIncorrecta2.setBounds(1250, 715, 420, 40);
         fondo.add(txtIncorrecta2);
     }
+ 
 }

@@ -26,7 +26,7 @@ public class MenuAdmin extends JFrame{
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png"); 
-        setContentPane(fondo);      
+        setContentPane(fondo);       
         setTitle("Menú Administrador");
         setSize(1980, 1080); 
         setLocationRelativeTo(null);
@@ -89,4 +89,5 @@ public class MenuAdmin extends JFrame{
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);
     }
+   
 }
