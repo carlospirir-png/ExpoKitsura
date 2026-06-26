@@ -14,6 +14,14 @@ public class HiddenFox_Codigo extends HiddenFox {
     private int vidas = 3;
     private int nivelActual;
     private int nivelFinal;
+    /**
+     * Segundos que quedan en el turno actual.
+     */
+    private int segundosRestantes;
+    /**
+     * Timer de Swing que descuenta el tiempo cada segundo.
+     */
+    private Timer countdown;
 
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel) {
@@ -95,13 +103,16 @@ public class HiddenFox_Codigo extends HiddenFox {
 
     //--------- MOSTRAR PREGUNTA -----------
     public void MostrarPregunta() {
-        int id_pregunta = preguntasPartida[preguntaActual];
 
+        HabilitarBotones(true);
+
+        int id_pregunta = preguntasPartida[preguntaActual];
         //DEBUG
         System.out.println(
                 "Mostrando pregunta ID: "
                 + id_pregunta);
         //DEBUG
+
         ModificarPregunta(id_pregunta);
 
         CargarRespuestas(id_pregunta);
@@ -109,6 +120,10 @@ public class HiddenFox_Codigo extends HiddenFox {
         CargarImagen(id_pregunta, false);
 
         ModificarAcierto(preguntaActual + 1);
+
+        int tiempoLimite = ObtenerTiempoLimite(id_pregunta);
+
+        iniciarTiempo(tiempoLimite);
     }
 
     // -------------- MODIFICAR ------------
@@ -126,10 +141,80 @@ public class HiddenFox_Codigo extends HiddenFox {
         timer.start();
     }
 
+    private void iniciarTiempo(int tiempoLimite) {
+
+        if (countdown != null) {
+            countdown.stop();
+        }
+
+        segundosRestantes = tiempoLimite;
+
+        ModificarTiempo(segundosRestantes);
+
+        countdown = new Timer(1000, e -> {
+
+            segundosRestantes--;
+
+            ModificarTiempo(segundosRestantes);
+
+            if (segundosRestantes <= 0) {
+                FinTiempo();
+            }
+
+        });
+
+        countdown.start();
+    }
+
+    private void FinTiempo() {
+
+        if (countdown != null) {
+            countdown.stop();
+        }
+
+        HabilitarBotones(false);
+
+        dispose();
+
+        new SeAcaboTiempo();
+    }
+
+    private int ObtenerTiempoLimite(int idPregunta) {
+
+        String sql
+                = "SELECT cn.tiempo_limite "
+                + "FROM Pregunta p "
+                + "INNER JOIN Configuracion_nivel cn "
+                + "ON p.id_nivel = cn.id_nivel "
+                + "WHERE p.id_pregunta = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idPregunta);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("tiempo_limite");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 15; // valor por defecto
+    }
+
     //-------------- BOTONES -------------
     //---------------- ACTION LISTENER -----------------
     @Override
     public void respuestaSeleccionada(JButton boton) {
+
+        HabilitarBotones(false);
+
+        if (countdown != null) {
+            countdown.stop();
+        }
 
         System.out.println("Botón presionado");
 
