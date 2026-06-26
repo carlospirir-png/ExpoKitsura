@@ -16,11 +16,15 @@ public class PantallaDificultad extends JFrame {
     private JLabel lblAlerta;
     private JLabel lblFlecha;
     private int nivel;
+    private int vidas;
+    private int puntos;
 
     private int tiempo = 3;
 
-    public PantallaDificultad(int nivel) {
+    public PantallaDificultad(int nivel, int vidas, int puntos) {
         this.nivel = nivel;
+        this.vidas = vidas;
+        this.puntos = puntos;
 
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
         setContentPane(fondo);
@@ -184,7 +188,7 @@ public class PantallaDificultad extends JFrame {
 
             dispose();
 
-            new HiddenFox_Codigo(nivel);
+            new HiddenFox_Codigo(nivel,vidas,puntos);
 
         });
 
@@ -196,6 +200,6 @@ public class PantallaDificultad extends JFrame {
     }
 
     public static void main(String[] args) {
-        new PantallaDificultad(2);
+        new PantallaDificultad(2,3,0);
     }
 }

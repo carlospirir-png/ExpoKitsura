@@ -19,7 +19,7 @@ public abstract class HiddenFox extends JFrame {
 
     private Font fuente1, fuente2;
 
-    private JLabel vida1, vida2, vida3, titulo, tiempoTexto, tiempo, acierto, dificultad, categoria, mascota, imagenSombra;
+    private JLabel vida1, vida2, vida3, titulo, tiempoTexto, tiempo, acierto, puntos, dificultad, categoria, mascota, imagenSombra;
 
     JLabel fondoPapel;
 
@@ -194,13 +194,21 @@ public abstract class HiddenFox extends JFrame {
 
         fondo.add(btnRespuesta4);
 
-        //---------------- NIVEL ----------------
+        //---------------- ACIERTO ----------------
         acierto = new JLabel("Acierto: ***");
         acierto.setFont(fuente2.deriveFont(25f));
         acierto.setForeground(Color.BLACK);
         acierto.setBounds(80, 740, 350, 40);
 
         fondo.add(acierto);
+
+        // --------------- PUNTUACIÓN ---------------
+        puntos = new JLabel("Puntos: 0");
+        puntos.setFont(fuente2.deriveFont(25f));
+        puntos.setForeground(Color.BLACK);
+        puntos.setBounds(80, 690, 350, 40);
+
+        fondo.add(puntos);
 
         //---------------- DIFICULTAD ----------------
         dificultad = new JLabel("Dificultad: ***");
@@ -421,7 +429,7 @@ public abstract class HiddenFox extends JFrame {
     public void ModificarAcierto(int n) {
         //Rango del 1 al 5
         if (n >= 1 && n <= 5) {
-            acierto.setText("Nivel: " + n);
+            acierto.setText("Problema:  " + n + "/5");
         } else {
             System.out.println("Número de nivel inválido.");
         }
@@ -570,6 +578,8 @@ public abstract class HiddenFox extends JFrame {
 
     public void ModificarTiempo(int segundos) {
 
+        tiempo.setText(String.format("%02d", segundos));
+
         int minutos = segundos / 60;
         int segundosRestantes = segundos % 60;
 
@@ -602,9 +612,21 @@ public abstract class HiddenFox extends JFrame {
         }
         fondo.repaint();
 
-        if (vidas == 0) {
-            JOptionPane.showMessageDialog(this, "Has perdido.");
+        if (vidas <= 0) {
+
+            if (vidas == 0) {
+
+                JOptionPane.showMessageDialog(this, "Has perdido.");
+                dispose(); // Cierra la pantalla que se está presentando
+                //new HaPerdido();
+                return;
+            }
         }
+
+    }
+
+    public void ActualizarPuntos(int puntosObtenidos) {
+        puntos.setText("Puntos: " + puntosObtenidos);
     }
 
     //------------------DESHABILITARLOS --------------------------
@@ -619,5 +641,4 @@ public abstract class HiddenFox extends JFrame {
 
     //----------------  AYUDA ------------------------
     public abstract void ayuda();
-
 }
