@@ -18,7 +18,7 @@ public class HiddenFox extends JFrame {
 
     private Font fuente1, fuente2;
 
-    private JLabel vida1, vida2, vida3, titulo, tiempoTexto, tiempo, acierto, dificultad, categoria, mascota, imagenSombra;
+    private JLabel vida1, vida2, vida3, titulo, tiempoTexto, tiempo, acierto, puntos, dificultad, categoria, mascota, imagenSombra;
 
     JLabel fondoPapel;
 
@@ -193,13 +193,21 @@ public class HiddenFox extends JFrame {
 
         fondo.add(btnRespuesta4);
 
-        //---------------- NIVEL ----------------
+        //---------------- ACIERTO ----------------
         acierto = new JLabel("Acierto: ***");
         acierto.setFont(fuente2.deriveFont(25f));
         acierto.setForeground(Color.BLACK);
         acierto.setBounds(80, 740, 350, 40);
 
         fondo.add(acierto);
+
+        // --------------- PUNTUACIÓN ---------------
+        puntos = new JLabel("Puntos: 0");
+        puntos.setFont(fuente2.deriveFont(25f));
+        puntos.setForeground(Color.BLACK);
+        puntos.setBounds(80, 690, 350, 40);
+
+        fondo.add(puntos);
 
         //---------------- DIFICULTAD ----------------
         dificultad = new JLabel("Dificultad: ***");
@@ -420,7 +428,7 @@ public class HiddenFox extends JFrame {
     public void ModificarAcierto(int n) {
         //Rango del 1 al 5
         if (n >= 1 && n <= 5) {
-            acierto.setText("Nivel: " + n);
+            acierto.setText("Problema:  " + n + "/5");
         } else {
             System.out.println("Número de nivel inválido.");
         }
@@ -566,12 +574,12 @@ public class HiddenFox extends JFrame {
                 JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-public void ModificarTiempo(int segundos) {
 
-    tiempo.setText(String.format("%02d", segundos));
+    public void ModificarTiempo(int segundos) {
 
-}
+        tiempo.setText(String.format("%02d", segundos));
+
+    }
 
     public void respuestaSeleccionada(JButton boton) {
         // Se implementará en HiddenFox_Codigo
@@ -595,22 +603,27 @@ public void ModificarTiempo(int segundos) {
             }
         }
         fondo.repaint();
-        
-        if (vidas == 0) {
+
+        if (vidas <= 0) {
             JOptionPane.showMessageDialog(this, "Has perdido.");
+            dispose(); // Cierra la pantalla que se está presentando
+            new HaPerdido();
+            return;
         }
     }
-    
+
+    public void ActualizarPuntos(int puntosObtenidos) {
+        puntos.setText("Puntos: " + puntosObtenidos);
+    }
+
     //------------------DESHABILITARLOS --------------------------
     public void HabilitarBotones(boolean estado) {
 
-    btnRespuesta1.setEnabled(estado);
-    btnRespuesta2.setEnabled(estado);
-    btnRespuesta3.setEnabled(estado);
-    btnRespuesta4.setEnabled(estado);
+        btnRespuesta1.setEnabled(estado);
+        btnRespuesta2.setEnabled(estado);
+        btnRespuesta3.setEnabled(estado);
+        btnRespuesta4.setEnabled(estado);
 
-}
-    
-   
+    }
 
 }

@@ -11,9 +11,14 @@ public class HiddenFox_Codigo extends HiddenFox {
     private int[] preguntasPartida = new int[5];
     //La pregunta en que se encuentra automáticamente
     private int preguntaActual = 0;
-    private int vidas = 3;
+    // Las vidas por defecto son 3 para el jugador
+    private int vidas;
+
+    // Nivel actual y final de la categoria
     private int nivelActual;
     private int nivelFinal;
+    // Variable que almacena los puntos obtenidos
+    private int puntos = 0;
     /**
      * Segundos que quedan en el turno actual.
      */
@@ -24,8 +29,10 @@ public class HiddenFox_Codigo extends HiddenFox {
     private Timer countdown;
 
     //---------------- CONSTRUCTOR ----------------
-    public HiddenFox_Codigo(int nivel) {
-        nivelActual = nivel;
+    public HiddenFox_Codigo(int nivel, int vidas, int puntos) {
+        this.nivelActual = nivel;
+        this.vidas = vidas;
+        this.puntos = puntos;
 
         if (nivelActual >= 1 && nivelActual <= 3) {
             nivelFinal = 3;
@@ -43,6 +50,11 @@ public class HiddenFox_Codigo extends HiddenFox {
 
     }
 
+    // Segundo contructor que indica cuando el jugador inicia una categoria desde el menu
+    public HiddenFox_Codigo(int nivel) {
+        this(nivel, 3, 0);
+    }
+
     //------------- SIGUIENTE PREGUNTA ------------
     public void SiguientePregunta() {
         System.out.println("Comparando: " + nivelActual + " < " + nivelFinal);
@@ -55,7 +67,7 @@ public class HiddenFox_Codigo extends HiddenFox {
 
                 dispose();
 
-                new PantallaDificultad(nivelActual + 1);
+                new PantallaDificultad(nivelActual + 1,vidas,puntos);
 
             } else {
 
@@ -73,9 +85,11 @@ public class HiddenFox_Codigo extends HiddenFox {
     //----------- PARTIDA -------------------
     public void Partida(int id_nivel) {
         preguntaActual = 0;
-        vidas = 3;
         GenerarPartida(id_nivel);
         ConfiguracionNivel(id_nivel);
+        // Metodo que realiza el aumento o disminución de puntos
+        ActualizarPuntos(puntos);
+        ModificarCorazones(vidas);
         SiguientePregunta();
     }
 
@@ -222,26 +236,40 @@ public class HiddenFox_Codigo extends HiddenFox {
                 = (Boolean) boton.getClientProperty("correcta");
 
         if (correcta) {
+            //suma puntos por responder correctamente
+            puntos += 100;
+            ActualizarPuntos(puntos);
 
             // Revela la imagen
             CargarImagen(
                     preguntasPartida[preguntaActual],
                     true);
-
+            Esperar();
         } else {
 
             // Pierde una vida
             vidas--;
 
+            // Resta los puntos (evitando números negativos)
+            if (puntos >= 5) {
+                puntos -= 5;
+            } else {
+                puntos = 0;
+            }
+
+            ActualizarPuntos(puntos);
             ModificarCorazones(vidas);
 
+            // Si ya no quedan vidas, termina la partida
+            if (vidas <= 0) {
+                return;
+            }
+            Esperar();
         }
-
-        Esperar();
     }
 
     public static void main(String[] args) {
-        new HiddenFox_Codigo(1);
+        new HiddenFox_Codigo(1, 3, 0);
     }
 
 }
