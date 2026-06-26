@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 
@@ -9,7 +10,9 @@ public class Victoria extends JFrame {
     private Font fuente1;
     private Font fuente2;
     
-    public Victoria() {
+    private JButton btnVolver;
+    
+    public Victoria(ActionListener accion) {
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -33,7 +36,15 @@ public class Victoria extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
         fondo.setLayout(null);
+        
+        
         crearComponentes();
+        
+        //--------------- VOLVER --------------
+        btnVolver.addActionListener(e -> {
+            dispose();          // Cierra esta ventana
+            accion.actionPerformed(e); // Ejecuta la acción que te pasaron
+        });
         setVisible(true);
     }
     
@@ -82,7 +93,7 @@ public class Victoria extends JFrame {
             fondo.add(fotoPerfil); 
         
         //---------------- BOTON VOLVER  ----------------
-        JButton btnVolver = new JButton("Volver");
+        btnVolver = new JButton("Volver");
         btnVolver.setFont(fuente1.deriveFont(25f));
         btnVolver.setBounds(1320, 710, 200, 50);
         btnVolver.addActionListener(e -> dispose());
@@ -90,7 +101,7 @@ public class Victoria extends JFrame {
     }
     
     public static void main(String[] args) {
-        new Victoria();
+        new Victoria(e -> System.out.println("Volver"));
     }
 }
 

@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 
@@ -9,7 +10,9 @@ public class VictoriaPerfecta extends JFrame {
     private Font fuente1;
     private Font fuente2;
     
-    public VictoriaPerfecta() {
+    private JButton btnVolver;
+    
+    public VictoriaPerfecta(ActionListener accion) {
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -34,6 +37,12 @@ public class VictoriaPerfecta extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
         fondo.setLayout(null);
         crearComponentes();
+        
+        //--------------- VOLVER --------------
+        btnVolver.addActionListener(e -> {
+            dispose();          // Cierra esta ventana
+            accion.actionPerformed(e); // Ejecuta la acción que te pasaron
+        });
         setVisible(true);
     }
     
@@ -75,7 +84,7 @@ public class VictoriaPerfecta extends JFrame {
         fondo.add(fotoPerfil); 
         
         //---------------- BOTON VOLVER  ----------------
-        JButton btnVolver = new JButton("Volver");
+        btnVolver = new JButton("Volver");
         btnVolver.setFont(fuente1.deriveFont(25f));
         btnVolver.setForeground(Color.BLACK);
         btnVolver.setBounds(1225, 790, 200, 50);
@@ -83,6 +92,6 @@ public class VictoriaPerfecta extends JFrame {
         fondo.add(btnVolver);
     }
     public static void main(String[] args) {
-        new VictoriaPerfecta();
+        new VictoriaPerfecta(e -> System.out.println("Volver"));
     }
 }
