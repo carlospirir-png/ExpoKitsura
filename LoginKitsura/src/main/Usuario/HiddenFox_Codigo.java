@@ -24,6 +24,8 @@ public class HiddenFox_Codigo extends HiddenFox {
     private int segundosRestantes;
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
+    private boolean TipoPista; //true texto | false audio
+    int penalizacion;
 
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos) {
@@ -269,21 +271,36 @@ public class HiddenFox_Codigo extends HiddenFox {
 
     @Override
     public void ayuda() {
+        Random random = new Random();
+        boolean esTexto = random.nextBoolean();
 
+        penalizacion = ObtenerPenalizacionPista(
+                preguntasPartida[preguntaActual],
+                esTexto);
+
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "Si utilizas una pista perderás " + penalizacion + " puntos.\n\n¿Deseas continuar?",
+                "Usar pista",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        // Si el usuario presionó "No" o cerró la ventana
+        if (opcion != JOptionPane.YES_OPTION) {
+            return;
+        }
         pausarPartida();
 
-        Random random = new Random();
+        RestarPuntos(penalizacion);
 
         JFrame ventana;
 
-        if (random.nextBoolean()) {
-            ventana = new PistasAudio(
-                    ObtenerRutaAudio(preguntasPartida[preguntaActual])
-            );
-        } else {
+        if (esTexto) {
             ventana = new PistasTexto(
-                    ObtenerPista(preguntasPartida[preguntaActual])
-            );
+                    ObtenerPista(preguntasPartida[preguntaActual]));
+        } else {
+            ventana = new PistasAudio(
+                    ObtenerRutaAudio(preguntasPartida[preguntaActual]));
         }
 
         ventana.addWindowListener(new WindowAdapter() {
@@ -306,12 +323,13 @@ public class HiddenFox_Codigo extends HiddenFox {
 
     //-------------- PISTAS TEXTO --------------
     private String ObtenerPista(int id_pregunta) {
+        TipoPista = true;
 
         String sql
-                = "SELECT contenido " +
-        "FROM Ayuda " +
-        "WHERE id_pregunta = ? " +
-        "AND tipo = 'texto'";
+                = "SELECT contenido "
+                + "FROM Ayuda "
+                + "WHERE id_pregunta = ? "
+                + "AND tipo = 'texto'";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -332,11 +350,11 @@ public class HiddenFox_Codigo extends HiddenFox {
 
     //------------------ PISTAS AUDIO -------------
     private String ObtenerRutaAudio(int id_pregunta) {
-
-        String sql = "SELECT audio " +
-        "FROM Ayuda " +
-        "WHERE id_pregunta = ? " +
-        "AND tipo = 'audio'";
+        TipoPista = false;
+        String sql = "SELECT audio "
+                + "FROM Ayuda "
+                + "WHERE id_pregunta = ? "
+                + "AND tipo = 'audio'";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -353,5 +371,50 @@ public class HiddenFox_Codigo extends HiddenFox {
         }
 
         return null;
+    }
+
+    //--------------- PUNTOS ------------------
+    private void RestarPuntos(int penalizacion) {
+
+        puntos -= penalizacion;
+
+        if (puntos < 0) {
+            puntos = 0;
+        }
+
+        ActualizarPuntos(puntos);
+    }
+
+    //TipoPista | true = texto  | false = audio.
+    private int ObtenerPenalizacionPista(int id_pregunta, boolean TipoPista) {
+        String pista;
+        if (TipoPista) {
+            pista = "texto";
+        } else {
+            pista = "audio";
+        }
+
+        String sql
+                = "SELECT penalizacion_puntos "
+                + "FROM Ayuda "
+                + "WHERE id_pregunta = ? "
+                + "AND tipo = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id_pregunta);
+            ps.setString(2, pista);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("penalizacion_puntos");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 50; // valor por defecto
     }
 }

@@ -6,7 +6,6 @@ import javax.swing.*; //Se importa java swing
 import java.net.URL; //Se importa URL
 import main.conexion.Conexion; //Se importa Conexion
 import java.sql.*; //Se importa el SQL
-import java.util.Random;
 
 public abstract class HiddenFox extends JFrame {
 
