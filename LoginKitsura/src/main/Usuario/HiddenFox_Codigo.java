@@ -20,16 +20,21 @@ public class HiddenFox_Codigo extends HiddenFox {
     private int nivelFinal;
     // Variable que almacena los puntos obtenidos
     private int puntos = 0;
+    // Indica si el jugador a utilizado alguna pista durante la partida
+    private boolean usoPista = false;
+    //Puntaje máximo posible de la categoria -> 5 preguntas por nivel, 3 niveles, 100 puntos por pregunta = 1500 pts
+    private final int puntajeMaximo = 1500;
     /*Segundos que quedan en el turno actual.*/
     private int segundosRestantes;
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
 
     //---------------- CONSTRUCTOR ----------------
-    public HiddenFox_Codigo(int nivel, int vidas, int puntos) {
+    public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista) {
         this.nivelActual = nivel;
         this.vidas = vidas;
         this.puntos = puntos;
+        this.usoPista = usoPista;
 
         if (nivelActual >= 1 && nivelActual <= 3) {
             nivelFinal = 3;
@@ -48,7 +53,7 @@ public class HiddenFox_Codigo extends HiddenFox {
 
     // Segundo contructor que indica cuando el jugador inicia una categoria desde el menu
     public HiddenFox_Codigo(int nivel) {
-        this(nivel, 3, 0);
+        this(nivel, 3, 0, false);
     }
 
     //------------- SIGUIENTE PREGUNTA ------------
@@ -63,17 +68,21 @@ public class HiddenFox_Codigo extends HiddenFox {
 
                 dispose();
 
-                new PantallaDificultad(nivelActual + 1, vidas, puntos);
+                new PantallaDificultad(nivelActual + 1, vidas, puntos, usoPista);
 
             } else {
 
                 dispose();
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "¡Has completado la categoría!");
-
-                new MenuHiddenFox();
+                if (vidas == 3 && puntos == puntajeMaximo && !usoPista) {
+                    new VictoriaPerfecta(e -> {
+                        new MenuHiddenFox().setVisible(true);
+                    });
+                } else {
+                    new Victoria(e -> {
+                        new MenuHiddenFox().setVisible(true);
+                    });
+                }
             }
         }
     }
@@ -271,6 +280,8 @@ public class HiddenFox_Codigo extends HiddenFox {
     public void ayuda() {
 
         pausarPartida();
+        // Aunque el usuario utilice una pista durante toda la partida, afectará su victoria perfecta
+        usoPista = true;
 
         Random random = new Random();
 
@@ -308,10 +319,10 @@ public class HiddenFox_Codigo extends HiddenFox {
     private String ObtenerPista(int id_pregunta) {
 
         String sql
-                = "SELECT contenido " +
-        "FROM Ayuda " +
-        "WHERE id_pregunta = ? " +
-        "AND tipo = 'texto'";
+                = "SELECT contenido "
+                + "FROM Ayuda "
+                + "WHERE id_pregunta = ? "
+                + "AND tipo = 'texto'";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -333,10 +344,10 @@ public class HiddenFox_Codigo extends HiddenFox {
     //------------------ PISTAS AUDIO -------------
     private String ObtenerRutaAudio(int id_pregunta) {
 
-        String sql = "SELECT audio " +
-        "FROM Ayuda " +
-        "WHERE id_pregunta = ? " +
-        "AND tipo = 'audio'";
+        String sql = "SELECT audio "
+                + "FROM Ayuda "
+                + "WHERE id_pregunta = ? "
+                + "AND tipo = 'audio'";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 

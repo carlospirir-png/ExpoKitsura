@@ -640,7 +640,6 @@ public abstract class HiddenFox extends JFrame {
         btnRespuesta4.setEnabled(estado);
 
     }
-
     //----------------  AYUDA ------------------------
     public abstract void ayuda();
 }
