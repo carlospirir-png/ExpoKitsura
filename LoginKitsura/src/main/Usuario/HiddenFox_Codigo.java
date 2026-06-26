@@ -266,6 +266,7 @@ public class HiddenFox_Codigo extends HiddenFox {
     }
 //-------------- AYUDA Y PISTAS-------------------
     // --------------- ABRIR VENTANA ---------------
+
     @Override
     public void ayuda() {
 
@@ -276,7 +277,9 @@ public class HiddenFox_Codigo extends HiddenFox {
         JFrame ventana;
 
         if (random.nextBoolean()) {
-            ventana = new PistasAudio();
+            ventana = new PistasAudio(
+                    ObtenerRutaAudio(preguntasPartida[preguntaActual])
+            );
         } else {
             ventana = new PistasTexto(
                     ObtenerPista(preguntasPartida[preguntaActual])
@@ -302,19 +305,22 @@ public class HiddenFox_Codigo extends HiddenFox {
     }
 
     //-------------- PISTAS TEXTO --------------
-    private String ObtenerPista(int idPregunta) {
+    private String ObtenerPista(int id_pregunta) {
 
         String sql
-                = "SELECT pista FROM Pregunta WHERE id_pregunta = ?";
+                = "SELECT contenido " +
+        "FROM Ayuda " +
+        "WHERE id_pregunta = ? " +
+        "AND tipo = 'texto'";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, idPregunta);
+            ps.setInt(1, id_pregunta);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return rs.getString("pista");
+                return rs.getString("contenido");
             }
 
         } catch (SQLException e) {
@@ -322,5 +328,30 @@ public class HiddenFox_Codigo extends HiddenFox {
         }
 
         return "No hay pista disponible.";
+    }
+
+    //------------------ PISTAS AUDIO -------------
+    private String ObtenerRutaAudio(int id_pregunta) {
+
+        String sql = "SELECT audio " +
+        "FROM Ayuda " +
+        "WHERE id_pregunta = ? " +
+        "AND tipo = 'audio'";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id_pregunta);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("audio");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
