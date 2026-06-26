@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import main.conexion.Conexion;
 import java.sql.*;
@@ -73,7 +74,6 @@ public class HiddenFox_Codigo extends HiddenFox {
     //----------- PARTIDA -------------------
     public void Partida(int id_nivel) {
         preguntaActual = 0;
-        vidas = 3;
         GenerarPartida(id_nivel);
         ConfiguracionNivel(id_nivel);
         SiguientePregunta();
@@ -121,9 +121,7 @@ public class HiddenFox_Codigo extends HiddenFox {
 
         ModificarAcierto(preguntaActual + 1);
 
-        int tiempoLimite = ObtenerTiempoLimite(id_pregunta);
-
-        iniciarTiempo(tiempoLimite);
+        iniciarTiempo(ObtenerTiempoLimite(id_pregunta));
     }
 
     // -------------- MODIFICAR ------------
@@ -170,13 +168,16 @@ public class HiddenFox_Codigo extends HiddenFox {
 
         if (countdown != null) {
             countdown.stop();
+            countdown = null;
         }
 
         HabilitarBotones(false);
 
         dispose();
 
-        new SeAcaboTiempo();
+        new SeAcaboTiempo(e -> {
+            new MenuHiddenFox().setVisible(true);
+        });
     }
 
     private int ObtenerTiempoLimite(int idPregunta) {
@@ -239,9 +240,33 @@ public class HiddenFox_Codigo extends HiddenFox {
 
         Esperar();
     }
+//-------------- AYUDA -------------------
 
-    public static void main(String[] args) {
-        new HiddenFox_Codigo(1);
+    @Override
+    public JFrame ayuda() {
+
+        pausarPartida();
+
+        JFrame ventana = super.ayuda();
+
+        ventana.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                reanudarPartida();
+            }
+        });
+        return ventana;
+    }
+
+    public void pausarPartida() {
+        countdown.stop();
+        HabilitarBotones(false);
+    }
+
+    public void reanudarPartida() {
+        countdown.start();
+        HabilitarBotones(true);
     }
 
 }

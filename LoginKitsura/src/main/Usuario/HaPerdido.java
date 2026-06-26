@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 
@@ -9,7 +10,11 @@ public class HaPerdido extends JFrame {
     private Font fuente1;
     private Font fuente2;
     
-    public HaPerdido() {
+    private JButton btnVolver;
+    
+    //Debe devolver al menú respectivo del minijuego.
+    //En el parámetro deben colocar de colocar la acción para que abra el menú del minijuego.
+    public HaPerdido(ActionListener accion) {
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -36,6 +41,13 @@ public class HaPerdido extends JFrame {
         fondo.setLayout(null);
         
         crearComponentes();
+        
+        //--------------- VOLVER --------------
+        btnVolver.addActionListener(e -> {
+            dispose();          // Cierra esta ventana
+            accion.actionPerformed(e); // Ejecuta la acción que te pasaron
+        });
+        
         setVisible(true);
     }
     
@@ -62,14 +74,14 @@ public class HaPerdido extends JFrame {
         fondo.add(lblCita);
 
         JLabel mascotaCorazones = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroLupa.png")); 
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/DERROTA-por-vidas.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         mascotaCorazones.setIcon(new ImageIcon(imgEscalada));
         mascotaCorazones.setBounds(150, 250, 600, 600);
         fondo.add(mascotaCorazones);
 
         //---------------- BOTON VOLVER ----------------
-        JButton btnVolver = new JButton("Volver");
+        btnVolver = new JButton("Volver");
         btnVolver.setFont(fuente1.deriveFont(25f));
         btnVolver.setForeground(Color.BLACK);
         btnVolver.setBounds(1225, 770, 200, 50);
@@ -78,6 +90,6 @@ public class HaPerdido extends JFrame {
     }
     
     public static void main(String[] args) {
-        new HaPerdido();
+        new HaPerdido(e -> System.out.println("Volver"));
     }
 }

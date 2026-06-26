@@ -6,6 +6,7 @@ import javax.swing.*; //Se importa java swing
 import java.net.URL; //Se importa URL
 import main.conexion.Conexion; //Se importa Conexion
 import java.sql.*; //Se importa el SQL
+import java.util.Random;
 
 public class HiddenFox extends JFrame {
 
@@ -126,7 +127,7 @@ public class HiddenFox extends JFrame {
         btnAyuda = new JButton("¿Necesitas ayuda?");
         btnAyuda.setFont(fuente2.deriveFont(18f));
         btnAyuda.setBounds(60, 120, 280, 55);
-
+        btnAyuda.addActionListener(e -> ayuda());
         fondo.add(btnAyuda);
 
         //---------------- TITULO ----------------
@@ -566,12 +567,17 @@ public class HiddenFox extends JFrame {
                 JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-public void ModificarTiempo(int segundos) {
 
-    tiempo.setText(String.format("%02d", segundos));
+    public void ModificarTiempo(int segundos) {
 
-}
+        int minutos = segundos / 60;
+        int segundosRestantes = segundos % 60;
+
+        tiempo.setText(
+                String.format("%02d:%02d", minutos, segundosRestantes)
+        );
+
+    }
 
     public void respuestaSeleccionada(JButton boton) {
         // Se implementará en HiddenFox_Codigo
@@ -595,22 +601,38 @@ public void ModificarTiempo(int segundos) {
             }
         }
         fondo.repaint();
-        
+
         if (vidas == 0) {
             JOptionPane.showMessageDialog(this, "Has perdido.");
         }
     }
-    
+
     //------------------DESHABILITARLOS --------------------------
     public void HabilitarBotones(boolean estado) {
 
-    btnRespuesta1.setEnabled(estado);
-    btnRespuesta2.setEnabled(estado);
-    btnRespuesta3.setEnabled(estado);
-    btnRespuesta4.setEnabled(estado);
+        btnRespuesta1.setEnabled(estado);
+        btnRespuesta2.setEnabled(estado);
+        btnRespuesta3.setEnabled(estado);
+        btnRespuesta4.setEnabled(estado);
 
+    }
+
+    //----------------  AYUDA ------------------------
+   public JFrame ayuda() {
+
+    Random random = new Random();
+
+    JFrame ventana;
+
+    if (random.nextBoolean()) {
+        ventana = new PistasAudio();
+    } else {
+        ventana = new PistasTexto();
+    }
+
+    System.out.println("Botón presionado");
+
+    return ventana;
 }
-    
-   
 
 }
