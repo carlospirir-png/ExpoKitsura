@@ -36,6 +36,7 @@ public class MenuMinijuegosC extends JFrame{
     public MenuMinijuegosC(String titulo, String categoria1, String categoria2, String categoria3) {
         try {
             // LettersForLearners
+            
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));

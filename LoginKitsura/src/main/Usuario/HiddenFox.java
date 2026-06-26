@@ -559,6 +559,12 @@ public class HiddenFox extends JFrame {
                 JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+public void ModificarTiempo(int segundos) {
+
+    tiempo.setText(String.format("%02d", segundos));
+
+}
 
     public void respuestaSeleccionada(JButton boton) {
         // Se implementará en HiddenFox_Codigo
@@ -590,5 +596,17 @@ public class HiddenFox extends JFrame {
             JOptionPane.showMessageDialog(null, "Has perdido.");
         }
     }
+    
+    //------------------DESHABILITARLOS --------------------------
+    public void HabilitarBotones(boolean estado) {
+
+    btnRespuesta1.setEnabled(estado);
+    btnRespuesta2.setEnabled(estado);
+    btnRespuesta3.setEnabled(estado);
+    btnRespuesta4.setEnabled(estado);
+
+}
+    
+   
 
 }
