@@ -94,8 +94,4 @@ public class PistasTexto extends JFrame {
         mascotaLector.setBounds(335, 140, 300, 300);
         fondo.add(mascotaLector);
     }
-
-    public static void main(String[] args) {
-        new PistasTexto("pista");
-    }
 }
