@@ -8,7 +8,7 @@ import main.conexion.Conexion; //Se importa Conexion
 import java.sql.*; //Se importa el SQL
 import java.util.Random;
 
-public class HiddenFox extends JFrame {
+public abstract class HiddenFox extends JFrame {
 
     //Atributos
     Connection con = new Conexion().getConnection();
@@ -618,21 +618,6 @@ public class HiddenFox extends JFrame {
     }
 
     //----------------  AYUDA ------------------------
-   public JFrame ayuda() {
-
-    Random random = new Random();
-
-    JFrame ventana;
-
-    if (random.nextBoolean()) {
-        ventana = new PistasAudio();
-    } else {
-        ventana = new PistasTexto();
-    }
-
-    System.out.println("Botón presionado");
-
-    return ventana;
-}
+    public abstract void ayuda();
 
 }

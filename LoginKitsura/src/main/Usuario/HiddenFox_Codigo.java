@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import main.conexion.Conexion;
 import java.sql.*;
+import java.util.Random;
 
 public class HiddenFox_Codigo extends HiddenFox {
 
@@ -15,6 +16,7 @@ public class HiddenFox_Codigo extends HiddenFox {
     private int vidas = 3;
     private int nivelActual;
     private int nivelFinal;
+
     /**
      * Segundos que quedan en el turno actual.
      */
@@ -240,23 +242,32 @@ public class HiddenFox_Codigo extends HiddenFox {
 
         Esperar();
     }
-//-------------- AYUDA -------------------
+//-------------- AYUDA Y PISTAS-------------------
 
+    // --------------- ABRIR VENTANA ---------------
     @Override
-    public JFrame ayuda() {
+    public void ayuda() {
 
         pausarPartida();
 
-        JFrame ventana = super.ayuda();
+        Random random = new Random();
+
+        JFrame ventana;
+
+        if (random.nextBoolean()) {
+            ventana = new PistasAudio();
+        } else {
+            ventana = new PistasTexto(
+                    ObtenerPista(preguntasPartida[preguntaActual])
+            );
+        }
 
         ventana.addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosed(WindowEvent e) {
                 reanudarPartida();
             }
         });
-        return ventana;
     }
 
     public void pausarPartida() {
@@ -269,4 +280,26 @@ public class HiddenFox_Codigo extends HiddenFox {
         HabilitarBotones(true);
     }
 
+    //-------------- PISTAS TEXTO --------------
+    private String ObtenerPista(int idPregunta) {
+
+        String sql
+                = "SELECT pista FROM Pregunta WHERE id_pregunta = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idPregunta);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("pista");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return "No hay pista disponible.";
+    }
 }
