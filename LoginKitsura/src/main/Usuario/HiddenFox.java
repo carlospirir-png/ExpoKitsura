@@ -14,7 +14,7 @@ public class HiddenFox extends JFrame {
 
     private final JPanel fondo;
 
-    ImageIcon fondoPapelIcon, iconoSombra;
+    ImageIcon fondoPapelIcon, iconoSombra, corazonFinal, corazonRotoFinal;
 
     private Font fuente1, fuente2;
 
@@ -79,10 +79,17 @@ public class HiddenFox extends JFrame {
             ImageIcon corazonIcon = new ImageIcon(
                     getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"));
 
+            ImageIcon rotoIcon = new ImageIcon(
+                    getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/corazon-roto.png"));
+
             Image corazonEscalado = corazonIcon.getImage().getScaledInstance(
                     60, 60, Image.SCALE_SMOOTH);
+            Image corazonRotoEscalado = rotoIcon.getImage().getScaledInstance(
+                    60, 60, Image.SCALE_SMOOTH);
 
-            ImageIcon corazonFinal = new ImageIcon(corazonEscalado);
+            corazonFinal = new ImageIcon(corazonEscalado);
+
+            corazonRotoFinal = new ImageIcon(corazonRotoEscalado);
 
             vida1 = new JLabel(corazonFinal);
             vida2 = new JLabel(corazonFinal);
@@ -154,7 +161,7 @@ public class HiddenFox extends JFrame {
         btnRespuesta1 = new JButton("RESPUESTA 1");
         btnRespuesta1.setFont(fuente2.deriveFont(20f));
         btnRespuesta1.setBounds(500, 730, 300, 75);
-        
+
         btnRespuesta1.addActionListener(e -> respuestaSeleccionada(btnRespuesta1));
 
         fondo.add(btnRespuesta1);
@@ -163,7 +170,7 @@ public class HiddenFox extends JFrame {
         btnRespuesta2 = new JButton("RESPUESTA 2");
         btnRespuesta2.setFont(fuente2.deriveFont(20f));
         btnRespuesta2.setBounds(1020, 730, 300, 75);
-        
+
         btnRespuesta2.addActionListener(e -> respuestaSeleccionada(btnRespuesta2));
 
         fondo.add(btnRespuesta2);
@@ -172,7 +179,7 @@ public class HiddenFox extends JFrame {
         btnRespuesta3 = new JButton("RESPUESTA 3");
         btnRespuesta3.setFont(fuente2.deriveFont(20f));
         btnRespuesta3.setBounds(500, 840, 300, 75);
-        
+
         btnRespuesta3.addActionListener(e -> respuestaSeleccionada(btnRespuesta3));
 
         fondo.add(btnRespuesta3);
@@ -181,7 +188,7 @@ public class HiddenFox extends JFrame {
         btnRespuesta4 = new JButton("RESPUESTA 4");
         btnRespuesta4.setFont(fuente2.deriveFont(20f));
         btnRespuesta4.setBounds(1020, 840, 300, 75);
-        
+
         btnRespuesta4.addActionListener(e -> respuestaSeleccionada(btnRespuesta4));
 
         fondo.add(btnRespuesta4);
@@ -564,11 +571,8 @@ public class HiddenFox extends JFrame {
         // Se implementará en HiddenFox_Codigo
     }
 
-    
     //-------------------- CORAZONES -----------------
     public void ModificarCorazones(int vidas) {
-        
-        
 
         JLabel[] corazones = {
             vida1,
@@ -579,15 +583,15 @@ public class HiddenFox extends JFrame {
         for (int i = 0; i < corazones.length; i++) {
 
             if (i < vidas) {
-                //corazones[i].setIcon(lleno);
+                corazones[i].setIcon(corazonFinal);
             } else {
-                //corazones[i].setIcon(roto);
+                corazones[i].setIcon(corazonRotoFinal);
             }
-
         }
-
+        fondo.repaint();
+        
         if (vidas == 0) {
-            JOptionPane.showMessageDialog(null, "Has perdido.");
+            JOptionPane.showMessageDialog(this, "Has perdido.");
         }
     }
 
