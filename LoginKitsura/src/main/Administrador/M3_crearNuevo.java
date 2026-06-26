@@ -3,13 +3,15 @@ package main.Administrador;
 import java.awt.*;
 import java.awt.Image;
 import javax.swing.*;
+import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanelSemi;
 
 public class M3_crearNuevo extends JFrame {
 
     private FondoPanelSemi fondo;
     private FondoPanelSemi panelSemi;
-
+    private Font fuente1;
+    private Font fuente2;
     private JLabel lblTitulo;
 
     private JLabel lblPregunta;
@@ -33,11 +35,26 @@ public class M3_crearNuevo extends JFrame {
     private JLabel lblIncorrecto5;
 
     private JButton btnSiguiente;
+    private DecoracionBotones btnSalir;
 
     private JLabel lblMascota;
 
     public M3_crearNuevo() {
-
+        try{
+            // LettersForLearners
+            fuente1 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+            
+        } catch (Exception e){
+            e.printStackTrace();            
+            fuente1 = new Font("Arial", Font.PLAIN,20);
+            fuente2 = new Font("Arial", Font.PLAIN,20);
+        }
         fondo = new FondoPanelSemi("/Multimedia/Minijuegos/Minijuego_3/Fondo.png");
         setContentPane(fondo);
 
@@ -63,19 +80,20 @@ public class M3_crearNuevo extends JFrame {
         fondo.add(panelSemi);
 
         lblTitulo = new JLabel("CREAR NUEVO (MINIJUEGO 3)");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 46));
+        lblTitulo.setFont(fuente2.deriveFont(40f));
+        lblTitulo.setForeground(Color.decode("#447A9C"));
         lblTitulo.setBounds(40, 30, 900, 60);
 
         panelSemi.add(lblTitulo);
 
         lblPregunta = new JLabel("Ingrese la pregunta:");
-        lblPregunta.setFont(new Font("Arial", Font.PLAIN, 28));
+        lblPregunta.setFont(fuente2.deriveFont(28f));
         lblPregunta.setBounds(50, 110, 400, 40);
 
         panelSemi.add(lblPregunta);
 
         txtPregunta = new JTextArea();
-        txtPregunta.setFont(new Font("Arial", Font.PLAIN, 24));
+        txtPregunta.setFont(fuente1.deriveFont(30f));
         txtPregunta.setLineWrap(true);
         txtPregunta.setWrapStyleWord(true);
         txtPregunta.setBounds(50, 170, 1150, 280);
@@ -102,15 +120,14 @@ public class M3_crearNuevo extends JFrame {
         lblRespuestaCorrecta = new JLabel(
                 "Ingrese la respuesta correcta del nivel:");
 
-        lblRespuestaCorrecta.setFont(
-                new Font("Arial", Font.PLAIN, 24));
+        lblRespuestaCorrecta.setFont(fuente2.deriveFont(22f));
 
         lblRespuestaCorrecta.setBounds(70, 490, 500, 35);
 
         panelSemi.add(lblRespuestaCorrecta);
 
         txtCorrecta = new JTextField();
-        txtCorrecta.setFont(new Font("Arial", Font.PLAIN, 22));
+        txtCorrecta.setFont(fuente1.deriveFont(26f));
         txtCorrecta.setBounds(90, 550, 400, 55);
 
         panelSemi.add(txtCorrecta);
@@ -118,8 +135,7 @@ public class M3_crearNuevo extends JFrame {
         lblRespuestaIncorrecta = new JLabel(
                 "Ingrese las respuestas incorrectas del nivel:");
 
-        lblRespuestaIncorrecta.setFont(
-                new Font("Arial", Font.PLAIN, 24));
+        lblRespuestaIncorrecta.setFont(fuente2.deriveFont(22f));
 
         lblRespuestaIncorrecta.setBounds(620, 490, 550, 35);
 
@@ -141,7 +157,7 @@ public class M3_crearNuevo extends JFrame {
         panelSemi.add(lblIncorrecto);
 
         txtIncorrecta = new JTextField();
-        txtIncorrecta.setFont(new Font("Arial", Font.PLAIN, 22));
+        txtIncorrecta.setFont(fuente1.deriveFont(26f));
         txtIncorrecta.setBounds(700, 550, 420, 55);
 
         panelSemi.add(txtIncorrecta);
@@ -152,7 +168,7 @@ public class M3_crearNuevo extends JFrame {
         panelSemi.add(lblIncorrecto2);
 
         txtIncorrecta2 = new JTextField();
-        txtIncorrecta2.setFont(new Font("Arial", Font.PLAIN, 22));
+        txtIncorrecta2.setFont(fuente1.deriveFont(26f));
         txtIncorrecta2.setBounds(700, 620, 420, 55);
 
         panelSemi.add(txtIncorrecta2);
@@ -163,7 +179,7 @@ public class M3_crearNuevo extends JFrame {
         panelSemi.add(lblIncorrecto3);
 
         txtIncorrecta3 = new JTextField();
-        txtIncorrecta3.setFont(new Font("Arial", Font.PLAIN, 22));
+        txtIncorrecta3.setFont(fuente1.deriveFont(26f));
         txtIncorrecta3.setBounds(700, 690, 420, 55);
 
         panelSemi.add(txtIncorrecta3);
@@ -174,7 +190,7 @@ public class M3_crearNuevo extends JFrame {
         panelSemi.add(lblIncorrecto4);
 
         txtIncorrecta4 = new JTextField();
-        txtIncorrecta4.setFont(new Font("Arial", Font.PLAIN, 22));
+        txtIncorrecta4.setFont(fuente1.deriveFont(26f));
         txtIncorrecta4.setBounds(90, 620, 400, 55);
 
         panelSemi.add(txtIncorrecta4);
@@ -185,15 +201,16 @@ public class M3_crearNuevo extends JFrame {
         panelSemi.add(lblIncorrecto5);
 
         txtIncorrecta5 = new JTextField();
-        txtIncorrecta5.setFont(new Font("Arial", Font.PLAIN, 22));
+        txtIncorrecta5.setFont(fuente1.deriveFont(26f));
         txtIncorrecta5.setBounds(90, 690, 400, 55);
 
         panelSemi.add(txtIncorrecta5);
-
-        btnSiguiente = new JButton("SIGUIENTE");
-        btnSiguiente.setFont(new Font("Arial", Font.BOLD, 24));
+        
+        btnSiguiente = new DecoracionBotones("SIGUIENTE", "#FC767D", "#da4d58", "#da4d58");
+        btnSiguiente.setFont(fuente2.deriveFont(25f));
+        btnSiguiente.setForeground(Color.WHITE);
         btnSiguiente.setBounds(480, 780, 280, 55);
-
+        fondo.add(btnSiguiente);
         panelSemi.add(btnSiguiente);
 
         lblMascota = new JLabel();
@@ -212,6 +229,15 @@ public class M3_crearNuevo extends JFrame {
         lblMascota.setBounds(1250, 180, 700, 500);
 
         fondo.add(lblMascota);
+        
+        btnSalir = new DecoracionBotones("VOLVER");
+        btnSalir.setFont(fuente2.deriveFont(30f));
+        btnSalir.setForeground(Color.WHITE);
+        btnSalir.setBounds(1695, 950, 210, 45);
+        btnSalir.addActionListener(e -> dispose());
+        fondo.add(btnSalir);
     }
- 
+    public static void main(String[] args) {
+        new M3_crearNuevo();
+    }
 }
