@@ -15,10 +15,12 @@ public class PantallaDificultad extends JFrame {
     private JLabel lblContador;
     private JLabel lblAlerta;
     private JLabel lblFlecha;
+    private int nivel;
 
     private int tiempo = 3;
 
-    public PantallaDificultad() {
+    public PantallaDificultad(int nivel) {
+        this.nivel = nivel;
 
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
         setContentPane(fondo);
@@ -178,11 +180,22 @@ public class PantallaDificultad extends JFrame {
 
         lblContador.setText("");
 
+        Timer timer = new Timer(1500, e -> {
+
+            dispose();
+
+            new HiddenFox_Codigo(nivel);
+
+        });
+
+        timer.setRepeats(false);
+        timer.start();
+
         panelTexto.revalidate();
         panelTexto.repaint();
     }
 
     public static void main(String[] args) {
-        new PantallaDificultad();
+        new PantallaDificultad(2);
     }
 }
