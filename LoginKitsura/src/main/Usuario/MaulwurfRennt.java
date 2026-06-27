@@ -13,12 +13,15 @@ public class MaulwurfRennt extends JFrame {
             tiempoTexto, tiempo,
             nivel, dificultad, categoria,
             mascota,
-            tablero,
-            topoCasco, topoLentes,
-            cartelCasco, cartelLentes;
+            tablero;
 
     private JButton btnAyuda;
- 
+
+    private static final int MAX_TOPOS = 6;
+
+    private JLabel[] topos = new JLabel[MAX_TOPOS];
+    private JLabel[] carteles = new JLabel[MAX_TOPOS];
+
     public MaulwurfRennt() {
         try {
             fuente1 = Font.createFont(
@@ -90,12 +93,12 @@ public class MaulwurfRennt extends JFrame {
         // --------------- PANEL -----------------
         JPanel panelv = new JPanel();
         panelv.setBounds(60, 20, 200, 70);
-        panelv.setBackground(Color.WHITE);  
+        panelv.setBackground(Color.WHITE);
         panelv.add(vida1);
         panelv.add(vida2);
         panelv.add(vida3);
         fondo.add(panelv);
-        
+
         //---------------- AYUDA ----------------
         btnAyuda = new JButton("¿Necesitas ayuda?");
         btnAyuda.setFont(fuente2.deriveFont(18f));
@@ -133,8 +136,6 @@ public class MaulwurfRennt extends JFrame {
         try {
             ImageIcon tableroIcon = new ImageIcon(
                     getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Fondo.png"));
-
-            // Se aumentó la altura a 500 para mejorar la perspectiva de las filas
             Image tableroEscalado = tableroIcon.getImage().getScaledInstance(
                     1050, 500, Image.SCALE_SMOOTH);
 
@@ -146,63 +147,14 @@ public class MaulwurfRennt extends JFrame {
         }
 
         tablero.setLayout(null);
-        tablero.setBounds(420, 230, 1050, 500); 
+        tablero.setBounds(420, 230, 1050, 500);
         fondo.add(tablero);
 
-        //---------------- TOPO CASCO (SUPERIOR IZQUIERDO) ----------------
-        topoCasco = new JLabel();
-        try {
-            ImageIcon iconoCasco = new ImageIcon(
-                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png"));
+        tablero.setBounds(420, 230, 1050, 500);
 
-            Image imgCasco = iconoCasco.getImage().getScaledInstance(
-                    200, 280, Image.SCALE_SMOOTH);
-
-            topoCasco.setIcon(new ImageIcon(imgCasco));
-
-        } catch (Exception e) {
-            topoCasco.setText("TOPO");
-        }
-        topoCasco.setBounds(178, 0, 200, 280);
-
-        //---------------- CARTEL CASCO ----------------
-        cartelCasco = new JLabel("Respuesta", SwingConstants.CENTER);
-        cartelCasco.setOpaque(true);
-        cartelCasco.setBackground(new Color(150, 150, 150));
-        cartelCasco.setFont(fuente2.deriveFont(30f));
-        cartelCasco.setBounds(192, 160, 170, 90);
+        fondo.add(tablero);
+        crearTopos();
         
-        tablero.add(cartelCasco);
-        tablero.add(topoCasco);
-
-
-        //---------------- TOPO LENTES  ----------------
-        topoLentes = new JLabel();
-        try {
-            ImageIcon iconoLentes = new ImageIcon(
-                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png"));
-
-            Image imgLentes = iconoLentes.getImage().getScaledInstance(
-                    200, 275, Image.SCALE_SMOOTH);
-
-            topoLentes.setIcon(new ImageIcon(imgLentes));
-
-        } catch (Exception e) {
-            topoLentes.setText("TOPO");
-        }
-        topoLentes.setBounds(728, 140, 200, 275);
-
-        //---------------- CARTEL LENTES ----------------
-        cartelLentes = new JLabel("Respuesta", SwingConstants.CENTER);
-        cartelLentes.setOpaque(true);
-        cartelLentes.setBackground(new Color(150, 150, 150));
-        cartelLentes.setFont(fuente2.deriveFont(30f));
-        cartelLentes.setBounds(745, 300, 170, 90);
-
-        tablero.add(cartelLentes);
-        tablero.add(topoLentes);
-
-
         //---------------- NIVEL ----------------
         nivel = new JLabel("Nivel: ***");
         nivel.setFont(fuente2.deriveFont(25f));
@@ -245,8 +197,215 @@ public class MaulwurfRennt extends JFrame {
         mascota.setBounds(1450, 480, 450, 450);
         fondo.add(mascota);
     }
-    
-    public static void main(String[] args) {
-        new MaulwurfRennt();
+
+    private void crearTopos() {
+
+        int[][] posiciones = {
+            {180, 0},
+            {430, 0},
+            {680, 0},
+            {60, 180},
+            {310, 180},
+            {560, 180},
+        };
+
+        String[] imagenes = {
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png"
+
+        };
+
+        for (int i = 0; i < MAX_TOPOS; i++) {
+
+            topos[i] = new JLabel();
+
+            try {
+
+                ImageIcon icono = new ImageIcon(
+                        getClass().getResource(imagenes[i]));
+
+                Image img = icono.getImage().getScaledInstance(
+                        200,
+                        280,
+                        Image.SCALE_SMOOTH);
+
+                topos[i].setIcon(new ImageIcon(img));
+
+            } catch (Exception e) {
+
+                topos[i].setText("TOPO");
+
+            }
+
+            topos[i].setBounds(
+                    posiciones[i][0],
+                    posiciones[i][1],
+                    200,
+                    280);
+
+            carteles[i] = new JLabel(
+                    "",
+                    SwingConstants.CENTER);
+
+            carteles[i].setOpaque(true);
+
+            carteles[i].setBackground(new Color(150, 150, 150));
+
+            carteles[i].setFont(fuente2.deriveFont(24f));
+
+            carteles[i].setBounds(
+                    posiciones[i][0] + 15,
+                    posiciones[i][1] + 160,
+                    170,
+                    90);
+
+            tablero.add(carteles[i]);
+
+            tablero.add(topos[i]);
+
+        }
+
+        mostrarTopos(2);
+
+    }
+
+    public void mostrarTopos(int cantidad) {
+
+        for (int i = 0; i < MAX_TOPOS; i++) {
+
+            boolean mostrar = i < cantidad;
+
+            topos[i].setVisible(mostrar);
+
+            carteles[i].setVisible(mostrar);
+
+        }
+
+    }
+
+    public void colocarRespuesta(int indice, String respuesta) {
+
+        if (indice >= 0 && indice < MAX_TOPOS) {
+
+            carteles[indice].setText(respuesta);
+
+        }
+
+    }
+
+    public JLabel getTopo(int indice) {
+
+        return topos[indice];
+
+    }
+
+    public void actualizarTiempo(String texto) {
+
+        tiempo.setText(texto);
+
+    }
+
+    public void actualizarNivel(int n) {
+
+        nivel.setText("Nivel: " + n);
+
+    }
+
+    public void actualizarCategoria(String texto) {
+
+        categoria.setText("Categoría: " + texto);
+
+    }
+
+    public void actualizarVidas(int vidas) {
+
+        vida1.setVisible(vidas >= 1);
+
+        vida2.setVisible(vidas >= 2);
+
+        vida3.setVisible(vidas >= 3);
+
+    }
+
+    /**
+     * Actualiza el texto de la pregunta.
+     */
+    public void actualizarPregunta(String pregunta) {
+        titulo.setText("<html><center>" + pregunta + "</center></html>");
+    }
+
+    /**
+     * Actualiza la dificultad.
+     */
+    public void actualizarDificultad(String texto) {
+        dificultad.setText("Dificultad: " + texto);
+    }
+
+    /**
+     * Limpia los carteles de respuesta.
+     */
+    public void limpiarRespuestas() {
+
+        for (JLabel cartel : carteles) {
+            cartel.setText("");
+        }
+
+    }
+
+    /**
+     * Devuelve la cantidad de topos visibles.
+     */
+    public int getCantidadToposVisibles() {
+
+        int cantidad = 0;
+
+        for (JLabel topo : topos) {
+            if (topo.isVisible()) {
+                cantidad++;
+            }
+        }
+
+        return cantidad;
+    }
+
+    /**
+     * Deshabilita todos los topos.
+     */
+    public void bloquearTopos() {
+
+        for (JLabel topo : topos) {
+            topo.setEnabled(false);
+        }
+
+    }
+
+    /**
+     * Habilita todos los topos.
+     */
+    public void desbloquearTopos() {
+
+        for (JLabel topo : topos) {
+            topo.setEnabled(true);
+        }
+
+    }
+
+    /**
+     * Devuelve el botón de ayuda.
+     */
+    public JButton getBtnAyuda() {
+        return btnAyuda;
+    }
+
+    /**
+     * Muestra un mensaje al usuario.
+     */
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
     }
 }
