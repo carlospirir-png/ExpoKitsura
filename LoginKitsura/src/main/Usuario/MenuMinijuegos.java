@@ -2,9 +2,7 @@ package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.PantallaInicio;
-import main.Menu.VolverMenu;
+import main.Menu.*;
 
 public class MenuMinijuegos extends JFrame {
 
@@ -73,6 +71,7 @@ public class MenuMinijuegos extends JFrame {
         btnMaulwurf.setBounds(780, 590, 400, 55);
         btnMaulwurf.addActionListener(e -> {
             new MaulwurfRennt();
+            new JuegoMaulwurfRennt(1);
             dispose();
         });
         fondo.add(btnMaulwurf);
@@ -93,9 +92,5 @@ public class MenuMinijuegos extends JFrame {
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(1245, 300, 600, 600);
         fondo.add(mascota);
-    }
-
-    public static void main(String[] args) {
-        new MenuMinijuegos();
     }
 }
