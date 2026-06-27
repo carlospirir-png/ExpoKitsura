@@ -1,4 +1,4 @@
-
+//------------------ MENU MINIJUEGOS ---------------
 package main.Usuario;
 
 import javax.swing.*;

@@ -88,7 +88,7 @@ public class PistasTexto extends JFrame {
 
         //---------------- MASCOTA ----------------
         JLabel mascotaLector = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/PISTA_AUDIO.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascotaLector.setIcon(new ImageIcon(imgEscalada));
         mascotaLector.setBounds(335, 140, 300, 300);

@@ -22,8 +22,8 @@ public class PantallaPerfil extends JFrame {
     private JLabel lblIdUsuario;
     private JLabel lblFechaCreacion;
 
-    private JTextField txtCorreo;
-    private JPasswordField txtPassword;
+    public JTextField txtCorreo;
+    public JPasswordField txtPassword;
 
     private JLabel lblEditarCorreo;
     private JLabel lblEditarPassword;
@@ -198,8 +198,5 @@ public class PantallaPerfil extends JFrame {
         fondo.add(btnVolver);
     }    
     
-    public static void main(String[] args) {
-        new PantallaPerfil();
-    }
     
 }
