@@ -3,17 +3,20 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Menu.DecoracionBotones;
 
 public class ResultadoFinal extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    private DecoracionBotones btnVolver;
     
     public ResultadoFinal() {
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
         setContentPane(fondo);
-        setUndecorated(true);
-        setSize(600, 400); 
+        
+        setTitle("Resultado Final");
+        setSize(700, 450); 
         setLocationRelativeTo(null); 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE); 
         fondo.setLayout(null);
@@ -34,43 +37,41 @@ public class ResultadoFinal extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        //---------------- BOTON CERRAR (X) ----------------
-        JButton btnCerrar = new JButton("X");
-        btnCerrar.setFont(new Font("Arial", Font.BOLD, 9));
-        btnCerrar.setForeground(Color.BLACK);
-        btnCerrar.setBounds(550, 10, 40, 30);
-        btnCerrar.setFocusable(false);
-        btnCerrar.addActionListener(e -> dispose());        
-        fondo.add(btnCerrar);
+        
+        JPanel panelContenedor = new JPanel();
+        panelContenedor.setLayout(null);
+        panelContenedor.setBackground(new Color(0, 0, 0, 100)); 
+        panelContenedor.setBounds(40, 50, 430, 320);
+        fondo.add(panelContenedor);
 
         //---------------- TEXTO PUNTAJE ----------------
         JLabel lblPuntaje = new JLabel("Puntaje:");
         lblPuntaje.setFont(fuente2.deriveFont(25f));
-        lblPuntaje.setForeground(Color.BLACK);
-        lblPuntaje.setBounds(60, 140, 300, 30);
-        fondo.add(lblPuntaje);
+        lblPuntaje.setForeground(Color.WHITE); 
+        lblPuntaje.setBounds(25, 60, 270, 30);
+        panelContenedor.add(lblPuntaje);
         
         //---------------- TEXTO TIEMPO ----------------
         JLabel lblTiempo = new JLabel("Tiempo:");
         lblTiempo.setFont(fuente2.deriveFont(25f));
-        lblTiempo.setForeground(Color.BLACK);
-        lblTiempo.setBounds(60, 200, 300, 30);
-        fondo.add(lblTiempo);
+        lblTiempo.setForeground(Color.WHITE); 
+        lblTiempo.setBounds(25, 140, 270, 30);
+        panelContenedor.add(lblTiempo);
         
         //---------------- BOTON VOLVER ----------------
-        JButton btnVolver = new JButton("Volver");
-        btnVolver.setFont(fuente1.deriveFont(25f));
-        btnVolver.setBounds(200, 310, 160, 45);
+        JButton btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver.setFont(fuente2.deriveFont(20f));
+        btnVolver.setBounds(135, 240, 160, 45);
         btnVolver.addActionListener(e -> dispose());
-        fondo.add(btnVolver);
+        panelContenedor.add(btnVolver);
 
-        //---------------- MASCOTA SALIENDO DESDE ABAJO (Derecha) ----------------
-            JLabel mascota = new JLabel();
-            ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VENTANITA.png")); 
-            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-            mascota.setIcon(new ImageIcon(mascotaEscalada));
-            mascota.setBounds(370, 210, 300, 300);
-            fondo.add(mascota);
+        //---------------- MASCOTA  ----------------
+        JLabel mascota = new JLabel();
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VENTANITA.png")); 
+        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
+        mascota.setIcon(new ImageIcon(mascotaEscalada));
+        mascota.setBounds(400, 190, 350, 350);
+        fondo.add(mascota);
     }
     
     public static void main(String[] args) {

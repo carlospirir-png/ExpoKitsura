@@ -7,7 +7,7 @@ import main.Menu.FondoPanelSemi;
 public class PantallaDificultad extends JFrame {
 
     private FondoPanelSemi fondo;
-
+    private Font fuente1, fuente2;
     private JPanel panelTexto;
     private JLabel lblTitulo;
     private JLabel lblMensaje;
@@ -22,6 +22,25 @@ public class PantallaDificultad extends JFrame {
     private int tiempo = 3;
 
     public PantallaDificultad(int nivel, int vidas, int puntos) {
+        try {
+
+            // LettersForLearners
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
         this.nivel = nivel;
         this.vidas = vidas;
         this.puntos = puntos;
@@ -55,7 +74,7 @@ public class PantallaDificultad extends JFrame {
                         650, 650, Image.SCALE_SMOOTH);
 
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(200, 200, 650, 650);
+        mascota.setBounds(135, 200, 650, 650);
 
         fondo.add(mascota);
 
@@ -108,7 +127,7 @@ public class PantallaDificultad extends JFrame {
         panelTexto.add(lblAlerta);
 
         lblTitulo = new JLabel("¡ALERTA!", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 60));
+        lblTitulo.setFont(fuente2.deriveFont(55f));
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setBounds(270, 330, 400, 60);
 
@@ -118,7 +137,7 @@ public class PantallaDificultad extends JFrame {
                 "Se aumenta la dificultad",
                 SwingConstants.CENTER);
 
-        lblMensaje.setFont(new Font("Arial", Font.BOLD, 40));
+        lblMensaje.setFont(fuente1.deriveFont(40f));
         lblMensaje.setForeground(Color.WHITE);
         lblMensaje.setBounds(205, 430, 550, 50);
 
@@ -128,7 +147,7 @@ public class PantallaDificultad extends JFrame {
                 "Empieza en:",
                 SwingConstants.CENTER);
 
-        lblEmpieza.setFont(new Font("Arial", Font.BOLD, 40));
+        lblEmpieza.setFont(fuente1.deriveFont(40f));
         lblEmpieza.setForeground(Color.WHITE);
         lblEmpieza.setBounds(270, 520, 400, 50);
 
@@ -136,7 +155,7 @@ public class PantallaDificultad extends JFrame {
 
         // CONTADOR
         lblContador = new JLabel("(3s)", SwingConstants.CENTER);
-        lblContador.setFont(new Font("Arial", Font.BOLD, 60));
+        lblContador.setFont(fuente2.deriveFont(60f));
         lblContador.setForeground(Color.WHITE);
         lblContador.setBounds(320, 600, 300, 70);
 
@@ -174,12 +193,15 @@ public class PantallaDificultad extends JFrame {
         lblFlecha.setVisible(true);
 
         lblTitulo.setText("DIFICULTAD AUMENTADA");
+        lblTitulo.setFont(fuente2.deriveFont(35f));
         lblTitulo.setBounds(5, 130, 900, 60);
 
         lblMensaje.setText("El nivel ha aumentado");
+        lblTitulo.setFont(fuente1.deriveFont(25f));
         lblMensaje.setBounds(150, 250, 600, 60);
 
         lblEmpieza.setText("¡Continúa jugando!");
+        lblEmpieza.setFont(fuente2.deriveFont(20f));
         lblEmpieza.setBounds(205, 350, 500, 60);
 
         lblContador.setText("");

@@ -1,9 +1,12 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
 import main.Menu.VolverMenu;
+import main.Menu.DecoracionBotones;
 
 public class PantallaPerfil extends JFrame {
 
@@ -25,21 +28,34 @@ public class PantallaPerfil extends JFrame {
     private JTextField txtCorreo;
     private JPasswordField txtPassword;
 
-    private JLabel lblEditarCorreo;
     private JLabel lblEditarPassword;
 
     private JLabel lblEstado;
-    private JLabel lblUsuario;
+    private JTextField txtUsuario;
 
     private JLabel lblFotoPerfil;
-
-    private JButton btnEditarNombre;
-    private JButton btnVolver;
-
+    private DecoracionBotones btnEditarNombre, btnVolver;
+    
+    private Font fuente1, fuente2;
     private JScrollPane scrollImagenes;
 
     public PantallaPerfil() {
+        try {
+            // LettersForLearners
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
 
+            e.printStackTrace();
+
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
@@ -85,55 +101,68 @@ public class PantallaPerfil extends JFrame {
         fondo.add(panelCuenta);
 
         lblTitulo = new JLabel("Gestión de Cuenta");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 40));
+        lblTitulo.setFont(fuente2.deriveFont(40f));
+        lblTitulo.setForeground(Color.decode("#447A9C"));
         lblTitulo.setBounds(280, 30, 400, 50);
 
         panelCuenta.add(lblTitulo);
 
         lblCorreo = new JLabel("Correo Electrónico");
-        lblCorreo.setFont(new Font("Arial", Font.BOLD, 24));
+        lblCorreo.setFont(fuente2.deriveFont(24f));
+        lblCorreo.setForeground(Color.decode("#FC767D"));
         lblCorreo.setBounds(40, 120, 300, 40);
 
         panelCuenta.add(lblCorreo);
 
         txtCorreo = new JTextField("usuario@correo.com");
-        txtCorreo.setFont(new Font("Arial", Font.PLAIN, 20));
+        txtCorreo.setFont(fuente1.deriveFont(28f));
         txtCorreo.setBounds(40, 170, 420, 50);
+        txtCorreo.setEditable(false); // No editable
 
         panelCuenta.add(txtCorreo);
 
-        lblEditarCorreo = new JLabel("Editar");
-        lblEditarCorreo.setFont(new Font("Arial", Font.PLAIN, 22));
-        lblEditarCorreo.setBounds(480, 170, 100, 50);
-
-        panelCuenta.add(lblEditarCorreo);
-
         lblPassword = new JLabel("Contraseña");
-        lblPassword.setFont(new Font("Arial", Font.BOLD, 24));
+        lblPassword.setFont(fuente2.deriveFont(24f));
+        lblPassword.setForeground(Color.decode("#FC767D"));
         lblPassword.setBounds(40, 270, 250, 40);
 
         panelCuenta.add(lblPassword);
 
         txtPassword = new JPasswordField("123456789");
-        txtPassword.setFont(new Font("Arial", Font.PLAIN, 20));
+        txtPassword.setFont(fuente1.deriveFont(30f));
         txtPassword.setBounds(40, 320, 420, 50);
+        txtPassword.setEditable(false); // No editable 
 
         panelCuenta.add(txtPassword);
-
-        lblEditarPassword = new JLabel("Editar");
-        lblEditarPassword.setFont(new Font("Arial", Font.PLAIN, 22));
+       
+        lblEditarPassword = new JLabel("<html><u>Editar</u></html>");
+        lblEditarPassword.setFont(fuente1.deriveFont(22f));
+        lblEditarPassword.setForeground(Color.BLACK);
+        lblEditarPassword.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Cursor de mano al pasar por encima
         lblEditarPassword.setBounds(480, 320, 100, 50);
 
+        // Efecto Hover
+        lblEditarPassword.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                lblEditarPassword.setForeground(Color.decode("#447A9C"));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                lblEditarPassword.setForeground(Color.BLACK);
+            }
+        });
         panelCuenta.add(lblEditarPassword);
 
         lblIdUsuario = new JLabel("<html><b>ID Usuario</b><br>19503236</html>");
-        lblIdUsuario.setFont(new Font("Arial", Font.PLAIN, 22));
+        lblIdUsuario.setFont(fuente1.deriveFont(23f));
         lblIdUsuario.setBounds(700, 150, 220, 100);
 
         panelCuenta.add(lblIdUsuario);
 
         lblFechaCreacion = new JLabel("<html><b>Fecha de creación</b><br>00/00/2026</html>");
-        lblFechaCreacion.setFont(new Font("Arial", Font.PLAIN, 22));
+        lblFechaCreacion.setFont(fuente1.deriveFont(23f));
         lblFechaCreacion.setBounds(700, 290, 250, 100);
 
         panelCuenta.add(lblFechaCreacion);
@@ -146,7 +175,7 @@ public class PantallaPerfil extends JFrame {
         fondo.add(panelPerfil);
 
         lblEstado = new JLabel("<html><b>Estado:</b> Activo</html>");
-        lblEstado.setFont(new Font("Arial", Font.PLAIN, 28));
+        lblEstado.setFont(fuente1.deriveFont(28f));
         lblEstado.setBounds(210, 20, 300, 50);
 
         panelPerfil.add(lblEstado);
@@ -162,20 +191,20 @@ public class PantallaPerfil extends JFrame {
 
         panelPerfil.add(lblFotoPerfil);
 
-        lblUsuario = new JLabel("Nombre de usuario");
-        lblUsuario.setFont(new Font("Arial", Font.BOLD, 28));
-        lblUsuario.setBounds(180, 370, 300, 40);
+        txtUsuario = new JTextField("Nombre de usuario");
+        txtUsuario.setFont(fuente2.deriveFont(26f));
+        txtUsuario.setBounds(180, 370, 300, 45);
+        txtUsuario.setEditable(false); // No editable (Si se desea editar solo eliminar esta linea)
+        panelPerfil.add(txtUsuario);
 
-        panelPerfil.add(lblUsuario);
-
-        btnEditarNombre = new JButton("EDITAR NOMBRE");
-        btnEditarNombre.setFont(new Font("Arial", Font.BOLD, 20));
+        btnEditarNombre = new DecoracionBotones("EDITAR NOMBRE", "#FC767D", "#da4d58", "#da4d58");
+        btnEditarNombre.setFont(fuente2.deriveFont(20f));
         btnEditarNombre.setBounds(180, 430, 280, 60);
 
         panelPerfil.add(btnEditarNombre);
 
         JLabel lblImagenActual = new JLabel("Imagen seleccionada actualmente");
-        lblImagenActual.setFont(new Font("Arial", Font.BOLD, 18));
+        lblImagenActual.setFont(fuente2.deriveFont(16f));
         lblImagenActual.setBounds(150, 530, 320, 30);
 
         panelPerfil.add(lblImagenActual);
@@ -188,8 +217,8 @@ public class PantallaPerfil extends JFrame {
 
         panelPerfil.add(scrollImagenes);
 
-        btnVolver = new JButton("VOLVER");
-        btnVolver.setFont(new Font("Arial", Font.BOLD, 26));
+        JButton btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver.setFont(fuente2.deriveFont(26f));
         btnVolver.setBounds(450, 860, 220, 60);
         btnVolver.addActionListener(e -> {
             new MenuPrincipal();
