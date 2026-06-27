@@ -2,111 +2,176 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
+import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanel;
+import main.Menu.FondoPanelSemi;
 
-public class PuntuacionesAdmin extends JFrame{
+public class PuntuacionesAdmin extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    
+
     public PuntuacionesAdmin() {
-        try{
-            // LettersForLearners
+
+        try {
+
             fuente1 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
-            // KGPerfectPenmanship
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+
             fuente2 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-            
-        } catch (Exception e){
-            e.printStackTrace();            
-        fuente1 = new Font("Arial", Font.PLAIN,20);
-        fuente2 = new Font("Arial", Font.PLAIN,20);
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
+
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
-        
+
         setTitle("Puntuaciones");
-        setSize(1980, 1080); 
+        setSize(1980, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         fondo.setLayout(null);
-        
+
         crearComponentes();
+
         setVisible(true);
     }
-    
+
     private void crearComponentes() {
-        JLabel lblTituloVentana = new JLabel("Puntuaciones");
-        lblTituloVentana.setFont(new Font("Arial", Font.PLAIN, 18));
-        lblTituloVentana.setBounds(50, 40, 200, 30);
-        fondo.add(lblTituloVentana);
 
-        JPanel recuadroPuntos = new JPanel();
-        recuadroPuntos.setBackground(new Color(255, 255, 255, 180)); 
-        recuadroPuntos.setOpaque(false);
-        recuadroPuntos.setLayout(null);
-        recuadroPuntos.setBounds(150, 180, 950, 650); 
-        fondo.add(recuadroPuntos);
+        //---------------- PANEL TÍTULO ----------------
 
-        JLabel lblTituloSeccion = new JLabel("PUNTUACIÓN", JLabel.CENTER);
-        lblTituloSeccion.setFont(fuente2.deriveFont(30f));
-        lblTituloSeccion.setForeground(Color.WHITE);
-        lblTituloSeccion.setBounds(50, 40, 850, 55);
-        recuadroPuntos.add(lblTituloSeccion);
+        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
+        panelTitulo.setLayout(null);
+        panelTitulo.setBounds(90, 65, 1800, 75);
+        fondo.add(panelTitulo);
 
-        JLabel lblPuntosActuales = new JLabel("Puntuación actual por este nivel: ****");
-        lblPuntosActuales.setFont(fuente1.deriveFont(25f));
+        JLabel lblTitulo = new JLabel("PUNTUACIÓN", JLabel.CENTER);
+        lblTitulo.setFont(fuente2.deriveFont(45f));
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setBounds(0, 0, 1800, 75);
+        panelTitulo.add(lblTitulo);
+
+        //---------------- PANEL PRINCIPAL ----------------
+
+        FondoPanelSemi panelPuntuacion = new FondoPanelSemi(new Color(0, 0, 0, 130));
+        panelPuntuacion.setLayout(null);
+        panelPuntuacion.setBounds(100, 170, 950, 650);
+        fondo.add(panelPuntuacion);
+
+        JLabel lblPuntosActuales = new JLabel("Puntuación actual por este nivel:");
+        lblPuntosActuales.setFont(fuente2.deriveFont(26f));
         lblPuntosActuales.setForeground(Color.WHITE);
-        lblPuntosActuales.setBounds(80, 150, 800, 30);
-        recuadroPuntos.add(lblPuntosActuales);
+        lblPuntosActuales.setBounds(60, 50, 800, 35);
+        panelPuntuacion.add(lblPuntosActuales);
 
-        JLabel lblInstruccion = new JLabel("Ingrese la cantidad de puntuación que se dará por ese nivel:");
-        lblInstruccion.setFont(fuente2.deriveFont(25f));
+        JLabel lblValorActual = new JLabel("****");
+        lblValorActual.setFont(fuente1.deriveFont(32f));
+        lblValorActual.setForeground(Color.WHITE);
+        lblValorActual.setBounds(60, 95, 200, 40);
+        panelPuntuacion.add(lblValorActual);
+
+        JLabel lblInstruccion = new JLabel("Ingrese la nueva puntuación:");
+        lblInstruccion.setFont(fuente2.deriveFont(26f));
         lblInstruccion.setForeground(Color.WHITE);
-        lblInstruccion.setBounds(80, 260, 800, 30);
-        recuadroPuntos.add(lblInstruccion);
+        lblInstruccion.setBounds(60, 180, 800, 35);
+        panelPuntuacion.add(lblInstruccion);
 
         JTextField txtNuevaPuntuacion = new JTextField();
-        txtNuevaPuntuacion.setFont(fuente1.deriveFont(25f));
-        txtNuevaPuntuacion.setBounds(80, 310, 790, 45);
-        recuadroPuntos.add(txtNuevaPuntuacion);
+        txtNuevaPuntuacion.setFont(fuente1.deriveFont(34f));
+        txtNuevaPuntuacion.setBounds(60, 225, 830, 55);
+        panelPuntuacion.add(txtNuevaPuntuacion);
 
-        // Botón EDITAR
-        JButton btnEditar = new JButton("EDITAR");
-        btnEditar.setFont(fuente1.deriveFont(25f));
-        btnEditar.setBounds(365, 390, 220, 55);
-        recuadroPuntos.add(btnEditar);
+        //---------------- BOTÓN EDITAR ----------------
 
-        JLabel lblModificando = new JLabel("Estás modificando:");
-        lblModificando.setFont(fuente2.deriveFont(25f));
+        JButton btnEditar = new DecoracionBotones("EDITAR");
+        btnEditar.setFont(fuente2.deriveFont(26f));
+        btnEditar.setBounds(340, 315, 260, 60);
+
+        btnEditar.addActionListener(e -> {
+
+            // Acción editar puntuación
+
+        });
+
+        panelPuntuacion.add(btnEditar);
+
+        //---------------- INFORMACIÓN ----------------
+
+        JLabel lblModificando = new JLabel("Está modificando:");
+        lblModificando.setFont(fuente2.deriveFont(28f));
         lblModificando.setForeground(Color.WHITE);
-        lblModificando.setBounds(80, 480, 300, 25);
-        recuadroPuntos.add(lblModificando);
+        lblModificando.setBounds(60, 430, 400, 35);
+        panelPuntuacion.add(lblModificando);
 
-        JLabel lblInfoJuego = new JLabel("Minijuego: **** Categoría: *** Nivel: ****");
-        lblInfoJuego.setFont(fuente1.deriveFont(25f));
-        lblInfoJuego.setForeground(Color.WHITE);
-        lblInfoJuego.setBounds(80, 515, 800, 25);
-        recuadroPuntos.add(lblInfoJuego);
+        JLabel lblMinijuego = new JLabel("Minijuego: ****");
+        lblMinijuego.setFont(fuente1.deriveFont(28f));
+        lblMinijuego.setForeground(Color.WHITE);
+        lblMinijuego.setBounds(60, 485, 600, 35);
+        panelPuntuacion.add(lblMinijuego);
 
-            JLabel mascotaLapiz = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/INICIAR_SESIÓN-REGISTRARSE_INVITADO-EDITAR_CONTRASENA.png"));
-            Image imgEscalada = iconMascota.getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
-            mascotaLapiz.setIcon(new ImageIcon(imgEscalada));
-            mascotaLapiz.setBounds(1250, 220, 500, 500);
-            fondo.add(mascotaLapiz);
-            
-        // BOTÓN SALIR
-        JButton btnSalir = new JButton("SALIR");
-        btnSalir.setFont(fuente1.deriveFont(25f));
-        btnSalir.setBounds(1390, 750, 220, 55);
-        btnSalir.addActionListener(e -> dispose());
-        fondo.add(btnSalir);
+        JLabel lblCategoria = new JLabel("Categoría: ****");
+        lblCategoria.setFont(fuente1.deriveFont(28f));
+        lblCategoria.setForeground(Color.WHITE);
+        lblCategoria.setBounds(60, 525, 600, 35);
+        panelPuntuacion.add(lblCategoria);
+
+        JLabel lblNivel = new JLabel("Nivel: ****");
+        lblNivel.setFont(fuente1.deriveFont(28f));
+        lblNivel.setForeground(Color.WHITE);
+        lblNivel.setBounds(60, 565, 600, 35);
+        panelPuntuacion.add(lblNivel);
+
+        //---------------- MASCOTA ----------------
+
+        JLabel mascota = new JLabel();
+
+        try {
+
+            ImageIcon iconMascota = new ImageIcon(
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+
+            Image img = iconMascota.getImage().getScaledInstance(
+                    550,
+                    550,
+                    Image.SCALE_SMOOTH);
+
+            mascota.setIcon(new ImageIcon(img));
+
+        } catch (Exception e) {
+
+            mascota.setText("~");
+
+        }
+
+        mascota.setBounds(1320, 220, 550, 550);
+        fondo.add(mascota);
+
+        //---------------- BOTÓN VOLVER ----------------
+
+        JButton btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver.setFont(fuente2.deriveFont(28f));
+        btnVolver.setBounds(1470, 870, 300, 65);
+
+        btnVolver.addActionListener(e -> dispose());
+
+        fondo.add(btnVolver);
+
     }
-    
-   
+
+    public static void main(String[] args) {
+        new PuntuacionesAdmin();
+    }
+
 }

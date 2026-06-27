@@ -4,114 +4,115 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Menu.FondoPanelSemi;
+import main.Menu.DecoracionBotones;
 
-public class HaPerdido extends JFrame {
+public class SeAcaboVidas extends JFrame {
 
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    private JuegoBase juego;
 
-
-    private JuegoBase juego; // 🔥 GENÉRICO
-
-    public HaPerdido(JuegoBase juego,ActionListener accion) {
-
+    public SeAcaboVidas(JuegoBase juego, ActionListener accion) {
         this.juego = juego;
 
-        try{
-            // LettersForLearners
+        try {
             fuente1 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
-            // KGPerfectPenmanship
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
             fuente2 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-            
-        } catch (Exception e){
-            e.printStackTrace();            
-        fuente1 = new Font("Arial", Font.PLAIN,20);
-        fuente2 = new Font("Arial", Font.PLAIN,20);
-
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png");
         setContentPane(fondo);
-
-        setTitle("Ha perdido");
-        setSize(1980, 1060);
+        setTitle("Se acabaron las vidas");
+        setSize(1920, 1060);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
         fondo.setLayout(null);
 
         crearComponentes();
+        setVisible(true);
     }
 
     private void crearComponentes() {
 
+        //---------------- MASCOTA ----------------
+        JLabel mascota = new JLabel();
+        try {
+            ImageIcon icon = new ImageIcon(
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/DERROTA-por-vidas.png"));
+            Image img = icon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+            mascota.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            mascota.setText("~");
+        }
+        mascota.setBounds(100, 250, 600, 600);
+        fondo.add(mascota);
+
+
+
+//---------------- TEXTOS CENTRO DERECHA ----------------
         JLabel lblGameOver = new JLabel("GAME OVER", JLabel.CENTER);
-        lblGameOver.setFont(fuente2.deriveFont(34f));
+        lblGameOver.setFont(fuente2.deriveFont(80f));
         lblGameOver.setForeground(Color.WHITE);
-        lblGameOver.setBounds(900, 100, 800, 60);
+        lblGameOver.setBounds(800, 300, 900, 90);
         fondo.add(lblGameOver);
 
         JLabel lblSubtitulo = new JLabel("Se te acabaron las vidas", JLabel.CENTER);
-        lblSubtitulo.setFont(fuente2.deriveFont(28f));
+        lblSubtitulo.setFont(fuente2.deriveFont(48f));
         lblSubtitulo.setForeground(Color.WHITE);
-        lblSubtitulo.setBounds(900, 170, 800, 45);
+        lblSubtitulo.setBounds(800, 400, 900, 60);
         fondo.add(lblSubtitulo);
 
-        JLabel lblCita = new JLabel(
-                "<<Aprender del error es avanzar>>",
-                JLabel.CENTER);
-        lblCita.setFont(fuente1.deriveFont(24f));
+        JLabel lblCita = new JLabel("\"El conocimiento que no se rinde,", JLabel.CENTER);
+        lblCita.setFont(fuente1.deriveFont(32f));
         lblCita.setForeground(Color.WHITE);
-        lblCita.setBounds(900, 240, 800, 30);
+        lblCita.setBounds(800, 500, 900, 40);
         fondo.add(lblCita);
 
-        JLabel mascota = new JLabel();
-        ImageIcon icon = new ImageIcon(
-                getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/DERROTA-por-vidas.png"));
+        JLabel lblCita2 = new JLabel("siempre encuentra el camino.\"", JLabel.CENTER);
+        lblCita2.setFont(fuente1.deriveFont(32f));
+        lblCita2.setForeground(Color.WHITE);
+        lblCita2.setBounds(800, 545, 900, 40);
+        fondo.add(lblCita2);
+        
+                //---------------- PANEL SEMITRANSPARENTE ----------------
+        FondoPanelSemi panelTextos = new FondoPanelSemi(new Color(0, 0, 0, 150));
+        panelTextos.setLayout(null);
+        panelTextos.setBounds(800, 270, 900, 360);
+        fondo.add(panelTextos);
 
-        Image img = icon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
-        mascota.setIcon(new ImageIcon(img));
-        mascota.setBounds(150, 250, 600, 600);
-        fondo.add(mascota);
-
-        //---------------- BOTÓN CONTINUAR ----------------
-        JButton btnContinuar = new JButton("Continuar");
-        btnContinuar.setFont(fuente1.deriveFont(25f));
-        btnContinuar.setBounds(1225, 770, 200, 50);
-
+        //---------------- BOTONES ----------------
+        JButton btnContinuar = new DecoracionBotones("CONTINUAR");
+        btnContinuar.setFont(fuente2.deriveFont(28f));
+        btnContinuar.setBounds(980, 740, 280, 65);
         btnContinuar.addActionListener(e -> {
-
             dispose();
-
             ResultadoFinal resultado = new ResultadoFinal(
                     juego,
                     juego.getPuntajeTotal(),
                     juego.getTiempoTotalJugado()
             );
-
             resultado.mostrar();
         });
-
         fondo.add(btnContinuar);
 
-        //---------------- BOTÓN MENÚ ----------------
-        JButton btnMenu = new JButton("Menú");
-        btnMenu.setFont(fuente1.deriveFont(25f));
-        btnMenu.setBounds(1225, 830, 200, 50);
-
+        JButton btnMenu = new DecoracionBotones("MENÚ");
+        btnMenu.setFont(fuente2.deriveFont(28f));
+        btnMenu.setBounds(1300, 740, 280, 65);
         btnMenu.addActionListener(e -> {
             dispose();
-
-            juego.irAlMenu(); // 🔥 genérico
+            juego.irAlMenu();
         });
-
         fondo.add(btnMenu);
-
     }
 }

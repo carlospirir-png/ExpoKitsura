@@ -932,7 +932,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     private void mostrarHaPerdido() {
         fadeTo(() -> {
-            new HaPerdido(this, e -> {
+            new SeAcaboVidas(this, e -> {
             }).setVisible(true);
             dispose();
         }, 400);
