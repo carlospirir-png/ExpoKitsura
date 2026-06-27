@@ -1,6 +1,8 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 
@@ -9,8 +11,14 @@ public class PistasAudio extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    private Clip clip;
 
-    public PistasAudio() {
+    private JButton btnRepetir;
+
+    private String rutaAudio;
+
+    public PistasAudio(String rutaAudio) {
+        this.rutaAudio = rutaAudio;
         try {
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -33,6 +41,8 @@ public class PistasAudio extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         fondo.setLayout(null);
         crearComponentes();
+
+        reproducirAudio();
         setVisible(true);
     }
 
@@ -51,7 +61,10 @@ public class PistasAudio extends JFrame {
         btnCerrar.setBorderPainted(false);
         btnCerrar.setBackground(new Color(245, 245, 245));
         btnCerrar.setForeground(new Color(180, 50, 50));
-        btnCerrar.addActionListener(e -> dispose());
+        btnCerrar.addActionListener(e -> {
+            detenerAudio();
+            dispose();
+        });
         barra.add(btnCerrar);
 
         JSeparator linea = new JSeparator();
@@ -89,13 +102,18 @@ public class PistasAudio extends JFrame {
         JButton btnSalir = new JButton("Salir");
         btnSalir.setFont(fuente1.deriveFont(20f));
         btnSalir.setBounds(40, 320, 150, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e -> {
+            detenerAudio();
+            dispose();
+        });
+
         fondo.add(btnSalir);
 
         //---------------- BOTON REPETIR ----------------
-        JButton btnRepetir = new JButton("Repetir");
+        btnRepetir = new JButton("Repetir");
         btnRepetir.setFont(fuente1.deriveFont(20f));
         btnRepetir.setBounds(230, 320, 150, 45);
+        btnRepetir.addActionListener(e -> reproducirAudio());
         fondo.add(btnRepetir);
 
         //---------------- MASCOTA ----------------
@@ -108,7 +126,37 @@ public class PistasAudio extends JFrame {
         fondo.add(mascotaAudifonos);
     }
 
-    public static void main(String[] args) {
-        new PistasAudio();
+    private void detenerAudio() {
+        if (clip != null) {
+            clip.stop();
+            clip.close();
+            clip = null;
+        }
+    }
+
+    private void reproducirAudio() {
+
+        try {
+
+            if (clip != null) {
+                clip.stop();
+                clip.close();
+            }
+            System.out.println("Ruta en BD: " + rutaAudio);
+            System.out.println(getClass().getResource(rutaAudio));
+            
+            URL url = getClass().getResource(rutaAudio);
+
+            System.out.println("URL encontrada: " + url);
+
+            AudioInputStream audio = AudioSystem.getAudioInputStream(url);
+
+            clip = AudioSystem.getClip();
+            clip.open(audio);
+            clip.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

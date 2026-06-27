@@ -277,7 +277,6 @@ public class FoxJump extends JFrame implements JuegoBase {
 
                 preguntasVistas.add(idPreguntaActual);
 
-                // 🔥 AQUÍ YA USAS LA BD REAL
                 respuestaCorrecta = rs.getBoolean("es_correcta");
 
                 // Si ya no hay más preguntas
@@ -318,10 +317,6 @@ public class FoxJump extends JFrame implements JuegoBase {
     // ─────────────────────────────────────────────────────────────────────────
     // Fin de juego — fondo Fin_Juego + botones
     // ─────────────────────────────────────────────────────────────────────────
-    /**
-     * Cambia el fondo del lago a Fin_Juego.png, bloquea los nénufares y muestra
-     * los botones Finalizar / Jugar de nuevo con la imagen Juego_Meta.png.
-     */
     private void activarFinJuego() {
 
         if (finJuegoActivo) {
@@ -359,10 +354,14 @@ public class FoxJump extends JFrame implements JuegoBase {
             ((javax.swing.Timer) e.getSource()).stop();
 
             if (vidas == 3) {
-                VictoriaPerfecta vp = new VictoriaPerfecta(this);
+                // ✅ CORRECCIÓN: se pasa ActionListener (sin uso) y JFrame
+                VictoriaPerfecta vp = new VictoriaPerfecta(e2 -> {
+                }, this);
                 fadeTo(() -> setContentPane(vp.getFondo()), 400);
             } else {
-                Victoria v = new Victoria(this);
+                // ✅ CORRECCIÓN: se pasa ActionListener (sin uso) y JFrame
+                Victoria v = new Victoria(e2 -> {
+                }, this);
                 fadeTo(() -> setContentPane(v.getFondo()), 400);
             }
         }).start();
@@ -453,13 +452,12 @@ public class FoxJump extends JFrame implements JuegoBase {
 
                 detenerCountdown();
 
-                // 🔴 IMPORTANTE: bloquear TODO desde aquí
                 if (finJuegoActivo) {
                     return;
                 }
                 finJuegoActivo = true;
 
-                mostrarTiempoAgotado(); // SOLO esto
+                mostrarTiempoAgotado();
             }
         });
 
@@ -474,8 +472,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * Reanuda el countdown con los segundos que quedaban al pausar. Solo recrea
-     * el Timer; no reinicia segundosRestantes.
+     * Reanuda el countdown con los segundos que quedaban al pausar.
      */
     private void reanudarCountdown() {
 
@@ -513,9 +510,8 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         int puntos = (int) (100 * porcentajeRapidez);
 
-        // evitar negativos
         if (puntos < 10) {
-            puntos = 10; // mínimo para no frustrar al jugador
+            puntos = 10;
         }
 
         return puntos;
@@ -537,7 +533,6 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
 
-            // seguridad por si el timer ya terminó
             if (tiempoUsado < 0) {
                 tiempoUsado = tiempoMaximoPregunta;
             }
@@ -562,11 +557,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-    /**
-     * Sube la dificultad si se alcanzó la racha. Abre PantallaDificultad como
-     * diálogo modal y cuando el jugador presiona continuar, carga la siguiente
-     * pregunta.
-     */
     private boolean intentarSubirDificultad() {
 
         if (correctasTotales < CORRECTAS_SUBIR) {
@@ -592,16 +582,21 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             resolverIdNivel();
 
-            PantallaDificultad pd = new PantallaDificultad(this);
+            PantallaDificultad pd = new PantallaDificultad(
+                    this, // JFrame ventanaAnterior
+                    idNivelActual, // nivel
+                    vidas, // vidas
+                    puntajeTotal, // puntos
+                    false // usoPista (no tienes esa lógica aún, va en false)
+            );
             fadeTo(() -> {
                 setContentPane(pd.getFondo());
             }, 400);
 
         } else {
-            // ← Ya está en DIFICIL, solo reinicia el contador para no quedar trabado
             correctasTotales = 0;
             activarFinJuego();
-            detenerCountdown();// ← Bug 2
+            detenerCountdown();
         }
 
         return subio;
@@ -903,10 +898,6 @@ public class FoxJump extends JFrame implements JuegoBase {
     // ─────────────────────────────────────────────────────────────────────────
     // Métodos públicos para integración con PantallaDificultad
     // ─────────────────────────────────────────────────────────────────────────
-    /**
-     * Devuelve el panel principal para que PantallaDificultad pueda
-     * restaurarlo.
-     */
     public JPanel getFondo() {
         return fondo;
     }
@@ -941,21 +932,23 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     private void mostrarHaPerdido() {
         fadeTo(() -> {
-            new HaPerdido(this).setVisible(true);
+            new HaPerdido(this, e -> {
+            }).setVisible(true);
             dispose();
         }, 400);
     }
 
     private void mostrarTiempoAgotado() {
         fadeTo(() -> {
-            new SeAcaboTiempo(this).setVisible(true);
+            // ✅ CORRECCIÓN: se pasa JuegoBase y ActionListener (sin uso)
+            new SeAcaboTiempo(this, e -> {
+            }).setVisible(true);
             dispose();
         }, 400);
     }
 
     private void fadeTo(Runnable onMidpoint, int duracionMs) {
 
-        // Overlay negro que cubre todo el JFrame
         JPanel overlay = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -967,7 +960,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         overlay.setOpaque(false);
         overlay.setBackground(new Color(0, 0, 0, 0));
 
-        // Lo añadimos encima del layeredPane para que tape todo
         JPanel glass = (JPanel) getGlassPane();
         glass.setLayout(new BorderLayout());
         glass.add(overlay, BorderLayout.CENTER);
@@ -976,14 +968,13 @@ public class FoxJump extends JFrame implements JuegoBase {
         int pasos = 20;
         int intervalo = (duracionMs / 2) / pasos;
         int[] alpha = {0};
-        int[] fase = {0};   // 0 = fade out (oscurecer), 1 = fade in (aclarar)
+        int[] fase = {0};
 
         javax.swing.Timer fadeTimer = new javax.swing.Timer(intervalo, null);
 
         fadeTimer.addActionListener(e -> {
 
             if (fase[0] == 0) {
-                // ── Fase 1: oscurecer ─────────────────────────────────────────
                 alpha[0] += 255 / pasos;
 
                 if (alpha[0] >= 255) {
@@ -991,16 +982,14 @@ public class FoxJump extends JFrame implements JuegoBase {
                     overlay.setBackground(new Color(0, 0, 0, alpha[0]));
                     overlay.repaint();
 
-                    // Pantalla totalmente negra → swap seguro
                     onMidpoint.run();
                     revalidate();
                     repaint();
 
-                    fase[0] = 1;   // pasa a aclarar
+                    fase[0] = 1;
                 }
 
             } else {
-                // ── Fase 2: aclarar ───────────────────────────────────────────
                 alpha[0] -= 255 / pasos;
 
                 if (alpha[0] <= 0) {
@@ -1008,7 +997,6 @@ public class FoxJump extends JFrame implements JuegoBase {
                     overlay.setBackground(new Color(0, 0, 0, alpha[0]));
                     overlay.repaint();
 
-                    // Limpieza: quita el overlay y oculta el glassPane
                     glass.remove(overlay);
                     glass.setVisible(false);
 
@@ -1024,17 +1012,12 @@ public class FoxJump extends JFrame implements JuegoBase {
         fadeTimer.start();
     }
 
-    /**
-     * Llamado por PantallaDificultad cuando el jugador presiona continuar. Hace
-     * fade de vuelta a FoxJump y carga la siguiente pregunta.
-     */
     public void continuarDespuesDeDificultad() {
 
         fadeTo(() -> {
             setContentPane(fondo);
         }, 400);
 
-        // cargarPregunta se llama después del fade para no interrumpirlo
         new javax.swing.Timer(420, e -> {
             ((javax.swing.Timer) e.getSource()).stop();
             cargarPregunta();

@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 
@@ -10,22 +11,28 @@ public class HaPerdido extends JFrame {
     private Font fuente1;
     private Font fuente2;
 
+
     private JuegoBase juego; // 🔥 GENÉRICO
 
-    public HaPerdido(JuegoBase juego) {
+    public HaPerdido(JuegoBase juego,ActionListener accion) {
 
         this.juego = juego;
 
-        try {
-            fuente1 = Font.createFont(Font.TRUETYPE_FONT,
-                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+        try{
+            // LettersForLearners
+            fuente1 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+            
+        } catch (Exception e){
+            e.printStackTrace();            
+        fuente1 = new Font("Arial", Font.PLAIN,20);
+        fuente2 = new Font("Arial", Font.PLAIN,20);
 
-            fuente2 = Font.createFont(Font.TRUETYPE_FONT,
-                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-
-        } catch (Exception e) {
-            fuente1 = new Font("Arial", Font.PLAIN, 20);
-            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png");
@@ -40,7 +47,6 @@ public class HaPerdido extends JFrame {
         fondo.setLayout(null);
 
         crearComponentes();
-        setVisible(true);
     }
 
     private void crearComponentes() {
@@ -106,5 +112,6 @@ public class HaPerdido extends JFrame {
         });
 
         fondo.add(btnMenu);
+
     }
 }

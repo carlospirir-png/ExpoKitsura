@@ -17,22 +17,39 @@ public class PantallaDificultad extends JFrame {
     private JLabel lblContador;
     private JLabel lblAlerta;
     private JLabel lblFlecha;
-
+    private int nivel;
+    private int vidas;
+    private int puntos;
+    private boolean usoPista;
+    private JFrame ventanaAnterior;
     private int tiempo = 3;
 
-    private JFrame ventanaAnterior;
+    // ✅ CORRECCIÓN 1: referencia al timer para poder cancelarlo desde la flecha
+    private Timer timerContinuar;
 
-    public PantallaDificultad(JFrame ventanaAnterior) {
-
+    public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int puntos, boolean usoPista) {
         this.ventanaAnterior = ventanaAnterior;
+        this.nivel = nivel;
+        this.vidas = vidas;
+        this.puntos = puntos;
+        this.usoPista = usoPista;
 
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
-
-        // NO hace setContentPane ni setVisible: FoxJump usará getFondo() directamente
         fondo.setLayout(null);
 
         crearComponentes();
         iniciarContador();
+
+        // ✅ CORRECCIÓN 2: si viene de HiddenFox, configurar y mostrar como ventana normal
+        if (!(ventanaAnterior instanceof FoxJump)) {
+            setContentPane(fondo);
+            setTitle("Pantalla de Dificultad");
+            setSize(1880, 1080);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(EXIT_ON_CLOSE);
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            setVisible(true);
+        }
     }
 
     /** Expone el panel para que FoxJump lo ponga como contentPane. */
@@ -93,8 +110,11 @@ public class PantallaDificultad extends JFrame {
 
             @Override
             public void mouseClicked(MouseEvent e) {
+                // ✅ CORRECCIÓN 1: cancelar el timer antes de continuar para evitar doble ejecución
+                if (timerContinuar != null) {
+                    timerContinuar.stop();
+                }
 
-                // Regresa a FoxJump intercambiando el contentPane, sin abrir ventanas
                 if (ventanaAnterior instanceof FoxJump foxJump) {
                     foxJump.continuarDespuesDeDificultad();
                 }
@@ -187,11 +207,21 @@ public class PantallaDificultad extends JFrame {
 
         lblContador.setText("");
 
+        // ✅ CORRECCIÓN 1: guardar referencia al timer para cancelarlo si el jugador
+        //    presiona la flecha antes de que se ejecute automáticamente
+        timerContinuar = new Timer(1500, e -> {
+            if (ventanaAnterior instanceof FoxJump foxJump) {
+                foxJump.continuarDespuesDeDificultad();
+            } else if (ventanaAnterior instanceof HiddenFox_Codigo) {
+                dispose();
+                new HiddenFox_Codigo(nivel, vidas, puntos, usoPista);
+            }
+        });
+
+        timerContinuar.setRepeats(false);
+        timerContinuar.start();
+
         panelTexto.revalidate();
         panelTexto.repaint();
-    }
-
-    public static void main(String[] args) {
-        new PantallaDificultad(null);
     }
 }

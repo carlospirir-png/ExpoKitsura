@@ -87,10 +87,15 @@ public class MaulwurfRennt extends JFrame {
         vida2.setBounds(135, 25, 60, 60);
         vida3.setBounds(200, 25, 60, 60);
 
-        fondo.add(vida1);
-        fondo.add(vida2);
-        fondo.add(vida3);
-
+        // --------------- PANEL -----------------
+        JPanel panelv = new JPanel();
+        panelv.setBounds(60, 20, 200, 70);
+        panelv.setBackground(Color.WHITE);  
+        panelv.add(vida1);
+        panelv.add(vida2);
+        panelv.add(vida3);
+        fondo.add(panelv);
+        
         //---------------- AYUDA ----------------
         btnAyuda = new JButton("¿Necesitas ayuda?");
         btnAyuda.setFont(fuente2.deriveFont(18f));

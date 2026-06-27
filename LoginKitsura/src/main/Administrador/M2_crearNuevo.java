@@ -3,12 +3,13 @@ package main.Administrador;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
+import main.Menu.DecoracionBotones; 
 
 public class M2_crearNuevo extends JFrame {
-
     private FondoPanelSemi fondo;
     private FondoPanelSemi panelSemi;
-
+    private Font fuente1;
+    private Font fuente2;
     private JLabel lblTitulo;
 
     private JLabel lblPregunta;
@@ -24,11 +25,26 @@ public class M2_crearNuevo extends JFrame {
     private JLabel lblIncorrecto;
 
     private JButton btnSiguiente;
-
+    private DecoracionBotones btnSalir;
+    
     private JLabel lblMascota;
 
     public M2_crearNuevo() {
-
+        try{
+            // LettersForLearners
+            fuente1 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+            
+        } catch (Exception e){
+            e.printStackTrace();            
+            fuente1 = new Font("Arial", Font.PLAIN,20);
+            fuente2 = new Font("Arial", Font.PLAIN,20);
+        }
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
@@ -54,19 +70,20 @@ public class M2_crearNuevo extends JFrame {
         fondo.add(panelSemi);
 
         lblTitulo = new JLabel("CREAR NUEVO (MINIJUEGO 2)");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 42));
+        lblTitulo.setFont(fuente2.deriveFont(40f));
+        lblTitulo.setForeground(Color.decode("#447A9C"));
         lblTitulo.setBounds(40, 40, 700, 50);
 
         panelSemi.add(lblTitulo);
 
         lblPregunta = new JLabel("Ingrese la pregunta:");
-        lblPregunta.setFont(new Font("Arial", Font.PLAIN, 26));
+        lblPregunta.setFont(fuente2.deriveFont(28f));
         lblPregunta.setBounds(50, 120, 350, 35);
 
         panelSemi.add(lblPregunta);
 
         txtPregunta = new JTextArea();
-        txtPregunta.setFont(new Font("Arial", Font.PLAIN, 24));
+        txtPregunta.setFont(fuente1.deriveFont(30f));
         txtPregunta.setLineWrap(true);
         txtPregunta.setWrapStyleWord(true);
         txtPregunta.setBounds(50, 170, 1050, 320);
@@ -93,15 +110,14 @@ public class M2_crearNuevo extends JFrame {
         lblRespuestaCorrecta = new JLabel(
                 "Ingrese la respuesta correcta del nivel:");
 
-        lblRespuestaCorrecta.setFont(
-                new Font("Arial", Font.PLAIN, 22));
+        lblRespuestaCorrecta.setFont(fuente2.deriveFont(22f));
 
         lblRespuestaCorrecta.setBounds(70, 530, 500, 35);
 
         panelSemi.add(lblRespuestaCorrecta);
 
         txtCorrecta = new JTextField();
-        txtCorrecta.setFont(new Font("Arial", Font.PLAIN, 22));
+        txtCorrecta.setFont(fuente1.deriveFont(26f));
         txtCorrecta.setBounds(110, 580, 380, 50);
 
         panelSemi.add(txtCorrecta);
@@ -126,22 +142,23 @@ public class M2_crearNuevo extends JFrame {
         lblRespuestaIncorrecta = new JLabel(
                 "Ingrese la respuesta incorrecta del nivel:");
 
-        lblRespuestaIncorrecta.setFont(
-                new Font("Arial", Font.PLAIN, 22));
+        lblRespuestaIncorrecta.setFont(fuente2.deriveFont(22f));
 
         lblRespuestaIncorrecta.setBounds(620, 530, 500, 35);
 
         panelSemi.add(lblRespuestaIncorrecta);
 
         txtIncorrecta = new JTextField();
-        txtIncorrecta.setFont(new Font("Arial", Font.PLAIN, 22));
+        txtIncorrecta.setFont(fuente1.deriveFont(26f));
         txtIncorrecta.setBounds(680, 580, 380, 50);
 
         panelSemi.add(txtIncorrecta);
 
-        btnSiguiente = new JButton("SIGUIENTE");
-        btnSiguiente.setFont(new Font("Arial", Font.BOLD, 24));
+        btnSiguiente = new DecoracionBotones("SIGUIENTE", "#FC767D", "#da4d58", "#da4d58");
+        btnSiguiente.setFont(fuente2.deriveFont(25f));
+        btnSiguiente.setForeground(Color.WHITE);
         btnSiguiente.setBounds(50, 700, 300, 60);
+        fondo.add(btnSiguiente);
 
         panelSemi.add(btnSiguiente);
 
@@ -161,7 +178,16 @@ public class M2_crearNuevo extends JFrame {
         lblMascota.setBounds(1280, 180, 650, 650);
 
         fondo.add(lblMascota);
+        
+        // --- BOTÓN VOLVER---
+        btnSalir = new DecoracionBotones("VOLVER");
+        btnSalir.setFont(fuente2.deriveFont(30f));
+        btnSalir.setForeground(Color.WHITE);
+        btnSalir.setBounds(1695, 950, 210, 45);
+        btnSalir.addActionListener(e -> dispose());
+        fondo.add(btnSalir);
     }
-
-  
+  public static void main(String[] args) {
+        new M2_crearNuevo();
+    }
 }

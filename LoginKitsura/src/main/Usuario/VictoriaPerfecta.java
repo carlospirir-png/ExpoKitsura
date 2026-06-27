@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 
@@ -10,19 +11,25 @@ public class VictoriaPerfecta extends JFrame {
     private Font fuente1;
     private Font fuente2;
     private JFrame ventanaAnterior;
-
-    public VictoriaPerfecta(JFrame ventanaAnterior) {
+    
+ 
+    
+    public VictoriaPerfecta(ActionListener accion,JFrame ventanaAnterior) {
         this.ventanaAnterior = ventanaAnterior;
-
-        try {
-            fuente1 = Font.createFont(Font.TRUETYPE_FONT,
-                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
-            fuente2 = Font.createFont(Font.TRUETYPE_FONT,
-                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            fuente1 = new Font("Arial", Font.PLAIN, 20);
-            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        try{
+            // LettersForLearners
+            fuente1 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+            
+        } catch (Exception e){
+            e.printStackTrace();            
+        fuente1 = new Font("Arial", Font.PLAIN,20);
+        fuente2 = new Font("Arial", Font.PLAIN,20);
         }
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
@@ -89,3 +96,7 @@ public class VictoriaPerfecta extends JFrame {
 
     }
 }
+
+
+
+

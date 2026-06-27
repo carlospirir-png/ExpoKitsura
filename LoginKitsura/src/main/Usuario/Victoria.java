@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 
@@ -9,27 +10,43 @@ public class Victoria extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    private JFrame ventanaAnterior;
+        private JFrame ventanaAnterior;
+            private JButton btnVolver;
 
-    public Victoria(JFrame ventanaAnterior) {
-        this.ventanaAnterior = ventanaAnterior;
+    
+    public Victoria(ActionListener accion, JFrame ventanaAnterior) {
+                this.ventanaAnterior = ventanaAnterior;
+        try{
+            // LettersForLearners
+            fuente1 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+            
+        } catch (Exception e){
+            e.printStackTrace();            
+        fuente1 = new Font("Arial", Font.PLAIN,20);
+        fuente2 = new Font("Arial", Font.PLAIN,20);
 
-        try {
-            fuente1 = Font.createFont(Font.TRUETYPE_FONT,
-                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
-            fuente2 = Font.createFont(Font.TRUETYPE_FONT,
-                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            fuente1 = new Font("Arial", Font.PLAIN, 20);
-            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
         // NO hace setContentPane ni setVisible
         fondo.setLayout(null);
 
+        
+        
         crearComponentes();
+        
+        //--------------- VOLVER --------------
+        btnVolver.addActionListener(e -> {
+            dispose();          // Cierra esta ventana
+            accion.actionPerformed(e); // Ejecuta la acción que te pasaron
+        });
+        setVisible(true);
     }
 
     public FondoPanel getFondo() {
@@ -74,15 +91,23 @@ public class Victoria extends JFrame {
         lblUsuario.setBounds(1250, 150, 400, 40);
         fondo.add(lblUsuario);
 
-        JLabel fotoPerfil = new JLabel();
-        ImageIcon paisajeIcon = new ImageIcon(getClass().getResource(
-                "/Multimedia/utiles/logotipo/logofK.png"));
-        Image paisajeEscalado = paisajeIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-        fotoPerfil.setIcon(new ImageIcon(paisajeEscalado));
-        fotoPerfil.setBounds(1030, 115, 150, 150);
-        fondo.add(fotoPerfil);
 
-        //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
+
+            JLabel fotoPerfil = new JLabel();
+            ImageIcon paisajeIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/logofK.png"));
+            Image paisajeEscalado = paisajeIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            fotoPerfil.setIcon(new ImageIcon(paisajeEscalado));
+            fotoPerfil.setBounds(1030, 115, 150, 150);
+            fondo.add(fotoPerfil); 
+        
+        //---------------- BOTON VOLVER  ----------------
+        btnVolver = new JButton("Volver");
+        btnVolver.setFont(fuente1.deriveFont(25f));
+        btnVolver.setBounds(1320, 710, 200, 50);
+        btnVolver.addActionListener(e -> dispose());
+        fondo.add(btnVolver);
+        
+                //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
         JButton btnResultados = new JButton("Ver resultados");
         btnResultados.setFont(fuente1.deriveFont(25f));
         btnResultados.setBounds(1320, 660, 200, 50);
@@ -92,6 +117,6 @@ public class Victoria extends JFrame {
             }
         });
         fondo.add(btnResultados);
-
     }
-}
+    
+  }

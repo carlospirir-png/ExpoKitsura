@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 
@@ -12,26 +13,29 @@ public class SeAcaboTiempo extends JFrame {
 
     private JuegoBase juego;
 
-    public SeAcaboTiempo(JuegoBase juego) {
+    public SeAcaboTiempo(JuegoBase juego, ActionListener accion) {
 
         this.juego = juego;
 
-        try {
-            fuente1 = Font.createFont(Font.TRUETYPE_FONT,
+try {
+            // LettersForLearners
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
-
-            fuente2 = Font.createFont(Font.TRUETYPE_FONT,
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
 
         } catch (Exception e) {
+            e.printStackTrace();
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png");
         setContentPane(fondo);
+        setTitle("Se acabo el tiempo");
 
-        setTitle("Tiempo agotado");
         setSize(1980, 1060);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -40,7 +44,7 @@ public class SeAcaboTiempo extends JFrame {
         fondo.setLayout(null);
 
         crearComponentes();
-        setVisible(true);
+ 
     }
 
     private void crearComponentes() {
@@ -58,6 +62,7 @@ public class SeAcaboTiempo extends JFrame {
         lblSub.setForeground(Color.WHITE);
         lblSub.setBounds(900, 170, 800, 45);
         fondo.add(lblSub);
+
 
         //---------------- FRASE ----------------
         JLabel lblFrase = new JLabel(
@@ -115,5 +120,7 @@ public class SeAcaboTiempo extends JFrame {
         });
 
         fondo.add(btnMenu);
+
+
     }
 }

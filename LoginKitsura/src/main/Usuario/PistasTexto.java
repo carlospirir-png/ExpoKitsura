@@ -5,21 +5,24 @@ import javax.swing.*;
 import main.Menu.FondoPanel;
 
 public class PistasTexto extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
 
-    public PistasTexto() {
-        try{
+    private JLabel lblPista;
+
+    public PistasTexto(String pista) {
+        try {
             // LettersForLearners
             fuente1 = Font.createFont(
-                Font.TRUETYPE_FONT,
-                getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
             // KGPerfectPenmanship
             fuente2 = Font.createFont(
-                Font.TRUETYPE_FONT,
-                getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-        } catch(Exception e){
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
             e.printStackTrace();
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
@@ -32,6 +35,11 @@ public class PistasTexto extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         fondo.setLayout(null);
         crearComponentes();
+
+        lblPista.setText(
+                "<html><body style='width:260px'>" + pista + "</body></html>"
+        );
+
         setVisible(true);
     }
 
@@ -64,17 +72,12 @@ public class PistasTexto extends JFrame {
         recuadroTexto.setBounds(40, 100, 320, 180);
         fondo.add(recuadroTexto);
 
-        JLabel lblTextoPredefinido = new JLabel("Texto predefinido");
-        lblTextoPredefinido.setFont(fuente2.deriveFont(20f));
-        lblTextoPredefinido.setForeground(Color.LIGHT_GRAY);
-        lblTextoPredefinido.setBounds(20, 45, 280, 30);
-        recuadroTexto.add(lblTextoPredefinido);
+        lblPista = new JLabel();
+        lblPista.setFont(fuente2.deriveFont(20f));
+        lblPista.setForeground(Color.BLACK);
+        lblPista.setBounds(20, 30, 280, 120);
 
-        JLabel lblTextoPredefinido2 = new JLabel("de la pista aquí...");
-        lblTextoPredefinido2.setFont(fuente2.deriveFont(20f));
-        lblTextoPredefinido2.setForeground(Color.LIGHT_GRAY);
-        lblTextoPredefinido2.setBounds(20, 85, 280, 30);
-        recuadroTexto.add(lblTextoPredefinido2);
+        recuadroTexto.add(lblPista);
 
         //---------------- BOTÓN SALIR ----------------
         JButton btnSalir = new JButton("Salir");
@@ -85,14 +88,10 @@ public class PistasTexto extends JFrame {
 
         //---------------- MASCOTA ----------------
         JLabel mascotaLector = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/PISTA_AUDIO.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascotaLector.setIcon(new ImageIcon(imgEscalada));
         mascotaLector.setBounds(335, 140, 300, 300);
         fondo.add(mascotaLector);
-    }
-    
-    public static void main(String[] args) {
-        new PistasTexto();
     }
 }
