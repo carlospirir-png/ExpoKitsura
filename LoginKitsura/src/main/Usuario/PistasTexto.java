@@ -72,10 +72,12 @@ public class PistasTexto extends JFrame {
         JLabel mascotaLector = new JLabel();
         ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MENÚ-PRINCIPAL-LINTERNA.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
+
         mascotaLector.setIcon(new ImageIcon(imgEscalada));
         mascotaLector.setBounds(360, 60, 350, 350);
         fondo.add(mascotaLector);
     }
+
 
     public static void main(String[] args) {
         new PistasTexto("Texto predefinido de la pista aquí...");

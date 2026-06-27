@@ -6,15 +6,19 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
+import main.Usuario.FoxJump;
 
 public class Victoria extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    
+        private JFrame ventanaAnterior;
+     
     private DecoracionBotones btnVolver;
     
-    public Victoria(ActionListener accion) {
+    public Victoria(ActionListener accion, JFrame ventanaAnterior) {
+                this.ventanaAnterior = ventanaAnterior;
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -27,17 +31,16 @@ public class Victoria extends JFrame {
             
         } catch (Exception e){
             e.printStackTrace();            
+
             fuente1 = new Font("Arial", Font.PLAIN,20);
             fuente2 = new Font("Arial", Font.PLAIN,20);
+
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png"); 
-        setContentPane(fondo);
-        setTitle("Victoria");
-        setSize(1980, 1060); 
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
+        // NO hace setContentPane ni setVisible
         fondo.setLayout(null);
+
         
         crearComponentes();
         
@@ -48,7 +51,11 @@ public class Victoria extends JFrame {
         });
         setVisible(true);
     }
-    
+
+    public FondoPanel getFondo() {
+        return fondo;
+    }
+
     private void crearComponentes() {
        
         JPanel panelIzquierdo = new JPanel();
@@ -89,17 +96,17 @@ public class Victoria extends JFrame {
         panelDerecho.add(fotoPerfil); 
 
         //---------------- DATOS DE USUARIO ----------------
-        JLabel lblUsuario = new JLabel("Nombre de usuario"); 
+        JLabel lblUsuario = new JLabel("Nombre de usuario");
         lblUsuario.setFont(fuente2.deriveFont(25f));
         lblUsuario.setForeground(Color.WHITE);
         lblUsuario.setBounds(260, 115, 550, 40);
         panelDerecho.add(lblUsuario); 
         
         //---------------- BOTON VOLVER  ----------------
-        btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER");
         btnVolver.setFont(fuente2.deriveFont(20f));
         btnVolver.setBounds(340, 680, 200, 50);
-        panelDerecho.add(btnVolver);
+        
         
         //---------------- MASCOTA ----------------
         JLabel mascotaCongrats = new JLabel();
@@ -115,11 +122,33 @@ public class Victoria extends JFrame {
         lblFraseAbajo.setForeground(Color.WHITE);
         lblFraseAbajo.setBounds(100, 880, 700, 35); 
         fondo.add(lblFraseAbajo);
+        
+        lblUsuario.setForeground(Color.BLACK);
+        lblUsuario.setBounds(1250, 150, 400, 40);
+        fondo.add(lblUsuario);
+
+        
+        //---------------- BOTON VOLVER  ----------------
+        btnVolver = new DecoracionBotones("Volver");
+        btnVolver.setFont(fuente1.deriveFont(25f));
+        btnVolver.setBounds(1320, 710, 200, 50);
+        btnVolver.addActionListener(e -> dispose());
+        fondo.add(btnVolver);
+        
+                //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
+        JButton btnResultados = new JButton("Ver resultados");
+        btnResultados.setFont(fuente1.deriveFont(25f));
+        btnResultados.setBounds(1320, 660, 200, 50);
+        btnResultados.addActionListener(e -> {
+            if (ventanaAnterior instanceof FoxJump foxJump) {
+                foxJump.mostrarResultadoConFade();
+            }
+        });
+        fondo.add(btnResultados);
     }
     
-    // =========================================================================
-    // METODO AUXILIAR: Recorta cualquier imagen de forma circular perfecta
-    // =========================================================================
+    
+    
     private Image crearImagenRedonda(Image imgOriginal, int diametro) {
         // Genera una imagen vacía que soporta transparencias (Alpha)
         BufferedImage master = new BufferedImage(diametro, diametro, BufferedImage.TYPE_INT_ARGB);
@@ -139,9 +168,5 @@ public class Victoria extends JFrame {
         g2.dispose();
         return master;
     }
-    
-    public static void main(String[] args) {
-        new Victoria(e -> System.out.println("Volver"));
-    }
-}
-
+        
+  }

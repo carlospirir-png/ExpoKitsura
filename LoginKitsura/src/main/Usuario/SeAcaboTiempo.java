@@ -12,12 +12,15 @@ public class SeAcaboTiempo extends JFrame {
     private Font fuente1;
     private Font fuente2;
 
-    private DecoracionBotones btnVolver; // Usada correctamente ahora
 
-    //Debe devolver al menú respectivo del minijuego.
-    //En el parámetro deben colocar de colocar la acción para que abra el menú del minijuego.
-    public SeAcaboTiempo(ActionListener accion) {
-        try {
+    private DecoracionBotones btnVolver; // Usada correctamente ahora
+    private JuegoBase juego;
+
+    public SeAcaboTiempo(JuegoBase juego, ActionListener accion) {
+
+        this.juego = juego;
+
+try {
             // LettersForLearners
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
@@ -35,20 +38,22 @@ public class SeAcaboTiempo extends JFrame {
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png");
         setContentPane(fondo);
         setTitle("Se acabo el tiempo");
+
         setSize(1980, 1060);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         fondo.setLayout(null);
 
         crearComponentes();
-        
         //--------------- VOLVER --------------
-        btnVolver.addActionListener(e -> {
-            dispose();       
-            accion.actionPerformed(e); 
-        });
-        setVisible(true);
+btnVolver.addActionListener(e -> {
+    dispose();
+    accion.actionPerformed(e);
+});
+
+setVisible(true);
     }
 
     private void crearComponentes() {
@@ -100,9 +105,5 @@ public class SeAcaboTiempo extends JFrame {
         mascotaReloj.setIcon(new ImageIcon(imgEscalada));
         mascotaReloj.setBounds(150, 250, 600, 600);
         fondo.add(mascotaReloj);
-    }
-
-    public static void main(String[] args) {
-        new SeAcaboTiempo(e -> System.out.println("Volver"));
     }
 }

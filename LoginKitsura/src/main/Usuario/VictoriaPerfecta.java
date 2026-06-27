@@ -8,13 +8,17 @@ import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
 
 public class VictoriaPerfecta extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    
+    private JFrame ventanaAnterior;
+
     private DecoracionBotones btnVolver;
+
     
-    public VictoriaPerfecta(ActionListener accion) {
+    public VictoriaPerfecta(ActionListener accion,JFrame ventanaAnterior) {
+        this.ventanaAnterior = ventanaAnterior;
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -30,15 +34,13 @@ public class VictoriaPerfecta extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN,20);
             fuente2 = new Font("Arial", Font.PLAIN,20);
         }
+
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
-        setContentPane(fondo);
-        setTitle("Victoria");
-        setSize(1980, 1060); 
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        // NO hace setContentPane ni setVisible
         fondo.setLayout(null);
+
         crearComponentes();
+
         
         //--------------- VOLVER --------------
         btnVolver.addActionListener(e -> {
@@ -46,8 +48,13 @@ public class VictoriaPerfecta extends JFrame {
             accion.actionPerformed(e); 
         });
         setVisible(true);
+
     }
-    
+
+    public FondoPanel getFondo() {
+        return fondo;
+    }
+
     private void crearComponentes() {
         JPanel panelIzquierdo = new JPanel();
         panelIzquierdo.setLayout(null);
@@ -69,6 +76,7 @@ public class VictoriaPerfecta extends JFrame {
         lblFrase.setBounds(0, 105, 700, 35);
         panelIzquierdo.add(lblFrase);
 
+
         JPanel panelDerecho = new JPanel();
         panelDerecho.setLayout(null);
         panelDerecho.setBackground(new Color(0, 0, 0, 115));
@@ -83,8 +91,10 @@ public class VictoriaPerfecta extends JFrame {
         fotoPerfil.setBounds(80, 60, 150, 150);
         panelDerecho.add(fotoPerfil); 
 
+        
+
         //---------------- DATOS DE USUARIO ----------------
-        JLabel lblUsuario = new JLabel("Nombre de usuario"); 
+        JLabel lblUsuario = new JLabel("Nombre de usuario");
         lblUsuario.setFont(fuente2.deriveFont(25f));
         lblUsuario.setForeground(Color.WHITE); 
         lblUsuario.setBounds(260, 115, 550, 40);
@@ -101,6 +111,22 @@ public class VictoriaPerfecta extends JFrame {
         mascotaCongrats.setIcon(new ImageIcon(imgEscalada));
         mascotaCongrats.setBounds(150, 270, 600, 600);
         fondo.add(mascotaCongrats);
+        
+        lblUsuario.setForeground(Color.BLACK);
+        lblUsuario.setBounds(1250, 150, 400, 40);
+        fondo.add(lblUsuario);
+
+        //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
+        JButton btnResultados = new JButton("Ver resultados");
+        btnResultados.setFont(fuente1.deriveFont(25f));
+        btnResultados.setForeground(Color.BLACK);
+        btnResultados.setBounds(1225, 740, 200, 50);
+        btnResultados.addActionListener(e -> {
+            if (ventanaAnterior instanceof FoxJump foxJump) {
+                foxJump.mostrarResultadoConFade();
+            }
+        });
+        fondo.add(btnResultados);
     }
     
     private Image crearImagenRedonda(Image imgOriginal, int diametro) {
@@ -119,7 +145,8 @@ public class VictoriaPerfecta extends JFrame {
         return master;
     }
     
-    public static void main(String[] args) {
-        new VictoriaPerfecta(e -> System.out.println("Volver"));
-    }
 }
+
+
+
+

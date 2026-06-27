@@ -63,7 +63,7 @@ public class MenuMinijuegos extends JFrame {
         btnFoxJump.setFont(fuente1.deriveFont(25f));
         btnFoxJump.setBounds(780, 460, 400, 55);
         btnFoxJump.addActionListener(e -> {
-            new FoxJump();
+            new MenuMinijuegoC2();
             dispose();
         });
         fondo.add(btnFoxJump);

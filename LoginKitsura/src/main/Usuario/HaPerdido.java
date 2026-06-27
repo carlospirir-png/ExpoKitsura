@@ -6,15 +6,18 @@ import javax.swing.*;
 import main.Menu.FondoPanel;
 
 public class HaPerdido extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    
-    private JButton btnVolver;
-    
-    //Debe devolver al menú respectivo del minijuego.
-    //En el parámetro deben colocar de colocar la acción para que abra el menú del minijuego.
-    public HaPerdido(ActionListener accion) {
+
+
+    private JuegoBase juego; // 🔥 GENÉRICO
+
+    public HaPerdido(JuegoBase juego,ActionListener accion) {
+
+        this.juego = juego;
+
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -29,67 +32,86 @@ public class HaPerdido extends JFrame {
             e.printStackTrace();            
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
+
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png"); 
+
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png");
         setContentPane(fondo);
-        
+
         setTitle("Ha perdido");
-        setSize(1980, 1060); 
+        setSize(1980, 1060);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         fondo.setLayout(null);
-        
+
         crearComponentes();
-        
-        //--------------- VOLVER --------------
-        btnVolver.addActionListener(e -> {
-            dispose();          // Cierra esta ventana
-            accion.actionPerformed(e); // Ejecuta la acción que te pasaron
-        });
-        
-        setVisible(true);
     }
-    
+
     private void crearComponentes() {
-        //---------------- GAME OVER ----------------
+
         JLabel lblGameOver = new JLabel("GAME OVER", JLabel.CENTER);
         lblGameOver.setFont(fuente2.deriveFont(34f));
         lblGameOver.setForeground(Color.WHITE);
         lblGameOver.setBounds(900, 100, 800, 60);
         fondo.add(lblGameOver);
 
-        //---------------- SUBTÍTULO ----------------
         JLabel lblSubtitulo = new JLabel("Se te acabaron las vidas", JLabel.CENTER);
         lblSubtitulo.setFont(fuente2.deriveFont(28f));
         lblSubtitulo.setForeground(Color.WHITE);
         lblSubtitulo.setBounds(900, 170, 800, 45);
         fondo.add(lblSubtitulo);
 
-        //---------------- CITA DE DALE CARNEGIE ----------------
-        JLabel lblCita = new JLabel("<<Desarrolla el éxito a partir de los fracasos. El desaliento y el fracaso son los peldaños hacia el éxito>>. -Dale Carnegie", JLabel.CENTER);
+        JLabel lblCita = new JLabel(
+                "<<Aprender del error es avanzar>>",
+                JLabel.CENTER);
         lblCita.setFont(fuente1.deriveFont(24f));
         lblCita.setForeground(Color.WHITE);
         lblCita.setBounds(900, 240, 800, 30);
         fondo.add(lblCita);
 
-        JLabel mascotaCorazones = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/DERROTA-por-vidas.png")); 
-        Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
-        mascotaCorazones.setIcon(new ImageIcon(imgEscalada));
-        mascotaCorazones.setBounds(150, 250, 600, 600);
-        fondo.add(mascotaCorazones);
+        JLabel mascota = new JLabel();
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/DERROTA-por-vidas.png"));
 
-        //---------------- BOTON VOLVER ----------------
-        btnVolver = new JButton("Volver");
-        btnVolver.setFont(fuente1.deriveFont(25f));
-        btnVolver.setForeground(Color.BLACK);
-        btnVolver.setBounds(1225, 770, 200, 50);
-        btnVolver.addActionListener(e -> dispose()); 
-        fondo.add(btnVolver);
-    }
-    
-    public static void main(String[] args) {
-        new HaPerdido(e -> System.out.println("Volver"));
+        Image img = icon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+        mascota.setIcon(new ImageIcon(img));
+        mascota.setBounds(150, 250, 600, 600);
+        fondo.add(mascota);
+
+        //---------------- BOTÓN CONTINUAR ----------------
+        JButton btnContinuar = new JButton("Continuar");
+        btnContinuar.setFont(fuente1.deriveFont(25f));
+        btnContinuar.setBounds(1225, 770, 200, 50);
+
+        btnContinuar.addActionListener(e -> {
+
+            dispose();
+
+            ResultadoFinal resultado = new ResultadoFinal(
+                    juego,
+                    juego.getPuntajeTotal(),
+                    juego.getTiempoTotalJugado()
+            );
+
+            resultado.mostrar();
+        });
+
+        fondo.add(btnContinuar);
+
+        //---------------- BOTÓN MENÚ ----------------
+        JButton btnMenu = new JButton("Menú");
+        btnMenu.setFont(fuente1.deriveFont(25f));
+        btnMenu.setBounds(1225, 830, 200, 50);
+
+        btnMenu.addActionListener(e -> {
+            dispose();
+
+            juego.irAlMenu(); // 🔥 genérico
+        });
+
+        fondo.add(btnMenu);
+
     }
 }
