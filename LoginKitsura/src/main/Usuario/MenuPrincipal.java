@@ -2,9 +2,7 @@ package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.SalirDelJuego;
-import main.Menu.VolverMenu;
+import main.Menu.*;
 
 public class MenuPrincipal extends JFrame {
 
@@ -104,7 +102,5 @@ public class MenuPrincipal extends JFrame {
         fondo.add(mascota);
     }
     
-    public static void main(String[] args) {
-        new MenuPrincipal();
-    }
+    
 }

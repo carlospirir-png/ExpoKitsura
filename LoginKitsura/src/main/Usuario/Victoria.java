@@ -6,13 +6,16 @@ import javax.swing.*;
 import main.Menu.FondoPanel;
 
 public class Victoria extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+        private JFrame ventanaAnterior;
+            private JButton btnVolver;
+
     
-    private JButton btnVolver;
-    
-    public Victoria(ActionListener accion) {
+    public Victoria(ActionListener accion, JFrame ventanaAnterior) {
+                this.ventanaAnterior = ventanaAnterior;
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -27,15 +30,13 @@ public class Victoria extends JFrame {
             e.printStackTrace();            
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
+
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png"); 
-        setContentPane(fondo);
-        setTitle("Victoria");
-        setSize(1980, 1060); 
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
+        // NO hace setContentPane ni setVisible
         fondo.setLayout(null);
+
         
         
         crearComponentes();
@@ -47,7 +48,11 @@ public class Victoria extends JFrame {
         });
         setVisible(true);
     }
-    
+
+    public FondoPanel getFondo() {
+        return fondo;
+    }
+
     private void crearComponentes() {
         //---------------- TÍTULO ----------------
         JLabel lblGanado = new JLabel("¡Has Ganado!", JLabel.CENTER);
@@ -64,12 +69,13 @@ public class Victoria extends JFrame {
         fondo.add(lblFrase);
 
         //---------------- MASCOTA ----------------
-            JLabel mascotaCongrats = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Imperfecta.png")); 
-            Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
-            mascotaCongrats.setIcon(new ImageIcon(imgEscalada));
-            mascotaCongrats.setBounds(225, 270, 600, 600);
-            fondo.add(mascotaCongrats);
+        JLabel mascotaCongrats = new JLabel();
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource(
+                "/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Imperfecta.png"));
+        Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+        mascotaCongrats.setIcon(new ImageIcon(imgEscalada));
+        mascotaCongrats.setBounds(225, 270, 600, 600);
+        fondo.add(mascotaCongrats);
 
         //---------------- FRASE INFERIOR ----------------
         JLabel lblFraseAbajo = new JLabel("Aún con errores, Pudiste lograrlo", JLabel.CENTER);
@@ -79,11 +85,13 @@ public class Victoria extends JFrame {
         fondo.add(lblFraseAbajo);
 
         //---------------- DATOS DE USUARIO ----------------
-        JLabel lblUsuario = new JLabel("Nombre de usuario"); 
+        JLabel lblUsuario = new JLabel("Nombre de usuario");
         lblUsuario.setFont(fuente2.deriveFont(25f));
         lblUsuario.setForeground(Color.BLACK);
         lblUsuario.setBounds(1250, 150, 400, 40);
         fondo.add(lblUsuario);
+
+
 
             JLabel fotoPerfil = new JLabel();
             ImageIcon paisajeIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/logofK.png"));
@@ -98,10 +106,17 @@ public class Victoria extends JFrame {
         btnVolver.setBounds(1320, 710, 200, 50);
         btnVolver.addActionListener(e -> dispose());
         fondo.add(btnVolver);
+        
+                //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
+        JButton btnResultados = new JButton("Ver resultados");
+        btnResultados.setFont(fuente1.deriveFont(25f));
+        btnResultados.setBounds(1320, 660, 200, 50);
+        btnResultados.addActionListener(e -> {
+            if (ventanaAnterior instanceof FoxJump foxJump) {
+                foxJump.mostrarResultadoConFade();
+            }
+        });
+        fondo.add(btnResultados);
     }
     
-    public static void main(String[] args) {
-        new Victoria(e -> System.out.println("Volver"));
-    }
-}
-
+  }

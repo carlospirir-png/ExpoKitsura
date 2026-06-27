@@ -7,7 +7,7 @@ import main.conexion.Conexion;
 import java.sql.*;
 import java.util.Random;
 
-public class HiddenFox_Codigo extends HiddenFox {
+public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
 
     //Son 5 preguntas las que se muestran
     private int[] preguntasPartida = new int[5];
@@ -70,20 +70,23 @@ public class HiddenFox_Codigo extends HiddenFox {
 
                 dispose();
 
-                new PantallaDificultad(nivelActual + 1, vidas, puntos, usoPista);
+                // ✅ CORRECCIÓN: se agrega this como ventanaAnterior
+                new PantallaDificultad(this, nivelActual + 1, vidas, puntos, usoPista);
 
             } else {
 
                 dispose();
 
                 if (vidas == 3 && puntos == puntajeMaximo && !usoPista) {
+                    // ✅ CORRECCIÓN: se agrega this como ventanaAnterior
                     new VictoriaPerfecta(e -> {
                         new MenuHiddenFox().setVisible(true);
-                    });
+                    }, this);
                 } else {
+                    // ✅ CORRECCIÓN: se agrega this como ventanaAnterior
                     new Victoria(e -> {
                         new MenuHiddenFox().setVisible(true);
-                    });
+                    }, this);
                 }
             }
         }
@@ -196,7 +199,8 @@ public class HiddenFox_Codigo extends HiddenFox {
 
         dispose();
 
-        new SeAcaboTiempo(e -> {
+        // ✅ CORRECCIÓN: se agrega this como JuegoBase
+        new SeAcaboTiempo(this, e -> {
             new MenuHiddenFox().setVisible(true);
         });
     }
@@ -275,9 +279,9 @@ public class HiddenFox_Codigo extends HiddenFox {
             Esperar();
         }
     }
-//-------------- AYUDA Y PISTAS-------------------
-    // --------------- ABRIR VENTANA ---------------
 
+    //-------------- AYUDA Y PISTAS-------------------
+    // --------------- ABRIR VENTANA ---------------
     @Override
     public void ayuda() {
         Random random = new Random();
@@ -427,5 +431,40 @@ public class HiddenFox_Codigo extends HiddenFox {
         }
 
         return 50; // valor por defecto
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // JuegoBase
+    // ─────────────────────────────────────────────────────────────────────────
+    @Override
+    public int getPuntajeTotal() {
+        return puntos;
+    }
+
+    @Override
+    public int getTiempoTotalJugado() {
+        return 0; // HiddenFox no trackea tiempo total
+    }
+
+    @Override
+    public void reiniciar() {
+        jugarDeNuevo();
+    }
+
+    @Override
+    public void jugarDeNuevo() {
+        dispose();
+        new HiddenFox_Codigo(nivelActual);
+    }
+
+    @Override
+    public void irAlMenu() {
+        dispose();
+        new MenuHiddenFox().setVisible(true);
+    }
+
+    @Override
+    public JFrame getFrame() {
+        return this;
     }
 }

@@ -7,7 +7,7 @@ import java.net.URL; //Se importa URL
 import main.conexion.Conexion; //Se importa Conexion
 import java.sql.*; //Se importa el SQL
 
-public abstract class HiddenFox extends JFrame {
+public abstract class HiddenFox extends JFrame implements JuegoBase{
 
     //Atributos
     Connection con = new Conexion().getConnection();
@@ -617,7 +617,7 @@ public abstract class HiddenFox extends JFrame {
 
                 JOptionPane.showMessageDialog(this, "Has perdido.");
                 dispose(); // Cierra la pantalla que se está presentando
-                new HaPerdido(e -> {
+                new HaPerdido(this,e -> {
                     new MenuHiddenFox().setVisible(true);
                 });
                 return;

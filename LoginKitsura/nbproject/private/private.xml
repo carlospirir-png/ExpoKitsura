@@ -3,28 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/Glorial%20Xol/Documents/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuHiddenFox.java</file>
-            <file>file:/C:/Users/Glorial%20Xol/Documents/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
-            <file>file:/C:/Users/Glorial%20Xol/Documents/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaDificultad.java</file>
-            <file>file:/C:/Users/Glorial%20Xol/Documents/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox.java</file>
-            <file>file:/C:/Users/Glorial%20Xol/Documents/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
-=======
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/VictoriaPerfecta.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaCContra.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HaPerdido.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegosC.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/Victoria.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/SeAcaboTiempo.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuPrincipal.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasTexto.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuHiddenFox.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasAudio.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaDificultad.java</file>
->>>>>>> 21c939aafc065ee7fc194102bd965909bd73ce6a
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/PreguntaDAO_MaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/Pregunta_MaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/OpcionRespuesta_MaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/PartidaDAO_MaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Main.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegos.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuPrincipal.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
         </group>
     </open-files>
 </project-private>
