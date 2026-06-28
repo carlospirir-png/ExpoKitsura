@@ -59,11 +59,11 @@ public class PantallaInicio extends JFrame {
 
         lblLogo = new JLabel();
 
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/LogoKitsura3.png"));
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/LogoKitsura.png"));
         Image logoEscalado = logoIcon.getImage().getScaledInstance(570, 600, Image.SCALE_SMOOTH);
 
         lblLogo.setIcon(new ImageIcon(logoEscalado));
-        lblLogo.setBounds(650, 100, 570, 600);
+        lblLogo.setBounds(650, 100, 570,600);
 
         fondo.add(lblLogo);
 
@@ -78,8 +78,8 @@ public class PantallaInicio extends JFrame {
 
         //---------------- BOTON JUGAR ----------------
         btnJugar = new DecoracionBotones("JUGAR");      
-        btnJugar.setFont(fuente2.deriveFont(18f)); 
-        btnJugar.setBounds(850, 910, 200, 45);
+        btnJugar.setFont(fuente2.deriveFont(30f)); 
+        btnJugar.setBounds(810, 880, 250, 70);
         btnJugar.addActionListener(e -> {
             new RegistroUsuario();
             dispose(); // Cierra PantallaInicio

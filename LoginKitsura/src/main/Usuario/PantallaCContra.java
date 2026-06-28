@@ -31,9 +31,28 @@ public class PantallaCContra extends JFrame {
     private JLabel lblMascota;
     private JLabel lblLogo;
 
+    private Font fuente1;
+    private Font fuente2;
+    
     private String correo;
 
     public PantallaCContra(String correo) {
+          try{
+            // LettersForLearners
+            fuente1 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+            
+        } catch (Exception e){
+            e.printStackTrace();            
+        fuente1 = new Font("Arial", Font.PLAIN,20);
+        fuente2 = new Font("Arial", Font.PLAIN,20);
+        }
+        
         this.correo = correo;
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
@@ -59,14 +78,14 @@ public class PantallaCContra extends JFrame {
         fondo.add(panelSemi);
 
         lblTitulo = new JLabel("Editar Contraseña");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 28));
+        lblTitulo.setFont(fuente2.deriveFont(28f));
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setBounds(20, 10, 565, 30);
 
         panelSemi.add(lblTitulo);
 
         lblActual = new JLabel("Ingrese la contraseña actual:");
-        lblActual.setFont(new Font("Arial", Font.PLAIN, 18));
+        lblActual.setFont(fuente1.deriveFont(28f));
         lblActual.setForeground(Color.WHITE);
         lblActual.setBounds(20, 60, 280, 30);
 
@@ -80,7 +99,7 @@ public class PantallaCContra extends JFrame {
         panelSemi.add(txtActual);
 
         lblNueva = new JLabel("Ingrese la contraseña nueva:");
-        lblNueva.setFont(new Font("Arial", Font.PLAIN, 18));
+        lblNueva.setFont(fuente1.deriveFont(28f));
         lblNueva.setForeground(Color.WHITE);
         lblNueva.setBounds(20, 170, 300, 30);
 
@@ -94,7 +113,7 @@ public class PantallaCContra extends JFrame {
         panelSemi.add(txtNueva);
 
         btnAceptar = new JButton("ACEPTAR");
-        btnAceptar.setFont(new Font("Arial", Font.BOLD, 18));
+        btnAceptar.setFont(fuente1.deriveFont(28f));
         btnAceptar.setBackground(new Color(74, 110, 157));
         btnAceptar.setForeground(Color.WHITE);
         btnAceptar.setFocusPainted(false);
@@ -104,8 +123,8 @@ public class PantallaCContra extends JFrame {
 
         panelSemi.add(btnAceptar);
 
-        lblOlvido = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
-        lblOlvido.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblOlvido = new JLabel("¿Olvidaste tu contraseña?");
+        lblOlvido.setFont(fuente1.deriveFont(22f));
         lblOlvido.setForeground(Color.WHITE);
         lblOlvido.setBounds(80, 315, 220, 20);
 
@@ -127,23 +146,6 @@ public class PantallaCContra extends JFrame {
         lblMascota.setBounds(320, 40, 280, 280);
 
         fondo.add(lblMascota);
-
-        lblLogo = new JLabel();
-
-        ImageIcon logoIcon
-                = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/logotipo/LogoKitsura2.png"));
-
-        Image logoEscalado
-                = logoIcon.getImage().getScaledInstance(
-                        140,
-                        55,
-                        Image.SCALE_SMOOTH);
-
-        lblLogo.setIcon(new ImageIcon(logoEscalado));
-        lblLogo.setBounds(380, 270, 150, 80);
-
-        fondo.add(lblLogo);
     }
 
     public String ObtenerContrasena() {

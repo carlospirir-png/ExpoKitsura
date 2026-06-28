@@ -5,20 +5,20 @@ import java.net.URL;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Menu.DecoracionBotones;
 
 public class PistasAudio extends JFrame {
 
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    private DecoracionBotones btnSalir, btnRepetir;
     private Clip clip;
-
-    private JButton btnRepetir;
-
     private String rutaAudio;
 
-    public PistasAudio(String rutaAudio) {
-        this.rutaAudio = rutaAudio;
+public PistasAudio(String rutaAudio) {
+
+    this.rutaAudio = rutaAudio;
         try {
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -35,8 +35,9 @@ public class PistasAudio extends JFrame {
         }
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
-        setUndecorated(true);
-        setSize(600, 450);
+        
+        setTitle("Pistas de Audio");
+        setSize(700, 450);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         fondo.setLayout(null);
@@ -75,7 +76,7 @@ public class PistasAudio extends JFrame {
         JPanel recuadroAudio = new JPanel();
         recuadroAudio.setLayout(null);
         recuadroAudio.setBackground(Color.WHITE);
-        recuadroAudio.setBounds(40, 130, 340, 120);
+        recuadroAudio.setBounds(40, 100, 340, 120);
         fondo.add(recuadroAudio);
 
         JLabel lblTiempoInicio = new JLabel("1:46");
@@ -99,7 +100,21 @@ public class PistasAudio extends JFrame {
         recuadroAudio.add(lblIdAudio);
 
         //---------------- BOTON SALIR ----------------
-        JButton btnSalir = new JButton("Salir");
+        JButton btnSalir = new DecoracionBotones("SALIR");
+        btnSalir.setFont(fuente2.deriveFont(20f));
+        btnSalir.setBounds(40, 290, 150, 45);
+        btnSalir.addActionListener(e -> {
+            detenerAudio();
+            dispose();
+        });
+        fondo.add(btnSalir);
+
+        //---------------- BOTON REPETIR ----------------
+        btnRepetir = new DecoracionBotones("REPETIR", "#FC767D", "#da4d58", "#da4d58");
+        btnRepetir.setFont(fuente2.deriveFont(20f));
+        btnRepetir.setBounds(230, 290, 150, 45);
+        btnRepetir.addActionListener(e -> reproducirAudio());
+        
         btnSalir.setFont(fuente1.deriveFont(20f));
         btnSalir.setBounds(40, 320, 150, 45);
         btnSalir.addActionListener(e -> {
@@ -110,18 +125,19 @@ public class PistasAudio extends JFrame {
         fondo.add(btnSalir);
 
         //---------------- BOTON REPETIR ----------------
-        btnRepetir = new JButton("Repetir");
+        
         btnRepetir.setFont(fuente1.deriveFont(20f));
         btnRepetir.setBounds(230, 320, 150, 45);
         btnRepetir.addActionListener(e -> reproducirAudio());
+
         fondo.add(btnRepetir);
 
         //---------------- MASCOTA ----------------
         JLabel mascotaAudifonos = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/PISTA_AUDIO.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascotaAudifonos.setIcon(new ImageIcon(imgEscalada));
-        mascotaAudifonos.setBounds(365, 140, 300, 300);
+        mascotaAudifonos.setBounds(390, 65, 300, 300);
 
         fondo.add(mascotaAudifonos);
     }

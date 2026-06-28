@@ -617,7 +617,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase{
 
                 JOptionPane.showMessageDialog(this, "Has perdido.");
                 dispose(); // Cierra la pantalla que se está presentando
-                new HaPerdido(this,e -> {
+                new SeAcaboVidas(this,e -> {
                     new MenuHiddenFox().setVisible(true);
                 });
                 return;

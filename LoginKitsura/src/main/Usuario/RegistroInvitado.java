@@ -4,6 +4,7 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Menu.DecoracionBotones;
 
 public class RegistroInvitado extends JFrame {
 
@@ -12,7 +13,7 @@ public class RegistroInvitado extends JFrame {
     private String nombreInvitado;
 
     private JTextField txtNombre;
-    private JButton btnJugar, btnVolver;
+    private DecoracionBotones btnJugar, btnVolver;
     private JLabel logo, lblNombre, mascota;
 
     public RegistroInvitado() {
@@ -68,7 +69,7 @@ public class RegistroInvitado extends JFrame {
         fondo.add(logo);
 
         //---------------- LABEL NOMBRE ----------------
-        lblNombre = new JLabel("NOMBRE");
+        lblNombre = new JLabel("Nombre");
         lblNombre.setFont(fuente2.deriveFont(25f));
         lblNombre.setForeground(Color.WHITE);
         lblNombre.setBounds(760, 420, 200, 30);
@@ -83,7 +84,7 @@ public class RegistroInvitado extends JFrame {
         fondo.add(txtNombre);
 
         //---------------- BOTON JUGAR ----------------
-        btnJugar = new JButton("JUGAR");
+        btnJugar = new DecoracionBotones("JUGAR", "#FC767D", "#da4d58", "#da4d58");
         btnJugar.setFont(fuente2.deriveFont(15f));
         btnJugar.setBounds(820, 600, 285, 60);
 
@@ -98,8 +99,8 @@ public class RegistroInvitado extends JFrame {
         fondo.add(btnJugar);
 
         //---------------- BOTON VOLVER ----------------
-        btnVolver = new JButton("VOLVER");
-        btnVolver.setFont(fuente2.deriveFont(10f));
+        JButton btnVolver = new DecoracionBotones ("VOLVER");
+        btnVolver.setFont(fuente2.deriveFont(12f));
         btnVolver.setBounds(40, 985, 120, 40);
 
         btnVolver.addActionListener(e -> {

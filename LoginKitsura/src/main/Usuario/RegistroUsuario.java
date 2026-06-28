@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.sql.*;
 import main.Menu.FondoPanel;
 import main.Menu.SalirDelJuego;
+import main.Menu.DecoracionBotones;
 import main.conexion.Conexion;
 
 public class RegistroUsuario extends JFrame {
@@ -16,7 +17,7 @@ public class RegistroUsuario extends JFrame {
     private JTextField txtNombre, txtCorreo;
     private JPasswordField txtPassword;
 
-    private JButton btnJugar, btnSalir;
+    private DecoracionBotones btnJugar, btnSalir;
 
     private JLabel logo, mascota;
     private JLabel lblNombre, lblCorreo, lblPassword, lblInvitado;
@@ -133,7 +134,7 @@ public class RegistroUsuario extends JFrame {
         fondo.add(txtPassword);
 
         //---------------- BOTON JUGAR ----------------
-        btnJugar = new JButton("JUGAR");
+        btnJugar = new DecoracionBotones("JUGAR", "#FC767D", "#da4d58", "#da4d58");
         btnJugar.setFont(fuente2.deriveFont(15f));
         btnJugar.setBounds(820, 815, 285, 60);
 
@@ -147,7 +148,7 @@ public class RegistroUsuario extends JFrame {
         fondo.add(btnJugar);
 
         //---------------- BOTON SALIR ----------------
-        btnSalir = new JButton("SALIR");
+        JButton btnSalir = new DecoracionBotones("SALIR");
         btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(1750, 950, 120, 40);
 
@@ -155,46 +156,57 @@ public class RegistroUsuario extends JFrame {
             new SalirDelJuego();
             dispose();
         });
- 
 
         fondo.add(btnSalir);
 
         //---------------- LABEL INVITADO ----------------
         lblInvitado = new JLabel("<html><u>Invitado</u></html>");
-
         lblInvitado.setFont(fuente2.deriveFont(20f));
         lblInvitado.setForeground(Color.WHITE);
+        lblInvitado.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblInvitado.setBounds(1700, 40, 120, 30);
 
-        lblInvitado.setCursor(
-                new Cursor(Cursor.HAND_CURSOR));
-        lblInvitado.setBounds(
-                1700, 40, 120, 30);
-
-        lblInvitado.addMouseListener(
-                new java.awt.event.MouseAdapter() {
+        // MODIFICACIÓN: Eventos del mouse cambiados para aplicar el color solicitado #447A9C al pasar por encima
+        lblInvitado.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e
-            ) {
+            public void mouseClicked(java.awt.event.MouseEvent e) {
                 new RegistroInvitado();
                 dispose();
+            }
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                lblInvitado.setForeground(Color.decode("#447A9C"));
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                lblInvitado.setForeground(Color.WHITE);
             }
         });
         fondo.add(lblInvitado);
 
         //---------------- LABEL INICIAR SESION ----------------
-        JLabel lblIniciarSesion
-                = new JLabel("<html><u>Iniciar Sesión</u></html>");
-
+        JLabel lblIniciarSesion = new JLabel("<html><u>Iniciar Sesión</u></html>");
         lblIniciarSesion.setFont(fuente2.deriveFont(18f));
         lblIniciarSesion.setForeground(Color.WHITE);
         lblIniciarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblIniciarSesion.setBounds(40, 985, 200, 30);
+        
+        // MODIFICACIÓN: Alineado en el eje Y (de 985 a 955) para emparejarse perfectamente con el botón SALIR (950)
+        lblIniciarSesion.setBounds(40, 955, 200, 30);
 
+        // MODIFICACIÓN: Eventos del mouse cambiados para aplicar el color solicitado #447A9C al pasar por encima
         lblIniciarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 new IniciarSesion();
                 dispose();
+            }
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                lblIniciarSesion.setForeground(Color.decode("#447A9C"));
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                lblIniciarSesion.setForeground(Color.WHITE);
             }
         });
 

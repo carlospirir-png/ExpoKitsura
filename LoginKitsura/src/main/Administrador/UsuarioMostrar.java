@@ -2,26 +2,38 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
+import main.Menu.DecoracionBotones;
+import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
 
 public class UsuarioMostrar extends JFrame {
 
-    private FondoPanelSemi fondo;
-    private JPanel panelIzquierdo;
-    private JPanel panelTabla;
-    private JButton btnEliminar;
-    private JButton btnBuscar;
-    private JLabel lblID;
-    private JTextField txtID;
-    private JLabel lblTitulo;
-    private JTable tablaUsuarios;
-    private JScrollPane scrollTabla;
-    private JLabel lblMascota;
+    private FondoPanel fondo;
+    private Font fuente1;
+    private Font fuente2;
 
     public UsuarioMostrar() {
 
-        fondo = new FondoPanelSemi("/multimedia/utiles/fondos/interfaces/fondoDosK.png");
+        try {
+
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+
+        }
+
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Usuarios");
@@ -39,109 +51,130 @@ public class UsuarioMostrar extends JFrame {
 
     private void crearComponentes() {
 
-        panelIzquierdo = new JPanel() {
 
-            @Override
-            protected void paintComponent(Graphics g) {
-
-                super.paintComponent(g);
-
-                Graphics2D g2 = (Graphics2D) g.create();
-
-                g2.setColor(new Color(0, 0, 0, 120));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
-
-                g2.dispose();
-            }
-        };
-
-        panelIzquierdo.setOpaque(false);
+        //---------------- PANEL IZQUIERDO ----------------
+        FondoPanelSemi panelIzquierdo = new FondoPanelSemi(new Color(0, 0, 0, 130));
         panelIzquierdo.setLayout(null);
-        panelIzquierdo.setBounds(60, 70, 720, 900);
-
+        panelIzquierdo.setBounds(100, 170, 520, 700);
         fondo.add(panelIzquierdo);
 
-        btnEliminar = new JButton("ELIMINAR");
-        btnEliminar.setFont(new Font("Arial", Font.BOLD, 28));
-        btnEliminar.setBounds(60, 50, 250, 75);
+        JButton btnEliminar = new DecoracionBotones("ELIMINAR");
+        btnEliminar.setFont(fuente2.deriveFont(24f));
+        btnEliminar.setBounds(40, 40, 190, 60);
+
+        btnEliminar.addActionListener(e -> {
+
+            // Acción eliminar usuario
+
+        });
 
         panelIzquierdo.add(btnEliminar);
 
-        btnBuscar = new JButton("BUSCAR");
-        btnBuscar.setFont(new Font("Arial", Font.BOLD, 28));
-        btnBuscar.setBounds(390, 50, 250, 75);
+        JButton btnBuscar = new DecoracionBotones("BUSCAR");
+        btnBuscar.setFont(fuente2.deriveFont(24f));
+        btnBuscar.setBounds(280, 40, 190, 60);
+
+        btnBuscar.addActionListener(e -> {
+
+            // Acción buscar usuario
+
+        });
 
         panelIzquierdo.add(btnBuscar);
 
-        lblID = new JLabel("Ingrese el ID del usuario:");
-        lblID.setFont(new Font("Arial", Font.PLAIN, 32));
+        JLabel lblID = new JLabel("Ingrese el ID del usuario");
+        lblID.setFont(fuente2.deriveFont(26f));
         lblID.setForeground(Color.WHITE);
-        lblID.setBounds(60, 190, 500, 45);
-
+        lblID.setBounds(35, 150, 440, 35);
         panelIzquierdo.add(lblID);
 
-        txtID = new JTextField();
-        txtID.setFont(new Font("Arial", Font.PLAIN, 28));
-        txtID.setBounds(60, 255, 580, 65);
-
+        JTextField txtID = new JTextField();
+        txtID.setFont(fuente1.deriveFont(34f));
+        txtID.setBounds(35, 200, 440, 55);
         panelIzquierdo.add(txtID);
 
-        lblMascota = new JLabel();
+        //---------------- MASCOTA ----------------
+        JLabel lblMascota = new JLabel();
 
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        try {
 
-        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(520, 520, Image.SCALE_SMOOTH);
+            ImageIcon mascota = new ImageIcon(
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
 
-        lblMascota.setIcon(new ImageIcon(mascotaEscalada));
-        lblMascota.setBounds(100, 360, 520, 520);
+            Image img = mascota.getImage().getScaledInstance(
+                    430,
+                    430,
+                    Image.SCALE_SMOOTH);
 
+            lblMascota.setIcon(new ImageIcon(img));
+
+        } catch (Exception e) {
+
+            lblMascota.setText("~");
+
+        }
+
+        lblMascota.setBounds(40, 280, 430, 430);
         panelIzquierdo.add(lblMascota);
 
-        panelTabla = new JPanel() {
-
-            @Override
-            protected void paintComponent(Graphics g) {
-
-                super.paintComponent(g);
-
-                Graphics2D g2 = (Graphics2D) g.create();
-
-                g2.setColor(new Color(0, 0, 0, 120));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
-
-                g2.dispose();
-            }
-        };
-
-        panelTabla.setOpaque(false);
+        //---------------- PANEL DERECHO ----------------
+        FondoPanelSemi panelTabla = new FondoPanelSemi(new Color(0, 0, 0, 130));
         panelTabla.setLayout(null);
-        panelTabla.setBounds(830, 70, 1040, 900);
-
+        panelTabla.setBounds(700, 170, 980, 700);
         fondo.add(panelTabla);
 
-        lblTitulo = new JLabel("USUARIOS", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 52));
-        lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setBounds(220, 30, 600, 60);
+        JLabel lblTabla = new JLabel("LISTA DE USUARIOS", JLabel.CENTER);
+        lblTabla.setFont(fuente2.deriveFont(34f));
+        lblTabla.setForeground(Color.WHITE);
+        lblTabla.setBounds(0, 20, 980, 45);
+        panelTabla.add(lblTabla);
 
-        panelTabla.add(lblTitulo);
+        //---------------- TABLA ----------------
+        DefaultTableModel modelo = new DefaultTableModel(
+                new String[]{"ID", "NOMBRE", "CORREO", "CONTRASEÑA"}, 0) {
 
-        String[] columnas = {"ID", "Nombre", "Correo", "Contraseña"};
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
 
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 10);
+        };
 
-        tablaUsuarios = new JTable(modelo);
+        for (int i = 0; i < 8; i++) {
+            modelo.addRow(new Object[]{"", "", "", ""});
+        }
 
-        tablaUsuarios.setRowHeight(75);
-        tablaUsuarios.setFont(new Font("Arial", Font.PLAIN, 22));
+        JTable tablaUsuarios = new JTable(modelo);
 
-        tablaUsuarios.getTableHeader().setFont(new Font("Arial", Font.BOLD, 24));
+        tablaUsuarios.setFont(fuente1.deriveFont(18f));
+        tablaUsuarios.setRowHeight(55);
 
-        scrollTabla = new JScrollPane(tablaUsuarios);
-        scrollTabla.setBounds(30, 120, 980, 730);
+        tablaUsuarios.getTableHeader().setFont(fuente2.deriveFont(20f));
+        tablaUsuarios.getTableHeader().setReorderingAllowed(false);
+
+        tablaUsuarios.getColumnModel().getColumn(0).setPreferredWidth(90);
+        tablaUsuarios.getColumnModel().getColumn(1).setPreferredWidth(220);
+        tablaUsuarios.getColumnModel().getColumn(2).setPreferredWidth(320);
+        tablaUsuarios.getColumnModel().getColumn(3).setPreferredWidth(250);
+
+        JScrollPane scrollTabla = new JScrollPane(tablaUsuarios);
+        scrollTabla.setBounds(30, 90, 920, 580);
 
         panelTabla.add(scrollTabla);
+
+        //---------------- BOTÓN VOLVER ----------------
+        JButton btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver.setFont(fuente2.deriveFont(28f));
+        btnVolver.setBounds(1550, 900, 300, 65);
+
+        btnVolver.addActionListener(e -> dispose());
+
+        fondo.add(btnVolver);
+
     }
-  
+
+    public static void main(String[] args) {
+        new UsuarioMostrar();
+    }
 
 }

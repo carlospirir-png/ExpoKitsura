@@ -2,21 +2,34 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
+import main.Menu.DecoracionBotones;
+import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
 
 public class UsuarioMenu extends JFrame {
 
-    private FondoPanelSemi fondo;
-    private JPanel panelSemi;
-    private JLabel lblTitulo;
-    private JButton btnAgregarAdmin;
-    private JButton btnEditar;
-    private JButton btnMostrar;
-    private JLabel lblMascota;
+    private FondoPanel fondo;
+    private Font fuente1;
+    private Font fuente2;
 
     public UsuarioMenu() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
+        try {
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
+
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Usuario");
@@ -34,63 +47,98 @@ public class UsuarioMenu extends JFrame {
 
     private void crearComponentes() {
 
-        panelSemi = new JPanel() {
+        //---------------- PANEL TÍTULO ----------------
+        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
+        panelTitulo.setLayout(null);
+        panelTitulo.setBounds(125, 105, 500, 75);
+        fondo.add(panelTitulo);
 
-            @Override
-            protected void paintComponent(Graphics g) {
-
-                super.paintComponent(g);
-
-                Graphics2D g2 = (Graphics2D) g.create();
-
-                g2.setColor(new Color(0, 0, 0, 120));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40);
-
-                g2.dispose();
-            }
-        };
-
-        panelSemi.setOpaque(false);
-        panelSemi.setLayout(null);
-        panelSemi.setBounds(120, 90, 1000, 850);
-
-        fondo.add(panelSemi);
-
-        lblTitulo = new JLabel("USUARIO", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 56));
+        JLabel lblTitulo = new JLabel("USUARIO", JLabel.CENTER);
+        lblTitulo.setFont(fuente2.deriveFont(45f));
         lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setBounds(250, 50, 500, 70);
+        lblTitulo.setBounds(0, 0, 500, 75);
+        panelTitulo.add(lblTitulo);
 
-        panelSemi.add(lblTitulo);
+        //---------------- PANEL IZQUIERDO ----------------
+        FondoPanelSemi panelOpciones = new FondoPanelSemi(new Color(0, 0, 0, 130));
+        panelOpciones.setLayout(null);
+        panelOpciones.setBounds(120, 180, 700, 620);
+        fondo.add(panelOpciones);
 
-        btnAgregarAdmin = new JButton("AÑADIR ADMINISTRADOR");
-        btnAgregarAdmin.setFont(new Font("Arial", Font.BOLD, 30));
-        btnAgregarAdmin.setBounds(250, 250, 500, 85);
+        //---------------- BOTÓN AGREGAR ADMIN ----------------
+        JButton btnAgregarAdmin = new DecoracionBotones("AÑADIR ADMINISTRADOR");
+        btnAgregarAdmin.setFont(fuente2.deriveFont(26f));
+        btnAgregarAdmin.setBounds(120, 140, 460, 70);
 
-        panelSemi.add(btnAgregarAdmin);
+        btnAgregarAdmin.addActionListener(e -> {
 
-        btnEditar = new JButton("EDITAR");
-        btnEditar.setFont(new Font("Arial", Font.BOLD, 30));
-        btnEditar.setBounds(250, 430, 320, 85);
+            // Acción para añadir administrador
 
-        panelSemi.add(btnEditar);
+        });
 
-        btnMostrar = new JButton("MOSTRAR");
-        btnMostrar.setFont(new Font("Arial", Font.BOLD, 30));
-        btnMostrar.setBounds(250, 610, 320, 85);
+        panelOpciones.add(btnAgregarAdmin);
 
-        panelSemi.add(btnMostrar);
+        //---------------- BOTÓN EDITAR ----------------
+        JButton btnEditar = new DecoracionBotones("EDITAR");
+        btnEditar.setFont(fuente2.deriveFont(26f));
+        btnEditar.setBounds(180, 290, 340, 70);
 
-        lblMascota = new JLabel();
+        btnEditar.addActionListener(e -> {
 
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+            // Acción para editar usuario
 
-        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(850, 850, Image.SCALE_SMOOTH);
+        });
 
-        lblMascota.setIcon(new ImageIcon(mascotaEscalada));
-        lblMascota.setBounds(1050, 100, 850, 850);
+        panelOpciones.add(btnEditar);
 
+        //---------------- BOTÓN MOSTRAR ----------------
+        JButton btnMostrar = new DecoracionBotones("MOSTRAR");
+        btnMostrar.setFont(fuente2.deriveFont(26f));
+        btnMostrar.setBounds(180, 440, 340, 70);
+
+        btnMostrar.addActionListener(e -> {
+
+            // Acción para mostrar usuarios
+
+        });
+
+        panelOpciones.add(btnMostrar);
+
+        //---------------- MASCOTA ----------------
+        JLabel lblMascota = new JLabel();
+
+        try {
+
+            ImageIcon mascotaIcon = new ImageIcon(
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+
+            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(
+                    700,
+                    700,
+                    Image.SCALE_SMOOTH);
+
+            lblMascota.setIcon(new ImageIcon(mascotaEscalada));
+
+        } catch (Exception e) {
+
+            lblMascota.setText("~");
+
+        }
+
+        lblMascota.setBounds(1080, 180, 700, 700);
         fondo.add(lblMascota);
+
+        //---------------- BOTÓN VOLVER ----------------
+        JButton btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver.setFont(fuente2.deriveFont(28f));
+        btnVolver.setBounds(1470, 870, 300, 65);
+
+        btnVolver.addActionListener(e -> dispose());
+
+        fondo.add(btnVolver);
     }
- 
+
+    public static void main(String[] args) {
+        new UsuarioMenu();
+    }
 }

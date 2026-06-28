@@ -56,7 +56,7 @@ public class PantallaCarga extends JFrame {
         fondo.add(panelOscuro2);
 
         lblFrase = new JLabel("\"NO ES MAGIA, ES MENTE\"", SwingConstants.CENTER);
-        lblFrase.setFont(fuente1.deriveFont(35f));
+        lblFrase.setFont(fuente1.deriveFont(40f));
         lblFrase.setForeground(new Color(230, 230, 230));
         lblFrase.setBounds(460, 50, 1000, 70);
 
@@ -70,8 +70,8 @@ public class PantallaCarga extends JFrame {
 
         lblDato = new JLabel("¿Sabías qué?... Los zorros pueden escuchar pequeños sonidos a más de 30 metros.", SwingConstants.CENTER);
         lblDato.setForeground(Color.WHITE);
-        lblDato.setFont(fuente1.deriveFont(40f));
-        lblDato.setBounds(210, 50, 1500, 50);
+        lblDato.setFont(fuente1.deriveFont(45f));
+        lblDato.setBounds(210, 70, 1500, 50);
 
         panelOscuro.add(lblDato);
     }
