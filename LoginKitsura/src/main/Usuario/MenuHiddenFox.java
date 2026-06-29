@@ -3,7 +3,7 @@ package main.Usuario;
 public class MenuHiddenFox extends MenuMinijuegosC {
 
     public MenuHiddenFox() {
-        super("Hidden Fox", "ANIMALES", "TERRITORIOS", "CARICATURAS");
+        super("HIDDEN FOX", "ANIMALES", "TERRITORIOS", "CARICATURAS");
 
         btnCategoria1.addActionListener(e -> {
             new HiddenFox_Codigo(1);
@@ -20,6 +20,7 @@ public class MenuHiddenFox extends MenuMinijuegosC {
             dispose();
         });
         
+        setTitle("Hidden Fox");
         
     }
 

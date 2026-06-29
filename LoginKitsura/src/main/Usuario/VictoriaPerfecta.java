@@ -12,13 +12,13 @@ public class VictoriaPerfecta extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    private JFrame ventanaAnterior;
+    private JuegoBase juego;
 
     private DecoracionBotones btnVolver;
 
     
-    public VictoriaPerfecta(ActionListener accion,JFrame ventanaAnterior) {
-        this.ventanaAnterior = ventanaAnterior;
+    public VictoriaPerfecta(ActionListener accion, JuegoBase juego) {
+        this.juego = juego;
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -122,9 +122,7 @@ public class VictoriaPerfecta extends JFrame {
         btnResultados.setForeground(Color.BLACK);
         btnResultados.setBounds(1225, 740, 200, 50);
         btnResultados.addActionListener(e -> {
-            if (ventanaAnterior instanceof FoxJump foxJump) {
-                foxJump.mostrarResultadoConFade();
-            }
+            juego.mostrarResultadoConFade();
         });
         fondo.add(btnResultados);
     }

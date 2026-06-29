@@ -584,10 +584,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             PantallaDificultad pd = new PantallaDificultad(
                     this, // JFrame ventanaAnterior
-                    idNivelActual, // nivel
-                    vidas, // vidas
-                    puntajeTotal, // puntos
-                    false // usoPista (no tienes esa lógica aún, va en false)
+                    idNivelActual // nivel        
             );
             fadeTo(() -> {
                 setContentPane(pd.getFondo());
