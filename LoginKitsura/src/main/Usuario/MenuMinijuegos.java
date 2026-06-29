@@ -52,7 +52,11 @@ public class MenuMinijuegos extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- BOTONES MINIJUEGOS ----------------
-        JButton btnHiddenFox = new DecoracionBotones("HIDDEN FOX");
+        JButton btnHiddenFox = new DecoracionBotones("HIDDEN FOX",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO  
+        
         btnHiddenFox.setFont(fuente2.deriveFont(25f));
         btnHiddenFox.setBounds(780, 340, 400, 65);
         btnHiddenFox.addActionListener(e -> {
@@ -61,7 +65,11 @@ public class MenuMinijuegos extends JFrame {
         });
         fondo.add(btnHiddenFox);
 
-        JButton btnFoxJump = new DecoracionBotones("FOX JUMP !");
+        JButton btnFoxJump = new DecoracionBotones("FOX JUMP !",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnFoxJump.setFont(fuente2.deriveFont(25f));
         btnFoxJump.setBounds(780, 460, 400, 65);
         btnFoxJump.addActionListener(e -> {
@@ -70,7 +78,11 @@ public class MenuMinijuegos extends JFrame {
         });
         fondo.add(btnFoxJump);
 
-        JButton btnMaulwurf = new DecoracionBotones("MAULWURF RENNT");
+        JButton btnMaulwurf = new DecoracionBotones("MAULWURF RENNT",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnMaulwurf.setFont(fuente2.deriveFont(25f));
         btnMaulwurf.setBounds(780, 580, 400, 65);
         btnMaulwurf.addActionListener(e -> {
@@ -81,7 +93,11 @@ public class MenuMinijuegos extends JFrame {
         fondo.add(btnMaulwurf);
 
         //---------------- BOTÓN VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(820, 720, 320, 65);
         btnVolver.addActionListener(e -> {

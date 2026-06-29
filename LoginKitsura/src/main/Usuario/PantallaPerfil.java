@@ -212,7 +212,10 @@ public class PantallaPerfil extends JFrame {
         panelPerfil.add(txtUsuario);
 
         //---------------- BOTÓN EDITAR/CONFIRMAR NOMBRE ----------------
-        btnEditarNombre = new DecoracionBotones("EDITAR NOMBRE", "#FC767D", "#da4d58", "#da4d58");
+        btnEditarNombre = new DecoracionBotones("EDITAR NOMBRE",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnEditarNombre.setFont(fuente2.deriveFont(20f));
         btnEditarNombre.setBounds(190, 430, 280, 60);
         btnEditarNombre.addActionListener(e -> {
@@ -242,7 +245,11 @@ public class PantallaPerfil extends JFrame {
         panelPerfil.add(scrollImagenes);
 
         //---------------- BOTÓN VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(26f));
         btnVolver.setBounds(450, 860, 220, 60);
         btnVolver.addActionListener(e -> {

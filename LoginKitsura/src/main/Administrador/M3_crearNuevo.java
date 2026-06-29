@@ -206,7 +206,11 @@ public class M3_crearNuevo extends JFrame {
 
         panelSemi.add(txtIncorrecta5);
         
-        btnSiguiente = new DecoracionBotones("SIGUIENTE", "#FC767D", "#da4d58", "#da4d58");
+        btnSiguiente = new DecoracionBotones("SIGUIENTE",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        
         btnSiguiente.setFont(fuente2.deriveFont(25f));
         btnSiguiente.setForeground(Color.WHITE);
         btnSiguiente.setBounds(480, 780, 280, 55);
@@ -230,7 +234,11 @@ public class M3_crearNuevo extends JFrame {
 
         fondo.add(lblMascota);
         
-        btnSalir = new DecoracionBotones("VOLVER");
+        btnSalir = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSalir.setFont(fuente2.deriveFont(30f));
         btnSalir.setForeground(Color.WHITE);
         btnSalir.setBounds(1695, 950, 210, 45);

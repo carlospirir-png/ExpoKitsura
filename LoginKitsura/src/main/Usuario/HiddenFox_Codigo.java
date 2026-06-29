@@ -497,12 +497,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         
         mostrarRespuestas(respuestas, correctas);
     }
-    
-    
-    
-    
-    
-    
 
     /*------------------  C O N F I G U R A C I Ó N ------------------
       Este es el apartado donde se establece la configuración principal

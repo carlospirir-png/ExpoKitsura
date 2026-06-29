@@ -166,7 +166,10 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo.add(txtPuntuacionTotal);
 
-        btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver = new DecoracionBotones("VOLVER",                 //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente1.deriveFont(40f));
         btnVolver.setBounds(1540, 900, 240, 70);
         btnVolver.addActionListener(e -> {

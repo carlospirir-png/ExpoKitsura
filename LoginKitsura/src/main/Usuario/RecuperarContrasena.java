@@ -58,7 +58,11 @@ public class RecuperarContrasena extends JFrame {
         panelContenedor.add(txtPasswordActual);
         
         //---------------- BOTON ACEPTAR ----------------
-        JButton btnAceptar = new DecoracionBotones("ACEPTAR");
+        JButton btnAceptar = new DecoracionBotones("ACEPTAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnAceptar.setFont(fuente2.deriveFont(20f));
         btnAceptar.setBounds(115, 230, 150, 45);
         panelContenedor.add(btnAceptar);

@@ -100,7 +100,11 @@ public class editarUsuario extends JFrame {
         txtContra.setBounds(50,700,500,55);
         panelSemi.add(txtContra);
 
-        btnEditar=new DecoracionBotones("EDITAR");
+        btnEditar=new DecoracionBotones("EDITAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnEditar.setFont(fuente2.deriveFont(26f));
         btnEditar.setBounds(190,790,220,65);
         panelSemi.add(btnEditar);
@@ -117,7 +121,11 @@ public class editarUsuario extends JFrame {
         lblPreview.setBounds(660,360,320,220);
         panelSemi.add(lblPreview);
 
-        btnCargar=new DecoracionBotones("CARGAR");
+        btnCargar=new DecoracionBotones("CARGAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnCargar.setFont(fuente2.deriveFont(26f));
         btnCargar.setBounds(720,610,200,60);
         panelSemi.add(btnCargar);
