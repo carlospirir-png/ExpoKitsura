@@ -7,12 +7,13 @@ import java.sql.*;
 import javax.swing.*;
 import main.conexion.Conexion;
 
+
 public class FoxJump extends JFrame implements JuegoBase {
 
-    // ── Interfaz gráfica ──────────────────────────────────────────────────────
     private final JPanel fondo;
-    private Font fuente1, fuente2;
 
+    private Font fuente1, fuente2;
+    
     private JLabel vida1, vida2, vida3;
     private JLabel titulo, tiempoTexto, tiempo;
     private JLabel nivelLabel, dificultadLabel, categoriaLabel;
@@ -24,57 +25,53 @@ public class FoxJump extends JFrame implements JuegoBase {
     private int tiempoTotalJugado = 0;
     private int tiempoMaximoPregunta;
     private String categoriaSeleccionada;
-    // ── Pantalla de fin de juego ──────────────────────────────────────────────
-    /**
-     * Botones que aparecen al llegar a la última pregunta.
-     */
+
+    private ImageIcon iconoCorazonLleno;
+    private ImageIcon iconoCorazonRoto;
+
+    private static final int MASCOTA_W      = 450;
+    private static final int MASCOTA_H      = 450;
+    private static final int MASCOTA_X_ORIG = (1880 - MASCOTA_W) / 2; 
+    private static final int MASCOTA_Y_ORIG = 1080 - MASCOTA_H - 10;  
+
+    private ImageIcon iconoKitsura;
+    private ImageIcon iconoCambioDificultad;
+
     private JButton btnFinalizar, btnJugarDeNuevo;
 
-    // ── Base de datos ─────────────────────────────────────────────────────────
     private Connection con;
 
-    // ── Estado de la partida ──────────────────────────────────────────────────
     private enum Dificultad {
         FACIL, INTERMEDIO, DIFICIL
     }
 
-    /**
-     * Respuestas correctas totales necesarias para subir de nivel.
-     */
-    private static final int CORRECTAS_SUBIR = 5;
+    private static final int CORRECTAS_SUBIR = 1;
 
     private Dificultad dificultadActual = Dificultad.FACIL;
+
     private int correctasTotales = 0;
 
     private int idNivelActual;
+
     private int idPreguntaActual = 0;
+
     private boolean respuestaCorrecta;
+
     private int vidas = 3;
 
-    /**
-     * Total de preguntas activas disponibles para el nivel actual. Se consulta
-     * cada vez que cambia idNivelActual.
-     */
     private int totalPreguntas = 0;
 
-    /**
-     * IDs de preguntas ya mostradas en el nivel actual (se limpia al cambiar
-     * nivel).
-     */
     private final java.util.Set<Integer> preguntasVistas = new java.util.HashSet<>();
 
-    /**
-     * True cuando ya se activó la pantalla de fin de juego.
-     */
     private boolean finJuegoActivo = false;
 
-    // ── Countdown ─────────────────────────────────────────────────────────────
     private int segundosRestantes;
+
     private javax.swing.Timer countdown;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────────────────────────────────
+    private boolean pistaMostradaEnPreguntaActual = false;
+
+
     public FoxJump(String categoria) {
 
         this.categoriaSeleccionada = categoria;
@@ -93,9 +90,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         crearComponentes();
 
-        // Pausar countdown cuando la ventana se minimiza
         addWindowListener(new java.awt.event.WindowAdapter() {
-
             @Override
             public void windowIconified(java.awt.event.WindowEvent e) {
                 detenerCountdown();
@@ -109,9 +104,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             }
         });
 
-        // Pausar cuando la ventana se oculta
         addComponentListener(new java.awt.event.ComponentAdapter() {
-
             @Override
             public void componentHidden(java.awt.event.ComponentEvent e) {
                 detenerCountdown();
@@ -144,24 +137,17 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     public void mostrarResultadoConFade() {
         ResultadoFinal resultado = new ResultadoFinal(this, puntajeTotal, tiempoTotalJugado);
-        resultado.mostrar();  // modal: FoxJump queda de fondo hasta que se cierre
+        resultado.mostrar();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Resolución de id_nivel y conteo de preguntas disponibles
-    // ─────────────────────────────────────────────────────────────────────────
     private void resolverIdNivel() {
 
         String difStr = switch (dificultadActual) {
-            case FACIL ->
-                "Fácil";
-            case INTERMEDIO ->
-                "Intermedio";
-            case DIFICIL ->
-                "Difícil";
+            case FACIL       -> "Fácil";
+            case INTERMEDIO  -> "Intermedio";
+            case DIFICIL     -> "Difícil";
         };
 
-        // Obtener id_nivel según categoría y dificultad
         String sqlNivel = """
             SELECT cn.id_nivel
             FROM Configuracion_nivel cn
@@ -176,30 +162,22 @@ public class FoxJump extends JFrame implements JuegoBase {
             """;
 
         try (PreparedStatement ps = con.prepareStatement(sqlNivel)) {
-
             ps.setString(1, "Fox Jump!");
             ps.setString(2, categoriaSeleccionada);
             ps.setString(3, difStr);
-
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 idNivelActual = rs.getInt("id_nivel");
-                System.out.println("Categoría: " + categoriaSeleccionada);
-                System.out.println("Dificultad: " + difStr);
-                System.out.println("idNivelActual: " + idNivelActual);
             } else {
                 JOptionPane.showMessageDialog(this,
                         "No existe la categoría \"" + categoriaSeleccionada
                         + "\" con dificultad " + difStr);
                 return;
             }
-
         } catch (SQLException ex) {
             mostrarError(ex);
         }
 
-        // Contar preguntas
         String sqlCount = """
             SELECT COUNT(*) AS total
             FROM Pregunta
@@ -208,15 +186,11 @@ public class FoxJump extends JFrame implements JuegoBase {
             """;
 
         try (PreparedStatement ps = con.prepareStatement(sqlCount)) {
-
             ps.setInt(1, idNivelActual);
-
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 totalPreguntas = rs.getInt("total");
             }
-
         } catch (SQLException ex) {
             mostrarError(ex);
         }
@@ -227,20 +201,26 @@ public class FoxJump extends JFrame implements JuegoBase {
         nivelLabel.setText("Nivel: Fox Jump!");
         dificultadLabel.setText("Dificultad: " + difStr);
         categoriaLabel.setText("Categoría: " + categoriaSeleccionada);
+
+        Color colorFondo = switch (dificultadActual) {
+            case FACIL      -> new Color(178, 197, 178);
+            case INTERMEDIO -> new Color(210, 200, 140);
+            case DIFICIL    -> new Color(210, 155, 155);
+        };
+        fondo.setBackground(colorFondo);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Carga de pregunta
-    // ─────────────────────────────────────────────────────────────────────────
     private void cargarPregunta() {
 
         detenerCountdown();
 
+        pistaMostradaEnPreguntaActual = false;
+        btnAyuda.setEnabled(true);
+        btnAyuda.setText("¿Necesitas ayuda?");
+
         String exclusion = preguntasVistas.isEmpty()
                 ? "0"
-                : preguntasVistas.toString()
-                        .replace("[", "")
-                        .replace("]", "");
+                : preguntasVistas.toString().replace("[", "").replace("]", "");
 
         String sql = """
             SELECT
@@ -266,20 +246,15 @@ public class FoxJump extends JFrame implements JuegoBase {
             """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setInt(1, idNivelActual);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-
                 idPreguntaActual = rs.getInt("id_pregunta");
-
                 preguntasVistas.add(idPreguntaActual);
 
                 respuestaCorrecta = rs.getBoolean("es_correcta");
 
-                // Si ya no hay más preguntas
                 if (preguntasVistas.size() >= totalPreguntas
                         && dificultadActual == Dificultad.DIFICIL) {
                     activarFinJuego();
@@ -289,23 +264,18 @@ public class FoxJump extends JFrame implements JuegoBase {
                 titulo.setText("<html><center>"
                         + rs.getString("pregunta")
                         + "</center></html>");
-
                 titulo.setFont(fuente2.deriveFont(30f));
-
                 categoriaLabel.setText("Categoría: " + rs.getString("categoria"));
 
                 tiempoMaximoPregunta = rs.getInt("tiempo_limite");
-
                 iniciarCountdown(tiempoMaximoPregunta);
 
             } else {
-
                 if (!finJuegoActivo && dificultadActual == Dificultad.DIFICIL) {
                     activarFinJuego();
                 }
                 return;
             }
-
         } catch (SQLException ex) {
             mostrarError(ex);
             return;
@@ -314,24 +284,67 @@ public class FoxJump extends JFrame implements JuegoBase {
         generarPosiciones();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Fin de juego — fondo Fin_Juego + botones
-    // ─────────────────────────────────────────────────────────────────────────
-    private void activarFinJuego() {
+    private void mostrarPista() {
 
-        if (finJuegoActivo) {
+        if (idPreguntaActual == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Todavía no hay una pregunta activa.",
+                    "Sin pista", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+
+        String sql = """
+            SELECT contenido, tipo
+            FROM Ayuda
+            WHERE id_pregunta = ?
+            LIMIT 1
+            """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idPreguntaActual);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String contenido = rs.getString("contenido");
+
+                detenerCountdown();
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "<html><body style='width:380px; font-size:13px;'>"
+                        + "<b>💡 Pista:</b><br><br>"
+                        + contenido
+                        + "</body></html>",
+                        "Pista — pregunta",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                if (!finJuegoActivo && segundosRestantes > 0) {
+                    reanudarCountdown();
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "No hay pista disponible para esta pregunta.",
+                        "Sin pista", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+    }
+
+    private void activarFinJuego() {
+
+        if (finJuegoActivo) return;
         finJuegoActivo = true;
 
         detenerCountdown();
 
-        // Limpiar pregunta y tiempo de la pantalla
         titulo.setText("");
         tiempo.setText("");
         tiempoTexto.setVisible(false);
 
-        // Cambiar fondo del lago a Fin_Juego
         try {
             ImageIcon finIcon = new ImageIcon(
                     getClass().getResource(
@@ -342,48 +355,35 @@ public class FoxJump extends JFrame implements JuegoBase {
             panelLago.setBackground(new Color(80, 140, 80));
         }
 
-        // Bloquear nénufares
         nenufarVerdadero.setVisible(false);
         nenufarFalso.setVisible(false);
 
         panelLago.revalidate();
         panelLago.repaint();
 
-        // Espera un momento y luego muestra Victoria con fade
         new javax.swing.Timer(800, e -> {
             ((javax.swing.Timer) e.getSource()).stop();
 
             if (vidas == 3) {
-                // ✅ CORRECCIÓN: se pasa ActionListener (sin uso) y JFrame
-                VictoriaPerfecta vp = new VictoriaPerfecta(e2 -> {
-                }, this);
+                VictoriaPerfecta vp = new VictoriaPerfecta(e2 -> {}, this);
                 fadeTo(() -> setContentPane(vp.getFondo()), 400);
             } else {
-                // ✅ CORRECCIÓN: se pasa ActionListener (sin uso) y JFrame
-                Victoria v = new Victoria(e2 -> {
-                }, this);
+                Victoria v = new Victoria(e2 -> {}, this);
                 fadeTo(() -> setContentPane(v.getFondo()), 400);
             }
         }).start();
     }
 
-    /**
-     * Reinicia todas las variables de estado y vuelve a cargar el juego desde
-     * Fácil sin crear una nueva ventana.
-     */
     private void reiniciarJuego() {
 
         detenerCountdown();
 
-        // Restaurar visibilidad del tiempo
         tiempoTexto.setVisible(true);
         tiempo.setText("00:00");
 
-        // Restaurar nénufares
         nenufarVerdadero.setVisible(true);
         nenufarFalso.setVisible(true);
 
-        // Restaurar fondo original del lago
         try {
             ImageIcon lagoIcon = new ImageIcon(
                     getClass().getResource(
@@ -397,20 +397,30 @@ public class FoxJump extends JFrame implements JuegoBase {
         panelLago.revalidate();
         panelLago.repaint();
 
-        // Restaurar vidas
         vidas = 3;
+        vida1.setIcon(iconoCorazonLleno);
+        vida2.setIcon(iconoCorazonLleno);
+        vida3.setIcon(iconoCorazonLleno);
         vida1.setVisible(true);
         vida2.setVisible(true);
         vida3.setVisible(true);
 
-        // Reiniciar estado
-        dificultadActual = Dificultad.FACIL;
-        correctasTotales = 0;
-        idPreguntaActual = 0;
-        finJuegoActivo = false;
-        puntajeTotal = 0;
+        mascota.setIcon(iconoKitsura);
+        mascota.setBounds(MASCOTA_X_ORIG, MASCOTA_Y_ORIG, MASCOTA_W, MASCOTA_H);
+
+        fondo.setBackground(new Color(178, 197, 178));
+
+        dificultadActual  = Dificultad.FACIL;
+        correctasTotales  = 0;
+        idPreguntaActual  = 0;
+        finJuegoActivo    = false;
+        puntajeTotal      = 0;
         tiempoTotalJugado = 0;
         preguntasVistas.clear();
+
+        pistaMostradaEnPreguntaActual = false;
+        btnAyuda.setEnabled(true);
+        btnAyuda.setText("¿Necesitas ayuda?");
 
         resolverIdNivel();
         cargarPregunta();
@@ -419,7 +429,6 @@ public class FoxJump extends JFrame implements JuegoBase {
     @Override
     public void jugarDeNuevo() {
         fadeTo(() -> setContentPane(fondo), 400);
-
         new javax.swing.Timer(420, e -> {
             ((javax.swing.Timer) e.getSource()).stop();
             reiniciarJuego();
@@ -427,9 +436,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         }).start();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Countdown
-    // ─────────────────────────────────────────────────────────────────────────
     private void iniciarCountdown(int segundos) {
 
         segundosRestantes = segundos;
@@ -449,14 +455,9 @@ public class FoxJump extends JFrame implements JuegoBase {
             tiempo.setForeground(segundosRestantes <= 5 ? Color.RED : Color.BLACK);
 
             if (segundosRestantes <= 0) {
-
                 detenerCountdown();
-
-                if (finJuegoActivo) {
-                    return;
-                }
+                if (finJuegoActivo) return;
                 finJuegoActivo = true;
-
                 mostrarTiempoAgotado();
             }
         });
@@ -471,20 +472,13 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-    /**
-     * Reanuda el countdown con los segundos que quedaban al pausar.
-     */
     private void reanudarCountdown() {
 
-        if (segundosRestantes <= 0 || finJuegoActivo) {
-            return;
-        }
+        if (segundosRestantes <= 0 || finJuegoActivo) return;
 
         countdown = new javax.swing.Timer(1000, e -> {
-
             segundosRestantes--;
             actualizarLabelTiempo();
-
             tiempo.setForeground(segundosRestantes <= 5 ? Color.RED : Color.BLACK);
 
             if (segundosRestantes <= 0) {
@@ -505,63 +499,119 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     private int calcularPuntosPorTiempo(int tiempoUsado, int tiempoMaximo) {
-
         double porcentajeRapidez = 1.0 - ((double) tiempoUsado / tiempoMaximo);
-
         int puntos = (int) (100 * porcentajeRapidez);
-
-        if (puntos < 10) {
-            puntos = 10;
-        }
-
+        if (puntos < 10) puntos = 10;
         return puntos;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Lógica de respuesta y progresión de dificultad
-    // ─────────────────────────────────────────────────────────────────────────
+    private Point centroNenufar(JLabel nenufar) {
+        int lagoX = panelLago.getX();
+        int lagoY = panelLago.getY();
+        int nx = nenufar.getX() + nenufar.getWidth()  / 2;
+        int ny = nenufar.getY() + nenufar.getHeight() / 2;
+        return new Point(lagoX + nx, lagoY + ny);
+    }
+
+    // ── FIX: SE ELIMINO setComponentZOrder Y fondo.repaint() DEL INTERIOR
+    //        DEL TIMER. EL Z-ORDER SE FIJA UNA SOLA VEZ EN crearComponentes()
+    //        Y NO SE TOCA DURANTE LA ANIMACION PARA EVITAR EL GRIS EN NENUFARES.
+    private void animarMascota(int destX, int destY, int duracionMs, Runnable onFin) {
+
+        int startX = mascota.getX();
+        int startY = mascota.getY();
+        int pasos    = 20;
+        int intervalo = duracionMs / pasos;
+        int[] paso = {0};
+
+        javax.swing.Timer anim = new javax.swing.Timer(intervalo, null);
+        anim.addActionListener(e -> {
+            paso[0]++;
+            double t = (double) paso[0] / pasos;
+            int nx = startX + (int) ((destX - startX) * t);
+            int ny = startY + (int) ((destY - startY) * t);
+            mascota.setBounds(nx, ny, MASCOTA_W, MASCOTA_H);
+            // SOLO REPINTAR LA MASCOTA, SIN TOCAR EL Z-ORDER EN CADA FRAME
+            mascota.repaint();
+
+            if (paso[0] >= pasos) {
+                anim.stop();
+                if (onFin != null) onFin.run();
+            }
+        });
+        anim.start();
+    }
+
     private void responder(boolean respuestaUsuario) {
-        if (finJuegoActivo) {
-            return;
-        }
+
+        if (finJuegoActivo) return;
 
         detenerCountdown();
 
-        if (respuestaUsuario == respuestaCorrecta) {
+        nenufarVerdadero.setEnabled(false);
+        nenufarFalso.setEnabled(false);
 
-            correctasTotales++;
+        boolean eligioVerdadero = (Boolean) nenufarVerdadero.getClientProperty("respuesta") == respuestaUsuario;
+        JLabel nenufarElegido = eligioVerdadero ? nenufarVerdadero : nenufarFalso;
 
-            int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
+        Point destino = centroNenufar(nenufarElegido);
+        int destX = destino.x - MASCOTA_W / 2;
+        int destY = destino.y - MASCOTA_H / 2;
 
-            if (tiempoUsado < 0) {
-                tiempoUsado = tiempoMaximoPregunta;
+        animarMascota(destX, destY, 700, () -> {
+
+            if (respuestaUsuario == respuestaCorrecta) {
+                animarMascota(MASCOTA_X_ORIG, MASCOTA_Y_ORIG, 500, () -> {
+                    nenufarVerdadero.setEnabled(true);
+                    nenufarFalso.setEnabled(true);
+                    procesarRespuestaCorrecta();
+                });
+
+            } else {
+                mascota.setIcon(iconoCambioDificultad);
+
+                new javax.swing.Timer(900, e2 -> {
+                    ((javax.swing.Timer) e2.getSource()).stop();
+
+                    mascota.setIcon(iconoKitsura);
+                    animarMascota(MASCOTA_X_ORIG, MASCOTA_Y_ORIG, 500, () -> {
+                        nenufarVerdadero.setEnabled(true);
+                        nenufarFalso.setEnabled(true);
+                        procesarRespuestaIncorrecta();
+                    });
+                }).start();
             }
+        });
+    }
 
-            int puntos = calcularPuntosPorTiempo(tiempoUsado, tiempoMaximoPregunta);
+    private void procesarRespuestaCorrecta() {
 
-            puntajeTotal += puntos;
+        correctasTotales++;
 
-            boolean subio = intentarSubirDificultad();
+        int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
+        if (tiempoUsado < 0) tiempoUsado = tiempoMaximoPregunta;
 
-            if (!subio) {
-                String msg = "¡Correcto! ("
-                        + correctasTotales + "/" + CORRECTAS_SUBIR
-                        + " para subir)";
-                JOptionPane.showMessageDialog(this, msg);
-                cargarPregunta();
-            }
+        puntajeTotal += calcularPuntosPorTiempo(tiempoUsado, tiempoMaximoPregunta);
 
-        } else {
-            JOptionPane.showMessageDialog(this, "¡Incorrecto!");
-            perderVida();
+        boolean subio = intentarSubirDificultad();
+
+        if (!subio) {
+            String msg = "¡Correcto! ("
+                    + correctasTotales + "/" + CORRECTAS_SUBIR
+                    + " para subir)";
+            JOptionPane.showMessageDialog(this, msg);
+            cargarPregunta();
         }
+    }
+
+    private void procesarRespuestaIncorrecta() {
+        JOptionPane.showMessageDialog(this, "¡Incorrecto!");
+        perderVida();
     }
 
     private boolean intentarSubirDificultad() {
 
-        if (correctasTotales < CORRECTAS_SUBIR) {
-            return false;
-        }
+        if (correctasTotales < CORRECTAS_SUBIR) return false;
 
         boolean subio = switch (dificultadActual) {
             case FACIL -> {
@@ -572,26 +622,17 @@ public class FoxJump extends JFrame implements JuegoBase {
                 dificultadActual = Dificultad.DIFICIL;
                 yield true;
             }
-            case DIFICIL ->
-                false;
+            case DIFICIL -> false;
         };
 
         if (subio) {
             correctasTotales = 0;
             idPreguntaActual = 0;
-
             resolverIdNivel();
 
             PantallaDificultad pd = new PantallaDificultad(
-                    this, // JFrame ventanaAnterior
-                    idNivelActual, // nivel
-                    vidas, // vidas
-                    puntajeTotal, // puntos
-                    false // usoPista (no tienes esa lógica aún, va en false)
-            );
-            fadeTo(() -> {
-                setContentPane(pd.getFondo());
-            }, 400);
+                    this, idNivelActual, vidas, puntajeTotal, false);
+            fadeTo(() -> setContentPane(pd.getFondo()), 400);
 
         } else {
             correctasTotales = 0;
@@ -602,32 +643,19 @@ public class FoxJump extends JFrame implements JuegoBase {
         return subio;
     }
 
-    private String nombreDificultad() {
-        return switch (dificultadActual) {
-            case FACIL ->
-                "Fácil";
-            case INTERMEDIO ->
-                "Intermedio";
-            case DIFICIL ->
-                "Difícil";
-        };
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Vidas
-    // ─────────────────────────────────────────────────────────────────────────
     private void perderVida() {
 
         vidas--;
 
         switch (vidas) {
-            case 2 ->
-                vida3.setVisible(false);
-            case 1 ->
-                vida2.setVisible(false);
+            case 2 -> vida3.setIcon(iconoCorazonRoto);
+            case 1 -> vida2.setIcon(iconoCorazonRoto);
             case 0 -> {
-                vida1.setVisible(false);
-                mostrarHaPerdido();
+                vida1.setIcon(iconoCorazonRoto);
+                new javax.swing.Timer(400, e -> {
+                    ((javax.swing.Timer) e.getSource()).stop();
+                    mostrarHaPerdido();
+                }).start();
                 return;
             }
         }
@@ -635,9 +663,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         cargarPregunta();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Aleatorización de nénufares
-    // ─────────────────────────────────────────────────────────────────────────
     private void generarPosiciones() {
 
         boolean verdaderoIzquierda = Math.random() < 0.5;
@@ -658,18 +683,12 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Utilidades
-    // ─────────────────────────────────────────────────────────────────────────
     private void mostrarError(SQLException ex) {
         JOptionPane.showMessageDialog(this,
                 "Error BD:\n" + ex.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Fuentes
-    // ─────────────────────────────────────────────────────────────────────────
     private void cargarFuentes() {
         try {
             fuente1 = Font.createFont(Font.TRUETYPE_FONT,
@@ -682,47 +701,86 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Construcción de interfaz gráfica
-    // ─────────────────────────────────────────────────────────────────────────
     private void crearComponentes() {
 
-        //---------------- VIDAS ----------------
+        // ── PRECARGAR ICONOS ──────────────────────────────────────────────────
         try {
-            ImageIcon icono = new ImageIcon(
+            Image imgKit = new ImageIcon(
                     getClass().getResource(
-                            "/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"));
-            Image imagen = icono.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-            ImageIcon corazon = new ImageIcon(imagen);
-            vida1 = new JLabel(corazon);
-            vida2 = new JLabel(corazon);
-            vida3 = new JLabel(corazon);
+                            "/Multimedia/utiles/mascotaKitsura/imagen/KitsuraFlotador.png"))
+                    .getImage().getScaledInstance(MASCOTA_W, MASCOTA_H, Image.SCALE_SMOOTH);
+            iconoKitsura = new ImageIcon(imgKit);
         } catch (Exception e) {
+            iconoKitsura = null;
+        }
+
+        try {
+            Image imgCambio = new ImageIcon(
+                    getClass().getResource(
+                            "/Multimedia/utiles/mascotaKitsura/imagen/CAMBIO_DE_DIFICULTAD.png"))
+                    .getImage().getScaledInstance(MASCOTA_W, MASCOTA_H, Image.SCALE_SMOOTH);
+            iconoCambioDificultad = new ImageIcon(imgCambio);
+        } catch (Exception e) {
+            iconoCambioDificultad = null;
+        }
+
+        try {
+            Image imgLleno = new ImageIcon(
+                    getClass().getResource(
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"))
+                    .getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+            iconoCorazonLleno = new ImageIcon(imgLleno);
+        } catch (Exception e) {
+            iconoCorazonLleno = null;
+        }
+
+        try {
+            Image imgRoto = new ImageIcon(
+                    getClass().getResource(
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/corazon-roto.png"))
+                    .getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+            iconoCorazonRoto = new ImageIcon(imgRoto);
+        } catch (Exception e) {
+            iconoCorazonRoto = null;
+        }
+
+        // ── VIDAS ─────────────────────────────────────────────────────────────
+        if (iconoCorazonLleno != null) {
+            vida1 = new JLabel(iconoCorazonLleno);
+            vida2 = new JLabel(iconoCorazonLleno);
+            vida3 = new JLabel(iconoCorazonLleno);
+        } else {
             vida1 = new JLabel("♥");
             vida2 = new JLabel("♥");
             vida3 = new JLabel("♥");
-            vida1.setFont(fuente1.deriveFont(55f));
-            vida1.setForeground(Color.RED);
-            vida2.setFont(fuente1.deriveFont(55f));
-            vida2.setForeground(Color.RED);
-            vida3.setFont(fuente1.deriveFont(55f));
-            vida3.setForeground(Color.RED);
+            vida1.setFont(fuente1.deriveFont(55f)); vida1.setForeground(Color.RED);
+            vida2.setFont(fuente1.deriveFont(55f)); vida2.setForeground(Color.RED);
+            vida3.setFont(fuente1.deriveFont(55f)); vida3.setForeground(Color.RED);
         }
-        vida1.setBounds(70, 25, 60, 60);
+        vida1.setBounds(70,  25, 60, 60);
         vida2.setBounds(135, 25, 60, 60);
         vida3.setBounds(200, 25, 60, 60);
         fondo.add(vida1);
         fondo.add(vida2);
         fondo.add(vida3);
 
-        //---------------- AYUDA ----------------
+        // ── BOTON DE AYUDA ────────────────────────────────────────────────────
         btnAyuda = new JButton("¿Necesitas ayuda?");
         btnAyuda.setBounds(60, 120, 280, 55);
         btnAyuda.setFocusPainted(false);
         btnAyuda.setFont(fuente2.deriveFont(18f));
+
+        btnAyuda.addActionListener(e -> {
+            if (pistaMostradaEnPreguntaActual) return;
+            pistaMostradaEnPreguntaActual = true;
+            btnAyuda.setEnabled(false);
+            btnAyuda.setText("Pista usada");
+            mostrarPista();
+        });
+
         fondo.add(btnAyuda);
 
-        //---------------- TITULO ----------------
+        // ── TITULO DE LA PREGUNTA ─────────────────────────────────────────────
         titulo = new JLabel("Cargando pregunta…", SwingConstants.CENTER);
         titulo.setBounds(500, 20, 900, 150);
         titulo.setFont(fuente2.deriveFont(25f));
@@ -731,7 +789,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         titulo.setVerticalAlignment(SwingConstants.CENTER);
         fondo.add(titulo);
 
-        //---------------- TIEMPO ----------------
+        // ── ETIQUETAS DE TIEMPO ───────────────────────────────────────────────
         tiempoTexto = new JLabel("Tiempo restante:");
         tiempoTexto.setBounds(1450, 70, 300, 40);
         tiempoTexto.setFont(fuente2.deriveFont(25f));
@@ -746,7 +804,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         tiempo.setFont(fuente2.deriveFont(28f));
         fondo.add(tiempo);
 
-        //---------------- PANEL LAGO ----------------
+        // ── PANEL DEL LAGO ────────────────────────────────────────────────────
         panelLago = new JLabel();
         panelLago.setBounds(420, 250, 1050, 450);
         panelLago.setLayout(null);
@@ -761,7 +819,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
         fondo.add(panelLago);
 
-        //---------------- NENUFAR FLOR ----------------
+        // ── NENUFAR DECORATIVO ────────────────────────────────────────────────
         nenufarFlor = new JLabel();
         try {
             ImageIcon icono = new ImageIcon(
@@ -774,7 +832,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         nenufarFlor.setBounds(60, 60, 90, 90);
         panelLago.add(nenufarFlor);
 
-        //---------------- NENUFAR VERDADERO (izquierdo) ----------------
+        // ── NENUFAR VERDADERO ─────────────────────────────────────────────────
         nenufarVerdadero = new JLabel();
         nenufarVerdadero.setLayout(null);
         try {
@@ -797,13 +855,11 @@ public class FoxJump extends JFrame implements JuegoBase {
             public void mouseClicked(MouseEvent e) {
                 responder((Boolean) nenufarVerdadero.getClientProperty("respuesta"));
             }
-
             @Override
             public void mouseEntered(MouseEvent e) {
                 nenufarVerdadero.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 nenufarVerdadero.setBounds(175, 135, 250, 190);
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 nenufarVerdadero.setBounds(180, 140, 240, 180);
@@ -811,7 +867,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         });
         panelLago.add(nenufarVerdadero);
 
-        //---------------- NENUFAR FALSO (derecho) ----------------
+        // ── NENUFAR FALSO ─────────────────────────────────────────────────────
         nenufarFalso = new JLabel();
         nenufarFalso.setLayout(null);
         try {
@@ -834,13 +890,11 @@ public class FoxJump extends JFrame implements JuegoBase {
             public void mouseClicked(MouseEvent e) {
                 responder((Boolean) nenufarFalso.getClientProperty("respuesta"));
             }
-
             @Override
             public void mouseEntered(MouseEvent e) {
                 nenufarFalso.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 nenufarFalso.setBounds(645, 135, 250, 190);
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 nenufarFalso.setBounds(650, 140, 240, 180);
@@ -848,7 +902,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         });
         panelLago.add(nenufarFalso);
 
-        //---------------- NIVEL / DIFICULTAD / CATEGORÍA ----------------
+        // ── ETIQUETAS INFORMATIVAS ────────────────────────────────────────────
         nivelLabel = new JLabel("Nivel: Fox Jump!");
         nivelLabel.setBounds(80, 740, 300, 40);
         nivelLabel.setFont(fuente2.deriveFont(25f));
@@ -867,17 +921,17 @@ public class FoxJump extends JFrame implements JuegoBase {
         categoriaLabel.setForeground(Color.BLACK);
         fondo.add(categoriaLabel);
 
-        //---------------- MASCOTA ----------------
+        // ── MASCOTA ───────────────────────────────────────────────────────────
+        // SE AGREGA AL FINAL Y SE FIJA SU Z-ORDER A 0 UNA SOLA VEZ.
+        // EL panelLago SE FIJA EN INDICE 1 PARA GARANTIZAR QUE LA MASCOTA
+        // SIEMPRE QUEDE DELANTE SIN NECESITAR TOCAR EL Z-ORDER EN LA ANIMACION.
         mascota = new JLabel();
-        mascota.setBounds(1450, 480, 450, 450);
+        mascota.setBounds(MASCOTA_X_ORIG, MASCOTA_Y_ORIG, MASCOTA_W, MASCOTA_H);
         mascota.setLayout(null);
-        try {
-            ImageIcon icono = new ImageIcon(
-                    getClass().getResource(
-                            "/Multimedia/utiles/mascotaKitsura/imagen/KitsuraFlotador.png"));
-            mascota.setIcon(new ImageIcon(
-                    icono.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH)));
-        } catch (Exception e) {
+
+        if (iconoKitsura != null) {
+            mascota.setIcon(iconoKitsura);
+        } else {
             mascota.setText("Mascota");
         }
 
@@ -892,12 +946,19 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
         florMascota.setBounds(210, 40, 120, 120);
         mascota.add(florMascota);
+
         fondo.add(mascota);
+
+        // FIX: Z-ORDER FIJADO UNA SOLA VEZ AQUI.
+        // MASCOTA EN INDICE 0 (FRENTE), panelLago EN INDICE 1 (DETRAS DE MASCOTA).
+        // ASI animarMascota() NO NECESITA TOCAR EL Z-ORDER EN CADA FRAME,
+        // LO QUE ELIMINABA EL COLOR GRIS EN LOS NENUFARES DURANTE LA ANIMACION.
+        fondo.setComponentZOrder(mascota, 0);
+        fondo.setComponentZOrder(panelLago, 1);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Métodos públicos para integración con PantallaDificultad
-    // ─────────────────────────────────────────────────────────────────────────
+    // ── METODOS PUBLICOS ──────────────────────────────────────────────────────
+
     public JPanel getFondo() {
         return fondo;
     }
@@ -932,17 +993,14 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     private void mostrarHaPerdido() {
         fadeTo(() -> {
-            new SeAcaboVidas(this, e -> {
-            }).setVisible(true);
+            new SeAcaboVidas(this, e -> {}).setVisible(true);
             dispose();
         }, 400);
     }
 
     private void mostrarTiempoAgotado() {
         fadeTo(() -> {
-            // ✅ CORRECCIÓN: se pasa JuegoBase y ActionListener (sin uso)
-            new SeAcaboTiempo(this, e -> {
-            }).setVisible(true);
+            new SeAcaboTiempo(this, e -> {}).setVisible(true);
             dispose();
         }, 400);
     }
@@ -965,10 +1023,10 @@ public class FoxJump extends JFrame implements JuegoBase {
         glass.add(overlay, BorderLayout.CENTER);
         glass.setVisible(true);
 
-        int pasos = 20;
+        int pasos    = 20;
         int intervalo = (duracionMs / 2) / pasos;
-        int[] alpha = {0};
-        int[] fase = {0};
+        int[] alpha  = {0};
+        int[] fase   = {0};
 
         javax.swing.Timer fadeTimer = new javax.swing.Timer(intervalo, null);
 
@@ -1013,11 +1071,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     public void continuarDespuesDeDificultad() {
-
-        fadeTo(() -> {
-            setContentPane(fondo);
-        }, 400);
-
+        fadeTo(() -> setContentPane(fondo), 400);
         new javax.swing.Timer(420, e -> {
             ((javax.swing.Timer) e.getSource()).stop();
             cargarPregunta();
