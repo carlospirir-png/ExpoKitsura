@@ -68,7 +68,7 @@ public class PreguntaDAO_MaulwurfRennt {
                 SELECT *
                 FROM Opcion_respuesta
                 WHERE id_pregunta=?
-                LIMIT 6
+                LIMIT 7
                 """;
 
         try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {

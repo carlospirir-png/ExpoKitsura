@@ -31,6 +31,8 @@ public class JuegoMaulwurfRennt {
     private int tiempoRestante;
 
     private Timer timer;
+    // Evita que el usuario haga varios clics mientras se procesa una respuesta
+    private boolean procesandoRespuesta = false;
 
     // PREGUNTA ACTUAL
     private Pregunta_MaulwurfRennt preguntaActual;
@@ -72,7 +74,7 @@ public class JuegoMaulwurfRennt {
 
                 vista.actualizarDificultad("Fácil");
 
-                vista.mostrarTopos(2);
+                vista.mostrarTopos(5);
 
                 tiempoRestante = 60;
 
@@ -84,7 +86,7 @@ public class JuegoMaulwurfRennt {
 
                 vista.actualizarDificultad("Intermedio");
 
-                vista.mostrarTopos(4);
+                vista.mostrarTopos(6);
 
                 tiempoRestante = 45;
 
@@ -96,7 +98,7 @@ public class JuegoMaulwurfRennt {
 
                 vista.actualizarDificultad("Difícil");
 
-                vista.mostrarTopos(6);
+                vista.mostrarTopos(7);
 
                 tiempoRestante = 30;
 
@@ -192,7 +194,7 @@ public class JuegoMaulwurfRennt {
                 = preguntaActual.getOpciones();
 
         for (int i = 0;
-                i < opcionesActuales.size() && i < 6;
+                i < opcionesActuales.size() && i < 7;
                 i++) {
 
             vista.colocarRespuesta(
@@ -207,7 +209,7 @@ public class JuegoMaulwurfRennt {
     // REGISTRAR EVENTOS
     private void registrarEventos() {
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
 
             final int indice = i;
 
@@ -216,7 +218,32 @@ public class JuegoMaulwurfRennt {
                 @Override
                 public void mouseClicked(MouseEvent e) {
 
-                    verificarRespuesta(indice);
+                    if (procesandoRespuesta) {
+                        return;
+                    }
+
+                    procesandoRespuesta = true;
+
+                    // Bloquea todos los topos para que no puedan volver a presionarse
+                    vista.bloquearTopos();
+
+                    // Cambia la imagen del topo al estado "golpeado"
+                    vista.golpearTopo(indice);
+
+                    // Espera a que termine la animación
+                    Timer espera = new Timer(300, ev -> {
+
+                        verificarRespuesta(indice);
+
+                        // Vuelve a habilitar los topos
+                        vista.desbloquearTopos();
+
+                        procesandoRespuesta = false;
+
+                    });
+
+                    espera.setRepeats(false);
+                    espera.start();
 
                 }
 
@@ -228,8 +255,10 @@ public class JuegoMaulwurfRennt {
 
     // VERIFICAR RESPUESTA
     private void verificarRespuesta(int indiceTopo) {
-
-        if (indiceTopo >= opcionesActuales.size()) {
+        
+        /* Este if no cambia nada del funcionamiento del programa, solo
+        lo hace mas seguro por si no carga la pregunta sera igual a null */
+        if (opcionesActuales == null || indiceTopo >= opcionesActuales.size()) {
             return;
         }
 

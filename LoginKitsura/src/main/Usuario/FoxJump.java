@@ -631,8 +631,12 @@ public class FoxJump extends JFrame implements JuegoBase {
             resolverIdNivel();
 
             PantallaDificultad pd = new PantallaDificultad(
+
                     this, idNivelActual, vidas, puntajeTotal, false);
             fadeTo(() -> setContentPane(pd.getFondo()), 400);
+
+           
+
 
         } else {
             correctasTotales = 0;
