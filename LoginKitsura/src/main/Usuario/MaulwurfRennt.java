@@ -17,10 +17,13 @@ public class MaulwurfRennt extends JFrame {
 
     private JButton btnAyuda;
 
-    private static final int MAX_TOPOS = 6;
+    private static final int MAX_TOPOS = 7;
 
     private JLabel[] topos = new JLabel[MAX_TOPOS];
     private JLabel[] carteles = new JLabel[MAX_TOPOS];
+    // Almacenaran las imagenes de los topos normales y golpeados
+    private ImageIcon[] imagenesNormal = new ImageIcon[MAX_TOPOS];
+    private ImageIcon[] imagenesGolpeado = new ImageIcon[MAX_TOPOS];
 
     public MaulwurfRennt() {
         try {
@@ -52,12 +55,12 @@ public class MaulwurfRennt extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         crearComponentes();
-
+        cambiarCursorMazo();
         setVisible(true);
     }
 
     private void crearComponentes() {
-
+        
         //---------------- VIDAS ----------------
         try {
             corazonIcon = new ImageIcon(
@@ -150,9 +153,6 @@ public class MaulwurfRennt extends JFrame {
         tablero.setBounds(420, 230, 1050, 500);
         fondo.add(tablero);
 
-        tablero.setBounds(420, 230, 1050, 500);
-
-        fondo.add(tablero);
         crearTopos();
         
         //---------------- NIVEL ----------------
@@ -197,7 +197,38 @@ public class MaulwurfRennt extends JFrame {
         mascota.setBounds(1450, 480, 450, 450);
         fondo.add(mascota);
     }
+    
+    private void cambiarCursorMazo() {
 
+        try {
+
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+            Image mazo = new ImageIcon(
+                    getClass().getResource(
+                            "/Multimedia/Minijuegos/Minijuego_3/Mazo.png"))
+                    .getImage();
+
+            mazo = mazo.getScaledInstance(
+                    70,
+                    70,
+                    Image.SCALE_SMOOTH);
+
+            Cursor cursor = toolkit.createCustomCursor(
+                    mazo,
+                    new Point(35, 10),
+                    "Mazo");
+
+            setCursor(cursor);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+    
     private void crearTopos() {
 
         int[][] posiciones = {
@@ -207,17 +238,28 @@ public class MaulwurfRennt extends JFrame {
             {60, 180},
             {310, 180},
             {560, 180},
+            {800, 180}  // Verificar estas medidaaaaas !!
         };
 
         String[] imagenes = {
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_camisa.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco.png",
             "/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png",
-            "/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png",
-            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png",
-            "/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png",
-            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png",
-            "/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png",
-            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco_tierra.png"
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_cono.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_loco.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_pala.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes.png"
 
+        };
+        
+        String[] imagenesHerido = {
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_camisa-herido.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco-herido.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_casco-herido.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_cono-herido.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_normal-herido.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_pala-herido.png",
+            "/Multimedia/Minijuegos/Minijuego_3/Topo_Lentes-herido.png"
         };
 
         for (int i = 0; i < MAX_TOPOS; i++) {
@@ -226,15 +268,27 @@ public class MaulwurfRennt extends JFrame {
 
             try {
 
-                ImageIcon icono = new ImageIcon(
+                ImageIcon iconoNormal = new ImageIcon(
                         getClass().getResource(imagenes[i]));
 
-                Image img = icono.getImage().getScaledInstance(
+                Image imgNormal = iconoNormal.getImage().getScaledInstance(
                         200,
                         280,
                         Image.SCALE_SMOOTH);
 
-                topos[i].setIcon(new ImageIcon(img));
+                imagenesNormal[i] = new ImageIcon(imgNormal);
+
+                ImageIcon iconoHerido = new ImageIcon(
+                        getClass().getResource(imagenesHerido[i]));
+
+                Image imgHerido = iconoHerido.getImage().getScaledInstance(
+                        200,
+                        280,
+                        Image.SCALE_SMOOTH);
+
+                imagenesGolpeado[i] = new ImageIcon(imgHerido);
+
+                topos[i].setIcon(imagenesNormal[i]);
 
             } catch (Exception e) {
 
@@ -269,8 +323,9 @@ public class MaulwurfRennt extends JFrame {
             tablero.add(topos[i]);
 
         }
-
-        mostrarTopos(2);
+        /* Cuando el usuario ingrese al juego 
+        se mostraran 5 topos y cambiaran segun el nivel*/
+        mostrarTopos(5);
 
     }
 
@@ -303,7 +358,25 @@ public class MaulwurfRennt extends JFrame {
         return topos[indice];
 
     }
+    
+    public void golpearTopo(int indice) {
 
+        if (indice < 0 || indice >= MAX_TOPOS) {
+            return;
+        }
+
+        topos[indice].setIcon(imagenesGolpeado[indice]);
+
+        Timer timer = new Timer(300, e -> {
+            topos[indice].setIcon(imagenesNormal[indice]);
+        });
+
+        timer.setRepeats(false);
+        timer.start();
+
+    }
+    
+    
     public void actualizarTiempo(String texto) {
 
         tiempo.setText(texto);
