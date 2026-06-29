@@ -1,3 +1,4 @@
+//-------------------------- HIDDEN FOX CÓDIGO ----------------------
 package main.Usuario;
 
 import java.awt.*;
@@ -8,6 +9,18 @@ import java.sql.*;
 import java.util.Random;
 
 public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
+
+    //--------------- A T R I B U T O S ---------------
+    //--------------- C O L O R E S
+    private Color facil = new Color(178, 197, 178);
+    private Color intermedio = new Color(239, 218, 154);
+    private Color dificil = new Color(218, 77, 88);
+
+    //--------------- T I E M P O
+    /*Segundos que quedan en el turno actual.*/
+    int segundosRestantes;
+    
+    private HiddenFoxDAO dao = new HiddenFoxDAO();
 
     //Son 5 preguntas las que se muestran
     private int[] preguntasPartida = new int[5];
@@ -24,11 +37,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private boolean usoPista = false;
     //Puntaje máximo posible de la categoria -> 5 preguntas por nivel, 3 niveles, 100 puntos por pregunta = 1500 pts
     private final int puntajeMaximo = 1500;
-    /*Segundos que quedan en el turno actual.*/
-    private int segundosRestantes;
+
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
-    private boolean TipoPista; //true texto | false audio
+
     private int penalizacion;
     private int tiempoTotalJugado = 0;
     private int tiempoMaximoPregunta;
@@ -103,40 +115,20 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //----------- PARTIDA -------------------
     public void Partida(int id_nivel) {
         preguntaActual = 0;
-        GenerarPartida(id_nivel);
+        preguntasPartida = dao.generarPartida(id_nivel);
         ConfiguracionNivel(id_nivel);
         // Metodo que realiza el aumento o disminución de puntos
-        ActualizarPuntos(puntos);
-        ModificarCorazones(vidas);
+        actualizarPuntos(puntos);
+        modificarCorazones(vidas);
         SiguientePregunta();
     }
 
-    //------------ GENERAR PARTIDA ------------
-    public void GenerarPartida(int id_nivel) {
-
-        String sql = "SELECT id_pregunta FROM Pregunta WHERE id_nivel = ? ORDER BY RAND() LIMIT 5";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, id_nivel);
-
-            ResultSet rs = ps.executeQuery();
-
-            int i = 0;
-            while (rs.next()) {
-                preguntasPartida[i] = rs.getInt("id_pregunta");
-                i++;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error al generar partida: " + e.getMessage());
-        }
-    }
+    
 
     //--------- MOSTRAR PREGUNTA -----------
     public void MostrarPregunta() {
 
-        HabilitarBotones(true);
+        habilitarBotones(true);
 
         int id_pregunta = preguntasPartida[preguntaActual];
         //DEBUG
@@ -145,15 +137,18 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 + id_pregunta);
         //DEBUG
 
-        ModificarPregunta(id_pregunta);
+        //ModificarPregunta es un método de HiddenFox,
+        //En el que está llamando al método de HiddenFox_Codigo
+        //para obtener la pregunta.
+        modificarPregunta(dao.obtenerPregunta(id_pregunta));
 
-        CargarRespuestas(id_pregunta);
+        respuestas(id_pregunta);
 
-        CargarImagen(id_pregunta, false);
+        cambiarImagen(dao.obtenerRutaImagen(id_pregunta, false));
 
-        ModificarAcierto(preguntaActual + 1);
+        modificarAcierto("Problema: " + (preguntaActual + 1) + "/5");
 
-        iniciarTiempo(ObtenerTiempoLimite(id_pregunta));
+        iniciarTiempo(dao.obtenerTiempoLimite(id_pregunta));
     }
 
     // -------------- MODIFICAR ------------
@@ -180,14 +175,14 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         tiempoMaximoPregunta = tiempoLimite;
         segundosRestantes = tiempoLimite;
 
-        ModificarTiempo(segundosRestantes);
+        modificarTiempo(formatearTiempo(segundosRestantes));
 
         countdown = new Timer(1000, e -> {
 
             segundosRestantes--;
             tiempoTotalJugado++;
 
-            ModificarTiempo(segundosRestantes);
+            modificarTiempo(formatearTiempo(segundosRestantes));
 
             if (segundosRestantes <= 0) {
                 FinTiempo();
@@ -205,41 +200,16 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             countdown = null;
         }
 
-        HabilitarBotones(false);
+        habilitarBotones(false);
 
         dispose();
 
-        // ✅ CORRECCIÓN: se agrega this como JuegoBase
         new SeAcaboTiempo(this, e -> {
             new MenuHiddenFox().setVisible(true);
         });
     }
 
-    private int ObtenerTiempoLimite(int idPregunta) {
-
-        String sql
-                = "SELECT cn.tiempo_limite "
-                + "FROM Pregunta p "
-                + "INNER JOIN Configuracion_nivel cn "
-                + "ON p.id_nivel = cn.id_nivel "
-                + "WHERE p.id_pregunta = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, idPregunta);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("tiempo_limite");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return 15; // valor por defecto
-    }
+    
 
     private int calcularPuntosPorTiempo() {
 
@@ -262,7 +232,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     @Override
     public void respuestaSeleccionada(JButton boton) {
 
-        HabilitarBotones(false);
+        habilitarBotones(false);
 
         if (countdown != null) {
             countdown.stop();
@@ -279,7 +249,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
             puntos += puntosGanados;
 
-            ActualizarPuntos(puntos);
+            actualizarPuntos(puntos);
 
             JOptionPane.showMessageDialog(
                     this,
@@ -289,9 +259,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             );
 
             // Revela la imagen
-            CargarImagen(
-                    preguntasPartida[preguntaActual],
-                    true);
+            cambiarImagen(
+                    dao.obtenerRutaImagen(
+                            preguntasPartida[preguntaActual],
+                            true));
             Esperar();
         } else {
 
@@ -305,11 +276,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 puntos = 0;
             }
 
-            ActualizarPuntos(puntos);
-            ModificarCorazones(vidas);
+            actualizarPuntos(puntos);
+            modificarCorazones(vidas);
 
             // Si ya no quedan vidas, termina la partida
             if (vidas <= 0) {
+                DerrotaVidas();
                 return;
             }
             Esperar();
@@ -322,8 +294,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     public void ayuda() {
         Random random = new Random();
         boolean esTexto = random.nextBoolean();
-
-        penalizacion = ObtenerPenalizacionPista(
+        
+            //esTexto | true = texto  | false = audio.
+        penalizacion = dao.obtenerPenalizacionPista(
                 preguntasPartida[preguntaActual],
                 esTexto);
 
@@ -348,10 +321,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         if (esTexto) {
             ventana = new PistasTexto(
-                    ObtenerPista(preguntasPartida[preguntaActual]));
+                    dao.obtenerPista(preguntasPartida[preguntaActual]));
         } else {
             ventana = new PistasAudio(
-                    ObtenerRutaAudio(preguntasPartida[preguntaActual]));
+                    dao.obtenerRutaAudio(preguntasPartida[preguntaActual]));
         }
 
         ventana.addWindowListener(new WindowAdapter() {
@@ -364,65 +337,14 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     public void pausarPartida() {
         countdown.stop();
-        HabilitarBotones(false);
+        habilitarBotones(false);
     }
 
     public void reanudarPartida() {
         countdown.start();
-        HabilitarBotones(true);
+        habilitarBotones(true);
     }
 
-    //-------------- PISTAS TEXTO --------------
-    private String ObtenerPista(int id_pregunta) {
-        TipoPista = true;
-
-        String sql
-                = "SELECT contenido "
-                + "FROM Ayuda "
-                + "WHERE id_pregunta = ? "
-                + "AND tipo = 'texto'";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, id_pregunta);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getString("contenido");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return "No hay pista disponible.";
-    }
-
-    //------------------ PISTAS AUDIO -------------
-    private String ObtenerRutaAudio(int id_pregunta) {
-        TipoPista = false;
-        String sql = "SELECT audio "
-                + "FROM Ayuda "
-                + "WHERE id_pregunta = ? "
-                + "AND tipo = 'audio'";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, id_pregunta);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getString("audio");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     //--------------- PUNTOS ------------------
     private void RestarPuntos(int penalizacion) {
@@ -433,41 +355,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             puntos = 0;
         }
 
-        ActualizarPuntos(puntos);
+        actualizarPuntos(puntos);
     }
 
-    //TipoPista | true = texto  | false = audio.
-    private int ObtenerPenalizacionPista(int id_pregunta, boolean TipoPista) {
-        String pista;
-        if (TipoPista) {
-            pista = "texto";
-        } else {
-            pista = "audio";
-        }
-
-        String sql
-                = "SELECT penalizacion_puntos "
-                + "FROM Ayuda "
-                + "WHERE id_pregunta = ? "
-                + "AND tipo = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, id_pregunta);
-            ps.setString(2, pista);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("penalizacion_puntos");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return 50; // valor por defecto
-    }
+    
 
     // ─────────────────────────────────────────────────────────────────────────
     // JuegoBase
@@ -592,4 +483,153 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         }).start();
     }
+
+    /*------------------  M O D I F I C A R ------------------
+      Este es el apartado donde se modifican cosas de la Interfaz Gráfica
+      a través de HiddenFox y la base de datos con HiddenFoxDAO, 
+      pero la parte lógica de dichas modificaciones permanecen en este bloque.
+    ----------------------------------------------------------*/
+
+    public void respuestas(int id_pregunta){
+        String [] respuestas = new String[4];
+        boolean [] correctas = new boolean[4]; //Determina si son correctas
+        dao.obtenerRespuestas(id_pregunta, respuestas, correctas);
+        
+        mostrarRespuestas(respuestas, correctas);
+    }
+    
+    
+    
+    
+    
+    
+
+    /*------------------  C O N F I G U R A C I Ó N ------------------
+      Este es el apartado donde se establece la configuración principal
+      del minijuego.
+    ------------------------------------------------------------------*/
+    public void ConfiguracionNivel(int nivel) {
+        /*NIVELES: 
+        1. Animales - Fácil
+        2. Animales - Intermedio
+        3. Animales - Difícil
+        4. Territorios - Fácil
+        5. Territorios - Intermedio
+        6. Territorios - Difícil
+        7. Caricaturas - Fácil
+        8. Caricaturas - Intermedio
+        9. Caricaturas - Difícil*/
+        switch (nivel) {
+            case 1:
+                modificarColorFondo(facil);
+                modificarDificultad("Fácil");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N1_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(1));
+
+                break;
+            case 2:
+                modificarColorFondo(intermedio);
+                modificarDificultad("Intermedio");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N2_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(1));
+
+                break;
+            case 3:
+                modificarColorFondo(dificil);
+                modificarDificultad("Difícil");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N3_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(1));
+
+                break;
+            case 4:
+                modificarColorFondo(facil);
+                modificarDificultad("Fácil");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N1_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(2));
+
+                break;
+            case 5:
+                modificarColorFondo(intermedio);
+                modificarDificultad("Intermedio");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N2_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(2));
+
+                break;
+            case 6:
+                modificarColorFondo(dificil);
+                modificarDificultad("Difícil");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N3_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(2));
+
+                break;
+            case 7:
+                modificarColorFondo(facil);
+                modificarDificultad("Fácil");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N1_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(3));
+
+                break;
+            case 8:
+                modificarColorFondo(intermedio);
+                modificarDificultad("Intermedio");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N2_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(3));
+
+                break;
+            case 9:
+                modificarColorFondo(dificil);
+                modificarDificultad("Difícil");
+                cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N3_FONDO.png");
+                modificarCategoria(dao.obtenerCategoria(3));
+
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+        
+    /*-------------------------- P A R T I D A ------------------------
+        Este apartado es donde se encuentra la configuración y generación
+        de las partidas.
+    -------------------------------------------------------------------*/
+    
+    //-------------------------- GENERAR PARTIDA
+    
+
+    /*--------------------------  D E R R O T A -----------------------
+      Este es el apartado donde se coloca la lógica de las derrotas.
+      Actualmente, solo puedes perder por dos motivos: Falta de tiempo
+      y falta de vidas (por equivocaciones, pierdes una).
+    ------------------------------------------------------------------*/
+    //--------------------- T I E M P O
+    //--------------------- V I D A S
+    public void DerrotaVidas() {
+        if (vidas <= 0) {
+
+            if (vidas == 0) {
+
+                JOptionPane.showMessageDialog(this, "Has perdido.");
+
+                fadeTo(() -> {
+                    new SeAcaboVidas(this, e -> {
+                    }).setVisible(true);
+                    dispose();
+                }, 400);
+            }
+        }
+    }
+
+    /*-------------------------- T I E M P O -----------------------
+      Este es el apartado donde se encuentra toda la lógica de los
+      tiempos.
+    ------------------------------------------------------------------*/
+    //--------------------- F O R M A T O
+    public String formatearTiempo(int segundos) {
+
+        int minutos = segundos / 60;
+        segundosRestantes = segundos % 60;
+
+        return String.format("%02d:%02d", minutos, segundosRestantes);
+    }
+
 }
