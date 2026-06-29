@@ -1,3 +1,4 @@
+//-------------- P A N T A L L A  D E  D I F I C U L T A D --------------
 package main.Usuario;
 
 import java.awt.*;
@@ -17,42 +18,37 @@ public class PantallaDificultad extends JFrame {
     private JLabel lblContador;
     private JLabel lblAlerta;
     private JLabel lblFlecha;
+
     private int nivel;
-    private int vidas;
-    private int puntos;
-    private boolean usoPista;
     private JFrame ventanaAnterior;
     private int tiempo = 3;
 
     private Timer timerContinuar;
 
-public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int puntos, boolean usoPista) {
+    public PantallaDificultad(JFrame ventanaAnterior, int nivel) {
 
-    try {
+        try {
 
-        // LettersForLearners
-        fuente1 = Font.createFont(
-                Font.TRUETYPE_FONT,
-                getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // LettersForLearners
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
 
-        // KGPerfectPenmanship
-        fuente2 = Font.createFont(
-                Font.TRUETYPE_FONT,
-                getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
 
-    } catch (Exception e) {
+        } catch (Exception e) {
 
-        e.printStackTrace();
+            e.printStackTrace();
 
-        fuente1 = new Font("Arial", Font.PLAIN, 20);
-        fuente2 = new Font("Arial", Font.PLAIN, 20);
-    }
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
 
-    this.ventanaAnterior = ventanaAnterior;
+        this.ventanaAnterior = ventanaAnterior;
         this.nivel = nivel;
-        this.vidas = vidas;
-        this.puntos = puntos;
-        this.usoPista = usoPista;
 
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
         fondo.setLayout(null);
@@ -60,8 +56,8 @@ public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int punt
         crearComponentes();
         iniciarContador();
 
-        // ✅ CORRECCIÓN 2: si viene de HiddenFox, configurar y mostrar como ventana normal
-        if (!(ventanaAnterior instanceof FoxJump)) {
+        
+        if (!(ventanaAnterior instanceof FoxJump) && !(ventanaAnterior instanceof HiddenFox_Codigo)) {
             setContentPane(fondo);
             setTitle("Pantalla de Dificultad");
             setSize(1880, 1080);
@@ -70,9 +66,13 @@ public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int punt
             setExtendedState(JFrame.MAXIMIZED_BOTH);
             setVisible(true);
         }
+        
+
     }
 
-    /** Expone el panel para que FoxJump lo ponga como contentPane. */
+    /**
+     * Expone el panel para que FoxJump lo ponga como contentPane.
+     */
     public FondoPanelSemi getFondo() {
         return fondo;
     }
@@ -137,6 +137,8 @@ public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int punt
 
                 if (ventanaAnterior instanceof FoxJump foxJump) {
                     foxJump.continuarDespuesDeDificultad();
+                } else if (ventanaAnterior instanceof HiddenFox_Codigo hiddenFox) {
+                    hiddenFox.continuarDespuesDeDificultad(nivel);
                 }
             }
         });
@@ -167,11 +169,11 @@ public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int punt
         panelTexto.add(lblTitulo);
 
 // MENSAJE
-lblMensaje = new JLabel(
-        "Se aumenta la dificultad",
-        SwingConstants.CENTER);
+        lblMensaje = new JLabel(
+                "Se aumenta la dificultad",
+                SwingConstants.CENTER);
 
-lblMensaje.setFont(fuente1.deriveFont(40f));
+        lblMensaje.setFont(fuente1.deriveFont(40f));
         lblMensaje.setForeground(Color.WHITE);
         lblMensaje.setBounds(205, 430, 550, 50);
 
@@ -179,8 +181,8 @@ lblMensaje.setFont(fuente1.deriveFont(40f));
 
         // EMPIEZA EN
         lblEmpieza = new JLabel(
-        "Empieza en:",
-        SwingConstants.CENTER);
+                "Empieza en:",
+                SwingConstants.CENTER);
 
         lblEmpieza.setFont(fuente1.deriveFont(40f));
         lblEmpieza.setForeground(Color.WHITE);
@@ -241,9 +243,8 @@ lblMensaje.setFont(fuente1.deriveFont(40f));
         timerContinuar = new Timer(1500, e -> {
             if (ventanaAnterior instanceof FoxJump foxJump) {
                 foxJump.continuarDespuesDeDificultad();
-            } else if (ventanaAnterior instanceof HiddenFox_Codigo) {
-                dispose();
-                new HiddenFox_Codigo(nivel, vidas, puntos, usoPista);
+            } else if (ventanaAnterior instanceof HiddenFox_Codigo hiddenFox) {
+                hiddenFox.continuarDespuesDeDificultad(nivel);
             }
         });
 

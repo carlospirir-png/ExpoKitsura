@@ -6,6 +6,7 @@ public interface JuegoBase {
     void reiniciar();
     void irAlMenu();
     void jugarDeNuevo();
+    void mostrarResultadoConFade();
     JFrame getFrame();
     
     int getPuntajeTotal();

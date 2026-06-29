@@ -7,7 +7,7 @@ import java.net.URL; //Se importa URL
 import main.conexion.Conexion; //Se importa Conexion
 import java.sql.*; //Se importa el SQL
 
-public abstract class HiddenFox extends JFrame implements JuegoBase{
+public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     //Atributos
     Connection con = new Conexion().getConnection();
@@ -284,8 +284,10 @@ public abstract class HiddenFox extends JFrame implements JuegoBase{
                 String rutaColor = rs.getString("imagen_color");
                 if (imagen) {
                     CambiarImagen(rutaColor);
+                    System.out.println(rutaColor);
                 } else {
                     CambiarImagen(rutaSombra);
+                    System.out.println(rutaSombra);
                 }
             }
         } catch (SQLException e) {
@@ -617,7 +619,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase{
 
                 JOptionPane.showMessageDialog(this, "Has perdido.");
                 dispose(); // Cierra la pantalla que se está presentando
-                new SeAcaboVidas(this,e -> {
+                new SeAcaboVidas(this, e -> {
                     new MenuHiddenFox().setVisible(true);
                 });
                 return;
@@ -639,6 +641,12 @@ public abstract class HiddenFox extends JFrame implements JuegoBase{
         btnRespuesta4.setEnabled(estado);
 
     }
+
     //----------------  AYUDA ------------------------
     public abstract void ayuda();
+
+    //GET Y SETS
+    public JPanel getFondo() {
+        return fondo;
+    }
 }

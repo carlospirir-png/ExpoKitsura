@@ -237,7 +237,4 @@ public class M3_crearNuevo extends JFrame {
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);
     }
-    public static void main(String[] args) {
-        new M3_crearNuevo();
-    }
 }

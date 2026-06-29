@@ -7,7 +7,7 @@ import main.conexion.Conexion;
 import java.sql.*;
 import java.util.Random;
 
-public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
+public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     //Son 5 preguntas las que se muestran
     private int[] preguntasPartida = new int[5];
@@ -29,14 +29,18 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
     private boolean TipoPista; //true texto | false audio
-    int penalizacion;
+    private int penalizacion;
+    private int tiempoTotalJugado = 0;
+    private int tiempoMaximoPregunta;
+    private PantallaDificultad pantallaDificultad;
 
     //---------------- CONSTRUCTOR ----------------
-    public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista) {
+    public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
         this.nivelActual = nivel;
         this.vidas = vidas;
         this.puntos = puntos;
         this.usoPista = usoPista;
+        this.tiempoTotalJugado = tiempoTotalJugado;
 
         if (nivelActual >= 1 && nivelActual <= 3) {
             nivelFinal = 3;
@@ -55,7 +59,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
 
     // Segundo contructor que indica cuando el jugador inicia una categoria desde el menu
     public HiddenFox_Codigo(int nivel) {
-        this(nivel, 3, 0, false);
+        this(nivel, 3, 0, false, 0);
     }
 
     //------------- SIGUIENTE PREGUNTA ------------
@@ -68,25 +72,29 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
         } else {
             if (nivelActual < nivelFinal) {
 
-                dispose();
-
-                // ✅ CORRECCIÓN: se agrega this como ventanaAnterior
-                new PantallaDificultad(this, nivelActual + 1, vidas, puntos, usoPista);
+                pantallaDificultad = new PantallaDificultad(this,
+                        nivelActual + 1);
+                fadeTo(() -> {
+                    setContentPane(pantallaDificultad.getFondo());
+                }, 400);
 
             } else {
 
-                dispose();
-
                 if (vidas == 3 && puntos == puntajeMaximo && !usoPista) {
-                    // ✅ CORRECCIÓN: se agrega this como ventanaAnterior
-                    new VictoriaPerfecta(e -> {
-                        new MenuHiddenFox().setVisible(true);
+
+                    VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
                     }, this);
+
+                    fadeTo(() -> {
+                        setContentPane(vp.getFondo());
+                    }, 400);
                 } else {
-                    // ✅ CORRECCIÓN: se agrega this como ventanaAnterior
-                    new Victoria(e -> {
-                        new MenuHiddenFox().setVisible(true);
+                    Victoria v = new Victoria(e -> {
                     }, this);
+
+                    fadeTo(() -> {
+                        setContentPane(v.getFondo());
+                    }, 400);
                 }
             }
         }
@@ -169,6 +177,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
             countdown.stop();
         }
 
+        tiempoMaximoPregunta = tiempoLimite;
         segundosRestantes = tiempoLimite;
 
         ModificarTiempo(segundosRestantes);
@@ -176,6 +185,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
         countdown = new Timer(1000, e -> {
 
             segundosRestantes--;
+            tiempoTotalJugado++;
 
             ModificarTiempo(segundosRestantes);
 
@@ -231,6 +241,22 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
         return 15; // valor por defecto
     }
 
+    private int calcularPuntosPorTiempo() {
+
+        int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
+
+        double porcentajeRapidez
+                = 1.0 - ((double) tiempoUsado / tiempoMaximoPregunta);
+
+        int puntos = (int) (100 * porcentajeRapidez);
+
+        if (puntos < 10) {
+            puntos = 10;
+        }
+
+        return puntos;
+    }
+
     //-------------- BOTONES -------------
     //---------------- ACTION LISTENER -----------------
     @Override
@@ -249,8 +275,18 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
 
         if (correcta) {
             //suma puntos por responder correctamente
-            puntos += 100;
+            int puntosGanados = calcularPuntosPorTiempo();
+
+            puntos += puntosGanados;
+
             ActualizarPuntos(puntos);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "¡Correcto!\nGanaste "
+                    + puntosGanados
+                    + " puntos."
+            );
 
             // Revela la imagen
             CargarImagen(
@@ -443,7 +479,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
 
     @Override
     public int getTiempoTotalJugado() {
-        return 0; // HiddenFox no trackea tiempo total
+        return tiempoTotalJugado;
     }
 
     @Override
@@ -466,5 +502,94 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase{
     @Override
     public JFrame getFrame() {
         return this;
+    }
+
+    @Override
+    public void mostrarResultadoConFade() {
+        ResultadoFinal resultado = new ResultadoFinal(this, puntos, tiempoTotalJugado);
+        resultado.mostrar();
+    }
+
+    //---------------- TRANSICIÓN ----------
+    private void fadeTo(Runnable onMidpoint, int duracionMs) {
+
+        JPanel overlay = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                g.setColor(new Color(0, 0, 0, getBackground().getAlpha()));
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+
+        overlay.setOpaque(false);
+        overlay.setBackground(new Color(0, 0, 0, 0));
+
+        JPanel glass = (JPanel) getGlassPane();
+        glass.setLayout(new BorderLayout());
+        glass.add(overlay, BorderLayout.CENTER);
+        glass.setVisible(true);
+
+        int pasos = 20;
+        int intervalo = (duracionMs / 2) / pasos;
+        int[] alpha = {0};
+        int[] fase = {0};
+
+        javax.swing.Timer fadeTimer = new javax.swing.Timer(intervalo, null);
+
+        fadeTimer.addActionListener(e -> {
+
+            if (fase[0] == 0) {
+                alpha[0] += 255 / pasos;
+
+                if (alpha[0] >= 255) {
+                    alpha[0] = 255;
+                    overlay.setBackground(new Color(0, 0, 0, alpha[0]));
+                    overlay.repaint();
+
+                    onMidpoint.run();
+                    revalidate();
+                    repaint();
+
+                    fase[0] = 1;
+                }
+
+            } else {
+                alpha[0] -= 255 / pasos;
+
+                if (alpha[0] <= 0) {
+                    alpha[0] = 0;
+                    overlay.setBackground(new Color(0, 0, 0, alpha[0]));
+                    overlay.repaint();
+
+                    glass.remove(overlay);
+                    glass.setVisible(false);
+
+                    fadeTimer.stop();
+                    return;
+                }
+            }
+
+            overlay.setBackground(new Color(0, 0, 0, alpha[0]));
+            overlay.repaint();
+        });
+
+        fadeTimer.start();
+    }
+
+    public void continuarDespuesDeDificultad(int nuevoNivel) {
+
+        fadeTo(() -> {
+            setContentPane(getFondo());
+        }, 400);
+
+        new Timer(420, e -> {
+
+            ((Timer) e.getSource()).stop();
+
+            nivelActual = nuevoNivel;
+
+            Partida(nivelActual);
+
+        }).start();
     }
 }
