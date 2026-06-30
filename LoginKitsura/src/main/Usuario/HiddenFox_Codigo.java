@@ -37,7 +37,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private boolean usoPista = false;
     //Puntaje máximo posible de la categoria -> 5 preguntas por nivel, 3 niveles, 100 puntos por pregunta = 1500 pts
     private final int puntajeMaximo = 1500;
-
+    private int puntajeTotal;
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
 
@@ -69,6 +69,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         Partida(nivelActual);
     }
 
+    
     // Segundo contructor que indica cuando el jugador inicia una categoria desde el menu
     public HiddenFox_Codigo(int nivel) {
         this(nivel, 3, 0, false, 0);
@@ -631,5 +632,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         return String.format("%02d:%02d", minutos, segundosRestantes);
     }
+    
+   
 
 }
