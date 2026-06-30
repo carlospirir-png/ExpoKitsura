@@ -79,7 +79,11 @@ public class PantallaImagenPerfil extends JFrame {
         scrollImagenes.setBounds(75,95,500,220);
         fondo.add(scrollImagenes);
 
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(15f));
         btnVolver.setBounds(250,350,140,40);
         fondo.add(btnVolver);

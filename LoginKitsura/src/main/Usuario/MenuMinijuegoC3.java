@@ -50,13 +50,13 @@ public class MenuMinijuegoC3 extends JFrame {
         btnComoJugar.addActionListener(e -> {
             JOptionPane.showMessageDialog(this,
                     """
-                    Fox Jump!
+                    MaulwurfRennt
 
                     • Selecciona la categoría que deseas jugar.
                     • Lee la pregunta.
-                    • Salta al nenúfar de Verdadero o Falso.
+                    • Haz Click al topo.
                     • Responde correctamente para avanzar.
-                    • Después de 5 respuestas correctas subirás de dificultad.
+                    • Despué0s de 5 respuestas correctas subirás de dificultad.
                     • Si pierdes las 3 vidas termina la partida.
                     """);
         });

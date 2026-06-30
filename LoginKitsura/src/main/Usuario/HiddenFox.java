@@ -1,20 +1,18 @@
+//-------------------------- HIDDEN FOX ----------------------
 package main.Usuario;
 
 //------------------------ IMPORTACIONES ----------------------------
 import java.awt.*; //Se importa java awt
 import javax.swing.*; //Se importa java swing
 import java.net.URL; //Se importa URL
-import main.conexion.Conexion; //Se importa Conexion
-import java.sql.*; //Se importa el SQL
+import main.Menu.DecoracionBotones;
 
 public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     //Atributos
-    Connection con = new Conexion().getConnection();
-
     private final JPanel fondo;
 
-    ImageIcon fondoPapelIcon, iconoSombra, corazonFinal, corazonRotoFinal;
+    ImageIcon fondoPapelIcon, corazonFinal, corazonRotoFinal;
 
     private Font fuente1, fuente2;
 
@@ -24,7 +22,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     Image fondoPapelEscalado;
 
-    private JButton btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
+    private DecoracionBotones btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
 
     public HiddenFox() {
         try {
@@ -59,7 +57,9 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         crearComponentes();
+    }
 
+    private void crearComponentes() {
         //------------------- SOMBRA ---------
         imagenSombra = new JLabel(); //Se crea el label de la imagen sombra
         imagenSombra.setBounds(350, 60, 350, 320); //Se posiciona y configura el tamaño de la sombra
@@ -68,10 +68,6 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         fondoPapel = new JLabel();
         fondoPapel.setLayout(null);
         fondoPapel.setBounds(420, 250, 1050, 450);
-
-    }
-
-    private void crearComponentes() {
 
         //---------------- VIDAS ----------------
         try {
@@ -122,13 +118,6 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         panelv.add(vida3);
         fondo.add(panelv);
 
-        //---------------- AYUDA ----------------
-        btnAyuda = new JButton("¿Necesitas ayuda?");
-        btnAyuda.setFont(fuente2.deriveFont(18f));
-        btnAyuda.setBounds(60, 120, 280, 55);
-        btnAyuda.addActionListener(e -> ayuda());
-        fondo.add(btnAyuda);
-
         //---------------- TITULO ----------------
         titulo = new JLabel(
                 "<html><center>¿Quién o qué se encuentra<br>detrás de la sombra?</center></html>",
@@ -157,37 +146,69 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         fondo.add(tiempo);
 
+        //---------------- B O T O N E S -------------
+        //---------------- AYUDA ----------------
+        btnAyuda = new DecoracionBotones("¿Necesitas ayuda?",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_APAGADO, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO); //MOUSE DENTRO   
+
+        btnAyuda.setFont(fuente2.deriveFont(18f));
+        btnAyuda.setBounds(60, 120, 280, 55);
+        btnAyuda.addActionListener(e -> ayuda());
+        fondo.add(btnAyuda);
+
         //---------------- RESPUESTA 1 ----------------
-        btnRespuesta1 = new JButton("RESPUESTA 1");
+        btnRespuesta1 = new DecoracionBotones("RESPUESTA 1",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO   
+
         btnRespuesta1.setFont(fuente2.deriveFont(20f));
         btnRespuesta1.setBounds(500, 730, 300, 75);
+        btnRespuesta1.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta1.addActionListener(e -> respuestaSeleccionada(btnRespuesta1));
 
         fondo.add(btnRespuesta1);
 
         //---------------- RESPUESTA 2 ----------------
-        btnRespuesta2 = new JButton("RESPUESTA 2");
+        btnRespuesta2 = new DecoracionBotones("RESPUESTA 2",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO  
+
         btnRespuesta2.setFont(fuente2.deriveFont(20f));
         btnRespuesta2.setBounds(1020, 730, 300, 75);
+        btnRespuesta2.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta2.addActionListener(e -> respuestaSeleccionada(btnRespuesta2));
 
         fondo.add(btnRespuesta2);
 
         //---------------- RESPUESTA 3 ----------------
-        btnRespuesta3 = new JButton("RESPUESTA 3");
+        btnRespuesta3 = new DecoracionBotones("RESPUESTA 3",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO   
+
         btnRespuesta3.setFont(fuente2.deriveFont(20f));
         btnRespuesta3.setBounds(500, 840, 300, 75);
+        btnRespuesta3.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta3.addActionListener(e -> respuestaSeleccionada(btnRespuesta3));
 
         fondo.add(btnRespuesta3);
 
         //---------------- RESPUESTA 4 ----------------
-        btnRespuesta4 = new JButton("RESPUESTA 4");
+        btnRespuesta4 = new DecoracionBotones("RESPUESTA 4",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO    
+
         btnRespuesta4.setFont(fuente2.deriveFont(20f));
         btnRespuesta4.setBounds(1020, 840, 300, 75);
+        btnRespuesta4.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta4.addActionListener(e -> respuestaSeleccionada(btnRespuesta4));
 
@@ -240,23 +261,57 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         fondo.add(mascota);
     }
 
-    //-------------------- CAMBIAR FONDOS -----------
-    public void CambiarImagen(String linkImagen) {
-        //---------------- IMAGEN SOMBRA Y A COLOR ----------------    
 
-        URL link = getClass().getResource(linkImagen);
+    /*---------------------------- M É T O D O S -------------------
+      Este es el apartado para los métodos que modifiquen la interfaz.*/
+ /*-------------------- M O D I F I C A R ----------------
+      Este es el apartado donde se modifican cosas de la Interfaz Gráfica a través
+      de HiddenFox_Codigo, pero aquí no se mantiene nada lógico, solo cumple con
+      modificar según lo que le llegue. 
+    ---------------------------------------------------------*/
+    //----------------------- T E X T O S 
+    //---------------------  PREGUNTA ------------------------
+    public void modificarPregunta(String pregunta) {
+        titulo.setText(pregunta);
+    }
+
+    //---------------------  CATEGORÍA -----------------------
+    public void modificarCategoria(String nombreCategoria) {
+        categoria.setText("Categoría: " + nombreCategoria);
+    }
+
+    //-------------- DIFICULTAD ----------------------
+    public void modificarDificultad(String dificultadTexto) {
+        dificultad.setText("Dificultad: " + dificultadTexto);
+    }
+
+    //------------ ACIERTO --------------------------
+    public void modificarAcierto(String texto) {
+        acierto.setText(texto);
+    }
+
+    //---------------- PUNTOS --------------------------
+    public void actualizarPuntos(int puntosObtenidos) {
+        puntos.setText("Puntos: " + puntosObtenidos);
+    }
+
+    //--------------------- I M Á G E N E S   Y  F O N D O S
+    //---------------- IMAGEN SOMBRA Y A COLOR ----------------     
+    public void cambiarImagen(String rutaImagen) {
+
+        URL ruta = getClass().getResource(rutaImagen);
 
         try {
 
-            if (link == null) {
-                throw new RuntimeException("No se encontró la imagen: " + linkImagen);
+            if (ruta == null) {
+                throw new RuntimeException("No se encontró la imagen.");
             }
 
-            iconoSombra = new ImageIcon(link);
+            ImageIcon icono = new ImageIcon(ruta);
 
-            Image sombraEscalada = iconoSombra.getImage().getScaledInstance(350, 320, Image.SCALE_SMOOTH);
+            Image iconoEscalado = icono.getImage().getScaledInstance(350, 320, Image.SCALE_SMOOTH);
 
-            imagenSombra.setIcon(new ImageIcon(sombraEscalada));
+            imagenSombra.setIcon(new ImageIcon(iconoEscalado));
 
             imagenSombra.revalidate();
             imagenSombra.repaint();
@@ -271,42 +326,18 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         }
     }
 
-    //boolean imagen:   false = sombra      |       true = color
-    public void CargarImagen(int id_pregunta, boolean imagen) {
-        String sql = "SELECT imagen_sombra, imagen_color FROM Pregunta WHERE id_pregunta = ?";
+    //------------------ FONDO DE LA SOMBRA --------------------
+    public void cambiarFondoPapel(String rutaImagen) {
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id_pregunta);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                String rutaSombra = rs.getString("imagen_sombra");
-                String rutaColor = rs.getString("imagen_color");
-                if (imagen) {
-                    CambiarImagen(rutaColor);
-                    System.out.println(rutaColor);
-                } else {
-                    CambiarImagen(rutaSombra);
-                    System.out.println(rutaSombra);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void CambiarFondoPapel(String linkImagen) {
-        //----------------- FONDO PAPEL  --------------
-
-        URL link = getClass().getResource(linkImagen);
+        URL ruta = getClass().getResource(rutaImagen);
 
         try {
 
-            if (link == null) {
-                throw new RuntimeException("No se encontró la imagen: " + linkImagen);
+            if (ruta == null) {
+                throw new RuntimeException("No se encontró la imagen.");
             }
 
-            fondoPapelIcon = new ImageIcon(link);
+            fondoPapelIcon = new ImageIcon(ruta);
 
             fondoPapelEscalado = fondoPapelIcon.getImage().getScaledInstance(1050, 450, Image.SCALE_SMOOTH);
 
@@ -319,6 +350,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
             fondo.add(fondoPapel); //Se añade el fondo papel al fondo
             setVisible(true); //Se vuelve visible
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -326,277 +358,15 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
             imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
             imagenSombra.setForeground(Color.RED);
         }
-
     }
 
-    public void CargarFondoPapel(int nivel) {
-        /*
-        NIVELES: 
-        1. Animales - Fácil
-        2. Animales - Intermedio
-        3. Animales - Difícil
-        4. Territorios - Fácil
-        5. Territorios - Intermedio
-        6. Territorios - Difícil
-        7. Caricaturas - Fácil
-        8. Caricaturas - Intermedio
-        9. Caricaturas - Difícil
-         */
-
-        switch (nivel) {
-            case 1:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N1_FONDO.png");
-                break;
-            case 2:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N2_FONDO.png");
-                break;
-            case 3:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N3_FONDO.png");
-                break;
-            case 4:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N1_FONDO.png");
-                break;
-            case 5:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N2_FONDO.png");
-                break;
-            case 6:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N3_FONDO.png");
-                break;
-            case 7:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N1_FONDO.png");
-                break;
-            case 8:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N2_FONDO.png");
-                break;
-            case 9:
-                CambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N3_FONDO.png");
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "ERROR: No se pudo cargar el fondo.", "ERROR.", JOptionPane.ERROR_MESSAGE);
-        }
+    //------------------------- CAMBIAR FONDO -----------------
+    public void modificarColorFondo(Color color) {
+        fondo.setBackground(color);
     }
 
-    public void CambiarFondo(int dificultad) {
-        Color verde = new Color(178, 197, 178);
-        Color amarillo = new Color(239, 218, 154);
-        Color rojo = new Color(218, 77, 88);
-
-        if (dificultad == 1) {
-            fondo.setBackground(verde);
-        } else if (dificultad == 2) {
-            fondo.setBackground(amarillo);
-        } else if (dificultad == 3) {
-            fondo.setBackground(rojo);
-        } else {
-            System.out.println("Error en la colocación de color.");
-        }
-
-    }
-
-    //---------------- BOTONES ---------------------
-    //----------------- CARGAR RESPUESTAS -----------
-    //Cargar respuestas por medio de la base de datos.
-    public void CargarRespuestas(int id_pregunta) {
-        String sql = "SELECT texto_opcion, es_correcta FROM Opcion_respuesta WHERE id_pregunta = ? ORDER BY RAND()";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, id_pregunta);
-
-            ResultSet rs = ps.executeQuery();
-
-            JButton[] botones = {
-                btnRespuesta1,
-                btnRespuesta2,
-                btnRespuesta3,
-                btnRespuesta4
-
-            };
-
-            int i = 0;
-
-            while (rs.next() && i < botones.length) {
-                botones[i].setText(rs.getString("texto_opcion"));
-                botones[i].putClientProperty("correcta", rs.getBoolean("es_correcta"));
-                i++;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    //-------------------------------- CAMBIAR DATOS -----------------------------
-    //------------ ACIERTO --------------------------
-    public void ModificarAcierto(int n) {
-        //Rango del 1 al 5
-        if (n >= 1 && n <= 5) {
-            acierto.setText("Problema:  " + n + "/5");
-        } else {
-            System.out.println("Número de nivel inválido.");
-        }
-    }
-
-    //-------------- DIFICULTAD ----------------------
-    public void ModificarDificultad(int d) {
-        switch (d) {
-            case 1:
-                dificultad.setText("Dificultad: Fácil");
-                break;
-            case 2:
-                dificultad.setText("Dificultad: Intermedio");
-                break;
-            case 3:
-                dificultad.setText("Dificultad: Difícil");
-                break;
-            default:
-                System.out.println("Número de dificultad inválido.");
-                break;
-        }
-    }
-
-    //----------------------- CATEGORÍA --------------------
-    public void ModificarCategoria(int id_categoria) {
-        String sql = "SELECT nombre FROM Categoria WHERE id_categoria = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, id_categoria);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                categoria.setText("Categoría: " + rs.getString("nombre"));
-            } else {
-                categoria.setText("Categoría no encontrada");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error al obtener categoría: " + e.getMessage());
-        }
-    }
-
-    //---------------------------- PREGUNTA --------------------
-    public void ModificarPregunta(int id_pregunta) {
-        String sql = "SELECT pregunta FROM Pregunta WHERE id_pregunta = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id_pregunta);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                titulo.setText(rs.getString("pregunta"));
-            } else {
-                titulo.setText("Pregunta no encontrada.");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error al obtener la pregunta: " + e.getMessage());
-        }
-    }
-
-    //-------------------------------------- UNIFICAR ----------------------------------
-    public void ConfiguracionNivel(int nivel) {
-        /*
-        NIVELES: 
-        1. Animales - Fácil
-        2. Animales - Intermedio
-        3. Animales - Difícil
-        4. Territorios - Fácil
-        5. Territorios - Intermedio
-        6. Territorios - Difícil
-        7. Caricaturas - Fácil
-        8. Caricaturas - Intermedio
-        9. Caricaturas - Difícil
-         */
-        switch (nivel) {
-            case 1:
-                CambiarFondo(1);
-                ModificarDificultad(1);
-                CargarFondoPapel(1);
-                ModificarCategoria(1);
-
-                break;
-            case 2:
-                CambiarFondo(2);
-                ModificarDificultad(2);
-                CargarFondoPapel(2);
-                ModificarCategoria(1);
-
-                break;
-            case 3:
-                CambiarFondo(3);
-                ModificarDificultad(3);
-                CargarFondoPapel(3);
-                ModificarCategoria(1);
-
-                break;
-            case 4:
-                CambiarFondo(1);
-                ModificarDificultad(1);
-                CargarFondoPapel(4);
-                ModificarCategoria(2);
-
-                break;
-            case 5:
-                CambiarFondo(2);
-                ModificarDificultad(2);
-                CargarFondoPapel(5);
-                ModificarCategoria(2);
-
-                break;
-            case 6:
-                CambiarFondo(3);
-                ModificarDificultad(3);
-                CargarFondoPapel(6);
-                ModificarCategoria(2);
-
-                break;
-            case 7:
-                CambiarFondo(1);
-                ModificarDificultad(1);
-                CargarFondoPapel(7);
-                ModificarCategoria(3);
-
-                break;
-            case 8:
-                CambiarFondo(2);
-                ModificarDificultad(2);
-                CargarFondoPapel(8);
-                ModificarCategoria(3);
-
-                break;
-            case 9:
-                CambiarFondo(3);
-                ModificarDificultad(3);
-                CargarFondoPapel(9);
-                ModificarCategoria(3);
-
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void ModificarTiempo(int segundos) {
-
-        tiempo.setText(String.format("%02d", segundos));
-
-        int minutos = segundos / 60;
-        int segundosRestantes = segundos % 60;
-
-        tiempo.setText(
-                String.format("%02d:%02d", minutos, segundosRestantes)
-        );
-
-    }
-
-    public void respuestaSeleccionada(JButton boton) {
-        // Se implementará en HiddenFox_Codigo
-    }
-
-    //-------------------- CORAZONES -----------------
-    public void ModificarCorazones(int vidas) {
-
+    //------------------------- CORAZONES -----------------
+    public void modificarCorazones(int vidas) {
         JLabel[] corazones = {
             vida1,
             vida2,
@@ -612,28 +382,30 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
             }
         }
         fondo.repaint();
+    }
 
-        if (vidas <= 0) {
+    //--------------------- B O T O N E S
+    //-------------------- MOSTRAR RESPUESTAS ------------------
+    public void mostrarRespuestas(String[] respuestas, boolean[] correctas) {
 
-            if (vidas == 0) {
+        JButton[] botones = {
+            btnRespuesta1,
+            btnRespuesta2,
+            btnRespuesta3,
+            btnRespuesta4
+        };
 
-                JOptionPane.showMessageDialog(this, "Has perdido.");
-                dispose(); // Cierra la pantalla que se está presentando
-                new SeAcaboVidas(this, e -> {
-                    new MenuHiddenFox().setVisible(true);
-                });
-                return;
-            }
+        for (int i = 0; i < botones.length; i++) {
+
+            botones[i].setText(respuestas[i]);
+            botones[i].putClientProperty(
+                    "correcta",
+                    correctas[i]);
         }
-
     }
 
-    public void ActualizarPuntos(int puntosObtenidos) {
-        puntos.setText("Puntos: " + puntosObtenidos);
-    }
-
-    //------------------DESHABILITARLOS --------------------------
-    public void HabilitarBotones(boolean estado) {
+    //------------------DESHABILITARLOS ----------------------
+    public void habilitarBotones(boolean estado) {
 
         btnRespuesta1.setEnabled(estado);
         btnRespuesta2.setEnabled(estado);
@@ -642,10 +414,25 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     }
 
-    //----------------  AYUDA ------------------------
+    //--------------------- T I E M P O
+    public void modificarTiempo(String tiempo) {
+        this.tiempo.setText(tiempo);
+    }
+
+    /*----------------- A B S T R A C T O S --------------
+      Este es el apartado donde se encuentran los métodos abstractos
+      cuya lógica se encuentra en HiddenFox_Codigo, pero como estos
+      métodos dependen de las acciones de los botones se colocan aquí.
+    --------------------------------------------------------------*/
     public abstract void ayuda();
 
-    //GET Y SETS
+    public abstract void respuestaSeleccionada(JButton boton);
+
+
+    /*-------------------------- G E T S -------------------------
+      Este es el apartado donde se encuentran los GETS conforme se
+      vayan necesitando en HiddenFox_Codigo.
+    --------------------------------------------------------------*/
     public JPanel getFondo() {
         return fondo;
     }

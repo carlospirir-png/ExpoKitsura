@@ -88,7 +88,10 @@ public class PedirMCN extends JFrame{
         recuadroFormulario.add(txtNivel);
 
         // BOTÓN CONTINUAR (
-        JButton btnContinuar = new DecoracionBotones("CONTINUAR","#FC767D", "#da4d58", "#da4d58");
+        JButton btnContinuar = new DecoracionBotones("CONTINUAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnContinuar.setFont(fuente2.deriveFont(25f));
         btnContinuar.setBounds(560, 560, 220, 55);
         recuadroFormulario.add(btnContinuar);
@@ -102,7 +105,11 @@ public class PedirMCN extends JFrame{
             fondo.add(mascotaControl);
 
         // BOTÓN REGRESAR
-        JButton btnRegresar = new DecoracionBotones("Regresar");
+        JButton btnRegresar = new DecoracionBotones("Regresar",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnRegresar.setFont(fuente2.deriveFont(25f));
         btnRegresar.setBounds(380, 800, 220, 55);
         btnRegresar.addActionListener(e -> dispose()); 

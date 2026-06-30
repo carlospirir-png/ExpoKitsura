@@ -54,7 +54,11 @@ public class MenuPrincipal extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- BOTÓN PERFIL ----------------
-        JButton btnPerfil = new DecoracionBotones("PERFIL");
+        JButton btnPerfil = new DecoracionBotones("PERFIL",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnPerfil.setFont(fuente2.deriveFont(25f));
         btnPerfil.setBounds(820, 320, 320, 65);
         btnPerfil.setIconTextGap(10);
@@ -70,7 +74,11 @@ public class MenuPrincipal extends JFrame {
         fondo.add(btnPerfil);
 
         //---------------- BOTÓN MINIJUEGOS ----------------
-        JButton btnMinijuegos = new DecoracionBotones("MINIJUEGOS");
+        JButton btnMinijuegos = new DecoracionBotones("MINIJUEGOS",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnMinijuegos.setFont(fuente2.deriveFont(25f));
         btnMinijuegos.setBounds(820, 440, 320, 65);
         btnMinijuegos.setIconTextGap(10);
@@ -86,7 +94,11 @@ public class MenuPrincipal extends JFrame {
         fondo.add(btnMinijuegos);
 
         //---------------- BOTÓN ESTADÍSTICAS ----------------
-        JButton btnEstadisticas = new DecoracionBotones("ESTADÍSTICAS");
+        JButton btnEstadisticas = new DecoracionBotones("ESTADÍSTICAS",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnEstadisticas.setFont(fuente2.deriveFont(25f));
         btnEstadisticas.setBounds(820, 560, 320, 65);
         btnEstadisticas.setIconTextGap(10);
@@ -102,7 +114,11 @@ public class MenuPrincipal extends JFrame {
         fondo.add(btnEstadisticas);
 
         //---------------- BOTÓN SALIR ----------------
-        JButton btnSalir = new DecoracionBotones("SALIR");
+        JButton btnSalir = new DecoracionBotones("SALIR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSalir.setFont(fuente2.deriveFont(25f));
         btnSalir.setBounds(820, 680, 320, 65);
         btnSalir.setIconTextGap(10);

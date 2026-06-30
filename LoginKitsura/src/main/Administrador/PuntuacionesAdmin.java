@@ -95,7 +95,11 @@ public class PuntuacionesAdmin extends JFrame {
 
         //---------------- BOTÓN EDITAR ----------------
 
-        JButton btnEditar = new DecoracionBotones("EDITAR");
+        JButton btnEditar = new DecoracionBotones("EDITAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnEditar.setFont(fuente2.deriveFont(26f));
         btnEditar.setBounds(340, 315, 260, 60);
 
@@ -160,7 +164,11 @@ public class PuntuacionesAdmin extends JFrame {
 
         //---------------- BOTÓN VOLVER ----------------
 
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1470, 870, 300, 65);
 

@@ -61,7 +61,11 @@ public class PistasTexto extends JFrame {
         recuadroTexto.add(lblPista);
 
         //---------------- BOTÓN SALIR ----------------
-        JButton btnSalir = new DecoracionBotones("SALIR");
+        JButton btnSalir = new DecoracionBotones("SALIR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSalir.setFont(fuente1.deriveFont(25f));
         btnSalir.setBounds(120, 320, 160, 45);
         btnSalir.addActionListener(e -> dispose());

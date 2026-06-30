@@ -135,7 +135,11 @@ public class PantallaTutorial extends JFrame {
         panelContenido.add(lblInfo3);
 
         //---------------- BOTÓN VOLVER ----------------
-        btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(20f));
         btnVolver.setBounds(30, 270, 150, 50);
         btnVolver.addActionListener(e -> dispose());

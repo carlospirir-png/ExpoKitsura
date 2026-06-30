@@ -135,7 +135,11 @@ public class IniciarSesion extends JFrame {
         fondo.add(txtPassword);
 
         //---------------- BOTON ----------------
-        btnLogIn = new DecoracionBotones("INICIAR SESIÓN", "#FC767D", "#da4d58", "#da4d58");
+        btnLogIn = new DecoracionBotones("INICIAR SESIÓN",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        
         btnLogIn.setFont(fuente2.deriveFont(15f));
         btnLogIn.setBounds(820, 650, 285, 60);
 
@@ -157,7 +161,10 @@ public class IniciarSesion extends JFrame {
         fondo.add(btnLogIn);
 
         //---------------- BOTON VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnVolver.setFont(fuente2.deriveFont(10f));
         btnVolver.setBounds(40, 975, 120, 40);
         

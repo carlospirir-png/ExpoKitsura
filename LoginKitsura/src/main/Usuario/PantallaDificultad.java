@@ -24,7 +24,7 @@ public class PantallaDificultad extends JFrame {
 
     private Timer timerContinuar;
 
-    public PantallaDificultad(JFrame ventanaAnterior, int nivel) {
+    public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int puntajeTotal, boolean par) {
 
         try {
 
@@ -65,6 +65,10 @@ public class PantallaDificultad extends JFrame {
             setVisible(true);
         }
 
+    }
+
+    PantallaDificultad(MaulwurfRennt vista, int nivel) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     /**
