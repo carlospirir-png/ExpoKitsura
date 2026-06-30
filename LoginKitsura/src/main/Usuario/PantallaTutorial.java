@@ -6,20 +6,20 @@ import main.Menu.DecoracionBotones;
 
 public class PantallaTutorial extends JFrame {
 
-    private JScrollPane scrollPane;
-    private JPanel panelContenido;
+    public JScrollPane scrollPane;
+    public JPanel panelContenido;
 
-    private JLabel lblTitulo;
-    private JLabel lblMascota;
-    private JLabel lblPaso1;
-    private JLabel lblTextoPaso1;
-    private JLabel lblImagen1;
-    private JLabel lblImagen2;
+    public JLabel lblTitulo;
+    public JLabel lblMascota;
+    public JLabel lblPaso1;
+    public JLabel lblTextoPaso1;
+    public JLabel lblImagen1;
+    public JLabel lblImagen2;
 
-    private JButton btnVolver;
+    public JButton btnVolver;
 
-    private Font fuente1;
-    private Font fuente2;
+    public Font fuente1;
+    public Font fuente2;
 
     public PantallaTutorial() {
 
@@ -44,11 +44,12 @@ public class PantallaTutorial extends JFrame {
         getContentPane().setLayout(null);
 
         crearComponentes();
+        agregarContenido();
 
         setVisible(true);
     }
 
-    private void crearComponentes() {
+    public void crearComponentes() {
 
         //---------------- PANEL CONTENIDO ----------------
         panelContenido = new JPanel() {
@@ -185,6 +186,12 @@ public class PantallaTutorial extends JFrame {
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         getContentPane().add(scrollPane);
+        
+        
+    }
+    
+    public void agregarContenido(){
+        // Este método lo usará la clase hija
     }
 
     public static void main(String[] args) {
