@@ -21,6 +21,10 @@ public class MenuMinijuegosC extends JFrame {
     public JButton btnComoJugar;
     public JButton btnVolver;
 
+    private String textoCategoria1;
+    private String textoCategoria2;
+    private String textoCategoria3;
+
     public MenuMinijuegosC(String titulo, String categoria1, String categoria2, String categoria3) {
         try {
             fuente1 = Font.createFont(
@@ -35,10 +39,26 @@ public class MenuMinijuegosC extends JFrame {
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
+        this.textoCategoria1 = categoria1;
+        this.textoCategoria2 = categoria2;
+        this.textoCategoria3 = categoria3;
+
         lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
-        btnCategoria1 = new DecoracionBotones(categoria1);
-        btnCategoria2 = new DecoracionBotones(categoria2);
-        btnCategoria3 = new DecoracionBotones(categoria3);
+
+        btnCategoria1 = new DecoracionBotones(categoria1,
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+        btnCategoria2 = new DecoracionBotones(categoria2,                 //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+        btnCategoria3 = new DecoracionBotones(categoria3,
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
@@ -56,7 +76,11 @@ public class MenuMinijuegosC extends JFrame {
     private void crearComponentes() {
 
         //---------------- BOTÓN ¿CÓMO JUGAR? ----------------
-        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?");
+        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
         btnComoJugar.addActionListener(e -> {
@@ -88,29 +112,39 @@ public class MenuMinijuegosC extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- BOTONES CATEGORÍAS ----------------
+        btnCategoria1 = new DecoracionBotones(textoCategoria1,
+                        //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO
+        
         btnCategoria1.setFont(fuente2.deriveFont(25f));
         btnCategoria1.setBounds(1100, 300, 400, 65);
-        btnCategoria1.addActionListener(e -> {
-            // Acción para la Categoría 1
-        });
         fondo.add(btnCategoria1);
+
+        btnCategoria2 = new DecoracionBotones(textoCategoria2,
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO
 
         btnCategoria2.setFont(fuente2.deriveFont(25f));
         btnCategoria2.setBounds(1100, 430, 400, 65);
-        btnCategoria2.addActionListener(e -> {
-            // Acción para la Categoría 2
-        });
         fondo.add(btnCategoria2);
 
+        btnCategoria3 = new DecoracionBotones(textoCategoria3,
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO  
+        
         btnCategoria3.setFont(fuente2.deriveFont(25f));
         btnCategoria3.setBounds(1100, 560, 400, 65);
-        btnCategoria3.addActionListener(e -> {
-            // Acción para la Categoría 3
-        });
         fondo.add(btnCategoria3);
 
         //---------------- BOTÓN VOLVER ----------------
-        btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1150, 720, 320, 65);
         btnVolver.addActionListener(e -> {

@@ -9,7 +9,7 @@ public class MenuHiddenFox extends MenuMinijuegosC {
             new HiddenFox_Codigo(1);
             dispose();
         });
-
+        
         btnCategoria2.addActionListener(e -> {
             new HiddenFox_Codigo(4);
             dispose();

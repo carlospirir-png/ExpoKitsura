@@ -2,17 +2,18 @@ package main.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
 
-public class MenuMinijuegoC2 extends JFrame {
+public class MenuMinijuegoC3 extends JFrame {
 
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
 
-    public MenuMinijuegoC2() {
+    public MenuMinijuegoC3() {
 
         try {
             fuente1 = Font.createFont(
@@ -46,20 +47,19 @@ public class MenuMinijuegoC2 extends JFrame {
         JButton btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
-
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
         btnComoJugar.addActionListener(e -> {
             JOptionPane.showMessageDialog(this,
                     """
-                    Fox Jump!
+                    MaulwurfRennt
 
                     • Selecciona la categoría que deseas jugar.
                     • Lee la pregunta.
-                    • Salta al nenúfar de Verdadero o Falso.
+                    • Haz Click al topo.
                     • Responde correctamente para avanzar.
-                    • Después de 5 respuestas correctas subirás de dificultad.
+                    • Despué0s de 5 respuestas correctas subirás de dificultad.
                     • Si pierdes las 3 vidas termina la partida.
                     """);
         });
@@ -91,42 +91,40 @@ public class MenuMinijuegoC2 extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- CATEGORÍA 1 ----------------
-        JButton btnCategoria1 = new DecoracionBotones("ANIMALES",
+        JButton btnCategoria1 = new DecoracionBotones("Operaciones Basicas",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
-
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO 
         btnCategoria1.setFont(fuente2.deriveFont(25f));
         btnCategoria1.setBounds(1100, 300, 400, 65);
         btnCategoria1.addActionListener(e -> {
-            new FoxJump("Animales");
+            new JuegoMaulwurfRennt(1,7);
             dispose();
         });
         fondo.add(btnCategoria1);
+
         //---------------- CATEGORÍA 2 ----------------
-        JButton btnCategoria2 = new DecoracionBotones("PLANTAS",
+        JButton btnCategoria2 = new DecoracionBotones("Operaciones Avanzadas",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO   
-
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO
         btnCategoria2.setFont(fuente2.deriveFont(25f));
         btnCategoria2.setBounds(1100, 430, 400, 65);
         btnCategoria2.addActionListener(e -> {
-            new FoxJump("Plantas");
+            new JuegoMaulwurfRennt(1,8);
             dispose();
         });
         fondo.add(btnCategoria2);
 
         //---------------- CATEGORÍA 3 ----------------
-        JButton btnCategoria3 = new DecoracionBotones("HÁBITATS",
+        JButton btnCategoria3 = new DecoracionBotones("Cientificos Matematicos",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO  
-
+                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO
         btnCategoria3.setFont(fuente2.deriveFont(25f));
         btnCategoria3.setBounds(1100, 560, 400, 65);
         btnCategoria3.addActionListener(e -> {
-            new FoxJump("Hábitats");
+           new JuegoMaulwurfRennt(1,9);
             dispose();
         });
         fondo.add(btnCategoria3);
@@ -136,7 +134,6 @@ public class MenuMinijuegoC2 extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
-
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1150, 720, 320, 65);
         btnVolver.addActionListener(e -> {
@@ -147,6 +144,6 @@ public class MenuMinijuegoC2 extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(MenuMinijuegoC2::new);
+        SwingUtilities.invokeLater(MenuMinijuegoC3::new);
     }
 }

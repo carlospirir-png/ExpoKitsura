@@ -2,10 +2,9 @@
 package main.Usuario;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
+import java.awt.event.*;
 
 public class PantallaDificultad extends JFrame {
 
@@ -56,7 +55,6 @@ public class PantallaDificultad extends JFrame {
         crearComponentes();
         iniciarContador();
 
-        
         if (!(ventanaAnterior instanceof FoxJump) && !(ventanaAnterior instanceof HiddenFox_Codigo)) {
             setContentPane(fondo);
             setTitle("Pantalla de Dificultad");
@@ -66,8 +64,11 @@ public class PantallaDificultad extends JFrame {
             setExtendedState(JFrame.MAXIMIZED_BOTH);
             setVisible(true);
         }
-        
 
+    }
+
+    PantallaDificultad(MaulwurfRennt vista, int nivel) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
@@ -130,7 +131,7 @@ public class PantallaDificultad extends JFrame {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                // ✅ CORRECCIÓN 1: cancelar el timer antes de continuar para evitar doble ejecución
+                //cancelar el timer antes de continuar para evitar doble ejecución
                 if (timerContinuar != null) {
                     timerContinuar.stop();
                 }
@@ -139,6 +140,8 @@ public class PantallaDificultad extends JFrame {
                     foxJump.continuarDespuesDeDificultad();
                 } else if (ventanaAnterior instanceof HiddenFox_Codigo hiddenFox) {
                     hiddenFox.continuarDespuesDeDificultad(nivel);
+                } else if (ventanaAnterior instanceof MaulwurfRennt maulwurf) {
+                    maulwurf.continuarDespuesDeDificultad();
                 }
             }
         });
@@ -155,16 +158,21 @@ public class PantallaDificultad extends JFrame {
         Image alertaEscalada = alertaIcon.getImage().getScaledInstance(
                 200, 200, Image.SCALE_SMOOTH);
 
-        lblAlerta.setIcon(new ImageIcon(alertaEscalada));
-        lblAlerta.setBounds(350, 50, 200, 200);
+        lblAlerta.setIcon(
+                new ImageIcon(alertaEscalada));
+        lblAlerta.setBounds(
+                350, 50, 200, 200);
 
         panelTexto.add(lblAlerta);
 
         // TITULO
         lblTitulo = new JLabel("¡ALERTA!", SwingConstants.CENTER);
+
         lblTitulo.setFont(fuente2.deriveFont(55f));
         lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setBounds(270, 330, 400, 60);
+
+        lblTitulo.setBounds(
+                270, 330, 400, 60);
 
         panelTexto.add(lblTitulo);
 
@@ -173,7 +181,7 @@ public class PantallaDificultad extends JFrame {
                 "Se aumenta la dificultad",
                 SwingConstants.CENTER);
 
-        lblMensaje.setFont(fuente1.deriveFont(40f));
+        lblMensaje.setFont(fuente1.deriveFont(55f));
         lblMensaje.setForeground(Color.WHITE);
         lblMensaje.setBounds(205, 430, 550, 50);
 
@@ -186,15 +194,20 @@ public class PantallaDificultad extends JFrame {
 
         lblEmpieza.setFont(fuente1.deriveFont(40f));
         lblEmpieza.setForeground(Color.WHITE);
-        lblEmpieza.setBounds(270, 520, 400, 50);
+
+        lblEmpieza.setBounds(
+                270, 520, 400, 50);
 
         panelTexto.add(lblEmpieza);
 
         // CONTADOR
         lblContador = new JLabel("(3s)", SwingConstants.CENTER);
+
         lblContador.setFont(fuente2.deriveFont(60f));
         lblContador.setForeground(Color.WHITE);
-        lblContador.setBounds(320, 600, 300, 70);
+
+        lblContador.setBounds(
+                320, 600, 300, 70);
 
         panelTexto.add(lblContador);
     }
@@ -225,33 +238,39 @@ public class PantallaDificultad extends JFrame {
         lblFlecha.setVisible(true);
 
         lblTitulo.setText("DIFICULTAD AUMENTADA");
-        lblTitulo.setFont(fuente2.deriveFont(35f));
-        lblTitulo.setBounds(5, 130, 900, 60);
+        lblTitulo.setFont(fuente1.deriveFont(65f));
+        lblTitulo.setBounds(5, 130, 900, 75);
 
         lblMensaje.setText("El nivel ha aumentado");
-        lblTitulo.setFont(fuente1.deriveFont(25f));
+        lblMensaje.setFont(fuente1.deriveFont(55f));
+        lblMensaje.setForeground(Color.WHITE);
         lblMensaje.setBounds(150, 250, 600, 60);
+        lblMensaje.revalidate();
+        lblMensaje.repaint();
 
         lblEmpieza.setText("¡Continúa jugando!");
-        lblEmpieza.setFont(fuente2.deriveFont(20f));
+        lblEmpieza.setFont(fuente1.deriveFont(35f));
         lblEmpieza.setBounds(205, 350, 500, 60);
 
         lblContador.setText("");
 
-        // ✅ CORRECCIÓN 1: guardar referencia al timer para cancelarlo si el jugador
-        //    presiona la flecha antes de que se ejecute automáticamente
+        // Forzar redibujado
+        lblTitulo.revalidate();
+        lblTitulo.repaint();
+        panelTexto.revalidate();
+        panelTexto.repaint();
+
         timerContinuar = new Timer(1500, e -> {
             if (ventanaAnterior instanceof FoxJump foxJump) {
                 foxJump.continuarDespuesDeDificultad();
             } else if (ventanaAnterior instanceof HiddenFox_Codigo hiddenFox) {
                 hiddenFox.continuarDespuesDeDificultad(nivel);
+            } else if (ventanaAnterior instanceof MaulwurfRennt maulwurf) {
+                maulwurf.continuarDespuesDeDificultad();
             }
         });
 
         timerContinuar.setRepeats(false);
         timerContinuar.start();
-
-        panelTexto.revalidate();
-        panelTexto.repaint();
     }
 }

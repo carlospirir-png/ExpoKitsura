@@ -50,7 +50,7 @@ public class UsuarioMenu extends JFrame {
         //---------------- PANEL TÍTULO ----------------
         FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
         panelTitulo.setLayout(null);
-        panelTitulo.setBounds(125, 105, 500, 75);
+        panelTitulo.setBounds(220, 105, 500, 75);
         fondo.add(panelTitulo);
 
         JLabel lblTitulo = new JLabel("USUARIO", JLabel.CENTER);
@@ -66,7 +66,11 @@ public class UsuarioMenu extends JFrame {
         fondo.add(panelOpciones);
 
         //---------------- BOTÓN AGREGAR ADMIN ----------------
-        JButton btnAgregarAdmin = new DecoracionBotones("AÑADIR ADMINISTRADOR");
+        JButton btnAgregarAdmin = new DecoracionBotones("AÑADIR ADMINISTRADOR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnAgregarAdmin.setFont(fuente2.deriveFont(26f));
         btnAgregarAdmin.setBounds(120, 140, 460, 70);
 
@@ -79,7 +83,11 @@ public class UsuarioMenu extends JFrame {
         panelOpciones.add(btnAgregarAdmin);
 
         //---------------- BOTÓN EDITAR ----------------
-        JButton btnEditar = new DecoracionBotones("EDITAR");
+        JButton btnEditar = new DecoracionBotones("EDITAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnEditar.setFont(fuente2.deriveFont(26f));
         btnEditar.setBounds(180, 290, 340, 70);
 
@@ -92,13 +100,18 @@ public class UsuarioMenu extends JFrame {
         panelOpciones.add(btnEditar);
 
         //---------------- BOTÓN MOSTRAR ----------------
-        JButton btnMostrar = new DecoracionBotones("MOSTRAR");
+        JButton btnMostrar = new DecoracionBotones("MOSTRAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnMostrar.setFont(fuente2.deriveFont(26f));
         btnMostrar.setBounds(180, 440, 340, 70);
 
         btnMostrar.addActionListener(e -> {
 
-            // Acción para mostrar usuarios
+            new UsuarioMostrar();
+            dispose();
 
         });
 
@@ -129,11 +142,18 @@ public class UsuarioMenu extends JFrame {
         fondo.add(lblMascota);
 
         //---------------- BOTÓN VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1470, 870, 300, 65);
 
-        btnVolver.addActionListener(e -> dispose());
+        btnVolver.addActionListener(e -> {
+            new MenuAdmin();
+            dispose();
+                });
 
         fondo.add(btnVolver);
     }

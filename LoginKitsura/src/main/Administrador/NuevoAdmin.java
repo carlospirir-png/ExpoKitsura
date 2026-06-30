@@ -110,7 +110,10 @@ public class NuevoAdmin extends JFrame {
 
         panelSemi.add(txtContra);
 
-        btnAnadir = new DecoracionBotones("AÑADIR", "#FC767D", "#da4d58", "#da4d58");
+        btnAnadir = new DecoracionBotones("AÑADIR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnAnadir.setFont(fuente2.deriveFont(25f));
         btnAnadir.setForeground(Color.WHITE);
         btnAnadir.setBounds(350, 730, 300, 70);
@@ -134,7 +137,10 @@ public class NuevoAdmin extends JFrame {
 
         fondo.add(lblMascota);
         
-        btnSalir = new DecoracionBotones("VOLVER");
+        btnSalir = new DecoracionBotones("VOLVER",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnSalir.setFont(fuente2.deriveFont(30f));
         btnSalir.setForeground(Color.WHITE);
         btnSalir.setBounds(1695, 950, 210, 45);

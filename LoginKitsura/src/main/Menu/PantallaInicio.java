@@ -70,14 +70,17 @@ public class PantallaInicio extends JFrame {
         fondo.setComponentZOrder(lblLogo, 0);
 
         lblFrase = new JLabel("\"No es magia, es mente\"", SwingConstants.CENTER);
-        lblFrase.setFont(fuente1.deriveFont(35f));
+        lblFrase.setFont(fuente1.deriveFont(55f));
         lblFrase.setForeground(new Color(196, 221, 227));
         lblFrase.setBounds(530, 690, 850, 60);
 
         fondo.add(lblFrase);
 
         //---------------- BOTON JUGAR ----------------
-        btnJugar = new DecoracionBotones("JUGAR");      
+        btnJugar = new DecoracionBotones("JUGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO      
         btnJugar.setFont(fuente2.deriveFont(30f)); 
         btnJugar.setBounds(810, 880, 250, 70);
         btnJugar.addActionListener(e -> {
