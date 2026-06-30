@@ -41,7 +41,10 @@ public class MenuAdmin extends JFrame {
         panelTitulo.add(lbl);
 
         // ---------------- USUARIO ----------------
-        JButton btnUsuario = new DecoracionBotones("USUARIO");
+        JButton btnUsuario = new DecoracionBotones("USUARIO",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
         btnUsuario.setFont(fuente2.deriveFont(26f));
         btnUsuario.setBounds(180, 240, 430, 65);
         btnUsuario.addActionListener(e -> {
@@ -50,7 +53,10 @@ public class MenuAdmin extends JFrame {
         });
         fondo.add(btnUsuario);
         // ---------------- PUNTUACIONES ----------------
-        JButton btnPuntuaciones = new DecoracionBotones("PUNTUACIONES");
+        JButton btnPuntuaciones = new DecoracionBotones("PUNTUACIONES",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO   
         btnPuntuaciones.setFont(fuente2.deriveFont(26f));
         btnPuntuaciones.setBounds(180, 335, 430, 65);
         btnPuntuaciones.addActionListener(e -> {
@@ -59,7 +65,11 @@ public class MenuAdmin extends JFrame {
         });
         fondo.add(btnPuntuaciones);
         // ---------------- VIDAS ----------------
-        JButton btnVidas = new DecoracionBotones("VIDAS");
+        JButton btnVidas = new DecoracionBotones("VIDAS",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
+        
         btnVidas.setFont(fuente2.deriveFont(26f));
         btnVidas.setBounds(180, 430, 430, 65);
         btnVidas.addActionListener(e -> {
@@ -68,7 +78,10 @@ public class MenuAdmin extends JFrame {
         });
         fondo.add(btnVidas);
         // ---------------- TIEMPO ----------------
-        JButton btnTiempo = new DecoracionBotones("TIEMPO");
+        JButton btnTiempo = new DecoracionBotones("TIEMPO",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO  
         btnTiempo.setFont(fuente2.deriveFont(26f));
         btnTiempo.setBounds(180, 525, 430, 65);
         btnTiempo.addActionListener(e -> {
@@ -77,7 +90,10 @@ public class MenuAdmin extends JFrame {
         });
         fondo.add(btnTiempo);
         // ---------------- PISTAS ----------------
-        JButton btnPistas = new DecoracionBotones("PISTAS");
+        JButton btnPistas = new DecoracionBotones("PISTAS",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
         btnPistas.setFont(fuente2.deriveFont(26f));
         btnPistas.setBounds(180, 620, 430, 65);
         btnPistas.addActionListener(e -> {
@@ -86,7 +102,10 @@ public class MenuAdmin extends JFrame {
         });
         fondo.add(btnPistas);
         // ---------------- ADMINISTRAR STAGES ----------------
-        JButton btnStages = new DecoracionBotones("ADMINISTRAR STAGES");
+        JButton btnStages = new DecoracionBotones("ADMINISTRAR STAGES",
+                 //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO   
         btnStages.setFont(fuente2.deriveFont(24f));
         btnStages.setBounds(180, 715, 430, 65);
         btnStages.addActionListener(e -> {

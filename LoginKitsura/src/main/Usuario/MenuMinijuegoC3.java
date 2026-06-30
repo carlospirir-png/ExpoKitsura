@@ -44,7 +44,10 @@ public class MenuMinijuegoC3 extends JFrame {
     private void crearComponentes() {
 
         //---------------- BOTÓN ¿CÓMO JUGAR? ----------------
-        JButton btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?");
+        JButton btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
         btnComoJugar.addActionListener(e -> {
@@ -88,7 +91,10 @@ public class MenuMinijuegoC3 extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- CATEGORÍA 1 ----------------
-        JButton btnCategoria1 = new DecoracionBotones("Operaciones Basicas");
+        JButton btnCategoria1 = new DecoracionBotones("Operaciones Basicas",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO 
         btnCategoria1.setFont(fuente2.deriveFont(25f));
         btnCategoria1.setBounds(1100, 300, 400, 65);
         btnCategoria1.addActionListener(e -> {
@@ -98,7 +104,10 @@ public class MenuMinijuegoC3 extends JFrame {
         fondo.add(btnCategoria1);
 
         //---------------- CATEGORÍA 2 ----------------
-        JButton btnCategoria2 = new DecoracionBotones("Operaciones Avanzadas");
+        JButton btnCategoria2 = new DecoracionBotones("Operaciones Avanzadas",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO
         btnCategoria2.setFont(fuente2.deriveFont(25f));
         btnCategoria2.setBounds(1100, 430, 400, 65);
         btnCategoria2.addActionListener(e -> {
@@ -108,7 +117,10 @@ public class MenuMinijuegoC3 extends JFrame {
         fondo.add(btnCategoria2);
 
         //---------------- CATEGORÍA 3 ----------------
-        JButton btnCategoria3 = new DecoracionBotones("Cientificos Matematicos");
+        JButton btnCategoria3 = new DecoracionBotones("Cientificos Matematicos",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO
         btnCategoria3.setFont(fuente2.deriveFont(25f));
         btnCategoria3.setBounds(1100, 560, 400, 65);
         btnCategoria3.addActionListener(e -> {
@@ -118,7 +130,10 @@ public class MenuMinijuegoC3 extends JFrame {
         fondo.add(btnCategoria3);
 
         //---------------- BOTÓN VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1150, 720, 320, 65);
         btnVolver.addActionListener(e -> {

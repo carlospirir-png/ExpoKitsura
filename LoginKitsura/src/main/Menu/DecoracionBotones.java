@@ -78,10 +78,6 @@ public class DecoracionBotones extends JButton {
         inicializarComponentes();
     }
 
-    public DecoracionBotones(String volver) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     //--------------------------- M É T O D O S --------------------------------
     // Aquí se configura todo el comportamiento visual del botón
     private void inicializarComponentes() {

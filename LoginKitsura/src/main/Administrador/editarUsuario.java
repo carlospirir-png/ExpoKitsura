@@ -137,7 +137,10 @@ public class editarUsuario extends JFrame {
         lblMascota.setBounds(1280, 230, 650, 650);
         fondo.add(lblMascota);
 
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+        //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1470, 870, 300, 65);
 

@@ -54,7 +54,11 @@ public class VolverMenu extends JFrame {
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(400, 210, 240, 240);
         fondo.add(mascota);
-        JButton btnSI = new DecoracionBotones("SI");
+        JButton btnSI = new DecoracionBotones("SI",
+        //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSI.setFont(fuente1.deriveFont(22f));
         btnSI.setBounds(100, 220, 160, 50);
         btnSI.addActionListener(e -> {
@@ -62,7 +66,10 @@ public class VolverMenu extends JFrame {
             dispose();
         });
         fondo.add(btnSI);
-        JButton btnCancelar = new DecoracionBotones("CANCELAR");
+        JButton btnCancelar = new DecoracionBotones("CANCELAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO 
         btnCancelar.setFont(fuente1.deriveFont(22f));
         btnCancelar.setBounds(290, 220, 160, 50);
         btnCancelar.addActionListener(e -> {
