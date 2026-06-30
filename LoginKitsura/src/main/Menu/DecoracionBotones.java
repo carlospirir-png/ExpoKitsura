@@ -50,6 +50,10 @@ public class DecoracionBotones extends JButton {
     public static final String BLANCO = "#FFFFFF";
     public static final String NARANJA_PASTEL = "#E39D8B";
     public static final String ROSA_PASTEL = "#EE9797";
+    public static final String AMARILLO_SUAVE = "#F0D060";
+    public static final String VERDE = "#91BF4B";
+    public static final String VERDE_SUAVE = "#B4DC64";
+    
 
     //---------------------- C O N S T R U C T O R E S -------------------------
     //COLORES DEL BOTÓN | MOUSE FUERA | MOUSE DENTRO
@@ -72,6 +76,10 @@ public class DecoracionBotones extends JButton {
         
         //Método para inicializar Componentes.
         inicializarComponentes();
+    }
+
+    public DecoracionBotones(String volver) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     //--------------------------- M É T O D O S --------------------------------

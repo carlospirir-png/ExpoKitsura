@@ -4,9 +4,7 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import java.sql.*;
-import main.Menu.FondoPanel;
-import main.Menu.SalirDelJuego;
-import main.Menu.DecoracionBotones;
+import main.Menu.*;
 import main.conexion.Conexion;
 
 public class RegistroUsuario extends JFrame {
@@ -180,10 +178,12 @@ public class RegistroUsuario extends JFrame {
                 new RegistroInvitado();
                 dispose();
             }
+
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 lblInvitado.setForeground(Color.decode("#447A9C"));
             }
+
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
                 lblInvitado.setForeground(Color.WHITE);
@@ -196,7 +196,7 @@ public class RegistroUsuario extends JFrame {
         lblIniciarSesion.setFont(fuente2.deriveFont(18f));
         lblIniciarSesion.setForeground(Color.WHITE);
         lblIniciarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         // MODIFICACIÓN: Alineado en el eje Y (de 985 a 955) para emparejarse perfectamente con el botón SALIR (950)
         lblIniciarSesion.setBounds(40, 955, 200, 30);
 
@@ -207,10 +207,12 @@ public class RegistroUsuario extends JFrame {
                 new IniciarSesion();
                 dispose();
             }
+
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 lblIniciarSesion.setForeground(Color.decode("#447A9C"));
             }
+
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
                 lblIniciarSesion.setForeground(Color.WHITE);
@@ -291,15 +293,24 @@ public class RegistroUsuario extends JFrame {
                     = "INSERT INTO Usuario(nombre_usuario, correo, contrasena) "
                     + "VALUES (?, ?, ?)";
 
-            PreparedStatement ps
-                    = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(
+                    sql,
+                    Statement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, nombre);
             ps.setString(2, correo);
             ps.setString(3, password);
-
             int filas = ps.executeUpdate();
 
+            int idUsuario = 0;
+
+            ResultSet rsId = ps.getGeneratedKeys();
+
+            if (rsId.next()) {
+                idUsuario = rsId.getInt(1);
+            }
+
+            rsId.close();
             ps.close();
             con.close();
 
@@ -338,9 +349,5 @@ public class RegistroUsuario extends JFrame {
 
             return false;
         }
-    }
-    
-    public static void main(String[] args) {
-        new RegistroUsuario();
     }
 }

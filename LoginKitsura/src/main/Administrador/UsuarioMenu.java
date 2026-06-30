@@ -50,7 +50,7 @@ public class UsuarioMenu extends JFrame {
         //---------------- PANEL TÍTULO ----------------
         FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
         panelTitulo.setLayout(null);
-        panelTitulo.setBounds(125, 105, 500, 75);
+        panelTitulo.setBounds(220, 105, 500, 75);
         fondo.add(panelTitulo);
 
         JLabel lblTitulo = new JLabel("USUARIO", JLabel.CENTER);
@@ -110,7 +110,8 @@ public class UsuarioMenu extends JFrame {
 
         btnMostrar.addActionListener(e -> {
 
-            // Acción para mostrar usuarios
+            new UsuarioMostrar();
+            dispose();
 
         });
 
@@ -149,7 +150,10 @@ public class UsuarioMenu extends JFrame {
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1470, 870, 300, 65);
 
-        btnVolver.addActionListener(e -> dispose());
+        btnVolver.addActionListener(e -> {
+            new MenuAdmin();
+            dispose();
+                });
 
         fondo.add(btnVolver);
     }

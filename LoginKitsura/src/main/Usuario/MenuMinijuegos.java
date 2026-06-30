@@ -86,8 +86,7 @@ public class MenuMinijuegos extends JFrame {
         btnMaulwurf.setFont(fuente2.deriveFont(25f));
         btnMaulwurf.setBounds(780, 580, 400, 65);
         btnMaulwurf.addActionListener(e -> {
-            new MaulwurfRennt();
-            new JuegoMaulwurfRennt(1);
+            new MenuMinijuegoC3();
             dispose();
         });
         fondo.add(btnMaulwurf);

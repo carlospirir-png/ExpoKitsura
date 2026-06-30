@@ -77,11 +77,11 @@ public class PistasTxtAdmin extends JFrame {
         panelIzquierdo.add(scrollPaneTexto);
 
         //---------------- BOTÓN EDITAR ----------------
-        JButton btnEditar = new DecoracionBotones("EDITAR",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
+        JButton btnEditar = new DecoracionBotones("EDITAR", //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        
         btnEditar.setFont(fuente2.deriveFont(26f));
         btnEditar.setBounds(130, 550, 240, 55);
         btnEditar.addActionListener(e -> {
@@ -153,7 +153,11 @@ public class PistasTxtAdmin extends JFrame {
 
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1470, 870, 300, 65);
-        btnVolver.addActionListener(e -> dispose());
+        btnVolver.addActionListener(e -> 
+        {
+            new PistasMenu();
+            dispose();
+                });
         fondo.add(btnVolver);
     }
     

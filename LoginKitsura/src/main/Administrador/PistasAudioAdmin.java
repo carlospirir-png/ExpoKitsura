@@ -76,11 +76,11 @@ public class PistasAudioAdmin extends JFrame {
         panelOndaAudio.add(lblIconoOnda, BorderLayout.CENTER);
         panelIzquierdo.add(panelOndaAudio);
 
-        JButton btnCargar = new DecoracionBotones("CARGAR",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
+        JButton btnCargar = new DecoracionBotones("CARGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnCargar.setFont(fuente2.deriveFont(26f));
         btnCargar.setBounds(130, 230, 240, 65);
         panelIzquierdo.add(btnCargar);
@@ -149,7 +149,10 @@ public class PistasAudioAdmin extends JFrame {
 
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1550, 860, 300, 65);
-        btnVolver.addActionListener(e -> dispose());
+        btnVolver.addActionListener(e ->{
+            new PistasMenu();
+            dispose();
+        });
         fondo.add(btnVolver);
     }
     

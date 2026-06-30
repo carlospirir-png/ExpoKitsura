@@ -9,8 +9,13 @@ public class MenuPrincipal extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    private int idUsuario;
+
 
     public MenuPrincipal() {
+        
+        this.idUsuario = idUsuario;
+        
         try {
             fuente1 = Font.createFont(Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));

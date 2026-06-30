@@ -3,9 +3,7 @@ package main.Usuario;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
-import main.Menu.DecoracionBotones;
+import main.Menu.*;
 
 public class SeAcaboVidas extends JFrame {
 
@@ -58,8 +56,6 @@ public class SeAcaboVidas extends JFrame {
         mascota.setBounds(100, 250, 600, 600);
         fondo.add(mascota);
 
-
-
 //---------------- TEXTOS CENTRO DERECHA ----------------
         JLabel lblGameOver = new JLabel("GAME OVER", JLabel.CENTER);
         lblGameOver.setFont(fuente2.deriveFont(80f));
@@ -84,8 +80,8 @@ public class SeAcaboVidas extends JFrame {
         lblCita2.setForeground(Color.WHITE);
         lblCita2.setBounds(800, 545, 900, 40);
         fondo.add(lblCita2);
-        
-                //---------------- PANEL SEMITRANSPARENTE ----------------
+
+        //---------------- PANEL SEMITRANSPARENTE ----------------
         FondoPanelSemi panelTextos = new FondoPanelSemi(new Color(0, 0, 0, 150));
         panelTextos.setLayout(null);
         panelTextos.setBounds(800, 270, 900, 360);
@@ -110,10 +106,11 @@ public class SeAcaboVidas extends JFrame {
         });
         fondo.add(btnContinuar);
 
+
         JButton btnMenu = new DecoracionBotones("MENÚ",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
 
         btnMenu.setFont(fuente2.deriveFont(28f));
         btnMenu.setBounds(1300, 740, 280, 65);

@@ -191,7 +191,7 @@ public class PantallaPerfil extends JFrame {
         panelPerfil.add(lblEstadoTitulo);
 
         JLabel lblEstadoValor = new JLabel("Activo");
-        lblEstadoValor.setFont(fuente1.deriveFont(28f));
+        lblEstadoValor.setFont(fuente1.deriveFont(55f));
         lblEstadoValor.setBounds(335, 20, 150, 50);
         panelPerfil.add(lblEstadoValor);
 

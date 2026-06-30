@@ -9,6 +9,6 @@ public interface JuegoBase {
     void mostrarResultadoConFade();
     JFrame getFrame();
     
-    int getPuntajeTotal();
-int getTiempoTotalJugado();
+    int getPuntajeTotal();  
+    int getTiempoTotalJugado();
 }
