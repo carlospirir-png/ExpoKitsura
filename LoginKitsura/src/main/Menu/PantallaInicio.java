@@ -77,7 +77,10 @@ public class PantallaInicio extends JFrame {
         fondo.add(lblFrase);
 
         //---------------- BOTON JUGAR ----------------
-        btnJugar = new DecoracionBotones("JUGAR");      
+        btnJugar = new DecoracionBotones("JUGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO      
         btnJugar.setFont(fuente2.deriveFont(30f)); 
         btnJugar.setBounds(810, 880, 250, 70);
         btnJugar.addActionListener(e -> {

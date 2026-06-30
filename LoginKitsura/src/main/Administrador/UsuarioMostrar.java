@@ -58,7 +58,15 @@ public class UsuarioMostrar extends JFrame {
         panelIzquierdo.setBounds(100, 170, 520, 700);
         fondo.add(panelIzquierdo);
 
+<<<<<<< HEAD
         JButton btnEliminar = new DecoracionBotones("ELIMINAR", "#FC767D", "#da4d58", "#da4d58");
+=======
+        JButton btnEliminar = new DecoracionBotones("ELIMINAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+>>>>>>> 8d29a9e75b19afa2cfd4b44a742a0f73e91fab9b
         btnEliminar.setFont(fuente2.deriveFont(24f));
         btnEliminar.setBounds(40, 40, 190, 60);
 
@@ -70,7 +78,15 @@ public class UsuarioMostrar extends JFrame {
 
         panelIzquierdo.add(btnEliminar);
 
+<<<<<<< HEAD
         JButton btnBuscar = new DecoracionBotones("BUSCAR", "#FC767D", "#da4d58", "#da4d58");
+=======
+        JButton btnBuscar = new DecoracionBotones("BUSCAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+>>>>>>> 8d29a9e75b19afa2cfd4b44a742a0f73e91fab9b
         btnBuscar.setFont(fuente2.deriveFont(24f));
         btnBuscar.setBounds(280, 40, 190, 60);
 
@@ -163,7 +179,11 @@ public class UsuarioMostrar extends JFrame {
         panelTabla.add(scrollTabla);
 
         //---------------- BOTÓN VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1550, 900, 300, 65);
 

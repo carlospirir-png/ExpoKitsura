@@ -99,7 +99,11 @@ public class Victoria extends JFrame {
         panelDerecho.add(lblUsuario);
 
         //---------------- BOTON VOLVER  ----------------
-        btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(20f));
         btnVolver.setBounds(340, 680, 200, 50);
 
@@ -123,7 +127,11 @@ public class Victoria extends JFrame {
         fondo.add(lblUsuario);
 
         //---------------- BOTON VOLVER  ----------------
-        btnVolver = new DecoracionBotones("Volver");
+        btnVolver = new DecoracionBotones("Volver",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente1.deriveFont(25f));
         btnVolver.setBounds(1320, 710, 200, 50);
         btnVolver.addActionListener(e -> dispose());

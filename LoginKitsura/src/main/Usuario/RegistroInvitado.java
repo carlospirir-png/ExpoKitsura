@@ -84,7 +84,10 @@ public class RegistroInvitado extends JFrame {
         fondo.add(txtNombre);
 
         //---------------- BOTON JUGAR ----------------
-        btnJugar = new DecoracionBotones("JUGAR", "#FC767D", "#da4d58", "#da4d58");
+        btnJugar = new DecoracionBotones("JUGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnJugar.setFont(fuente2.deriveFont(15f));
         btnJugar.setBounds(820, 600, 285, 60);
 
@@ -99,7 +102,11 @@ public class RegistroInvitado extends JFrame {
         fondo.add(btnJugar);
 
         //---------------- BOTON VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones ("VOLVER");
+        JButton btnVolver = new DecoracionBotones ("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(12f));
         btnVolver.setBounds(40, 985, 120, 40);
 

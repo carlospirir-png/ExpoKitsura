@@ -76,7 +76,15 @@ public class PistasAudioAdmin extends JFrame {
         panelOndaAudio.add(lblIconoOnda, BorderLayout.CENTER);
         panelIzquierdo.add(panelOndaAudio);
 
+<<<<<<< HEAD
         JButton btnCargar = new DecoracionBotones("CARGAR", "#FC767D", "#da4d58", "#da4d58");
+=======
+        JButton btnCargar = new DecoracionBotones("CARGAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+>>>>>>> 8d29a9e75b19afa2cfd4b44a742a0f73e91fab9b
         btnCargar.setFont(fuente2.deriveFont(26f));
         btnCargar.setBounds(130, 230, 240, 65);
         panelIzquierdo.add(btnCargar);
@@ -138,7 +146,11 @@ public class PistasAudioAdmin extends JFrame {
         fondo.add(staticMascotaLibro);
 
         //---------------- BOTÓN VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1550, 860, 300, 65);
         btnVolver.addActionListener(e ->{

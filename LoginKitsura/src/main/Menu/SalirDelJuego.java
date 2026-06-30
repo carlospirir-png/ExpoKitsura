@@ -65,7 +65,11 @@ public class SalirDelJuego extends JFrame {
         getContentPane().add(mascota);
 
         //---------------- BOTÓN SI ----------------
-        JButton btnSi = new DecoracionBotones("SI");
+        JButton btnSi = new DecoracionBotones("SI",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSi.setFont(fuente1.deriveFont(22f));
         btnSi.setBounds(60, 200, 140, 50);
         btnSi.addActionListener(e -> {
@@ -75,7 +79,11 @@ public class SalirDelJuego extends JFrame {
         getContentPane().add(btnSi);
 
         //---------------- BOTÓN REGRESAR ----------------
-        JButton btnRegresar = new DecoracionBotones("REGRESAR");
+        JButton btnRegresar = new DecoracionBotones("REGRESAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnRegresar.setFont(fuente1.deriveFont(22f));
         btnRegresar.setBounds(250, 200, 160, 50);
         btnRegresar.addActionListener(e -> dispose());

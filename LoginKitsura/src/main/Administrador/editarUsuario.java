@@ -100,7 +100,15 @@ public class editarUsuario extends JFrame {
         txtContra.setBounds(50, 700, 500, 55);
         panelSemi.add(txtContra);
 
+<<<<<<< HEAD
         btnEditar = new DecoracionBotones("EDITAR", "#FC767D", "#da4d58", "#da4d58");
+=======
+        btnEditar=new DecoracionBotones("EDITAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+>>>>>>> 8d29a9e75b19afa2cfd4b44a742a0f73e91fab9b
         btnEditar.setFont(fuente2.deriveFont(26f));
         btnEditar.setBounds(190, 790, 220, 65);
         panelSemi.add(btnEditar);
@@ -117,7 +125,15 @@ public class editarUsuario extends JFrame {
         lblPreview.setBounds(660, 360, 320, 220);
         panelSemi.add(lblPreview);
 
+<<<<<<< HEAD
         btnCargar = new DecoracionBotones("CARGAR", "#FC767D", "#da4d58", "#da4d58");
+=======
+        btnCargar=new DecoracionBotones("CARGAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+>>>>>>> 8d29a9e75b19afa2cfd4b44a742a0f73e91fab9b
         btnCargar.setFont(fuente2.deriveFont(26f));
         btnCargar.setBounds(720, 610, 200, 60);
         panelSemi.add(btnCargar);

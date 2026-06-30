@@ -5,6 +5,7 @@ package main.Usuario;
 import java.awt.*; //Se importa java awt
 import javax.swing.*; //Se importa java swing
 import java.net.URL; //Se importa URL
+import main.Menu.DecoracionBotones;
 
 public abstract class HiddenFox extends JFrame implements JuegoBase {
 
@@ -21,7 +22,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     Image fondoPapelEscalado;
 
-    private JButton btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
+    private DecoracionBotones btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
 
     public HiddenFox() {
         try {
@@ -117,13 +118,6 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         panelv.add(vida3);
         fondo.add(panelv);
 
-        //---------------- AYUDA ----------------
-        btnAyuda = new JButton("¿Necesitas ayuda?");
-        btnAyuda.setFont(fuente2.deriveFont(18f));
-        btnAyuda.setBounds(60, 120, 280, 55);
-        btnAyuda.addActionListener(e -> ayuda());
-        fondo.add(btnAyuda);
-
         //---------------- TITULO ----------------
         titulo = new JLabel(
                 "<html><center>¿Quién o qué se encuentra<br>detrás de la sombra?</center></html>",
@@ -152,37 +146,69 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         fondo.add(tiempo);
 
+        //---------------- B O T O N E S -------------
+        //---------------- AYUDA ----------------
+        btnAyuda = new DecoracionBotones("¿Necesitas ayuda?",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_APAGADO, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO); //MOUSE DENTRO   
+
+        btnAyuda.setFont(fuente2.deriveFont(18f));
+        btnAyuda.setBounds(60, 120, 280, 55);
+        btnAyuda.addActionListener(e -> ayuda());
+        fondo.add(btnAyuda);
+
         //---------------- RESPUESTA 1 ----------------
-        btnRespuesta1 = new JButton("RESPUESTA 1");
+        btnRespuesta1 = new DecoracionBotones("RESPUESTA 1",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO   
+
         btnRespuesta1.setFont(fuente2.deriveFont(20f));
         btnRespuesta1.setBounds(500, 730, 300, 75);
+        btnRespuesta1.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta1.addActionListener(e -> respuestaSeleccionada(btnRespuesta1));
 
         fondo.add(btnRespuesta1);
 
         //---------------- RESPUESTA 2 ----------------
-        btnRespuesta2 = new JButton("RESPUESTA 2");
+        btnRespuesta2 = new DecoracionBotones("RESPUESTA 2",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO  
+
         btnRespuesta2.setFont(fuente2.deriveFont(20f));
         btnRespuesta2.setBounds(1020, 730, 300, 75);
+        btnRespuesta2.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta2.addActionListener(e -> respuestaSeleccionada(btnRespuesta2));
 
         fondo.add(btnRespuesta2);
 
         //---------------- RESPUESTA 3 ----------------
-        btnRespuesta3 = new JButton("RESPUESTA 3");
+        btnRespuesta3 = new DecoracionBotones("RESPUESTA 3",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO   
+
         btnRespuesta3.setFont(fuente2.deriveFont(20f));
         btnRespuesta3.setBounds(500, 840, 300, 75);
+        btnRespuesta3.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta3.addActionListener(e -> respuestaSeleccionada(btnRespuesta3));
 
         fondo.add(btnRespuesta3);
 
         //---------------- RESPUESTA 4 ----------------
-        btnRespuesta4 = new JButton("RESPUESTA 4");
+        btnRespuesta4 = new DecoracionBotones("RESPUESTA 4",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO    
+
         btnRespuesta4.setFont(fuente2.deriveFont(20f));
         btnRespuesta4.setBounds(1020, 840, 300, 75);
+        btnRespuesta4.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta4.addActionListener(e -> respuestaSeleccionada(btnRespuesta4));
 
@@ -238,7 +264,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     /*---------------------------- M É T O D O S -------------------
       Este es el apartado para los métodos que modifiquen la interfaz.*/
-    /*-------------------- M O D I F I C A R ----------------
+ /*-------------------- M O D I F I C A R ----------------
       Este es el apartado donde se modifican cosas de la Interfaz Gráfica a través
       de HiddenFox_Codigo, pero aquí no se mantiene nada lógico, solo cumple con
       modificar según lo que le llegue. 
@@ -263,7 +289,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     public void modificarAcierto(String texto) {
         acierto.setText(texto);
     }
-    
+
     //---------------- PUNTOS --------------------------
     public void actualizarPuntos(int puntosObtenidos) {
         puntos.setText("Puntos: " + puntosObtenidos);
@@ -398,7 +424,6 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
       cuya lógica se encuentra en HiddenFox_Codigo, pero como estos
       métodos dependen de las acciones de los botones se colocan aquí.
     --------------------------------------------------------------*/
-    
     public abstract void ayuda();
 
     public abstract void respuestaSeleccionada(JButton boton);
@@ -408,7 +433,6 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
       Este es el apartado donde se encuentran los GETS conforme se
       vayan necesitando en HiddenFox_Codigo.
     --------------------------------------------------------------*/
-    
     public JPanel getFondo() {
         return fondo;
     }

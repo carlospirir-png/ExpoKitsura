@@ -3,9 +3,7 @@ package main.Usuario;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
-import main.Menu.DecoracionBotones;
+import main.Menu.*;
 
 public class SeAcaboVidas extends JFrame {
 
@@ -90,7 +88,11 @@ public class SeAcaboVidas extends JFrame {
         fondo.add(panelTextos);
 
         //---------------- BOTONES ----------------
-        JButton btnContinuar = new DecoracionBotones("CONTINUAR");
+        JButton btnContinuar = new DecoracionBotones("CONTINUAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnContinuar.setFont(fuente2.deriveFont(28f));
         btnContinuar.setBounds(980, 740, 280, 65);
         btnContinuar.addActionListener(e -> {
@@ -104,7 +106,15 @@ public class SeAcaboVidas extends JFrame {
         });
         fondo.add(btnContinuar);
 
+<<<<<<< HEAD
         JButton btnMenu = new DecoracionBotones("MENU", "#91BF4B", "#B4DC64", "#3E454C");
+=======
+        JButton btnMenu = new DecoracionBotones("MENÚ",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+>>>>>>> 8d29a9e75b19afa2cfd4b44a742a0f73e91fab9b
         btnMenu.setFont(fuente2.deriveFont(28f));
         btnMenu.setBounds(1300, 740, 280, 65);
         btnMenu.addActionListener(e -> {

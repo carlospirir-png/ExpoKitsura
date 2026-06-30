@@ -100,7 +100,11 @@ public PistasAudio(String rutaAudio) {
         recuadroAudio.add(lblIdAudio);
 
         //---------------- BOTON SALIR ----------------
-        JButton btnSalir = new DecoracionBotones("SALIR");
+        JButton btnSalir = new DecoracionBotones("SALIR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSalir.setFont(fuente2.deriveFont(20f));
         btnSalir.setBounds(40, 290, 150, 45);
         btnSalir.addActionListener(e -> {
@@ -110,7 +114,11 @@ public PistasAudio(String rutaAudio) {
         fondo.add(btnSalir);
 
         //---------------- BOTON REPETIR ----------------
-        btnRepetir = new DecoracionBotones("REPETIR", "#FC767D", "#da4d58", "#da4d58");
+        btnRepetir = new DecoracionBotones("REPETIR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        
         btnRepetir.setFont(fuente2.deriveFont(20f));
         btnRepetir.setBounds(230, 290, 150, 45);
         btnRepetir.addActionListener(e -> reproducirAudio());

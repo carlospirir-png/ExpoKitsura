@@ -2,9 +2,7 @@ package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanelSemi;
+import main.Menu.*;
 
 public class ResultadoFinal extends JDialog {
 
@@ -77,7 +75,11 @@ public class ResultadoFinal extends JDialog {
         panelContenedor.add(lblTiempo);
 
         //---------------- BOTÓN REINTENTAR ----------------
-        JButton btnJugarDeNuevo = new DecoracionBotones("Jugar de nuevo");
+        JButton btnJugarDeNuevo = new DecoracionBotones("Jugar de nuevo",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnJugarDeNuevo.setFont(fuente1.deriveFont(18f));
         btnJugarDeNuevo.setBounds(75, 300, 180, 45);
         btnJugarDeNuevo.addActionListener(e -> {
@@ -87,7 +89,11 @@ public class ResultadoFinal extends JDialog {
         fondo.add(btnJugarDeNuevo);
 
         //---------------- BOTÓN MENÚ ----------------
-        JButton btnMenu = new DecoracionBotones("Menú");
+        JButton btnMenu = new DecoracionBotones("Menú",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnMenu.setFont(fuente1.deriveFont(18f));
         btnMenu.setBounds(275, 300, 160, 45);
         btnMenu.addActionListener(e -> {

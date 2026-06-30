@@ -113,7 +113,11 @@ public class EditarStages extends JFrame {
 
         fondo.add(lblMascota);
         
-        btnConfirmar = new DecoracionBotones("CONFIRMAR");
+        btnConfirmar = new DecoracionBotones("CONFIRMAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnConfirmar.setFont(fuente2.deriveFont(24f));
         btnConfirmar.setForeground(Color.WHITE);
         btnConfirmar.setBounds(400, 510, 230, 50); 

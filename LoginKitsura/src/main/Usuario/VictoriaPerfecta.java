@@ -100,7 +100,11 @@ public class VictoriaPerfecta extends JFrame {
         lblUsuario.setBounds(260, 115, 550, 40);
         panelDerecho.add(lblUsuario); 
         
-        btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente1.deriveFont(20f));
         btnVolver.setBounds(340, 680, 200, 50);
         panelDerecho.add(btnVolver);

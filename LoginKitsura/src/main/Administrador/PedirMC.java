@@ -77,7 +77,10 @@ public class PedirMC extends JFrame {
         txtCategoria.setBounds(80, 360, 700, 45);
         recuadroFormulario.add(txtCategoria);
         
-        btnModificar = new DecoracionBotones("MODIFICAR", "#FC767D", "#da4d58", "#da4d58");
+        btnModificar = new DecoracionBotones("MODIFICAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnModificar.setFont(fuente2.deriveFont(25f));
         btnModificar.setForeground(Color.WHITE);
         btnModificar.setBounds(280, 470, 300, 60); 
@@ -92,7 +95,11 @@ public class PedirMC extends JFrame {
             fondo.add(mascotaControl);
             
         // BOTÓN REGRESAR 
-        JButton btnRegresar = new DecoracionBotones("REGRESAR");
+        JButton btnRegresar = new DecoracionBotones("REGRESAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnRegresar.setFont(fuente2.deriveFont(25f));
         btnRegresar.setBounds(410, 850, 220, 55);
         btnRegresar.addActionListener(e -> dispose()); 
