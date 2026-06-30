@@ -142,33 +142,52 @@ public class DecoracionBotones extends JButton {
                 BorderFactory.createEmptyBorder(6, 14, 6, 14) // Margen del texto interno
         );
     }
-
+    
+    //-------------------------- B O T Ó N   D E S H A B I L I T A D O -------------------------
+    
     //Este método guarda colores cuando el botón esté deshabilitado
     public void estiloBotonDeshabilitado(String colorBaseDisabled, String colorBordeDisabled, String colorTextoDisabled) {
         //COLORES DEL BOTÓN (DESHABILITAD)
-        this.colorBaseDisabled = Color.decode(colorBaseDisabled);
-        this.colorBordeDisabled = Color.decode(colorBordeDisabled);
-        this.colorTextoDisabled = Color.decode(colorTextoDisabled);
+        this.colorBaseDisabled = Color.decode(colorBaseDisabled); //Color base
+        this.colorBordeDisabled = Color.decode(colorBordeDisabled); //Color borde
+        this.colorTextoDisabled = Color.decode(colorTextoDisabled); //Color texto
     }
 
     //Este método aplica los colores que anteriormente se guardaron
     private void aplicarEstiloBotonDeshabilitado() {
-        setBackground(colorBaseDisabled);
-        setForeground(colorTextoDisabled);
-        setBorder(createPixelBorder(colorBordeDisabled));
+        setBackground(colorBaseDisabled); //Color base
+        setForeground(colorTextoDisabled); //Color texto
+        setBorder(createPixelBorder(colorBordeDisabled)); //Color borde
     }
 
-    //--------------- ENABLED ----------------
-    //Si los botones estám habilitados o no
+    /*------------------------------------ SETENABLED --------------------------
+      Método de la clase JComponent, indica si el componente está habilitado o no.
+      Se utiliza Override porque estamos sobreescribiendo un método de la clase
+      padre. Ya que DecoracionBotones hereda de JButton, que a su vez hereda de 
+      AbstractButton, y por lo tanto de Jcomponent.
+    ----------------------------------------------------------------------------*/
+
     @Override
     public void setEnabled(boolean enabled) {
+        
+        /*Se utiliza super para llamar a la clase padre del método, para que
+        primero se ejecute el método normal y haga su trabajo, ya luego comenzamos
+        a agregar el resto de comportamientos que queremos.*/
         super.setEnabled(enabled);
+        
+        //Si el botón está habilitado
         if (enabled) {
+            //Se coloca la fuente del botón
             setFont(fuente2.deriveFont(30f));
+            //Se llama al método del aspecto del botón cuando el mouse no interactua.
             mouseFuera();
+        //Si el botón está deshabilitado
         } else {
+            //Se llama al enterior método para aplicar el estilo del botón.
              aplicarEstiloBotonDeshabilitado();
         }
+        
+        //Se llama al repaint
         repaint();
     }
 }

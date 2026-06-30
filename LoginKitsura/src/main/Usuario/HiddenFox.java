@@ -123,9 +123,9 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
                 "<html><center>¿Quién o qué se encuentra<br>detrás de la sombra?</center></html>",
                 SwingConstants.CENTER);
 
-        titulo.setFont(fuente1.deriveFont(40f));
+        titulo.setFont(fuente1.deriveFont(50f));
         titulo.setForeground(Color.BLACK);
-        titulo.setBounds(500, 20, 900, 150);
+        titulo.setBounds(400, 70, 1000, 150);
 
         fondo.add(titulo);
 
