@@ -21,6 +21,10 @@ public class MenuMinijuegosC extends JFrame {
     public JButton btnComoJugar;
     public JButton btnVolver;
 
+    private String textoCategoria1;
+    private String textoCategoria2;
+    private String textoCategoria3;
+
     public MenuMinijuegosC(String titulo, String categoria1, String categoria2, String categoria3) {
         try {
             fuente1 = Font.createFont(
@@ -35,10 +39,11 @@ public class MenuMinijuegosC extends JFrame {
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
+        this.textoCategoria1 = categoria1;
+        this.textoCategoria2 = categoria2;
+        this.textoCategoria3 = categoria3;
+
         lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
-        btnCategoria1 = new DecoracionBotones(categoria1);
-        btnCategoria2 = new DecoracionBotones(categoria2);
-        btnCategoria3 = new DecoracionBotones(categoria3);
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
@@ -56,7 +61,7 @@ public class MenuMinijuegosC extends JFrame {
     private void crearComponentes() {
 
         //---------------- BOTÓN ¿CÓMO JUGAR? ----------------
-        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?");
+        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?", "#FC767D", "#da4d58", "#da4d58");
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
         btnComoJugar.addActionListener(e -> {
@@ -88,25 +93,19 @@ public class MenuMinijuegosC extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- BOTONES CATEGORÍAS ----------------
+        btnCategoria1 = new DecoracionBotones(textoCategoria1);
         btnCategoria1.setFont(fuente2.deriveFont(25f));
         btnCategoria1.setBounds(1100, 300, 400, 65);
-        btnCategoria1.addActionListener(e -> {
-            // Acción para la Categoría 1
-        });
         fondo.add(btnCategoria1);
 
+        btnCategoria2 = new DecoracionBotones(textoCategoria2, "#E8BE18", "#F0D060", "#3E454C");
         btnCategoria2.setFont(fuente2.deriveFont(25f));
         btnCategoria2.setBounds(1100, 430, 400, 65);
-        btnCategoria2.addActionListener(e -> {
-            // Acción para la Categoría 2
-        });
         fondo.add(btnCategoria2);
 
+        btnCategoria3 = new DecoracionBotones(textoCategoria3, "#91BF4B", "#B4DC64", "#3E454C");
         btnCategoria3.setFont(fuente2.deriveFont(25f));
         btnCategoria3.setBounds(1100, 560, 400, 65);
-        btnCategoria3.addActionListener(e -> {
-            // Acción para la Categoría 3
-        });
         fondo.add(btnCategoria3);
 
         //---------------- BOTÓN VOLVER ----------------

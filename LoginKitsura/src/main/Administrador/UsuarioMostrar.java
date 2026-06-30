@@ -58,7 +58,7 @@ public class UsuarioMostrar extends JFrame {
         panelIzquierdo.setBounds(100, 170, 520, 700);
         fondo.add(panelIzquierdo);
 
-        JButton btnEliminar = new DecoracionBotones("ELIMINAR");
+        JButton btnEliminar = new DecoracionBotones("ELIMINAR", "#FC767D", "#da4d58", "#da4d58");
         btnEliminar.setFont(fuente2.deriveFont(24f));
         btnEliminar.setBounds(40, 40, 190, 60);
 
@@ -70,7 +70,7 @@ public class UsuarioMostrar extends JFrame {
 
         panelIzquierdo.add(btnEliminar);
 
-        JButton btnBuscar = new DecoracionBotones("BUSCAR");
+        JButton btnBuscar = new DecoracionBotones("BUSCAR", "#FC767D", "#da4d58", "#da4d58");
         btnBuscar.setFont(fuente2.deriveFont(24f));
         btnBuscar.setBounds(280, 40, 190, 60);
 
@@ -167,7 +167,10 @@ public class UsuarioMostrar extends JFrame {
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1550, 900, 300, 65);
 
-        btnVolver.addActionListener(e -> dispose());
+        btnVolver.addActionListener(e -> {
+            new UsuarioMenu();
+            dispose();
+                });
 
         fondo.add(btnVolver);
 

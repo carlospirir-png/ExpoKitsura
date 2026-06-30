@@ -69,7 +69,11 @@ public class PistasMenu extends JFrame{
         btnVolver.setFont(fuente2.deriveFont(25f));
         btnVolver.setForeground(Color.WHITE);
         btnVolver.setBounds(1600, 945, 220, 55);
-        btnVolver.addActionListener(e -> dispose());
+        btnVolver.addActionListener(e -> 
+        {
+            new MenuAdmin();
+            dispose();
+                });
         fondo.add(btnVolver);
         
     }

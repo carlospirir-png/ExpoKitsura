@@ -45,7 +45,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         FACIL, INTERMEDIO, DIFICIL
     }
 
-    private static final int CORRECTAS_SUBIR = 1;
+    private static final int CORRECTAS_SUBIR = 5;
 
     private Dificultad dificultadActual = Dificultad.FACIL;
 

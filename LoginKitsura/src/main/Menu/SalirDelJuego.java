@@ -22,7 +22,7 @@ public class SalirDelJuego extends JFrame {
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
 
-        getContentPane().setBackground(new Color(180, 180, 180));
+        getContentPane().setBackground(new Color(145, 191, 75));
         setTitle("Salir del juego");
         setSize(520, 320);
         setLocationRelativeTo(null);

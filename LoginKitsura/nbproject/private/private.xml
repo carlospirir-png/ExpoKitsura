@@ -3,16 +3,43 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/Usuario/OneDrive/Documentos/AAA/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
-            <file>file:/C:/Users/Usuario/OneDrive/Documentos/AAA/ExpoKitsura/LoginKitsura/src/main/Main.java</file>
-            <file>file:/C:/Users/Usuario/OneDrive/Documentos/AAA/ExpoKitsura/LoginKitsura/src/Multimedia/utiles/ElementosGraficos/imagenes/corazon-roto.png</file>
-=======
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFoxDAO.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
->>>>>>> 25a7a6106d1f34c8a3c1f2ae74340a3fae461ebc
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegosC.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/SeAcaboTiempo.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/TiempoAdmin.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/VictoriaPerfecta.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFoxDAO.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/PistasTxtAdmin.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoBase.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Main.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/PuntuacionesAdmin.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegoC2.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/ResultadoFinal.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaImagenPerfil.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroUsuario.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuHiddenFox.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/PistasAudioAdmin.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaEstadisticas.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaPerfil.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Menu/PantallaCarga.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/editarUsuario.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Menu/SalirDelJuego.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/MenuAdmin.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuPrincipal.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/SeAcaboVidas.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/RecuperarContrasena.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/Victoria.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaDificultad.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaTutorial.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/UsuarioMenu.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegos.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Menu/PantallaInicio.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/UsuarioMostrar.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaCContra.java</file>
+            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/VidasAdmin.java</file>
         </group>
     </open-files>
 </project-private>

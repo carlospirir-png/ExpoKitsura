@@ -56,7 +56,6 @@ public class PantallaDificultad extends JFrame {
         crearComponentes();
         iniciarContador();
 
-        
         if (!(ventanaAnterior instanceof FoxJump) && !(ventanaAnterior instanceof HiddenFox_Codigo)) {
             setContentPane(fondo);
             setTitle("Pantalla de Dificultad");
@@ -66,7 +65,6 @@ public class PantallaDificultad extends JFrame {
             setExtendedState(JFrame.MAXIMIZED_BOTH);
             setVisible(true);
         }
-        
 
     }
 
@@ -173,7 +171,7 @@ public class PantallaDificultad extends JFrame {
                 "Se aumenta la dificultad",
                 SwingConstants.CENTER);
 
-        lblMensaje.setFont(fuente1.deriveFont(40f));
+        lblMensaje.setFont(fuente1.deriveFont(55f));
         lblMensaje.setForeground(Color.WHITE);
         lblMensaje.setBounds(205, 430, 550, 50);
 
@@ -225,21 +223,28 @@ public class PantallaDificultad extends JFrame {
         lblFlecha.setVisible(true);
 
         lblTitulo.setText("DIFICULTAD AUMENTADA");
-        lblTitulo.setFont(fuente2.deriveFont(35f));
-        lblTitulo.setBounds(5, 130, 900, 60);
+        lblTitulo.setFont(fuente1.deriveFont(65f));
+        lblTitulo.setBounds(5, 130, 900, 75);
 
         lblMensaje.setText("El nivel ha aumentado");
-        lblTitulo.setFont(fuente1.deriveFont(25f));
+        lblMensaje.setFont(fuente1.deriveFont(55f));
+        lblMensaje.setForeground(Color.WHITE);
         lblMensaje.setBounds(150, 250, 600, 60);
+        lblMensaje.revalidate();
+        lblMensaje.repaint();
 
         lblEmpieza.setText("¡Continúa jugando!");
-        lblEmpieza.setFont(fuente2.deriveFont(20f));
+        lblEmpieza.setFont(fuente1.deriveFont(35f));
         lblEmpieza.setBounds(205, 350, 500, 60);
 
         lblContador.setText("");
 
-        // ✅ CORRECCIÓN 1: guardar referencia al timer para cancelarlo si el jugador
-        //    presiona la flecha antes de que se ejecute automáticamente
+        // Forzar redibujado
+        lblTitulo.revalidate();
+        lblTitulo.repaint();
+        panelTexto.revalidate();
+        panelTexto.repaint();
+
         timerContinuar = new Timer(1500, e -> {
             if (ventanaAnterior instanceof FoxJump foxJump) {
                 foxJump.continuarDespuesDeDificultad();
@@ -250,8 +255,5 @@ public class PantallaDificultad extends JFrame {
 
         timerContinuar.setRepeats(false);
         timerContinuar.start();
-
-        panelTexto.revalidate();
-        panelTexto.repaint();
     }
 }

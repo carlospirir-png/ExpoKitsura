@@ -43,7 +43,7 @@ public class MenuMinijuegoC2 extends JFrame {
     private void crearComponentes() {
 
         //---------------- BOTÓN ¿CÓMO JUGAR? ----------------
-        JButton btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?");
+        JButton btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?", "#FC767D", "#da4d58", "#da4d58");
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
         btnComoJugar.addActionListener(e -> {
@@ -97,7 +97,7 @@ public class MenuMinijuegoC2 extends JFrame {
         fondo.add(btnCategoria1);
 
         //---------------- CATEGORÍA 2 ----------------
-        JButton btnCategoria2 = new DecoracionBotones("PLANTAS");
+        JButton btnCategoria2 = new DecoracionBotones("PLANTAS" ,"#E8BE18", "#F0D060", "#3E454C");
         btnCategoria2.setFont(fuente2.deriveFont(25f));
         btnCategoria2.setBounds(1100, 430, 400, 65);
         btnCategoria2.addActionListener(e -> {
@@ -107,7 +107,7 @@ public class MenuMinijuegoC2 extends JFrame {
         fondo.add(btnCategoria2);
 
         //---------------- CATEGORÍA 3 ----------------
-        JButton btnCategoria3 = new DecoracionBotones("HÁBITATS");
+        JButton btnCategoria3 = new DecoracionBotones("HÁBITATS", "#91BF4B", "#B4DC64", "#3E454C");
         btnCategoria3.setFont(fuente2.deriveFont(25f));
         btnCategoria3.setBounds(1100, 560, 400, 65);
         btnCategoria3.addActionListener(e -> {

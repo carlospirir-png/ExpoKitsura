@@ -70,7 +70,7 @@ public class PantallaInicio extends JFrame {
         fondo.setComponentZOrder(lblLogo, 0);
 
         lblFrase = new JLabel("\"No es magia, es mente\"", SwingConstants.CENTER);
-        lblFrase.setFont(fuente1.deriveFont(35f));
+        lblFrase.setFont(fuente1.deriveFont(55f));
         lblFrase.setForeground(new Color(196, 221, 227));
         lblFrase.setBounds(530, 690, 850, 60);
 

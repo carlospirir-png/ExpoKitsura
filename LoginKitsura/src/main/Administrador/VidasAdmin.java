@@ -97,7 +97,7 @@ public class VidasAdmin extends JFrame {
 
         //---------------- BOTÓN EDITAR ----------------
 
-        JButton btnEditar = new DecoracionBotones("EDITAR");
+        JButton btnEditar = new DecoracionBotones("EDITAR", "#FC767D", "#da4d58", "#da4d58");
         btnEditar.setFont(fuente2.deriveFont(26f));
         btnEditar.setBounds(340, 315, 260, 60);
 
@@ -118,19 +118,19 @@ public class VidasAdmin extends JFrame {
         panelVidas.add(lblModificando);
 
         JLabel lblMinijuego = new JLabel("Minijuego: ****");
-        lblMinijuego.setFont(fuente1.deriveFont(36f));
+        lblMinijuego.setFont(fuente1.deriveFont(40f));
         lblMinijuego.setForeground(Color.WHITE);
         lblMinijuego.setBounds(60, 485, 600, 35);
         panelVidas.add(lblMinijuego);
 
         JLabel lblCategoria = new JLabel("Categoría: ****");
-        lblCategoria.setFont(fuente1.deriveFont(36f));
+        lblCategoria.setFont(fuente1.deriveFont(40f));
         lblCategoria.setForeground(Color.WHITE);
         lblCategoria.setBounds(60, 525, 600, 35);
         panelVidas.add(lblCategoria);
 
         JLabel lblNivel = new JLabel("Nivel: ****");
-        lblNivel.setFont(fuente1.deriveFont(36f));
+        lblNivel.setFont(fuente1.deriveFont(40f));
         lblNivel.setForeground(Color.WHITE);
         lblNivel.setBounds(60, 565, 600, 35);
         panelVidas.add(lblNivel);
@@ -166,7 +166,10 @@ public class VidasAdmin extends JFrame {
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1470, 870, 300, 65);
 
-        btnVolver.addActionListener(e -> dispose());
+        btnVolver.addActionListener(e ->{
+                new MenuAdmin();
+                dispose();
+                        });
 
         fondo.add(btnVolver);
     }
