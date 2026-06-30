@@ -24,18 +24,6 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     private DecoracionBotones btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
 
-    //---------- B O T O N E S --------------
-    //---------- R O S A D O
-    private String rosa = "#E39D8B"; //Rosa base #E39D8B
-    private String rosa2 = "#BF6149"; //Al presionarse: Rosa naranja
-    private String rosa3 = "#FC767D"; //Borde: Rosa
-    private String blanco = "#FFFFFF"; //Texto blanco
-    //---------- A M A R I L L O
-    private String amarillo = "#E8BE18"; //Amarillo base #E8BE18
-    private String amarillo2 = "#E88F18"; //Al presionarse: Amarillo naranja
-    private String amarillo3 = "#EFDA9A"; //Borde: Amarillo pálido
-    private String negro = "#000000"; //Texto negro
-
     public HiddenFox() {
         try {
 
@@ -161,9 +149,9 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         //---------------- B O T O N E S -------------
         //---------------- AYUDA ----------------
         btnAyuda = new DecoracionBotones("¿Necesitas ayuda?",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_APAGADO, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO); //MOUSE DENTRO   
 
         btnAyuda.setFont(fuente2.deriveFont(18f));
         btnAyuda.setBounds(60, 120, 280, 55);
@@ -172,12 +160,13 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         //---------------- RESPUESTA 1 ----------------
         btnRespuesta1 = new DecoracionBotones("RESPUESTA 1",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO   
 
         btnRespuesta1.setFont(fuente2.deriveFont(20f));
         btnRespuesta1.setBounds(500, 730, 300, 75);
+        btnRespuesta1.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta1.addActionListener(e -> respuestaSeleccionada(btnRespuesta1));
 
@@ -185,12 +174,13 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         //---------------- RESPUESTA 2 ----------------
         btnRespuesta2 = new DecoracionBotones("RESPUESTA 2",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO  
 
         btnRespuesta2.setFont(fuente2.deriveFont(20f));
         btnRespuesta2.setBounds(1020, 730, 300, 75);
+        btnRespuesta2.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta2.addActionListener(e -> respuestaSeleccionada(btnRespuesta2));
 
@@ -198,12 +188,13 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         //---------------- RESPUESTA 3 ----------------
         btnRespuesta3 = new DecoracionBotones("RESPUESTA 3",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO   
 
         btnRespuesta3.setFont(fuente2.deriveFont(20f));
         btnRespuesta3.setBounds(500, 840, 300, 75);
+        btnRespuesta3.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta3.addActionListener(e -> respuestaSeleccionada(btnRespuesta3));
 
@@ -211,12 +202,13 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         //---------------- RESPUESTA 4 ----------------
         btnRespuesta4 = new DecoracionBotones("RESPUESTA 4",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO    
 
         btnRespuesta4.setFont(fuente2.deriveFont(20f));
         btnRespuesta4.setBounds(1020, 840, 300, 75);
+        btnRespuesta4.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
 
         btnRespuesta4.addActionListener(e -> respuestaSeleccionada(btnRespuesta4));
 

@@ -24,25 +24,35 @@ public class DecoracionBotones extends JButton {
     private Color colorBordeHover; //Color de borde
     private Color colorTextoHover; //Color de texto
 
+    //-------------- COLORES DEL BOTÓN (CUANDO ESTÉ DESHABILITADO)
+    private Color colorBaseDisabled; //Color de base
+    private Color colorBordeDisabled; //Color de borde
+    private Color colorTextoDisabled; //Color de texto
+
     //-------------- FUENTE ------------
     private Font fuente2; //Llamada fuente2, es KGPerfectPenmanship
-    
+
     //-------------- COLORES PREDEFINIDOS -----------
     /*Definimos constantes. Por convención, las constantes se colocan con Mayúsculas.
     - public las hace públicas.
     - static indica que pertenecen a la clase así que no hay necesidad de crear 
       objetos para llamarlas. 
     - final indica que es su valor "final" y que por lo tanto, no puede modificarse.*/
-    
     public static final String AZUL = "#447a9c";
     public static final String GRIS = "#3E454C";
     public static final String AMARILLO = "#EFDA9A";
     public static final String CELESTE = "#82D3E0";
     public static final String ROSA = "#FC767D";
-    public static final String ROJO = "#DA4D58";  
+    public static final String ROJO = "#DA4D58";
+    public static final String AMARILLO_MOSTAZA = "#E8BE18";
+    public static final String AMARILLO_APAGADO = "#EBBF66";
+    public static final String NEGRO = "#000000";
+    public static final String BLANCO = "#FFFFFF";
+    public static final String NARANJA_PASTEL = "#E39D8B";
+    public static final String ROSA_PASTEL = "#EE9797";
 
-    //---------------------- C O N S T R U C T O R -------------------------
-    //Texto del botón
+    //---------------------- C O N S T R U C T O R E S -------------------------
+    //COLORES DEL BOTÓN | MOUSE FUERA | MOUSE DENTRO
     public DecoracionBotones(String text,
             // COLORES DEL BOTÓN (MOUSE FUERA)
             String colorBase, String colorBorde, String colorTexto,
@@ -59,7 +69,7 @@ public class DecoracionBotones extends JButton {
         this.colorBaseHover = Color.decode(colorBaseHover);
         this.colorBordeHover = Color.decode(colorBordeHover);
         this.colorTextoHover = Color.decode(colorTextoHover);
-
+        
         //Método para inicializar Componentes.
         inicializarComponentes();
     }
@@ -75,7 +85,7 @@ public class DecoracionBotones extends JButton {
             e.printStackTrace();
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        
+
         setContentAreaFilled(false);
         setFocusPainted(false);
         setOpaque(false);
@@ -104,7 +114,7 @@ public class DecoracionBotones extends JButton {
         setBorder(createPixelBorder(colorBorde)); //Color del borde 
         repaint();
     }
-    
+
     //--------------------- MOUSE DENTRO ---------------------
     public void mouseDentro() {
         setBackground(colorBaseHover); //Color de fondo
@@ -131,5 +141,34 @@ public class DecoracionBotones extends JButton {
                 BorderFactory.createMatteBorder(4, 4, 4, 4, colorDelBorde), // Borde de 4px de grosor
                 BorderFactory.createEmptyBorder(6, 14, 6, 14) // Margen del texto interno
         );
+    }
+
+    //Este método guarda colores cuando el botón esté deshabilitado
+    public void estiloBotonDeshabilitado(String colorBaseDisabled, String colorBordeDisabled, String colorTextoDisabled) {
+        //COLORES DEL BOTÓN (DESHABILITAD)
+        this.colorBaseDisabled = Color.decode(colorBaseDisabled);
+        this.colorBordeDisabled = Color.decode(colorBordeDisabled);
+        this.colorTextoDisabled = Color.decode(colorTextoDisabled);
+    }
+
+    //Este método aplica los colores que anteriormente se guardaron
+    private void aplicarEstiloBotonDeshabilitado() {
+        setBackground(colorBaseDisabled);
+        setForeground(colorTextoDisabled);
+        setBorder(createPixelBorder(colorBordeDisabled));
+    }
+
+    //--------------- ENABLED ----------------
+    //Si los botones estám habilitados o no
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (enabled) {
+            setFont(fuente2.deriveFont(30f));
+            mouseFuera();
+        } else {
+             aplicarEstiloBotonDeshabilitado();
+        }
+        repaint();
     }
 }
