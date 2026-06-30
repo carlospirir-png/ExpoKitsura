@@ -1,24 +1,22 @@
 package main.Usuario;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 import main.conexion.Conexion;
 
+// Clase de Acceso a Datos (DAO) encargada de la persistencia de las partidas, sus detalles y la actualización de las estadísticas globales de los usuarios.
 public class PartidaDAO_MaulwurfRennt {
 
+    // Componente encargado de establecer y gestionar el puente de conexión con el servidor de la base de datos.
     private Conexion conexion;
 
+    // Constructor de la clase: Inicializa el objeto de conexión listo para interactuar con los datos transaccionales del juego.
     public PartidaDAO_MaulwurfRennt() {
         conexion = new Conexion();
     }
         
-// Crea una nueva partida.
-public int crearPartida(int idUsuario,
-            int idMinijuego,
-            int vidasIniciales) {
+    // Inserta un nuevo registro de partida en estado "en_curso" y retorna el ID autogenerado por la base de datos.
+    public int crearPartida(int idUsuario, int idMinijuego, int vidasIniciales) {
 
         int idPartida = -1;
 
@@ -35,19 +33,21 @@ public int crearPartida(int idUsuario,
         VALUES (?,?,?,?,?,?)
         """;
 
+        // Inicializa la sentencia solicitando explícitamente el retorno de las llaves primarias generadas automáticamente (Statement.RETURN_GENERATED_KEYS).
         try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, idUsuario);
             ps.setInt(2, idMinijuego);
-            ps.setInt(3, 0); // puntuación inicial
+            ps.setInt(3, 0); // Puntuación inicial por defecto.
             ps.setInt(4, vidasIniciales);
-            ps.setInt(5, 0); // tiempo jugado
+            ps.setInt(5, 0); // Tiempo inicial por defecto.
             ps.setString(6, "en_curso");
 
             ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
 
+            // Recupera la clave numérica generada para la partida actual.
             if (rs.next()) {
                 idPartida = rs.getInt(1);
             }
@@ -59,13 +59,8 @@ public int crearPartida(int idUsuario,
         return idPartida;
     }
 
-    //Guarda una respuesta del jugador.
-    public void guardarDetalle(
-            int idPartida,
-            int idPregunta,
-            int puntosObtenidos,
-            int tiempoRespuesta,
-            boolean respondioCorrectamente) {
+    // Registra de forma pormenorizada cada respuesta individual dada por el usuario en el transcurso de la sesión.
+    public void guardarDetalle(int idPartida, int idPregunta, int puntosObtenidos, int tiempoRespuesta, boolean respondioCorrectamente) {
 
         String sql = """
             INSERT INTO Detalle_partida
@@ -88,18 +83,12 @@ public int crearPartida(int idUsuario,
             ps.executeUpdate();
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
         }
-
     }
 
-    //Finaliza una partida.
-    public void finalizarPartida(int idPartida,
-            int puntuacion,
-            int tiempoJugado,
-            String estado) {
+    // Actualiza los valores definitivos de una partida específica modificando su puntuación, tiempo y el estado final (por ejemplo: "completada" o "abandonada").
+    public void finalizarPartida(int idPartida, int puntuacion, int tiempoJugado, String estado) {
 
         String sql = """
                 UPDATE Partida
@@ -109,8 +98,7 @@ public int crearPartida(int idUsuario,
                 WHERE id_partida=?
                 """;
 
-        try (Connection con = conexion.getConnection(); PreparedStatement ps
-                = con.prepareStatement(sql)) {
+        try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, puntuacion);
             ps.setInt(2, tiempoJugado);
@@ -120,18 +108,12 @@ public int crearPartida(int idUsuario,
             ps.executeUpdate();
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
         }
-
     }
 
-    //Actualiza las estadísticas del jugador.
-    public void actualizarEstadisticas(int idUsuario,
-            int idMinijuego,
-            int puntuacion,
-            int tiempo) {
+    // Acumula las métricas de la partida finalizada en el registro histórico del usuario, evaluando y actualizando además su récord personal de puntuación.
+    public void actualizarEstadisticas(int idUsuario, int idMinijuego, int puntuacion, int tiempo) {
 
         try (Connection con = conexion.getConnection()) {
 
@@ -142,22 +124,20 @@ public int crearPartida(int idUsuario,
                     AND id_minijuego=?
                     """;
 
-            PreparedStatement psBuscar
-                    = con.prepareStatement(buscar);
-
+            PreparedStatement psBuscar = con.prepareStatement(buscar);
             psBuscar.setInt(1, idUsuario);
             psBuscar.setInt(2, idMinijuego);
 
             ResultSet rs = psBuscar.executeQuery();
 
+            // Bloque de actualización: Si el usuario ya registra estadísticas previas en este minijuego, se modifican los acumuladores.
             if (rs.next()) {
 
                 int mejor = rs.getInt("mejor_puntuacion");
 
+                // Evalúa si la puntuación obtenida en la última partida supera la marca histórica del jugador.
                 if (puntuacion > mejor) {
-
                     mejor = puntuacion;
-
                 }
 
                 String update = """
@@ -170,9 +150,7 @@ public int crearPartida(int idUsuario,
                         AND id_minijuego=?
                         """;
 
-                PreparedStatement ps
-                        = con.prepareStatement(update);
-
+                PreparedStatement ps = con.prepareStatement(update);
                 ps.setInt(1, mejor);
                 ps.setInt(2, puntuacion);
                 ps.setInt(3, tiempo);
@@ -181,6 +159,7 @@ public int crearPartida(int idUsuario,
 
                 ps.executeUpdate();
 
+            // Bloque de inserción: Si es la primera vez que el usuario completa el minijuego, se genera un registro nuevo desde cero.
             } else {
 
                 String insert = """
@@ -196,9 +175,7 @@ public int crearPartida(int idUsuario,
                         VALUES(?,?,?,?,?,?)
                         """;
 
-                PreparedStatement ps
-                        = con.prepareStatement(insert);
-
+                PreparedStatement ps = con.prepareStatement(insert);
                 ps.setInt(1, idUsuario);
                 ps.setInt(2, idMinijuego);
                 ps.setInt(3, puntuacion);
@@ -207,15 +184,10 @@ public int crearPartida(int idUsuario,
                 ps.setInt(6, tiempo);
 
                 ps.executeUpdate();
-
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
         }
-
     }
-
 }

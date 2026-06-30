@@ -3,9 +3,7 @@ package main.Usuario;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
-import main.Menu.DecoracionBotones;
+import main.Menu.*;
 
 public class SeAcaboVidas extends JFrame {
 

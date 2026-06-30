@@ -2,8 +2,7 @@ package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.DecoracionBotones;
+import main.Menu.*;
 
 public class PistasTexto extends JFrame {
 

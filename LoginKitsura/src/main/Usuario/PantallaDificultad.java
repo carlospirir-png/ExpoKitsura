@@ -2,10 +2,9 @@
 package main.Usuario;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
+import java.awt.event.*;
 
 public class PantallaDificultad extends JFrame {
 
@@ -56,7 +55,6 @@ public class PantallaDificultad extends JFrame {
         crearComponentes();
         iniciarContador();
 
-        
         if (!(ventanaAnterior instanceof FoxJump) && !(ventanaAnterior instanceof HiddenFox_Codigo)) {
             setContentPane(fondo);
             setTitle("Pantalla de Dificultad");
@@ -66,7 +64,6 @@ public class PantallaDificultad extends JFrame {
             setExtendedState(JFrame.MAXIMIZED_BOTH);
             setVisible(true);
         }
-        
 
     }
 
@@ -139,65 +136,93 @@ public class PantallaDificultad extends JFrame {
                     foxJump.continuarDespuesDeDificultad();
                 } else if (ventanaAnterior instanceof HiddenFox_Codigo hiddenFox) {
                     hiddenFox.continuarDespuesDeDificultad(nivel);
+                } else if (ventanaAnterior instanceof MaulwurfRennt maulwurf) {
+                    maulwurf.continuarDespuesDeDificultad();
                 }
             }
         });
 
-        panelTexto.add(lblFlecha);
+            panelTexto.add (lblFlecha);
 
-        // ALERTA
-        lblAlerta = new JLabel();
+            // ALERTA
+            lblAlerta  = new JLabel();
 
-        ImageIcon alertaIcon = new ImageIcon(
-                getClass().getResource(
-                        "/Multimedia/utiles/ElementosGraficos/imagenes/alerta.png"));
+            ImageIcon alertaIcon = new ImageIcon(
+                    getClass().getResource(
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/alerta.png"));
 
-        Image alertaEscalada = alertaIcon.getImage().getScaledInstance(
-                200, 200, Image.SCALE_SMOOTH);
+            Image alertaEscalada = alertaIcon.getImage().getScaledInstance(
+                    200, 200, Image.SCALE_SMOOTH);
 
-        lblAlerta.setIcon(new ImageIcon(alertaEscalada));
-        lblAlerta.setBounds(350, 50, 200, 200);
+            lblAlerta.setIcon (
 
-        panelTexto.add(lblAlerta);
+            new ImageIcon(alertaEscalada));
+            lblAlerta.setBounds (
 
-        // TITULO
-        lblTitulo = new JLabel("¡ALERTA!", SwingConstants.CENTER);
-        lblTitulo.setFont(fuente2.deriveFont(55f));
-        lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setBounds(270, 330, 400, 60);
+            350, 50, 200, 200);
 
-        panelTexto.add(lblTitulo);
+            panelTexto.add (lblAlerta);
+
+            // TITULO
+            lblTitulo  = new JLabel("¡ALERTA!", SwingConstants.CENTER);
+
+            lblTitulo.setFont (fuente2.deriveFont
+
+            (55f));
+            lblTitulo.setForeground (Color.WHITE);
+
+            lblTitulo.setBounds (
+
+            270, 330, 400, 60);
+
+            panelTexto.add (lblTitulo);
 
 // MENSAJE
-        lblMensaje = new JLabel(
-                "Se aumenta la dificultad",
-                SwingConstants.CENTER);
+            lblMensaje  = new JLabel(
+                    "Se aumenta la dificultad",
+                    SwingConstants.CENTER);
 
-        lblMensaje.setFont(fuente1.deriveFont(40f));
-        lblMensaje.setForeground(Color.WHITE);
-        lblMensaje.setBounds(205, 430, 550, 50);
+            lblMensaje.setFont (fuente1.deriveFont
 
-        panelTexto.add(lblMensaje);
+            (40f));
+            lblMensaje.setForeground (Color.WHITE);
 
-        // EMPIEZA EN
-        lblEmpieza = new JLabel(
-                "Empieza en:",
-                SwingConstants.CENTER);
+            lblMensaje.setBounds (
 
-        lblEmpieza.setFont(fuente1.deriveFont(40f));
-        lblEmpieza.setForeground(Color.WHITE);
-        lblEmpieza.setBounds(270, 520, 400, 50);
+            205, 430, 550, 50);
 
-        panelTexto.add(lblEmpieza);
+            panelTexto.add (lblMensaje);
 
-        // CONTADOR
-        lblContador = new JLabel("(3s)", SwingConstants.CENTER);
-        lblContador.setFont(fuente2.deriveFont(60f));
-        lblContador.setForeground(Color.WHITE);
-        lblContador.setBounds(320, 600, 300, 70);
+            // EMPIEZA EN
+            lblEmpieza  = new JLabel(
+                    "Empieza en:",
+                    SwingConstants.CENTER);
 
-        panelTexto.add(lblContador);
-    }
+            lblEmpieza.setFont (fuente1.deriveFont
+
+            (40f));
+            lblEmpieza.setForeground (Color.WHITE);
+
+            lblEmpieza.setBounds (
+
+            270, 520, 400, 50);
+
+            panelTexto.add (lblEmpieza);
+
+            // CONTADOR
+            lblContador  = new JLabel("(3s)", SwingConstants.CENTER);
+
+            lblContador.setFont (fuente2.deriveFont
+
+            (60f));
+            lblContador.setForeground (Color.WHITE);
+
+            lblContador.setBounds (
+
+            320, 600, 300, 70);
+
+            panelTexto.add (lblContador);
+        }
 
     private void iniciarContador() {
 
@@ -245,6 +270,8 @@ public class PantallaDificultad extends JFrame {
                 foxJump.continuarDespuesDeDificultad();
             } else if (ventanaAnterior instanceof HiddenFox_Codigo hiddenFox) {
                 hiddenFox.continuarDespuesDeDificultad(nivel);
+            } else if (ventanaAnterior instanceof MaulwurfRennt maulwurf) {
+                maulwurf.continuarDespuesDeDificultad();
             }
         });
 
