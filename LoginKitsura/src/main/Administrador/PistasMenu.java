@@ -48,12 +48,18 @@ public class PistasMenu extends JFrame{
         lblPistas.setBounds(90, 150, 1800, 60);
         fondo.add(lblPistas);
 
-        JButton btnTexto = new DecoracionBotones("TEXTO", "#FC767D", "#da4d58", "#da4d58");
+        JButton btnTexto = new DecoracionBotones("TEXTO",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnTexto.setFont(fuente1.deriveFont(25f));
         btnTexto.setBounds(400, 380, 415, 75);
         fondo.add(btnTexto);
 
-        JButton btnAudio = new DecoracionBotones("AUDIO", "#FC767D", "#da4d58", "#da4d58");
+        JButton btnAudio = new DecoracionBotones("AUDIO",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnAudio.setFont(fuente1.deriveFont(25f));
         btnAudio.setBounds(400, 610, 415, 75);
         fondo.add(btnAudio);
@@ -65,7 +71,11 @@ public class PistasMenu extends JFrame{
         staticMascotaTablet.setBounds(1100, 280, 650, 650);
         fondo.add(staticMascotaTablet);
         
-        JButton btnVolver = new DecoracionBotones("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(25f));
         btnVolver.setForeground(Color.WHITE);
         btnVolver.setBounds(1600, 945, 220, 55);

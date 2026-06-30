@@ -60,13 +60,20 @@ public class AdminStages extends JFrame{
         lblTituloSeccion.setBounds(0, 20, 1800, 55);
         panelTitulo.add(lblTituloSeccion); // En lugar de agregarlo al fondo lo agregamos al panel 
 
-        btnCrearUno = new DecoracionBotones("CREAR UNO", "#FC767D", "#da4d58", "#da4d58");
+        btnCrearUno = new DecoracionBotones("CREAR UNO",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        
         btnCrearUno.setFont(fuente2.deriveFont(20f));
         btnCrearUno.setForeground(Color.WHITE); // Letras blancas fijas al inicio
         btnCrearUno.setBounds(350, 500, 320, 60);
         fondo.add(btnCrearUno);
 
-        btnEditarExistente = new DecoracionBotones("EDITAR UNO EXISTENTE", "#FC767D", "#da4d58", "#da4d58");
+        btnEditarExistente = new DecoracionBotones("EDITAR UNO EXISTENTE",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnEditarExistente.setFont(fuente2.deriveFont(20f));
         btnEditarExistente.setForeground(Color.WHITE); // Letras blancas fijas al inicio
         btnEditarExistente.setBounds(1270, 500, 320, 60);
@@ -79,7 +86,11 @@ public class AdminStages extends JFrame{
         staticMascotaControl.setBounds(680, 290, 600, 600);
         fondo.add(staticMascotaControl);
 
-        btnSalir = new DecoracionBotones("VOLVER"); 
+        btnSalir = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSalir.setFont(fuente2.deriveFont(30f));
         btnSalir.setForeground(Color.WHITE);
         btnSalir.setBounds(1695, 950, 210, 45);

@@ -47,7 +47,11 @@ public class MenuAdmin extends JFrame {
         String[] txt={"USUARIO","PUNTUACIONES","VIDAS","TIEMPO","PISTAS","ADMINISTRAR STAGES"};
         int y=240;
         for(int i=0;i<txt.length;i++){
-            JButton b=new DecoracionBotones(txt[i]);
+            JButton b =new DecoracionBotones(txt[i],
+                                    //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
             b.setFont(fuente2.deriveFont(i==5?24f:26f));
             b.setBounds(180,y,430,65);
             fondo.add(b);
@@ -60,7 +64,11 @@ public class MenuAdmin extends JFrame {
         mascota.setBounds(700,150,700,700);
         fondo.add(mascota);
 
-        JButton volver=new DecoracionBotones("VOLVER");
+        JButton volver=new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         volver.setFont(fuente2.deriveFont(28f));
         volver.setBounds(1500,870,300,65);
         volver.addActionListener(e->dispose());

@@ -134,7 +134,10 @@ public class RegistroUsuario extends JFrame {
         fondo.add(txtPassword);
 
         //---------------- BOTON JUGAR ----------------
-        btnJugar = new DecoracionBotones("JUGAR", "#FC767D", "#da4d58", "#da4d58");
+        btnJugar = new DecoracionBotones("JUGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnJugar.setFont(fuente2.deriveFont(15f));
         btnJugar.setBounds(820, 815, 285, 60);
 
@@ -148,7 +151,11 @@ public class RegistroUsuario extends JFrame {
         fondo.add(btnJugar);
 
         //---------------- BOTON SALIR ----------------
-        JButton btnSalir = new DecoracionBotones("SALIR");
+        JButton btnSalir = new DecoracionBotones("SALIR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(1750, 950, 120, 40);
 

@@ -36,9 +36,20 @@ public class MenuMinijuegosC extends JFrame {
         }
 
         lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
-        btnCategoria1 = new DecoracionBotones(categoria1);
-        btnCategoria2 = new DecoracionBotones(categoria2);
-        btnCategoria3 = new DecoracionBotones(categoria3);
+        btnCategoria1 = new DecoracionBotones(categoria1,
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+        btnCategoria2 = new DecoracionBotones(categoria2,                 //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+        btnCategoria3 = new DecoracionBotones(categoria3,
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
@@ -56,7 +67,11 @@ public class MenuMinijuegosC extends JFrame {
     private void crearComponentes() {
 
         //---------------- BOTÓN ¿CÓMO JUGAR? ----------------
-        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?");
+        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
         btnComoJugar.addActionListener(e -> {
@@ -110,7 +125,11 @@ public class MenuMinijuegosC extends JFrame {
         fondo.add(btnCategoria3);
 
         //---------------- BOTÓN VOLVER ----------------
-        btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1150, 720, 320, 65);
         btnVolver.addActionListener(e -> {

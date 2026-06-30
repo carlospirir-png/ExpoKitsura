@@ -92,7 +92,11 @@ public class SeAcaboVidas extends JFrame {
         fondo.add(panelTextos);
 
         //---------------- BOTONES ----------------
-        JButton btnContinuar = new DecoracionBotones("CONTINUAR");
+        JButton btnContinuar = new DecoracionBotones("CONTINUAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnContinuar.setFont(fuente2.deriveFont(28f));
         btnContinuar.setBounds(980, 740, 280, 65);
         btnContinuar.addActionListener(e -> {
@@ -106,7 +110,11 @@ public class SeAcaboVidas extends JFrame {
         });
         fondo.add(btnContinuar);
 
-        JButton btnMenu = new DecoracionBotones("MENÚ");
+        JButton btnMenu = new DecoracionBotones("MENÚ",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnMenu.setFont(fuente2.deriveFont(28f));
         btnMenu.setBounds(1300, 740, 280, 65);
         btnMenu.addActionListener(e -> {

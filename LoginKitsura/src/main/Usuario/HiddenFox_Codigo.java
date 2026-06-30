@@ -85,7 +85,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             if (nivelActual < nivelFinal) {
 
                 pantallaDificultad = new PantallaDificultad(this,
-                        nivelActual + 1);
+                        nivelActual + 1, vidas, puntos, false);
                 fadeTo(() -> {
                     setContentPane(pantallaDificultad.getFondo());
                 }, 400);
@@ -497,12 +497,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         
         mostrarRespuestas(respuestas, correctas);
     }
-    
-    
-    
-    
-    
-    
 
     /*------------------  C O N F I G U R A C I Ó N ------------------
       Este es el apartado donde se establece la configuración principal

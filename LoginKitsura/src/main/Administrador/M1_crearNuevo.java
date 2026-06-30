@@ -86,7 +86,10 @@ public class M1_crearNuevo extends JFrame {
         areaColor.setBounds(40, 80, 420, 240);
         panelFormulario.add(areaColor);
 
-        btnCargarColor = new DecoracionBotones("CARGAR", "#FC767D", "#da4d58", "#da4d58");
+        btnCargarColor = new DecoracionBotones("CARGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnCargarColor.setFont(fuente1.deriveFont(25f));
         btnCargarColor.setForeground(Color.WHITE);
         btnCargarColor.setBounds(130, 340, 255, 45); 
@@ -103,7 +106,10 @@ public class M1_crearNuevo extends JFrame {
         areaSombra.setBounds(590, 80, 420, 240); 
         panelFormulario.add(areaSombra);
 
-        btnCargarSombra = new DecoracionBotones("CARGAR", "#FC767D", "#da4d58", "#da4d58");
+        btnCargarSombra = new DecoracionBotones("CARGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnCargarSombra.setFont(fuente1.deriveFont(25f));
         btnCargarSombra.setForeground(Color.WHITE);
         btnCargarSombra.setBounds(680, 340, 255, 45); 
@@ -154,7 +160,11 @@ public class M1_crearNuevo extends JFrame {
         panelFormulario.add(txtIncorrecta2);
 
         // --- BOTÓN VOLVER---
-        btnSalir = new DecoracionBotones("VOLVER");
+        btnSalir = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnSalir.setFont(fuente2.deriveFont(30f));
         btnSalir.setForeground(Color.WHITE);
         btnSalir.setBounds(1695, 950, 210, 45);

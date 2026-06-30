@@ -92,7 +92,11 @@ setVisible(true);
         panelContenedor.add(lblCita2);
 
         //---------------- BOTON VOLVER ----------------
-        btnVolver = new DecoracionBotones("VOLVER");
+        btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
         btnVolver.setFont(fuente1.deriveFont(20f));
         btnVolver.setForeground(Color.BLACK);
         btnVolver.setBounds(340, 710, 200, 50);
