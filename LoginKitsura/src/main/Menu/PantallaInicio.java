@@ -59,27 +59,30 @@ public class PantallaInicio extends JFrame {
 
         lblLogo = new JLabel();
 
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/LogoKitsura3.png"));
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/LogoKitsura.png"));
         Image logoEscalado = logoIcon.getImage().getScaledInstance(570, 600, Image.SCALE_SMOOTH);
 
         lblLogo.setIcon(new ImageIcon(logoEscalado));
-        lblLogo.setBounds(650, 100, 570, 600);
+        lblLogo.setBounds(650, 100, 570,600);
 
         fondo.add(lblLogo);
 
         fondo.setComponentZOrder(lblLogo, 0);
 
         lblFrase = new JLabel("\"No es magia, es mente\"", SwingConstants.CENTER);
-        lblFrase.setFont(fuente1.deriveFont(35f));
+        lblFrase.setFont(fuente1.deriveFont(55f));
         lblFrase.setForeground(new Color(196, 221, 227));
         lblFrase.setBounds(530, 690, 850, 60);
 
         fondo.add(lblFrase);
 
         //---------------- BOTON JUGAR ----------------
-        btnJugar = new DecoracionBotones("JUGAR");      
-        btnJugar.setFont(fuente2.deriveFont(18f)); 
-        btnJugar.setBounds(850, 910, 200, 45);
+        btnJugar = new DecoracionBotones("JUGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO      
+        btnJugar.setFont(fuente2.deriveFont(30f)); 
+        btnJugar.setBounds(810, 880, 250, 70);
         btnJugar.addActionListener(e -> {
             new RegistroUsuario();
             dispose(); // Cierra PantallaInicio

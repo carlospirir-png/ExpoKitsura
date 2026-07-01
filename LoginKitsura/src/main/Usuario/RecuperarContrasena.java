@@ -1,14 +1,16 @@
-
 package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Menu.DecoracionBotones;
 
 public class RecuperarContrasena extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    private static String codigoRecuperacion;   /* Variable global que nos ayudara a generar el
+                                                codigo para el recuperar contraseña*/
     
     public RecuperarContrasena (){
         try{
@@ -16,77 +18,101 @@ public class RecuperarContrasena extends JFrame {
             fuente1 = Font.createFont(
             Font.TRUETYPE_FONT,
             getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+
             // KGPerfectPenmanship
             fuente2 = Font.createFont(
             Font.TRUETYPE_FONT,
             getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-            
+
         } catch (Exception e){
             e.printStackTrace();            
-        fuente1 = new Font("Arial", Font.PLAIN,20);
-        fuente2 = new Font("Arial", Font.PLAIN,20);
+            fuente1 = new Font("Arial", Font.PLAIN,20);
+            fuente2 = new Font("Arial", Font.PLAIN,20);
         }
+
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane (fondo);
-        setUndecorated(true);
-        setSize(600, 400);
+
+        setTitle("Recuperar Contraseña");
+        setSize(700, 450);
         setLocationRelativeTo(null); 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE); 
         fondo.setLayout(null);
         crearComponentes();
         setVisible(true);
     }
+
     private void crearComponentes() {
-        JPanel barra = new JPanel();
-        barra.setLayout(null);
-        barra.setBackground(Color.WHITE);
-        barra.setBounds(0, 0, 600, 40);
-        fondo.add(barra);
+        JPanel panelContenedor = new JPanel();
+        panelContenedor.setLayout(null);
+        panelContenedor.setBackground(new Color(0, 0, 0, 100)); 
+        panelContenedor.setBounds(25, 60, 400, 310);
+        fondo.add(panelContenedor);
 
-        JLabel titulo = new JLabel(" ");
-        titulo.setFont(fuente1.deriveFont(10f));
-        titulo.setBounds(15, 0, 220, 40);
-        barra.add(titulo);
-
-        JButton btnCerrar = new JButton("X");
-        btnCerrar.setFont(fuente1.deriveFont(15f));
-        btnCerrar.setBounds(550, 5, 40, 30);
-        btnCerrar.setFocusable(false);
-        btnCerrar.setBorderPainted(false);
-        btnCerrar.setBackground(new Color(245, 245, 245));
-        btnCerrar.setForeground(new Color(180, 50, 50));
-        btnCerrar.addActionListener(e -> dispose());
-        barra.add(btnCerrar);
-
-        JSeparator linea = new JSeparator();
-        linea.setBounds(0, 39, 600, 1);
-        barra.add(linea);
-        
         //---------------- T I T U L O ----------------
-        JLabel lblIndicacion = new JLabel("Ingrese la contraseña actual");
-        lblIndicacion.setFont(fuente2.deriveFont(25f));
+        JLabel lblIndicacion = new JLabel("Ingrese su nombre de usuario: ");
+        lblIndicacion.setFont(fuente2.deriveFont(25F));
         lblIndicacion.setForeground(Color.WHITE); 
-        lblIndicacion.setBounds(35, 125, 450, 45);
-        fondo.add(lblIndicacion);
+        lblIndicacion.setBounds(20, 20, 365, 45);
+        panelContenedor.add(lblIndicacion);
 
         //---------------- CAMPO DE TEXTO ----------------
-        JPasswordField txtPasswordActual = new JPasswordField();
-        txtPasswordActual.setBounds(50, 195, 300, 45);
-        fondo.add(txtPasswordActual);
+        JTextField txtUsuario = new JTextField();
+        txtUsuario.setBounds(20, 95, 350, 40);
+        txtUsuario.setFont(fuente1.deriveFont(20f));
+        panelContenedor.add(txtUsuario);
         
         //---------------- BOTON ACEPTAR ----------------
-        JButton btnAceptar = new JButton("Aceptar");
-        btnAceptar.setFont(fuente1.deriveFont(25f));
-        btnAceptar.setBounds(125, 275, 150, 45);
-        fondo.add(btnAceptar);
+        JButton btnAceptar = new DecoracionBotones("ENVIAR CÓDIGO",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+        btnAceptar.setFont(fuente2.deriveFont(15f));
+        btnAceptar.setBounds(95, 230, 200, 45);
+        panelContenedor.add(btnAceptar);
+        btnAceptar.addActionListener(e -> {
+            // Programamos el boton que nos ayudara a:
+            String usuario = txtUsuario.getText().trim();
+            // Verificar si el usuario ha dejado vacio el campo
+            if(usuario.isEmpty()){
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Ingrese un nombre de usuario.");
+                return; // mostrara la frase "Ingrese un nombre de usuario."
+            }
+
+            codigoRecuperacion = generarCodigo(); // es igual al metodo creado
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Su código de recuperación es:\n\n" + codigoRecuperacion);
+           // Abre la nueva interfaz donde el usuario ingresara el codigo generado
+            new VerificarCodigo();
+                dispose();
+        });
 
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
         ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png")); 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(330, 90, 300, 300);
+        mascota.setBounds(420, 70, 300, 300);
         fondo.add(mascota);
-
     }
-}
+    // Metodo creado para generar codigo
+    private String generarCodigo() {
+        int numero = (int)(Math.random() * 900000) + 100000; // Creara codigos siempre de 6 digitos
+        return String.valueOf(numero);
+    }
+    
+    // Método para obtener el código generado
+    public static String getCodigoRecuperacion() {
+        return codigoRecuperacion;
+    }
+    
+    public static void main(String[] args) {
+        new RecuperarContrasena();
+    }
+
+} 
+

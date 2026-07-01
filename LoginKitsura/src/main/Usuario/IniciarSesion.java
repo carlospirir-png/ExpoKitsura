@@ -5,6 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import java.sql.*;
 import main.Menu.FondoPanel;
+import main.Menu.FondoPanelSemi;
+import main.Menu.DecoracionBotones;
 import main.conexion.Conexion;
 
 public class IniciarSesion extends JFrame {
@@ -16,7 +18,7 @@ public class IniciarSesion extends JFrame {
     private JTextField txtUsuario;
     private JPasswordField txtPassword;
 
-    private JButton btnLogIn, btnVolver;
+    private DecoracionBotones btnLogIn, btnVolver;
 
     private JLabel logo, mascota, titulo;
     private JLabel lblUsuario, lblPassword;
@@ -84,20 +86,25 @@ public class IniciarSesion extends JFrame {
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
-                        191, 264, Image.SCALE_SMOOTH);
+                        350, 350, Image.SCALE_SMOOTH);
 
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(1250, 550, 191, 264);
+        mascota.setBounds(1250, 560, 350, 350);
 
         fondo.add(mascota);
-
+        
+        FondoPanelSemi panelEslogan = new FondoPanelSemi(new Color(0, 0, 0, 140));
+        panelEslogan.setBounds(825, 210, 300, 35);
+        panelEslogan.setLayout(null);
+        fondo.add(panelEslogan);
+        
         //---------------- ESLOGAN ----------------
         titulo = new JLabel("No es magia, es mente");
         titulo.setFont(fuente1.deriveFont(30f));
-        titulo.setForeground(Color.BLUE);
-        titulo.setBounds(865, 190, 400, 60);
+        titulo.setForeground(Color.decode("#82D3E0"));
+        titulo.setBounds(35, -8, 280, 50);
 
-        fondo.add(titulo);
+        panelEslogan.add(titulo);
 
         //---------------- USUARIO ----------------
         lblUsuario = new JLabel("Nombre:");
@@ -128,7 +135,11 @@ public class IniciarSesion extends JFrame {
         fondo.add(txtPassword);
 
         //---------------- BOTON ----------------
-        btnLogIn = new JButton("INICIAR SESION");
+        btnLogIn = new DecoracionBotones("INICIAR SESIÓN",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        
         btnLogIn.setFont(fuente2.deriveFont(15f));
         btnLogIn.setBounds(820, 650, 285, 60);
 
@@ -150,10 +161,13 @@ public class IniciarSesion extends JFrame {
         fondo.add(btnLogIn);
 
         //---------------- BOTON VOLVER ----------------
-        btnVolver = new JButton("VOLVER");
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnVolver.setFont(fuente2.deriveFont(10f));
-        btnVolver.setBounds(40, 985, 120, 40);
-
+        btnVolver.setBounds(40, 975, 120, 40);
+        
         btnVolver.addActionListener(e -> {
 
             new RegistroUsuario();
@@ -239,5 +253,9 @@ public class IniciarSesion extends JFrame {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public static void main(String[] args) {
+        new IniciarSesion();
     }
 }

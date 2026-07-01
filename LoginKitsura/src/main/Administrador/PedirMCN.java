@@ -3,6 +3,8 @@ package main.Administrador;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Menu.DecoracionBotones;
+import main.Menu.FondoPanelSemi;
 
 public class PedirMCN extends JFrame{
     private FondoPanel fondo;
@@ -25,7 +27,7 @@ public class PedirMCN extends JFrame{
         fuente1 = new Font("Arial", Font.PLAIN,20);
         fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondoTresK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
         setContentPane(fondo);       
         setTitle("Pedir M, C, N");
         setSize(1980, 1080); 
@@ -37,23 +39,21 @@ public class PedirMCN extends JFrame{
         setVisible(true);
     }
     
-    private void crearComponentes() {      
-        JPanel recuadroFormulario = new JPanel();
-        recuadroFormulario.setBackground(new Color(255, 255, 255, 180)); 
-        recuadroFormulario.setOpaque(false);
+    private void crearComponentes() {
+        FondoPanelSemi recuadroFormulario = new FondoPanelSemi(new Color(0, 0, 0, 120));
+        recuadroFormulario.setBounds(900, 220, 900, 650);
         recuadroFormulario.setLayout(null);
-        recuadroFormulario.setBounds(900, 140, 900, 680);
         fondo.add(recuadroFormulario);
-
+        
         JLabel lblTituloCentral = new JLabel("Minijuegos, Categoría y Nivel", JLabel.LEFT);
         lblTituloCentral.setFont(fuente2.deriveFont(35f));
-        lblTituloCentral.setForeground(Color.WHITE);
-        lblTituloCentral.setBounds(80, 50, 750, 55);
+        lblTituloCentral.setForeground(Color.decode("#447A9C"));
+        lblTituloCentral.setBounds(80, 40, 540, 50);
         recuadroFormulario.add(lblTituloCentral);
-
+        
         // Minijuego
         JLabel lblMinijuego = new JLabel("Ingrese el minijuego a modificar:");
-        lblMinijuego.setFont(fuente2.deriveFont(25f));
+        lblMinijuego.setFont(fuente2.deriveFont(27f));
         lblMinijuego.setForeground(Color.WHITE);
         lblMinijuego.setBounds(80, 160, 700, 30);
         recuadroFormulario.add(lblMinijuego);
@@ -65,7 +65,7 @@ public class PedirMCN extends JFrame{
 
         // Categoría
         JLabel lblCategoria = new JLabel("Ingrese la categoría a modificar:");
-        lblCategoria.setFont(fuente2.deriveFont(25f));
+        lblCategoria.setFont(fuente2.deriveFont(27f));
         lblCategoria.setForeground(Color.WHITE);
         lblCategoria.setBounds(80, 290, 700, 30);
         recuadroFormulario.add(lblCategoria);
@@ -77,7 +77,7 @@ public class PedirMCN extends JFrame{
 
         // Nivel
         JLabel lblNivel = new JLabel("Ingrese el nivel a modificar:");
-        lblNivel.setFont(fuente2.deriveFont(25f));
+        lblNivel.setFont(fuente2.deriveFont(27f));
         lblNivel.setForeground(Color.WHITE);
         lblNivel.setBounds(80, 420, 700, 30);
         recuadroFormulario.add(lblNivel);
@@ -88,24 +88,36 @@ public class PedirMCN extends JFrame{
         recuadroFormulario.add(txtNivel);
 
         // BOTÓN CONTINUAR (
-        JButton btnContinuar = new JButton("Continuar");
-        btnContinuar.setFont(fuente1.deriveFont(25f));
+        JButton btnContinuar = new DecoracionBotones("CONTINUAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        btnContinuar.setFont(fuente2.deriveFont(25f));
         btnContinuar.setBounds(560, 560, 220, 55);
         recuadroFormulario.add(btnContinuar);
         
         // MASCOTA
             JLabel mascotaControl = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota3.png"));
+            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
             Image imgEscalada = iconMascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH);
             mascotaControl.setIcon(new ImageIcon(imgEscalada));
             mascotaControl.setBounds(200, 180, 650, 650);
             fondo.add(mascotaControl);
 
         // BOTÓN REGRESAR
-        JButton btnRegresar = new JButton("Regresar");
-        btnRegresar.setFont(fuente1.deriveFont(25f));
+        JButton btnRegresar = new DecoracionBotones("Regresar",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+        btnRegresar.setFont(fuente2.deriveFont(25f));
         btnRegresar.setBounds(380, 800, 220, 55);
         btnRegresar.addActionListener(e -> dispose()); 
         fondo.add(btnRegresar);
     }
+    
+    public static void main(String[] args) {
+        new PedirMCN();
+    }
+    
 }

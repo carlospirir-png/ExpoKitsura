@@ -3,22 +3,39 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
+import main.Menu.DecoracionBotones;
 
 public class PantallaImagenPerfil extends JFrame {
     private FondoPanelSemi fondo;
     private JLabel lblTitulo,lblLogo,lblMascota;
-    private JButton btnVolver;
-
+    private DecoracionBotones btnVolver;
+    
+    private Font fuente1, fuente2;
     private JPanel panelImagenes;
     private JScrollPane scrollImagenes;
 
     public PantallaImagenPerfil() {
+        try {
+            // LettersForLearners
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
 
+            e.printStackTrace();
+
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Imagen de Perfil");
-        setSize(600, 400);
+        setSize(650, 450);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -32,16 +49,16 @@ public class PantallaImagenPerfil extends JFrame {
     private void crearComponentes() {
 
         lblTitulo = new JLabel("Imagen de Perfil", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 30));
-        lblTitulo.setBounds(170,20,250,30);
+        lblTitulo.setFont(fuente2.deriveFont(28f));
+        lblTitulo.setBounds(175,20,300,30);
         lblTitulo.setForeground(new Color(196,221,227));
         fondo.add(lblTitulo);
 
         lblMascota = new JLabel();
         ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VENTANITA.png"));
-        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(130,130,Image.SCALE_SMOOTH);
+        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(140,140,Image.SCALE_SMOOTH);
         lblMascota.setIcon(new ImageIcon(mascotaEscalada));
-        lblMascota.setBounds(450,0,130,130);
+        lblMascota.setBounds(460,15,140,140);
         fondo.add(lblMascota);
 
         panelImagenes = new JPanel();
@@ -59,20 +76,17 @@ public class PantallaImagenPerfil extends JFrame {
         agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",370,110);
 
         scrollImagenes = new JScrollPane(panelImagenes);
-        scrollImagenes.setBounds(40,70,500,220);
+        scrollImagenes.setBounds(75,95,500,220);
         fondo.add(scrollImagenes);
 
-        btnVolver = new JButton("Volver");
-        btnVolver.setFont(new Font("Arial", Font.BOLD, 20));
-        btnVolver.setBounds(230,310,140,40);
-        fondo.add(btnVolver);
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        lblLogo = new JLabel();
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/logoKitsura2.png"));
-        Image logoEscalado = logoIcon.getImage().getScaledInstance(100,40,Image.SCALE_SMOOTH);
-        lblLogo.setIcon(new ImageIcon(logoEscalado));
-        lblLogo.setBounds(450,310,100,40);
-        fondo.add(lblLogo);
+        btnVolver.setFont(fuente2.deriveFont(15f));
+        btnVolver.setBounds(250,350,140,40);
+        fondo.add(btnVolver);
     }
 
     private void agregarImagen(String ruta, int x, int y) {
@@ -87,6 +101,9 @@ public class PantallaImagenPerfil extends JFrame {
 
         panelImagenes.add(imagen);
     }
-
+    
+    public static void main(String[] args) {
+        new PantallaImagenPerfil();
+    }
 
 }

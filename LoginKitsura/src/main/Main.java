@@ -15,8 +15,8 @@ public class Main {
             if (conectar.getConnection() == null) {
                 throw new Exception("No se pudo establecer la conexión con la base de datos.");
             }
-            HiddenFox_Codigo hiddenfox = new HiddenFox_Codigo();
-            hiddenfox.setVisible(true);
+            PantallaInicio p = new PantallaInicio();
+            p.setVisible(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(
                     null,
