@@ -908,7 +908,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             // MOSTRAR PANTALLA INTERMEDIA QUE ANUNCIA EL CAMBIO DE DIFICULTAD
             PantallaDificultad pd = new PantallaDificultad(
-                    this, idNivelActual, vidas, puntajeTotal, false);
+                    this, idNivelActual);
             fadeTo(() -> setContentPane(pd.getFondo()), 400);
 
         } else {

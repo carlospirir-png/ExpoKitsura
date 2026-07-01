@@ -24,7 +24,7 @@ public class PantallaDificultad extends JFrame {
 
     private Timer timerContinuar;
 
-    public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int puntajeTotal, boolean par) {
+    public PantallaDificultad(JFrame ventanaAnterior, int nivel) {
 
         try {
 
@@ -112,41 +112,6 @@ public class PantallaDificultad extends JFrame {
 
         fondo.add(panelTexto);
 
-        // FLECHA
-        lblFlecha = new JLabel();
-
-        ImageIcon flechaicon = new ImageIcon(
-                getClass().getResource(
-                        "/Multimedia/utiles/ElementosGraficos/imagenes/FlechaAvanzar.png"));
-
-        Image flechaEscalada = flechaicon.getImage().getScaledInstance(
-                300, 200, Image.SCALE_SMOOTH);
-
-        lblFlecha.setIcon(new ImageIcon(flechaEscalada));
-        lblFlecha.setBounds(320, 440, 300, 200);
-        lblFlecha.setVisible(false);
-        lblFlecha.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        lblFlecha.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //cancelar el timer antes de continuar para evitar doble ejecución
-                if (timerContinuar != null) {
-                    timerContinuar.stop();
-                }
-
-                if (ventanaAnterior instanceof FoxJump foxJump) {
-                    foxJump.continuarDespuesDeDificultad();
-                } else if (ventanaAnterior instanceof HiddenFox_Codigo hiddenFox) {
-                    hiddenFox.continuarDespuesDeDificultad(nivel);
-                } else if (ventanaAnterior instanceof MaulwurfRennt maulwurf) {
-                    maulwurf.continuarDespuesDeDificultad();
-                }
-            }
-        });
-
-        panelTexto.add(lblFlecha);
 
         // ALERTA
         lblAlerta = new JLabel();
@@ -235,22 +200,21 @@ public class PantallaDificultad extends JFrame {
     private void mostrarNuevaDificultad() {
 
         lblAlerta.setVisible(false);
-        lblFlecha.setVisible(true);
 
         lblTitulo.setText("DIFICULTAD AUMENTADA");
-        lblTitulo.setFont(fuente1.deriveFont(65f));
-        lblTitulo.setBounds(5, 130, 900, 75);
+        lblTitulo.setFont(fuente1.deriveFont(75f));
+        lblTitulo.setBounds(5, 230, 900, 75);
 
         lblMensaje.setText("El nivel ha aumentado");
-        lblMensaje.setFont(fuente1.deriveFont(55f));
+        lblMensaje.setFont(fuente1.deriveFont(65f));
         lblMensaje.setForeground(Color.WHITE);
-        lblMensaje.setBounds(150, 250, 600, 60);
+        lblMensaje.setBounds(150, 350, 600, 60);
         lblMensaje.revalidate();
         lblMensaje.repaint();
 
         lblEmpieza.setText("¡Continúa jugando!");
-        lblEmpieza.setFont(fuente1.deriveFont(35f));
-        lblEmpieza.setBounds(205, 350, 500, 60);
+        lblEmpieza.setFont(fuente1.deriveFont(45f));
+        lblEmpieza.setBounds(205, 450, 500, 60);
 
         lblContador.setText("");
 
