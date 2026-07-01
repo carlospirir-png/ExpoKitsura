@@ -4,17 +4,17 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
 
 public class RegistroInvitado extends JFrame {
-
     private FondoPanel fondo;
     private Font fuente1, fuente2;
     private String nombreInvitado;
 
     private JTextField txtNombre;
     private DecoracionBotones btnJugar, btnVolver;
-    private JLabel logo, lblNombre, mascota;
+    private JLabel logo, lblNombre, mascota, titulo;
 
     public RegistroInvitado() {
 
@@ -30,9 +30,7 @@ public class RegistroInvitado extends JFrame {
                     getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
@@ -48,18 +46,16 @@ public class RegistroInvitado extends JFrame {
         fondo.setLayout(null);
 
         crearComponentes();
-
         setVisible(true);
+
     }
 
     private void crearComponentes() {
 
         //---------------- LOGO ----------------
         logo = new JLabel();
-
         ImageIcon logoIcon = new ImageIcon(
                 getClass().getResource("/Multimedia/utiles/logotipo/logofK.png"));
-
         Image logoEscalado = logoIcon.getImage().getScaledInstance(
                 150, 150, Image.SCALE_SMOOTH);
 
@@ -68,6 +64,19 @@ public class RegistroInvitado extends JFrame {
 
         fondo.add(logo);
 
+        FondoPanelSemi panelEslogan = new FondoPanelSemi(new Color(0, 0, 0, 140));
+        panelEslogan.setBounds(815, 210, 320, 35);
+        panelEslogan.setLayout(null);
+        fondo.add(panelEslogan);
+        
+        //---------------- ESLOGAN ----------------
+        titulo = new JLabel("No es magia, es mente");
+        titulo.setFont(fuente1.deriveFont(34f));
+        titulo.setForeground(Color.decode("#EBBF66"));
+        titulo.setBounds(30, -8, 280, 50);
+
+        panelEslogan.add(titulo);
+        
         //---------------- LABEL NOMBRE ----------------
         lblNombre = new JLabel("Nombre");
         lblNombre.setFont(fuente2.deriveFont(25f));
@@ -92,11 +101,11 @@ public class RegistroInvitado extends JFrame {
         btnJugar.setBounds(820, 600, 285, 60);
 
         btnJugar.addActionListener(e -> {
-
             if (registrarInvitado(txtNombre.getText())) {
                 new MenuPrincipal();
                 dispose();
             }
+
         });
 
         fondo.add(btnJugar);
@@ -114,45 +123,39 @@ public class RegistroInvitado extends JFrame {
 
             new RegistroUsuario();
             dispose();
-
         });
 
         fondo.add(btnVolver);
 
         //---------------- MASCOTA ----------------
         mascota = new JLabel();
-
         ImageIcon mascotaIcon = new ImageIcon(
                 getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
-
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(
-                191, 264, Image.SCALE_SMOOTH);
-
+                400, 400, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(1250, 550, 191, 264);
-
+        mascota.setBounds(1210, 510, 400, 400);
         fondo.add(mascota);
+
     }
 
     // Método para registrar al invitado sin base de datos
     private boolean registrarInvitado(String nombre) {
 
     try {
-
         nombre = nombre.trim();
 
         if (nombre.isEmpty()) {
             throw new IllegalArgumentException(
                     "Debe ingresar un nombre.");
+
         }
 
         if (nombre.length() > 20) {
             throw new IllegalArgumentException(
                     "El nombre no puede superar los 20 caracteres.");
         }
-
         nombreInvitado = nombre;
-
         JOptionPane.showMessageDialog(
                 this,
                 "¡Bienvenido " + nombreInvitado + "!",
@@ -173,12 +176,12 @@ public class RegistroInvitado extends JFrame {
     }
 }
 
-    // Getter por si necesitas usar el nombre en otra ventana
     public String getNombreInvitado() {
         return nombreInvitado;
     }
-    
+
     public static void main(String[] args) {
         new RegistroInvitado();
     }
+
 }

@@ -15,6 +15,7 @@ public class EditarStages extends JFrame {
     private JTextField txtID;
     private JLabel lblMascota;
     private DecoracionBotones btnConfirmar;
+    private DecoracionBotones btnSalir;
 
     public EditarStages() {
         try {
@@ -115,18 +116,29 @@ public class EditarStages extends JFrame {
         
         btnConfirmar = new DecoracionBotones("CONFIRMAR",
                                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO_APAGADO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO   
 
         btnConfirmar.setFont(fuente2.deriveFont(24f));
-        btnConfirmar.setForeground(Color.WHITE);
         btnConfirmar.setBounds(400, 510, 230, 50); 
         
         // Acción del botón
         btnConfirmar.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "¡Cambio guardado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        
         });
 
+        btnSalir = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+        btnSalir.setFont(fuente2.deriveFont(20F));
+        btnSalir.setBounds(1680, 950, 210, 45);
+        btnSalir.addActionListener(e -> dispose());
+        fondo.add(btnSalir);
+        
+        
         panelSemi.add(btnConfirmar);
     }
    public static void main(String[] args) {

@@ -41,13 +41,13 @@ public class PedirMCN extends JFrame{
     
     private void crearComponentes() {
         FondoPanelSemi recuadroFormulario = new FondoPanelSemi(new Color(0, 0, 0, 120));
-        recuadroFormulario.setBounds(900, 220, 900, 650);
+        recuadroFormulario.setBounds(900, 160, 900, 650);
         recuadroFormulario.setLayout(null);
         fondo.add(recuadroFormulario);
         
         JLabel lblTituloCentral = new JLabel("Minijuegos, Categoría y Nivel", JLabel.LEFT);
         lblTituloCentral.setFont(fuente2.deriveFont(35f));
-        lblTituloCentral.setForeground(Color.decode("#447A9C"));
+        lblTituloCentral.setForeground(Color.decode("#82D3E0"));
         lblTituloCentral.setBounds(80, 40, 540, 50);
         recuadroFormulario.add(lblTituloCentral);
         
@@ -92,7 +92,7 @@ public class PedirMCN extends JFrame{
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnContinuar.setFont(fuente2.deriveFont(25f));
+        btnContinuar.setFont(fuente2.deriveFont(20f));
         btnContinuar.setBounds(560, 560, 220, 55);
         recuadroFormulario.add(btnContinuar);
         
@@ -105,12 +105,12 @@ public class PedirMCN extends JFrame{
             fondo.add(mascotaControl);
 
         // BOTÓN REGRESAR
-        JButton btnRegresar = new DecoracionBotones("Regresar",
+        JButton btnRegresar = new DecoracionBotones("REGRESAR",
                                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnRegresar.setFont(fuente2.deriveFont(25f));
+        btnRegresar.setFont(fuente2.deriveFont(20f));
         btnRegresar.setBounds(380, 800, 220, 55);
         btnRegresar.addActionListener(e -> dispose()); 
         fondo.add(btnRegresar);

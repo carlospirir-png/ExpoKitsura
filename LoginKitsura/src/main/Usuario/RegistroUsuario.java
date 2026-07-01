@@ -82,10 +82,10 @@ public class RegistroUsuario extends JFrame {
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
-                        191, 264, Image.SCALE_SMOOTH);
+                        400, 400, Image.SCALE_SMOOTH);
 
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(1250, 550, 191, 264);
+        mascota.setBounds(1210, 520, 400, 400);
 
         fondo.add(mascota);
 
@@ -93,13 +93,13 @@ public class RegistroUsuario extends JFrame {
         lblNombre = new JLabel("Nombre");
         lblNombre.setFont(fuente2.deriveFont(25f));
         lblNombre.setForeground(Color.WHITE);
-        lblNombre.setBounds(760, 380, 200, 30);
+        lblNombre.setBounds(760, 365, 200, 30);
 
         fondo.add(lblNombre);
 
         txtNombre = new JTextField();
         txtNombre.setFont(fuente1.deriveFont(22f));
-        txtNombre.setBounds(760, 415, 400, 50);
+        txtNombre.setBounds(760, 410, 400, 50);
 
         fondo.add(txtNombre);
 
@@ -107,13 +107,13 @@ public class RegistroUsuario extends JFrame {
         lblCorreo = new JLabel("Correo");
         lblCorreo.setFont(fuente2.deriveFont(25f));
         lblCorreo.setForeground(Color.WHITE);
-        lblCorreo.setBounds(760, 480, 200, 30);
+        lblCorreo.setBounds(760, 465, 200, 30);
 
         fondo.add(lblCorreo);
 
         txtCorreo = new JTextField();
         txtCorreo.setFont(fuente1.deriveFont(22f));
-        txtCorreo.setBounds(760, 515, 400, 50);
+        txtCorreo.setBounds(760, 500, 400, 50);
 
         fondo.add(txtCorreo);
 
@@ -121,13 +121,13 @@ public class RegistroUsuario extends JFrame {
         lblPassword = new JLabel("Password");
         lblPassword.setFont(fuente2.deriveFont(25f));
         lblPassword.setForeground(Color.WHITE);
-        lblPassword.setBounds(760, 580, 200, 30);
+        lblPassword.setBounds(760, 565, 200, 30);
 
         fondo.add(lblPassword);
 
         txtPassword = new JPasswordField();
         txtPassword.setFont(fuente1.deriveFont(22f));
-        txtPassword.setBounds(760, 615, 400, 50);
+        txtPassword.setBounds(760, 600, 400, 50);
 
         fondo.add(txtPassword);
 
@@ -137,7 +137,7 @@ public class RegistroUsuario extends JFrame {
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnJugar.setFont(fuente2.deriveFont(15f));
-        btnJugar.setBounds(820, 815, 285, 60);
+        btnJugar.setBounds(820, 725, 285, 60);
 
         btnJugar.addActionListener(e -> {
             if (registrarUsuario()) {
@@ -164,14 +164,28 @@ public class RegistroUsuario extends JFrame {
 
         fondo.add(btnSalir);
 
+        //---------------- PANEL SEMITRANSPARENTE INVITADO ----------------
+        JPanel pnlInvitado = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(0, 0, 0, 100)); // Negro con 100 de opacidad (semi-transparente)
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bordes redondeados estilizados
+            }
+        };
+        pnlInvitado.setOpaque(false);
+        pnlInvitado.setLayout(null);
+        pnlInvitado.setBounds(1680, 30, 140, 50); // Un poco más grande que el texto para el margen
+
         //---------------- LABEL INVITADO ----------------
-        lblInvitado = new JLabel("<html><u>Invitado</u></html>");
+        lblInvitado = new JLabel("<html><u>Invitado</u></html>", SwingConstants.CENTER);
         lblInvitado.setFont(fuente2.deriveFont(20f));
         lblInvitado.setForeground(Color.WHITE);
         lblInvitado.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblInvitado.setBounds(1700, 40, 120, 30);
+        lblInvitado.setBounds(0, 0, 140, 50); // Se acopla completamente al tamaño del panel contenedor
 
-        // MODIFICACIÓN: Eventos del mouse cambiados para aplicar el color solicitado #447A9C al pasar por encima
         lblInvitado.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -181,7 +195,7 @@ public class RegistroUsuario extends JFrame {
 
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                lblInvitado.setForeground(Color.decode("#447A9C"));
+                lblInvitado.setForeground(Color.decode("#EE9797"));
             }
 
             @Override
@@ -189,18 +203,33 @@ public class RegistroUsuario extends JFrame {
                 lblInvitado.setForeground(Color.WHITE);
             }
         });
-        fondo.add(lblInvitado);
+        
+        pnlInvitado.add(lblInvitado);
+        fondo.add(pnlInvitado);
+
+
+        //---------------- PANEL SEMITRANSPARENTE INICIAR SESION ----------------
+        JPanel pnlIniciarSesion = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(0, 0, 0, 100)); // Negro con 100 de opacidad
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            }
+        };
+        pnlIniciarSesion.setOpaque(false);
+        pnlIniciarSesion.setLayout(null);
+        pnlIniciarSesion.setBounds(20, 945, 180, 50); // Ajustado para hacer juego con la altura del botón salir
 
         //---------------- LABEL INICIAR SESION ----------------
-        JLabel lblIniciarSesion = new JLabel("<html><u>Iniciar Sesión</u></html>");
+        JLabel lblIniciarSesion = new JLabel("<html><u>Iniciar Sesión</u></html>", SwingConstants.CENTER);
         lblIniciarSesion.setFont(fuente2.deriveFont(18f));
         lblIniciarSesion.setForeground(Color.WHITE);
         lblIniciarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblIniciarSesion.setBounds(0, 0, 180, 50); // Se acopla completamente al tamaño del panel contenedor
 
-        // MODIFICACIÓN: Alineado en el eje Y (de 985 a 955) para emparejarse perfectamente con el botón SALIR (950)
-        lblIniciarSesion.setBounds(40, 955, 200, 30);
-
-        // MODIFICACIÓN: Eventos del mouse cambiados para aplicar el color solicitado #447A9C al pasar por encima
         lblIniciarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -210,7 +239,7 @@ public class RegistroUsuario extends JFrame {
 
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                lblIniciarSesion.setForeground(Color.decode("#447A9C"));
+                lblIniciarSesion.setForeground(Color.decode("#EE9797"));
             }
 
             @Override
@@ -219,7 +248,8 @@ public class RegistroUsuario extends JFrame {
             }
         });
 
-        fondo.add(lblIniciarSesion);
+        pnlIniciarSesion.add(lblIniciarSesion);
+        fondo.add(pnlIniciarSesion);
     }
 
     private boolean registrarUsuario() {
