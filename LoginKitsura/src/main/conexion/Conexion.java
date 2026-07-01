@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class Conexion {
     private static String User = "root";
-    private static String Password = "admin";
+    private static String Password = "123456789";
  private static String Url =
     "jdbc:mysql://localhost:3306/KITSURA_DB"
     + "?useSSL=false"
