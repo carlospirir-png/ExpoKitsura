@@ -83,9 +83,7 @@ public class MenuMinijuegosC extends JFrame {
         
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
-        btnComoJugar.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Instrucciones del minijuego...");
-        });
+        ComoJugar();
         fondo.add(btnComoJugar);
 
         //---------------- MASCOTA ----------------
@@ -152,6 +150,12 @@ public class MenuMinijuegosC extends JFrame {
             dispose();
         });
         fondo.add(btnVolver);
+    }
+    
+    public void ComoJugar(){
+        btnComoJugar.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Instrucciones del minijuego...");
+        });
     }
 
     public static void main(String[] args) {
