@@ -21,7 +21,14 @@ public class MenuHiddenFox extends MenuMinijuegosC {
         });
         
         setTitle("Hidden Fox");
-        
+        ComoJugar();
+    }
+    
+    @Override
+    public void ComoJugar(){
+        btnComoJugar.addActionListener(e -> {
+            new TutorialHiddenFox();
+        });
     }
 
     public static void main(String[] args) {

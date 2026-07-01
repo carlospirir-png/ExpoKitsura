@@ -123,6 +123,9 @@ public class TutorialHiddenFox extends PantallaTutorial {
 
         // Modifcar el tamaño del Scroll
         panelContenido.setPreferredSize(new Dimension(540, 1200));
+        
+        //------------------------ AL CERRAR -------------------
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     public static void main(String[] args) {

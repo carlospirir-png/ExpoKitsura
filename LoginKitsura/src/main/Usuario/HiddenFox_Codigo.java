@@ -35,8 +35,8 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int puntos = 0;
     // Indica si el jugador a utilizado alguna pista durante la partida
     private boolean usoPista = false;
-    //Puntaje máximo posible de la categoria -> 5 preguntas por nivel, 3 niveles, 100 puntos por pregunta = 1500 pts
-    private final int puntajeMaximo = 1500;
+    //Puntaje máximo posible de la categoria -> 5 preguntas por nivel, 3 niveles, 95 por pregunta mínimo (95*15)
+    private final int puntajeMaximo = 1425;
     private int puntajeTotal;
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
@@ -45,6 +45,13 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int tiempoTotalJugado = 0;
     private int tiempoMaximoPregunta;
     private PantallaDificultad pantallaDificultad;
+    
+    //Esta variable defina la cantidad de respuestas correctas que se necesitan para pasar a la siguiente dificultad.
+    private static final int CORRECTAS = 5;
+    
+    //Esta variable almacena las respuestas correctas totales que lleva el jugador.
+    private int respuestas_Correctas = 0;
+    
 
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
@@ -83,7 +90,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             MostrarPregunta();
 
         } else {
-            if (nivelActual < nivelFinal) {
+            //Si el nivel actual es menor al nivel en el que acaba la categoría
+            //Y si las respuestas correctas tiene la cantidad de respuestas Correctas que se solicita
+            if (nivelActual < nivelFinal && respuestas_Correctas == CORRECTAS) {
 
                 pantallaDificultad = new PantallaDificultad(this,
                         nivelActual + 1);
@@ -147,7 +156,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         cambiarImagen(dao.obtenerRutaImagen(id_pregunta, false));
 
-        modificarAcierto("Problema: " + (preguntaActual + 1) + "/5");
+        modificarAcierto("Problema: " + (preguntaActual + 1) + "/"+CORRECTAS);
 
         iniciarTiempo(dao.obtenerTiempoLimite(id_pregunta));
     }
@@ -256,8 +265,11 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                     this,
                     "¡Correcto!\nGanaste "
                     + puntosGanados
-                    + " puntos."
+                    + " puntos.\n"
+                    +respuestas_Correctas+"/"+CORRECTAS
             );
+            
+            respuestas_Correctas++;
 
             // Revela la imagen
             cambiarImagen(
@@ -276,6 +288,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             } else {
                 puntos = 0;
             }
+            
+            JOptionPane.showMessageDialog(
+                    this,
+                    "¡Incorrecto!\n"
+                    +"Mejor suerte la próxima vez."
+            );
 
             actualizarPuntos(puntos);
             modificarCorazones(vidas);
