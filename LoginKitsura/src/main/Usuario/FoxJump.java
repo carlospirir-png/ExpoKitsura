@@ -67,7 +67,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     // CANTIDAD DE RESPUESTAS CORRECTAS NECESARIAS PARA SUBIR DE DIFICULTAD
-    private static final int CORRECTAS_SUBIR = 5;
+    private static final int CORRECTAS_SUBIR = 2;
 
     // DIFICULTAD EN LA QUE EMPIEZA Y VA CAMBIANDO LA PARTIDA
     private Dificultad dificultadActual = Dificultad.FACIL;
@@ -908,7 +908,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             // MOSTRAR PANTALLA INTERMEDIA QUE ANUNCIA EL CAMBIO DE DIFICULTAD
             PantallaDificultad pd = new PantallaDificultad(
-                    this, idNivelActual, vidas, puntajeTotal, false);
+                    this, idNivelActual);
             fadeTo(() -> setContentPane(pd.getFondo()), 400);
 
         } else {

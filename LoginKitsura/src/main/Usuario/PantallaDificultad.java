@@ -24,7 +24,7 @@ public class PantallaDificultad extends JFrame {
 
     private Timer timerContinuar;
 
-    public PantallaDificultad(JFrame ventanaAnterior, int nivel, int vidas, int puntajeTotal, boolean par) {
+    public PantallaDificultad(JFrame ventanaAnterior, int nivel) {
 
         try {
 
