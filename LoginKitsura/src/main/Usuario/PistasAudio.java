@@ -48,56 +48,29 @@ public PistasAudio(String rutaAudio) {
     }
 
     private void crearComponentes() {
-        //---------------- BARRA SUPERIOR ----------------
-        JPanel barra = new JPanel();
-        barra.setLayout(null);
-        barra.setBackground(Color.WHITE);
-        barra.setBounds(0, 0, 600, 40);
-        fondo.add(barra);
-
-        JButton btnCerrar = new JButton("X");
-        btnCerrar.setFont(fuente1.deriveFont(15f));
-        btnCerrar.setBounds(520, 5, 60, 30);
-        btnCerrar.setFocusable(false);
-        btnCerrar.setBorderPainted(false);
-        btnCerrar.setBackground(new Color(245, 245, 245));
-        btnCerrar.setForeground(new Color(180, 50, 50));
-        btnCerrar.addActionListener(e -> {
-            detenerAudio();
-            dispose();
-        });
-        barra.add(btnCerrar);
-
-        JSeparator linea = new JSeparator();
-        linea.setBounds(0, 39, 600, 1);
-        barra.add(linea);
-
+        
         //---------------- RECUADRO AUDIO ----------------
         JPanel recuadroAudio = new JPanel();
         recuadroAudio.setLayout(null);
         recuadroAudio.setBackground(Color.WHITE);
-        recuadroAudio.setBounds(40, 100, 340, 120);
+        recuadroAudio.setBounds(40, 100, 340, 100);
         fondo.add(recuadroAudio);
 
         JLabel lblTiempoInicio = new JLabel("1:46");
         lblTiempoInicio.setFont(fuente2.deriveFont(16f));
-        lblTiempoInicio.setBounds(20, 35, 40, 25);
+        lblTiempoInicio.setBounds(20, 40, 40, 25);
         recuadroAudio.add(lblTiempoInicio);
 
         JPanel barraProgreso = new JPanel();
         barraProgreso.setBackground(Color.LIGHT_GRAY);
-        barraProgreso.setBounds(65, 43, 200, 10);
+        barraProgreso.setBounds(65, 48, 200, 10);
         recuadroAudio.add(barraProgreso);
 
         JLabel lblTiempoFin = new JLabel("3:32");
         lblTiempoFin.setFont(fuente2.deriveFont(16f));
-        lblTiempoFin.setBounds(275, 35, 40, 25);
+        lblTiempoFin.setBounds(275, 40, 40, 25);
         recuadroAudio.add(lblTiempoFin);
 
-        JLabel lblIdAudio = new JLabel("M1-D1-N1", JLabel.CENTER);
-        lblIdAudio.setFont(fuente2.deriveFont(22f));
-        lblIdAudio.setBounds(20, 75, 300, 30);
-        recuadroAudio.add(lblIdAudio);
 
         //---------------- BOTON SALIR ----------------
         JButton btnSalir = new DecoracionBotones("SALIR",
@@ -183,4 +156,5 @@ public PistasAudio(String rutaAudio) {
             e.printStackTrace();
         }
     }
+
 }

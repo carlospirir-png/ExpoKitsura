@@ -8,6 +8,7 @@ import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
 
 public class RegistroInvitado extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1, fuente2;
     private String nombreInvitado;
@@ -68,7 +69,7 @@ public class RegistroInvitado extends JFrame {
         panelEslogan.setBounds(815, 210, 320, 35);
         panelEslogan.setLayout(null);
         fondo.add(panelEslogan);
-        
+
         //---------------- ESLOGAN ----------------
         titulo = new JLabel("No es magia, es mente");
         titulo.setFont(fuente1.deriveFont(34f));
@@ -76,7 +77,7 @@ public class RegistroInvitado extends JFrame {
         titulo.setBounds(30, -8, 280, 50);
 
         panelEslogan.add(titulo);
-        
+
         //---------------- LABEL NOMBRE ----------------
         lblNombre = new JLabel("Nombre");
         lblNombre.setFont(fuente2.deriveFont(25f));
@@ -102,6 +103,7 @@ public class RegistroInvitado extends JFrame {
 
         btnJugar.addActionListener(e -> {
             if (registrarInvitado(txtNombre.getText())) {
+                Sesion.iniciarSesionInvitado(nombreInvitado);
                 new MenuPrincipal();
                 dispose();
             }
@@ -111,8 +113,8 @@ public class RegistroInvitado extends JFrame {
         fondo.add(btnJugar);
 
         //---------------- BOTON VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones ("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
+        JButton btnVolver = new DecoracionBotones("VOLVER",
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
@@ -142,39 +144,39 @@ public class RegistroInvitado extends JFrame {
     // Método para registrar al invitado sin base de datos
     private boolean registrarInvitado(String nombre) {
 
-    try {
-        nombre = nombre.trim();
+        try {
+            nombre = nombre.trim();
 
-        if (nombre.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Debe ingresar un nombre.");
+            if (nombre.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "Debe ingresar un nombre.");
 
+            }
+
+            if (nombre.length() > 20) {
+                throw new IllegalArgumentException(
+                        "El nombre no puede superar los 20 caracteres.");
+            }
+            nombreInvitado = nombre;
+            JOptionPane.showMessageDialog(
+                    this,
+                    "¡Bienvenido " + nombreInvitado + "!",
+                    "Registro exitoso",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            return true;
+
+        } catch (IllegalArgumentException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return false;
         }
-
-        if (nombre.length() > 20) {
-            throw new IllegalArgumentException(
-                    "El nombre no puede superar los 20 caracteres.");
-        }
-        nombreInvitado = nombre;
-        JOptionPane.showMessageDialog(
-                this,
-                "¡Bienvenido " + nombreInvitado + "!",
-                "Registro exitoso",
-                JOptionPane.INFORMATION_MESSAGE);
-
-        return true;
-
-    } catch (IllegalArgumentException e) {
-
-        JOptionPane.showMessageDialog(
-                this,
-                e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-
-        return false;
     }
-}
 
     public String getNombreInvitado() {
         return nombreInvitado;

@@ -13,7 +13,7 @@ public class Victoria extends JFrame {
     private Font fuente1;
     private Font fuente2;
     private JuegoBase juego;
-    private DecoracionBotones btnVolver;
+    private DecoracionBotones btnVolver, btnResultados;
 
     public Victoria(ActionListener accion, JuegoBase juego) {
         this.juego = juego;
@@ -69,7 +69,7 @@ public class Victoria extends JFrame {
 
         //---------------- FRASE DE MOTIVACIÓN ----------------
         JLabel lblFrase = new JLabel("Tu potencial es infinito, atrévete a explorarlo.", JLabel.CENTER);
-        lblFrase.setFont(fuente1.deriveFont(30f));
+        lblFrase.setFont(fuente1.deriveFont(40f));
         lblFrase.setForeground(Color.WHITE);
         lblFrase.setBounds(0, 105, 700, 35);
         panelIzquierdo.add(lblFrase);
@@ -80,7 +80,7 @@ public class Victoria extends JFrame {
         panelDerecho.setBounds(950, 80, 880, 800);
         fondo.add(panelDerecho);
 
-        //---------------- FOTO PERFIL / LOGO (AHORA REDONDA) ----------------
+        //---------------- FOTO PERFIL ----------------
         JLabel fotoPerfil = new JLabel();
         ImageIcon paisajeIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ImagenesPerfil/Seccion1/PE_S1_N9.png"));
 
@@ -94,7 +94,7 @@ public class Victoria extends JFrame {
         //---------------- DATOS DE USUARIO ----------------
         JLabel lblUsuario = new JLabel("Nombre de usuario");
         lblUsuario.setFont(fuente2.deriveFont(25f));
-        lblUsuario.setForeground(Color.WHITE);
+        lblUsuario.setForeground(Color.decode("#FC767D"));
         lblUsuario.setBounds(260, 115, 550, 40);
         panelDerecho.add(lblUsuario);
 
@@ -132,15 +132,18 @@ public class Victoria extends JFrame {
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnVolver.setFont(fuente1.deriveFont(25f));
+        btnVolver.setFont(fuente2.deriveFont(15f));
         btnVolver.setBounds(1320, 710, 200, 50);
         btnVolver.addActionListener(e -> dispose());
         fondo.add(btnVolver);
 
         //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
-        JButton btnResultados = new JButton("Ver resultados");
-        btnResultados.setFont(fuente1.deriveFont(25f));
-        btnResultados.setBounds(1320, 660, 200, 50);
+        btnResultados = new DecoracionBotones("VER RESULTADOS",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        btnResultados.setFont(fuente2.deriveFont(15f));
+        btnResultados.setBounds(1410, 910, 200, 50);
         btnResultados.addActionListener(e -> {
             juego.mostrarResultadoConFade();
         });

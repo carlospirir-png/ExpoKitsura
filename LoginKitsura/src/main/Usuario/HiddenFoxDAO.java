@@ -2,6 +2,7 @@ package main.Usuario;
 
 import java.sql.*;
 import main.conexion.*;
+import java.util.*;
 
 public class HiddenFoxDAO {
 
@@ -211,10 +212,10 @@ public class HiddenFoxDAO {
     }
 
     //------------ GENERAR PARTIDA ------------
-    public int[] generarPartida(int id_nivel) {
-        int[] preguntas = new int[5];
+    public ArrayList<Integer> generarPartida(int id_nivel) {
+        ArrayList<Integer> preguntas = new ArrayList<>();
 
-        String sql = "SELECT id_pregunta FROM Pregunta WHERE id_nivel = ? ORDER BY RAND() LIMIT 5";
+        String sql = "SELECT id_pregunta FROM Pregunta WHERE id_nivel = ? ORDER BY RAND() ";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -224,7 +225,7 @@ public class HiddenFoxDAO {
 
             int i = 0;
             while (rs.next()) {
-                preguntas[i] = rs.getInt("id_pregunta");
+                preguntas.add(rs.getInt("id_pregunta"));
                 i++;
             }
 

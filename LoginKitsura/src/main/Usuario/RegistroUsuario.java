@@ -17,7 +17,7 @@ public class RegistroUsuario extends JFrame {
 
     private DecoracionBotones btnJugar, btnSalir;
 
-    private JLabel logo, mascota;
+    private JLabel logo, mascota, titulo;
     private JLabel lblNombre, lblCorreo, lblPassword, lblInvitado;
 
     public RegistroUsuario() {
@@ -88,7 +88,20 @@ public class RegistroUsuario extends JFrame {
         mascota.setBounds(1210, 520, 400, 400);
 
         fondo.add(mascota);
+        
+        FondoPanelSemi panelEslogan = new FondoPanelSemi(new Color(0, 0, 0, 140));
+        panelEslogan.setBounds(815, 210, 320, 35);
+        panelEslogan.setLayout(null);
+        fondo.add(panelEslogan);
+        
+        //---------------- ESLOGAN ----------------
+        titulo = new JLabel("No es magia, es mente");
+        titulo.setFont(fuente1.deriveFont(34f));
+        titulo.setForeground(Color.decode("#EBBF66"));
+        titulo.setBounds(30, -8, 280, 50);
 
+        panelEslogan.add(titulo);
+        
         //---------------- LABEL NOMBRE ----------------
         lblNombre = new JLabel("Nombre");
         lblNombre.setFont(fuente2.deriveFont(25f));
@@ -383,4 +396,12 @@ public class RegistroUsuario extends JFrame {
             return false;
         }
     }
+<<<<<<< HEAD
+=======
+
+    public static void main(String[] args) {
+        new RegistroUsuario();
+    }
+
+>>>>>>> ef9d6786f6b5fff1a337a681f69ebf0c34d19611
 }
