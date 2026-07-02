@@ -92,31 +92,16 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
             vida3 = new JLabel(corazonFinal);
 
         } catch (Exception e) {
-
-            vida1 = new JLabel("♥");
-            vida2 = new JLabel("♥");
-            vida3 = new JLabel("♥");
-
-            vida1.setFont(fuente1.deriveFont(55f));
-            vida2.setFont(fuente1.deriveFont(55f));
-            vida3.setFont(fuente1.deriveFont(55f));
-
-            vida1.setForeground(Color.RED);
-            vida2.setForeground(Color.RED);
-            vida3.setForeground(Color.RED);
+            e.printStackTrace();
         }
 
         vida1.setBounds(70, 25, 60, 60);
         vida2.setBounds(135, 25, 60, 60);
         vida3.setBounds(200, 25, 60, 60);
-        // --------------- PANEL -----------------
-        JPanel panelv = new JPanel();
-        panelv.setBounds(60, 20, 200, 70);
-        panelv.setBackground(Color.WHITE);
-        panelv.add(vida1);
-        panelv.add(vida2);
-        panelv.add(vida3);
-        fondo.add(panelv);
+        
+        fondo.add(vida1);
+        fondo.add(vida2);
+        fondo.add(vida3);
 
         //---------------- TITULO ----------------
         titulo = new JLabel(
@@ -161,12 +146,12 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         //---------------- RESPUESTA 1 ----------------
         btnRespuesta1 = new DecoracionBotones("RESPUESTA 1",
                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
-                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO   
+                DecoracionBotones.TURQUESA, DecoracionBotones.CELESTE, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.TURQUESA, DecoracionBotones.NEGRO); //MOUSE DENTRO   
 
         btnRespuesta1.setFont(fuente2.deriveFont(20f));
         btnRespuesta1.setBounds(500, 730, 300, 75);
-        btnRespuesta1.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
+        btnRespuesta1.estiloBotonDeshabilitado(DecoracionBotones.GRIS, DecoracionBotones.ROSA, DecoracionBotones.BLANCO);
 
         btnRespuesta1.addActionListener(e -> respuestaSeleccionada(btnRespuesta1));
 
@@ -175,12 +160,12 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         //---------------- RESPUESTA 2 ----------------
         btnRespuesta2 = new DecoracionBotones("RESPUESTA 2",
                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
-                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO  
+                DecoracionBotones.TURQUESA, DecoracionBotones.CELESTE, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.TURQUESA, DecoracionBotones.NEGRO); //MOUSE DENTRO   
 
         btnRespuesta2.setFont(fuente2.deriveFont(20f));
         btnRespuesta2.setBounds(1020, 730, 300, 75);
-        btnRespuesta2.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
+        btnRespuesta2.estiloBotonDeshabilitado(DecoracionBotones.GRIS, DecoracionBotones.ROSA, DecoracionBotones.BLANCO);
 
         btnRespuesta2.addActionListener(e -> respuestaSeleccionada(btnRespuesta2));
 
@@ -189,12 +174,12 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         //---------------- RESPUESTA 3 ----------------
         btnRespuesta3 = new DecoracionBotones("RESPUESTA 3",
                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
-                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO   
+                DecoracionBotones.TURQUESA, DecoracionBotones.CELESTE, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.TURQUESA, DecoracionBotones.NEGRO); //MOUSE DENTRO     
 
         btnRespuesta3.setFont(fuente2.deriveFont(20f));
         btnRespuesta3.setBounds(500, 840, 300, 75);
-        btnRespuesta3.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
+        btnRespuesta3.estiloBotonDeshabilitado(DecoracionBotones.GRIS, DecoracionBotones.ROSA, DecoracionBotones.BLANCO);
 
         btnRespuesta3.addActionListener(e -> respuestaSeleccionada(btnRespuesta3));
 
@@ -203,12 +188,12 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         //---------------- RESPUESTA 4 ----------------
         btnRespuesta4 = new DecoracionBotones("RESPUESTA 4",
                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO, //MOUSE FUERA
-                DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.ROSA, DecoracionBotones.BLANCO); //MOUSE DENTRO    
+                DecoracionBotones.TURQUESA, DecoracionBotones.CELESTE, DecoracionBotones.BLANCO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.TURQUESA, DecoracionBotones.NEGRO); //MOUSE DENTRO   
 
         btnRespuesta4.setFont(fuente2.deriveFont(20f));
         btnRespuesta4.setBounds(1020, 840, 300, 75);
-        btnRespuesta4.estiloBotonDeshabilitado(DecoracionBotones.NARANJA_PASTEL, DecoracionBotones.GRIS, DecoracionBotones.NEGRO);
+        btnRespuesta4.estiloBotonDeshabilitado(DecoracionBotones.GRIS, DecoracionBotones.ROSA, DecoracionBotones.BLANCO);
 
         btnRespuesta4.addActionListener(e -> respuestaSeleccionada(btnRespuesta4));
 

@@ -15,7 +15,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //--------------- C O L O R E S
     private Color facil = new Color(178, 197, 178);
     private Color intermedio = new Color(239, 218, 154);
-    private Color dificil = new Color(218, 77, 88);
+    private Color dificil = new Color(227, 157, 139);
 
     //--------------- T I E M P O
     /*Segundos que quedan en el turno actual.*/
@@ -48,7 +48,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private PantallaDificultad pantallaDificultad;
 
     //Esta variable defina la cantidad de respuestas correctas que se necesitan para pasar a la siguiente dificultad.
-    private static final int CORRECTAS = 5;
+    private static final int CORRECTAS = 1;
 
     //Esta variable almacena las respuestas correctas totales que lleva el jugador.
     private int respuestas_Correctas = 0;
