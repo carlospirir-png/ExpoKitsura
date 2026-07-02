@@ -24,7 +24,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private HiddenFoxDAO dao = new HiddenFoxDAO();
 
     //Son 5 preguntas las que se muestran
-    private ArrayList<Integer> preguntasPartida = new ArrayList<>() ;
+    private ArrayList<Integer> preguntasPartida = new ArrayList<>();
     //La pregunta en que se encuentra automáticamente
     private int preguntaActual = 0;
     // Las vidas por defecto son 3 para el jugador
@@ -36,8 +36,8 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int puntos = 0;
     // Indica si el jugador a utilizado alguna pista durante la partida
     private boolean usoPista = false;
-    //Puntaje máximo posible de la categoria -> 5 preguntas por nivel, 3 niveles, 95 por pregunta mínimo (95*15)
-    private final int puntajeMaximo = 1425;
+    //Puntaje máximo posible de la categoria -> 5 aciertos por nivel, 3 niveles, da como resultado: (5*3) 15  aciertos mínimos cuyo puntaje máximo es de 100 (15*100) = 1500
+    private final int puntajeMaximo = 1500;
     private int puntajeTotal;
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
@@ -84,13 +84,13 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //------------- SIGUIENTE PREGUNTA ------------
     public void SiguientePregunta() {
         System.out.println("Comparando: " + nivelActual + " < " + nivelFinal);
-        if (respuestas_Correctas < CORRECTAS ) {
+        if (respuestas_Correctas < CORRECTAS) {
 
             MostrarPregunta();
 
         } else {
             //Si el nivel actual es menor al nivel en el que acaba la categoría
-            
+
             if (nivelActual < nivelFinal) {
 
                 respuestas_Correctas = 0;
@@ -222,16 +222,24 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
 
-        double porcentajeRapidez
-                = 1.0 - ((double) tiempoUsado / tiempoMaximoPregunta);
+        //Si el tiempo usado son más de dos segundos, se dará una penalización (como normalmente sería)
+        if (tiempoUsado > 2) {
+            double porcentajeRapidez
+                    = 1.0 - ((double) tiempoUsado / tiempoMaximoPregunta);
 
-        int puntos = (int) (100 * porcentajeRapidez);
+            int puntos = (int) (100 * porcentajeRapidez);
 
-        if (puntos < 10) {
-            puntos = 10;
+            if (puntos < 10) {
+                puntos = 10;
+            }
+
+            return puntos;
+
+        } else {
+            //Si el tiempo usado está dentro de dos segundos de reacción, se dará el punteo completo
+            return 100;
         }
 
-        return puntos;
     }
 
     //-------------- BOTONES -------------
@@ -254,7 +262,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             //suma puntos por responder correctamente
             int puntosGanados = calcularPuntosPorTiempo();
 
-            respuestas_Correctas = respuestas_Correctas +1;
+            respuestas_Correctas = respuestas_Correctas + 1;
 
             puntos += puntosGanados;
 
