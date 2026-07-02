@@ -49,13 +49,13 @@ public class PistasTexto extends JFrame {
         JPanel recuadroTexto = new JPanel();
         recuadroTexto.setLayout(null);
         recuadroTexto.setBackground(Color.WHITE);
-        recuadroTexto.setBounds(40, 75, 350, 210);
+        recuadroTexto.setBounds(40, 75, 380, 210);
         fondo.add(recuadroTexto);
 
         lblPista = new JLabel();
         
-        lblPista.setFont(fuente1.deriveFont(26f)); 
-        lblPista.setForeground(Color.decode("#9E9E9E")); 
+        lblPista.setFont(fuente1.deriveFont(18f)); 
+        lblPista.setForeground(Color.BLACK); 
         
         lblPista.setBounds(12, 20, 280, 140);
         recuadroTexto.add(lblPista);
@@ -77,7 +77,7 @@ public class PistasTexto extends JFrame {
         Image imgEscalada = iconMascota.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
 
         mascotaLector.setIcon(new ImageIcon(imgEscalada));
-        mascotaLector.setBounds(340, 60, 350, 350);
+        mascotaLector.setBounds(355, 60, 350, 350);
         fondo.add(mascotaLector);
     }
 
