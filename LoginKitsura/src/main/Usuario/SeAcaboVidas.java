@@ -86,26 +86,32 @@ public class SeAcaboVidas extends JFrame {
         panelTextos.setLayout(null);
         panelTextos.setBounds(800, 270, 900, 360);
         fondo.add(panelTextos);
-
-        //---------------- BOTONES ----------------
+//---------------- BOTONES ----------------
         JButton btnContinuar = new DecoracionBotones("CONTINUAR",
-                                //ColorBase             ColorBorde              ColorLetra
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO
 
         btnContinuar.setFont(fuente2.deriveFont(28f));
         btnContinuar.setBounds(980, 740, 280, 65);
+
         btnContinuar.addActionListener(e -> {
-            
+
             ResultadoFinal resultado = new ResultadoFinal(
                     juego,
                     juego.getPuntajeTotal(),
                     juego.getTiempoTotalJugado()
             );
-            resultado.mostrar();
-        });
-        fondo.add(btnContinuar);
 
+            // Le pasamos la referencia de esta ventana
+            resultado.setSeAcaboVidas(this);
+
+            // Mostramos el diálogo
+            resultado.mostrar();
+
+        });
+
+        fondo.add(btnContinuar);
 
         JButton btnMenu = new DecoracionBotones("MENÚ",
                 //ColorBase             ColorBorde              ColorLetra
