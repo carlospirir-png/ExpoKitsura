@@ -145,7 +145,6 @@ public class RegistroUsuario extends JFrame {
                 dispose();
             }
         });
-
         fondo.add(btnJugar);
 
         //---------------- BOTON SALIR ----------------
@@ -384,10 +383,4 @@ public class RegistroUsuario extends JFrame {
             return false;
         }
     }
-<<<<<<< HEAD
-=======
-    public static void main(String[] args) {
-        new RegistroUsuario();
-    }
->>>>>>> 3c9268acccf326bff957fd65c80d6351d729b1e4
 }
