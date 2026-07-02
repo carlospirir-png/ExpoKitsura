@@ -9,7 +9,7 @@ import javax.swing.*;
 public class JuegoMaulwurfRennt implements JuegoBase {
 
     // Referencia a la ventana de la interfaz gráfica.
-    private MaulwurfRennt vista;
+    private final MaulwurfRennt vista;
 
     // Instancias de acceso a datos para preguntas, persistencia de partidas y sistema de pistas.
     private PreguntaDAO_MaulwurfRennt preguntaDAO;

@@ -12,7 +12,6 @@ public class SeAcaboTiempo extends JFrame {
     private Font fuente1;
     private Font fuente2;
 
-
     private DecoracionBotones btnVolver; // Usada correctamente ahora
     private JuegoBase juego;
 
@@ -20,7 +19,7 @@ public class SeAcaboTiempo extends JFrame {
 
         this.juego = juego;
 
-try {
+        try {
             // LettersForLearners
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
@@ -48,18 +47,18 @@ try {
 
         crearComponentes();
         //--------------- VOLVER --------------
-btnVolver.addActionListener(e -> {
-    dispose();
-    accion.actionPerformed(e);
-});
+        btnVolver.addActionListener(e -> {
+            dispose();
+            new MenuMinijuegos();
+        });
 
-setVisible(true);
+        setVisible(true);
     }
 
     private void crearComponentes() {
         JPanel panelContenedor = new JPanel();
         panelContenedor.setLayout(null);
-        panelContenedor.setBackground(new Color(0, 0, 0, 115)); 
+        panelContenedor.setBackground(new Color(0, 0, 0, 115));
         panelContenedor.setBounds(860, 60, 880, 820);
         fondo.add(panelContenedor);
 
@@ -81,19 +80,19 @@ setVisible(true);
         JLabel lblCita1 = new JLabel("<<El éxito no es definitivo; el fracaso no es fatal. Lo que realmente cuenta", JLabel.CENTER);
         lblCita1.setFont(fuente1.deriveFont(24f));
         lblCita1.setForeground(Color.WHITE);
-        lblCita1.setBounds(40, 180, 800, 35); 
+        lblCita1.setBounds(40, 180, 800, 35);
         panelContenedor.add(lblCita1);
 
         //---------------- CITA LÍNEA 2 ----------------
         JLabel lblCita2 = new JLabel("es tener valor para continuar>>. -Winston churchill", JLabel.CENTER);
         lblCita2.setFont(fuente1.deriveFont(24f));
         lblCita2.setForeground(Color.WHITE);
-        lblCita2.setBounds(40, 220, 800, 35); 
+        lblCita2.setBounds(40, 220, 800, 35);
         panelContenedor.add(lblCita2);
 
         //---------------- BOTON VOLVER ----------------
         btnVolver = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 

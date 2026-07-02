@@ -104,16 +104,12 @@ public class M2_crearNuevo extends JFrame {
 
         lblCheck.setIcon(new ImageIcon(checkEscalado));
         lblCheck.setBounds(50, 580, 50, 50);
-
         panelSemi.add(lblCheck);
 
         lblRespuestaCorrecta = new JLabel(
                 "Ingrese la respuesta correcta del nivel:");
-
         lblRespuestaCorrecta.setFont(fuente2.deriveFont(22f));
-
         lblRespuestaCorrecta.setBounds(70, 530, 500, 35);
-
         panelSemi.add(lblRespuestaCorrecta);
 
         txtCorrecta = new JTextField();
@@ -127,13 +123,11 @@ public class M2_crearNuevo extends JFrame {
         ImageIcon incorrectoIcon
                 = new ImageIcon(
                         getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/incorrecto.png"));
-
         Image incorrectoEscalado
                 = incorrectoIcon.getImage().getScaledInstance(
                         50,
                         50,
                         Image.SCALE_SMOOTH);
-
         lblIncorrecto.setIcon(new ImageIcon(incorrectoEscalado));
         lblIncorrecto.setBounds(620, 580, 50, 50);
 
@@ -141,11 +135,8 @@ public class M2_crearNuevo extends JFrame {
 
         lblRespuestaIncorrecta = new JLabel(
                 "Ingrese la respuesta incorrecta del nivel:");
-
         lblRespuestaIncorrecta.setFont(fuente2.deriveFont(22f));
-
         lblRespuestaIncorrecta.setBounds(620, 530, 500, 35);
-
         panelSemi.add(lblRespuestaIncorrecta);
 
         txtIncorrecta = new JTextField();
@@ -158,9 +149,8 @@ public class M2_crearNuevo extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnSiguiente.setFont(fuente2.deriveFont(25f));
-        btnSiguiente.setForeground(Color.WHITE);
-        btnSiguiente.setBounds(50, 700, 300, 60);
+        btnSiguiente.setFont(fuente2.deriveFont(18f));
+        btnSiguiente.setBounds(450, 700, 300, 60);
         fondo.add(btnSiguiente);
 
         panelSemi.add(btnSiguiente);
@@ -188,8 +178,7 @@ public class M2_crearNuevo extends JFrame {
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnSalir.setFont(fuente2.deriveFont(30f));
-        btnSalir.setForeground(Color.WHITE);
+        btnSalir.setFont(fuente2.deriveFont(18f));
         btnSalir.setBounds(1695, 950, 210, 45);
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);

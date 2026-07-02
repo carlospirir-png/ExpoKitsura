@@ -2,7 +2,9 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegosC.java</file>
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/SeAcaboTiempo.java</file>
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/TiempoAdmin.java</file>
@@ -47,6 +49,16 @@
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/M3_crearNuevo.java</file>
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaCContra.java</file>
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/VidasAdmin.java</file>
+=======
+            <file>file:/C:/Users/Computacion/Desktop/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasTexto.java</file>
+            <file>file:/C:/Users/Computacion/Desktop/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroInvitado.java</file>
+            <file>file:/C:/Users/Computacion/Desktop/ExpoKitsura/LoginKitsura/src/main/Administrador/PedirMCN.java</file>
+            <file>file:/C:/Users/Computacion/Desktop/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroUsuario.java</file>
+            <file>file:/C:/Users/Computacion/Desktop/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
+>>>>>>> 3c9268acccf326bff957fd65c80d6351d729b1e4
         </group>
+=======
+        <group/>
+>>>>>>> fc6158e71deb9bc626efe1b581eb681df8e2de0f
     </open-files>
 </project-private>

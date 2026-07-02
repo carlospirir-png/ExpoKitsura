@@ -15,6 +15,7 @@ public class M1_crearNuevo extends JFrame {
     private DecoracionBotones btnCargarColor;
     private DecoracionBotones btnCargarSombra;
     private DecoracionBotones btnSalir;
+    private DecoracionBotones btnSiguiente;
     
     public M1_crearNuevo() {
         try{
@@ -63,9 +64,14 @@ public class M1_crearNuevo extends JFrame {
         staticMascotaTablet.setIcon(new ImageIcon(imgEscalada));
         staticMascotaTablet.setBounds(20, 240, 600, 600);
         fondo.add(staticMascotaTablet);
-
-        JButton btnSiguiente = new JButton("SIGUIENTE");
-        btnSiguiente.setFont(fuente1.deriveFont(20f));
+        
+        // -- BOTON SIGUIENTE --
+        // lo puse azul para que fueran dos azulitas y dos rosadas
+         btnSiguiente = new DecoracionBotones ("SIGUIENTE",
+                 //ColorBase              ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO 
+        btnSiguiente.setFont(fuente2.deriveFont(15f));
         btnSiguiente.setBounds(150, 810, 240, 40);
         fondo.add(btnSiguiente);
 
@@ -90,8 +96,7 @@ public class M1_crearNuevo extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnCargarColor.setFont(fuente1.deriveFont(25f));
-        btnCargarColor.setForeground(Color.WHITE);
+        btnCargarColor.setFont(fuente2.deriveFont(18f));
         btnCargarColor.setBounds(130, 340, 255, 45); 
         panelFormulario.add(btnCargarColor);
 
@@ -110,8 +115,7 @@ public class M1_crearNuevo extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnCargarSombra.setFont(fuente1.deriveFont(25f));
-        btnCargarSombra.setForeground(Color.WHITE);
+        btnCargarSombra.setFont(fuente2.deriveFont(18f));
         btnCargarSombra.setBounds(680, 340, 255, 45); 
         panelFormulario.add(btnCargarSombra);
 
@@ -165,8 +169,7 @@ public class M1_crearNuevo extends JFrame {
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnSalir.setFont(fuente2.deriveFont(30f));
-        btnSalir.setForeground(Color.WHITE);
+        btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(1695, 950, 210, 45);
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);

@@ -80,29 +80,26 @@ public class IniciarSesion extends JFrame {
 
         //---------------- MASCOTA ----------------
         mascota = new JLabel();
-
         ImageIcon mascotaIcon
                 = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
-
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
-                        350, 350, Image.SCALE_SMOOTH);
-
+                        400, 400, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(1250, 560, 350, 350);
+        mascota.setBounds(1210, 540, 400, 400);
 
         fondo.add(mascota);
         
         FondoPanelSemi panelEslogan = new FondoPanelSemi(new Color(0, 0, 0, 140));
-        panelEslogan.setBounds(825, 210, 300, 35);
+        panelEslogan.setBounds(815, 210, 320, 35);
         panelEslogan.setLayout(null);
         fondo.add(panelEslogan);
         
         //---------------- ESLOGAN ----------------
         titulo = new JLabel("No es magia, es mente");
-        titulo.setFont(fuente1.deriveFont(30f));
-        titulo.setForeground(Color.decode("#82D3E0"));
-        titulo.setBounds(35, -8, 280, 50);
+        titulo.setFont(fuente1.deriveFont(34f));
+        titulo.setForeground(Color.decode("#EBBF66"));
+        titulo.setBounds(30, -8, 280, 50);
 
         panelEslogan.add(titulo);
 
@@ -163,10 +160,10 @@ public class IniciarSesion extends JFrame {
         //---------------- BOTON VOLVER ----------------
         JButton btnVolver = new DecoracionBotones("VOLVER",
                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnVolver.setFont(fuente2.deriveFont(10f));
-        btnVolver.setBounds(40, 975, 120, 40);
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO 
+        btnVolver.setFont(fuente2.deriveFont(13f));
+        btnVolver.setBounds(40, 945, 150, 40);
         
         btnVolver.addActionListener(e -> {
 
