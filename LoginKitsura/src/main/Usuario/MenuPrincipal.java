@@ -55,9 +55,9 @@ public class MenuPrincipal extends JFrame {
 
         //---------------- BOTÓN PERFIL ----------------
         JButton btnPerfil = new DecoracionBotones("PERFIL",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
 
         btnPerfil.setFont(fuente2.deriveFont(25f));
         btnPerfil.setBounds(820, 320, 320, 65);
@@ -75,9 +75,9 @@ public class MenuPrincipal extends JFrame {
 
         //---------------- BOTÓN MINIJUEGOS ----------------
         JButton btnMinijuegos = new DecoracionBotones("MINIJUEGOS",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO
 
         btnMinijuegos.setFont(fuente2.deriveFont(25f));
         btnMinijuegos.setBounds(820, 440, 320, 65);
@@ -116,8 +116,8 @@ public class MenuPrincipal extends JFrame {
         //---------------- BOTÓN SALIR ----------------
         JButton btnSalir = new DecoracionBotones("SALIR",
                                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO  
 
         btnSalir.setFont(fuente2.deriveFont(25f));
         btnSalir.setBounds(820, 680, 320, 65);
