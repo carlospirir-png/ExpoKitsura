@@ -96,7 +96,7 @@ public class SeAcaboVidas extends JFrame {
         btnContinuar.setFont(fuente2.deriveFont(28f));
         btnContinuar.setBounds(980, 740, 280, 65);
         btnContinuar.addActionListener(e -> {
-            dispose();
+            
             ResultadoFinal resultado = new ResultadoFinal(
                     juego,
                     juego.getPuntajeTotal(),
