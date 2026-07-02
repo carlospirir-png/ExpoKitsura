@@ -219,6 +219,11 @@ public class IniciarSesion extends JFrame {
 
             if (rs.next()) {
 
+                // Se guarda el id del usuario que inició sesión, para que
+                // MenuPrincipal / PantallaPerfil sepan de quién es la partida
+                int idUsuario = rs.getInt("id_usuario");
+                Sesion.setIdUsuarioActual(idUsuario);
+
                 rs.close();
                 ps.close();
                 con.close();
