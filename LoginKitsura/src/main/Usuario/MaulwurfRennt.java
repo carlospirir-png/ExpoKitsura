@@ -107,7 +107,9 @@ public class MaulwurfRennt extends JFrame {
         // Panel contenedor para alinear horizontalmente las vidas.
         JPanel panelv = new JPanel();
         panelv.setBounds(60, 20, 200, 70);
-        panelv.setBackground(Color.WHITE);
+//        panelv.setBackground(Color.false);
+        panelv.setBackground(new Color(0, 0, 0, 0));
+panelv.setOpaque(false);
         panelv.add(vida1);
         panelv.add(vida2);
         panelv.add(vida3);
@@ -145,9 +147,9 @@ public class MaulwurfRennt extends JFrame {
         tablero = new JLabel();
         try {
             ImageIcon tableroIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Fondo.png"));
+                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Fondo.jpg"));
             Image tableroEscalado = tableroIcon.getImage().getScaledInstance(
-                    1050, 500, Image.SCALE_SMOOTH);
+                    1180, 620, Image.SCALE_SMOOTH);
 
             tablero.setIcon(new ImageIcon(tableroEscalado));
 
@@ -189,7 +191,7 @@ public class MaulwurfRennt extends JFrame {
                     getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroMartillo.png"));
 
             Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(
-                    450, 450, Image.SCALE_SMOOTH);
+                    580, 580, Image.SCALE_SMOOTH);
 
             mascota.setIcon(new ImageIcon(mascotaEscalada));
 
@@ -197,7 +199,7 @@ public class MaulwurfRennt extends JFrame {
             mascota.setText("Mascota");
         }
 
-        mascota.setBounds(1450, 480, 450, 450);
+        mascota.setBounds(1410, 480, 580, 580);
         fondo.add(mascota);
     }
 
@@ -210,7 +212,7 @@ public class MaulwurfRennt extends JFrame {
                     getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Mazo.png"))
                     .getImage();
 
-            mazo = mazo.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+            mazo = mazo.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
             // Define la imagen, el punto crítico de colisión (5,5) y el nombre del cursor.
             Cursor cursor = toolkit.createCustomCursor(
@@ -230,13 +232,13 @@ public class MaulwurfRennt extends JFrame {
 
         // Matriz de coordenadas fijas (X, Y) relativas al panel del tablero.
         int[][] posiciones = {
-            {180, 0},
-            {430, 0},
-            {680, 0},
-            {60, 180},
-            {310, 180},
-            {560, 180},
-            {800, 180}
+            {210, 17},
+            {440, 22},
+            {675, 22},
+            {100, 195},
+            {330, 200},
+            {550, 200},
+            {790, 200}
         };
 
         // Rutas de los recursos de imagen para estados normales y heridos.

@@ -80,7 +80,7 @@ public class ResultadoFinal extends JDialog {
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnJugarDeNuevo.setFont(fuente1.deriveFont(18f));
+        btnJugarDeNuevo.setFont(fuente2.deriveFont(12f));
         btnJugarDeNuevo.setBounds(75, 300, 180, 45);
         btnJugarDeNuevo.addActionListener(e -> {
             dispose();
@@ -91,10 +91,10 @@ public class ResultadoFinal extends JDialog {
         //---------------- BOTÓN MENÚ ----------------
         JButton btnMenu = new DecoracionBotones("Menú",
                                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
 
-        btnMenu.setFont(fuente1.deriveFont(18f));
+        btnMenu.setFont(fuente2.deriveFont(15f));
         btnMenu.setBounds(275, 300, 160, 45);
         btnMenu.addActionListener(e -> {
             dispose();
@@ -112,7 +112,7 @@ public class ResultadoFinal extends JDialog {
         } catch (Exception e) {
             mascota.setText("Mascota");
         }
-        mascota.setBounds(400, 190, 350, 350);
+        mascota.setBounds(400, 215, 350, 350);
         fondo.add(mascota);
 
         animarPuntaje();
@@ -139,4 +139,5 @@ public class ResultadoFinal extends JDialog {
 
         timer.start();
     }
+   
 }
