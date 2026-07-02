@@ -7,6 +7,7 @@ import javax.swing.*;
 import main.conexion.Conexion;
 import java.sql.*;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
@@ -19,11 +20,11 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //--------------- T I E M P O
     /*Segundos que quedan en el turno actual.*/
     int segundosRestantes;
-    
+
     private HiddenFoxDAO dao = new HiddenFoxDAO();
 
     //Son 5 preguntas las que se muestran
-    private int[] preguntasPartida = new int[5];
+    private ArrayList<Integer> preguntasPartida = new ArrayList<>() ;
     //La pregunta en que se encuentra automáticamente
     private int preguntaActual = 0;
     // Las vidas por defecto son 3 para el jugador
@@ -45,13 +46,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int tiempoTotalJugado = 0;
     private int tiempoMaximoPregunta;
     private PantallaDificultad pantallaDificultad;
-    
+
     //Esta variable defina la cantidad de respuestas correctas que se necesitan para pasar a la siguiente dificultad.
     private static final int CORRECTAS = 5;
-    
+
     //Esta variable almacena las respuestas correctas totales que lleva el jugador.
     private int respuestas_Correctas = 0;
-    
 
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
@@ -76,7 +76,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         Partida(nivelActual);
     }
 
-    
     // Segundo contructor que indica cuando el jugador inicia una categoria desde el menu
     public HiddenFox_Codigo(int nivel) {
         this(nivel, 3, 0, false, 0);
@@ -85,14 +84,16 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //------------- SIGUIENTE PREGUNTA ------------
     public void SiguientePregunta() {
         System.out.println("Comparando: " + nivelActual + " < " + nivelFinal);
-        if (preguntaActual < preguntasPartida.length) {
+        if (respuestas_Correctas < CORRECTAS ) {
 
             MostrarPregunta();
 
         } else {
             //Si el nivel actual es menor al nivel en el que acaba la categoría
-            //Y si las respuestas correctas tiene la cantidad de respuestas Correctas que se solicita
-            if (nivelActual < nivelFinal && respuestas_Correctas == CORRECTAS) {
+            
+            if (nivelActual < nivelFinal) {
+
+                respuestas_Correctas = 0;
 
                 pantallaDificultad = new PantallaDificultad(this,
                         nivelActual + 1);
@@ -133,14 +134,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         SiguientePregunta();
     }
 
-    
-
     //--------- MOSTRAR PREGUNTA -----------
     public void MostrarPregunta() {
 
         habilitarBotones(true);
 
-        int id_pregunta = preguntasPartida[preguntaActual];
+        int id_pregunta = preguntasPartida.get(preguntaActual);
         //DEBUG
         System.out.println(
                 "Mostrando pregunta ID: "
@@ -156,7 +155,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         cambiarImagen(dao.obtenerRutaImagen(id_pregunta, false));
 
-        modificarAcierto("Problema: " + (preguntaActual + 1) + "/"+CORRECTAS);
+        modificarAcierto("Aciertos: " + (respuestas_Correctas) + "/" + CORRECTAS);
 
         iniciarTiempo(dao.obtenerTiempoLimite(id_pregunta));
     }
@@ -219,8 +218,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         });
     }
 
-    
-
     private int calcularPuntosPorTiempo() {
 
         int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
@@ -257,6 +254,8 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             //suma puntos por responder correctamente
             int puntosGanados = calcularPuntosPorTiempo();
 
+            respuestas_Correctas = respuestas_Correctas +1;
+
             puntos += puntosGanados;
 
             actualizarPuntos(puntos);
@@ -266,15 +265,13 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                     "¡Correcto!\nGanaste "
                     + puntosGanados
                     + " puntos.\n"
-                    +respuestas_Correctas+"/"+CORRECTAS
+                    + respuestas_Correctas + "/" + CORRECTAS
             );
-            
-            respuestas_Correctas++;
 
             // Revela la imagen
             cambiarImagen(
                     dao.obtenerRutaImagen(
-                            preguntasPartida[preguntaActual],
+                            preguntasPartida.get(preguntaActual),
                             true));
             Esperar();
         } else {
@@ -288,11 +285,11 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             } else {
                 puntos = 0;
             }
-            
+
             JOptionPane.showMessageDialog(
                     this,
                     "¡Incorrecto!\n"
-                    +"Mejor suerte la próxima vez."
+                    + "Mejor suerte la próxima vez."
             );
 
             actualizarPuntos(puntos);
@@ -313,10 +310,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     public void ayuda() {
         Random random = new Random();
         boolean esTexto = random.nextBoolean();
-        
-            //esTexto | true = texto  | false = audio.
+
+        //esTexto | true = texto  | false = audio.
         penalizacion = dao.obtenerPenalizacionPista(
-                preguntasPartida[preguntaActual],
+                preguntasPartida.get(preguntaActual),
                 esTexto);
 
         int opcion = JOptionPane.showConfirmDialog(
@@ -340,10 +337,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         if (esTexto) {
             ventana = new PistasTexto(
-                    dao.obtenerPista(preguntasPartida[preguntaActual]));
+                    dao.obtenerPista(preguntasPartida.get(preguntaActual)));
         } else {
             ventana = new PistasAudio(
-                    dao.obtenerRutaAudio(preguntasPartida[preguntaActual]));
+                    dao.obtenerRutaAudio(preguntasPartida.get(preguntaActual)));
         }
 
         ventana.addWindowListener(new WindowAdapter() {
@@ -364,7 +361,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         habilitarBotones(true);
     }
 
-
     //--------------- PUNTOS ------------------
     private void RestarPuntos(int penalizacion) {
 
@@ -376,8 +372,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         actualizarPuntos(puntos);
     }
-
-    
 
     // ─────────────────────────────────────────────────────────────────────────
     // JuegoBase
@@ -508,12 +502,11 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
       a través de HiddenFox y la base de datos con HiddenFoxDAO, 
       pero la parte lógica de dichas modificaciones permanecen en este bloque.
     ----------------------------------------------------------*/
-
-    public void respuestas(int id_pregunta){
-        String [] respuestas = new String[4];
-        boolean [] correctas = new boolean[4]; //Determina si son correctas
+    public void respuestas(int id_pregunta) {
+        String[] respuestas = new String[4];
+        boolean[] correctas = new boolean[4]; //Determina si son correctas
         dao.obtenerRespuestas(id_pregunta, respuestas, correctas);
-        
+
         mostrarRespuestas(respuestas, correctas);
     }
 
@@ -600,15 +593,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
         }
     }
-        
+
     /*-------------------------- P A R T I D A ------------------------
         Este apartado es donde se encuentra la configuración y generación
         de las partidas.
     -------------------------------------------------------------------*/
-    
     //-------------------------- GENERAR PARTIDA
-    
-
     /*--------------------------  D E R R O T A -----------------------
       Este es el apartado donde se coloca la lógica de las derrotas.
       Actualmente, solo puedes perder por dos motivos: Falta de tiempo
@@ -644,7 +634,5 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         return String.format("%02d:%02d", minutos, segundosRestantes);
     }
-    
-   
 
 }
