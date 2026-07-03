@@ -3,44 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroUsuario.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Main.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Menu/PantallaCarga.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Menu/PantallaInicio.java</file>
+            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFoxDAO.java</file>
+            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
+            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasAudio.java</file>
         </group>
-=======
-<<<<<<< HEAD
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/VictoriaPerfecta.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/Victoria.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroInvitado.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroUsuario.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/PreguntaDAO_MaulwurfRennt.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasAudio.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/SeAcaboTiempo.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/ResultadoFinal.java</file>
-        </group>
-        <group>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/VictoriaPerfecta.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/Victoria.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroInvitado.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroUsuario.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/PreguntaDAO_MaulwurfRennt.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasAudio.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/SeAcaboTiempo.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/ResultadoFinal.java</file>
-            <file>file:/C:/Users/HP/Documents/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
-=======
-            <file>file:/C:/Users/HP/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
->>>>>>> 25a167c0108b295e48aaaee7bd7a8343e53ced99
-        </group>
->>>>>>> ef9d6786f6b5fff1a337a681f69ebf0c34d19611
     </open-files>
 </project-private>
