@@ -67,10 +67,6 @@ public class PantallaDificultad extends JFrame {
 
     }
 
-    PantallaDificultad(MaulwurfRennt vista, int nivel) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     /**
      * Expone el panel para que FoxJump lo ponga como contentPane.
      */
@@ -193,7 +189,7 @@ public class PantallaDificultad extends JFrame {
                 mostrarNuevaDificultad();
             }
         });
-
+         
         timer.start();
     }
 

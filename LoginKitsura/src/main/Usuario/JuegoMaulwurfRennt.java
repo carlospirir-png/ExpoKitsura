@@ -1,5 +1,6 @@
 package main.Usuario;
 
+import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
@@ -56,9 +57,10 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 idUsuario,
                 idMinijuego,
                 vidas);
-
+        vista.actualizarCategoria(obtenerNombreCategoria());
         iniciarNivel();
         registrarEventos();
+        vista.actualizarPuntos(0);
     }
 
     // Configura las métricas del juego (dificultad, topos concurrentes en pantalla y límite de tiempo) basándose en el nivel actual.
@@ -72,25 +74,23 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.actualizarNivel(1);
                 vista.actualizarDificultad("Fácil");
                 vista.mostrarTopos(5);
-                tiempoRestante = 60;
                 break;
 
             case 2:
                 vista.actualizarNivel(2);
                 vista.actualizarDificultad("Intermedio");
                 vista.mostrarTopos(6);
-                tiempoRestante = 45;
+                vista.cambiarColorFondo(new Color(239, 218, 154));
                 break;
 
             case 3:
                 vista.actualizarNivel(3);
                 vista.actualizarDificultad("Difícil");
                 vista.mostrarTopos(7);
-                tiempoRestante = 30;
+                vista.cambiarColorFondo(new Color(255, 180, 80));
                 break;
         }
 
-        iniciarTemporizador();
         cargarPregunta();
     }
 
@@ -131,16 +131,24 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         String dificultad;
 
         switch (nivel) {
+
             case 1:
                 dificultad = "Fácil";
+                tiempoRestante = 25;
                 break;
+
             case 2:
                 dificultad = "Intermedio";
+                tiempoRestante = 20;
                 break;
+
             default:
                 dificultad = "Difícil";
+                tiempoRestante = 15;
                 break;
         }
+
+        iniciarTemporizador();
 
         preguntaActual = preguntaDAO.obtenerPreguntaAleatoria(
                 idCategoria,
@@ -154,7 +162,6 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         preguntasUsadas.add(preguntaActual.getIdPregunta());
 
-        // Modifica aleatoriamente la distribución en el tablero según el volumen de topos admitidos.
         switch (nivel) {
             case 1:
                 vista.mezclarTopos(5);
@@ -172,7 +179,6 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         opcionesActuales = preguntaActual.getOpciones();
 
-        // Mapea y distribuye el texto de cada opción de respuesta sobre los letreros de los topos.
         for (int i = 0; i < opcionesActuales.size() && i < 7; i++) {
             vista.colocarRespuesta(
                     i,
@@ -235,6 +241,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
     private void responderCorrecto() {
 
         puntos += preguntaActual.getPuntosBase();
+        vista.actualizarPuntos(puntos);
         preguntasContestadas++;
         preguntasNivel++;
 
@@ -270,7 +277,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         } else {
             puntos = 0;
         }
-
+        vista.actualizarPuntos(puntos);
         vista.actualizarVidas(vidas);
 
         partidaDAO.guardarDetalle(
@@ -410,6 +417,26 @@ public class JuegoMaulwurfRennt implements JuegoBase {
             default:
                 return 0;
         }
+    }
+
+    private String obtenerNombreCategoria() {
+
+        switch (idCategoria) {
+
+            case 22:
+                return "Operaciones Básicas";
+
+            case 23:
+                return "Operaciones Avanzadas";
+
+            case 24:
+                return "Científicos Matemáticos";
+
+            default:
+                return "Sin categoría";
+
+        }
+
     }
 
     // Implementaciones de la interfaz JuegoBase para la navegación, reinicio de componentes y retorno de metadatos del juego.

@@ -10,14 +10,14 @@ public class MaulwurfRennt extends JFrame {
     // Componentes principales, recursos de texto, imágenes y fuentes del juego.
     private final JPanel fondo;
     private Font fuente1, fuente2;
-    private ImageIcon corazonIcon, mascotaIcon;
+    private ImageIcon corazonNormal, mascotaIcon, corazonRoto;
 
     // Componentes gráficos para mostrar textos dinámicos, fondos e indicadores.
     private JLabel vida1, vida2, vida3, titulo,
             tiempoTexto, tiempo,
             nivel, dificultad, categoria,
             mascota,
-            tablero;
+            tablero, lblPuntos;
 
     private JButton btnAyuda;
 
@@ -74,19 +74,38 @@ public class MaulwurfRennt extends JFrame {
 
         // Indicador de vidas: Carga imágenes de corazones con respaldo de caracteres de texto (♥).
         try {
-            corazonIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"));
+
+            // Corazón normal
+            ImageIcon corazonIcon = new ImageIcon(
+                    getClass().getResource(
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"));
 
             Image corazonEscalado = corazonIcon.getImage().getScaledInstance(
-                    60, 60, Image.SCALE_SMOOTH);
+                    60,
+                    60,
+                    Image.SCALE_SMOOTH);
 
-            ImageIcon corazonFinal = new ImageIcon(corazonEscalado);
+            corazonNormal = new ImageIcon(corazonEscalado);
 
-            vida1 = new JLabel(corazonFinal);
-            vida2 = new JLabel(corazonFinal);
-            vida3 = new JLabel(corazonFinal);
+            // Corazón roto
+            ImageIcon corazonRotoIcon = new ImageIcon(
+                    getClass().getResource(
+                            "/Multimedia/utiles/ElementosGraficos/imagenes/corazon-roto.png"));
+
+            Image corazonRotoEscalado = corazonRotoIcon.getImage().getScaledInstance(
+                    60,
+                    60,
+                    Image.SCALE_SMOOTH);
+
+            corazonRoto = new ImageIcon(corazonRotoEscalado);
+
+            // Crear las vidas usando el corazón normal
+            vida1 = new JLabel(corazonNormal);
+            vida2 = new JLabel(corazonNormal);
+            vida3 = new JLabel(corazonNormal);
 
         } catch (Exception e) {
+
             vida1 = new JLabel("♥");
             vida2 = new JLabel("♥");
             vida3 = new JLabel("♥");
@@ -107,7 +126,9 @@ public class MaulwurfRennt extends JFrame {
         // Panel contenedor para alinear horizontalmente las vidas.
         JPanel panelv = new JPanel();
         panelv.setBounds(60, 20, 200, 70);
-        panelv.setBackground(Color.WHITE);
+//        panelv.setBackground(Color.false);
+        panelv.setBackground(new Color(0, 0, 0, 0));
+panelv.setOpaque(false);
         panelv.add(vida1);
         panelv.add(vida2);
         panelv.add(vida3);
@@ -145,9 +166,9 @@ public class MaulwurfRennt extends JFrame {
         tablero = new JLabel();
         try {
             ImageIcon tableroIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Fondo.png"));
+                    getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Fondo.jpg"));
             Image tableroEscalado = tableroIcon.getImage().getScaledInstance(
-                    1050, 500, Image.SCALE_SMOOTH);
+                    1180, 620, Image.SCALE_SMOOTH);
 
             tablero.setIcon(new ImageIcon(tableroEscalado));
 
@@ -163,23 +184,32 @@ public class MaulwurfRennt extends JFrame {
         // Inicialización de los topos dentro del tablero.
         crearTopos();
 
+        //---------------- PUNTOS ----------------
+        lblPuntos = new JLabel("Puntos: 0");
+
+        lblPuntos.setFont(fuente2.deriveFont(24f));
+        lblPuntos.setForeground(Color.BLACK);
+        lblPuntos.setBounds(80, 750, 250, 40);
+
+        fondo.add(lblPuntos);
+
         // Etiquetas informativas (Nivel, Dificultad, Categoría).
         nivel = new JLabel("Nivel: ***");
         nivel.setFont(fuente2.deriveFont(25f));
         nivel.setForeground(Color.BLACK);
-        nivel.setBounds(80, 750, 250, 40);
+        nivel.setBounds(80, 800, 250, 40);
         fondo.add(nivel);
 
         dificultad = new JLabel("Dificultad: ***");
         dificultad.setFont(fuente2.deriveFont(25f));
         dificultad.setForeground(Color.BLACK);
-        dificultad.setBounds(80, 800, 250, 40);
+        dificultad.setBounds(80, 850, 250, 40);
         fondo.add(dificultad);
 
         categoria = new JLabel("Categoría: ***");
         categoria.setFont(fuente2.deriveFont(25f));
         categoria.setForeground(Color.BLACK);
-        categoria.setBounds(80, 850, 250, 40);
+        categoria.setBounds(80, 900, 250, 40);
         fondo.add(categoria);
 
         // Ilustración de la mascota guía.
@@ -189,7 +219,7 @@ public class MaulwurfRennt extends JFrame {
                     getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroMartillo.png"));
 
             Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(
-                    450, 450, Image.SCALE_SMOOTH);
+                    580, 580, Image.SCALE_SMOOTH);
 
             mascota.setIcon(new ImageIcon(mascotaEscalada));
 
@@ -197,8 +227,15 @@ public class MaulwurfRennt extends JFrame {
             mascota.setText("Mascota");
         }
 
-        mascota.setBounds(1450, 480, 450, 450);
+        mascota.setBounds(1410, 480, 580, 580);
         fondo.add(mascota);
+    }
+
+    public void cambiarColorFondo(Color color) {
+
+        tablero.setBackground(color);
+        tablero.repaint();
+
     }
 
     // Modifica el puntero del mouse para renderizar la imagen de un mazo o martillo.
@@ -210,7 +247,7 @@ public class MaulwurfRennt extends JFrame {
                     getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Mazo.png"))
                     .getImage();
 
-            mazo = mazo.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+            mazo = mazo.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
             // Define la imagen, el punto crítico de colisión (5,5) y el nombre del cursor.
             Cursor cursor = toolkit.createCustomCursor(
@@ -230,13 +267,13 @@ public class MaulwurfRennt extends JFrame {
 
         // Matriz de coordenadas fijas (X, Y) relativas al panel del tablero.
         int[][] posiciones = {
-            {180, 0},
-            {430, 0},
-            {680, 0},
-            {60, 180},
-            {310, 180},
-            {560, 180},
-            {800, 180}
+            {210, 17},
+            {440, 22},
+            {675, 22},
+            {100, 195},
+            {330, 200},
+            {550, 200},
+            {790, 200}
         };
 
         // Rutas de los recursos de imagen para estados normales y heridos.
@@ -311,7 +348,7 @@ public class MaulwurfRennt extends JFrame {
             tablero.add(carteles[i]);
             tablero.add(topos[i]);
         }
-        
+
         // Muestra 5 topos por defecto al iniciar.
         mostrarTopos(5);
     }
@@ -355,6 +392,24 @@ public class MaulwurfRennt extends JFrame {
         }
     }
 
+    public void actualizarPuntos(int puntos) {
+        lblPuntos.setText("Puntos: " + puntos);
+
+    }
+
+    public void actualizarNivel(int Nivel) {
+        nivel.setText("Nivel: " + Nivel);
+    }
+
+    public void actualizarDificultad(String Dificultad) {
+        dificultad.setText("Dificultad: " + Dificultad);
+
+    }
+
+    public void actualizarCategoria(String Categoria) {
+        categoria.setText("Categoría: " + Categoria);
+    }
+
     // Asigna el texto de la respuesta al cartel del índice indicado.
     public void colocarRespuesta(int indice, String respuesta) {
         if (indice >= 0 && indice < MAX_TOPOS) {
@@ -395,31 +450,26 @@ public class MaulwurfRennt extends JFrame {
         tiempo.setText(texto);
     }
 
-    // Actualiza el texto del nivel actual.
-    public void actualizarNivel(int n) {
-        nivel.setText("Nivel: " + n);
-    }
-
-    // Actualiza el texto de la categoría elegida.
-    public void actualizarCategoria(String texto) {
-        categoria.setText("Categoría: " + texto);
-    }
-
     // Muestra u oculta los corazones de vida según el número de vidas restantes.
     public void actualizarVidas(int vidas) {
-        vida1.setVisible(vidas >= 1);
-        vida2.setVisible(vidas >= 2);
-        vida3.setVisible(vidas >= 3);
+
+        JLabel[] corazones = {vida1, vida2, vida3};
+
+        for (int i = 0; i < corazones.length; i++) {
+
+            if (i < vidas) {
+                corazones[i].setIcon(corazonNormal);
+            } else {
+                corazones[i].setIcon(corazonRoto);
+            }
+
+        }
+
     }
 
     // Cambia el enunciado de la pregunta usando HTML para habilitar el salto de línea automático y centrado.
     public void actualizarPregunta(String pregunta) {
         titulo.setText("<html><center>" + pregunta + "</center></html>");
-    }
-
-    // Actualiza el texto informativo de la dificultad.
-    public void actualizarDificultad(String texto) {
-        dificultad.setText("Dificultad: " + texto);
     }
 
     // Borra el texto de todos los carteles de respuesta.
