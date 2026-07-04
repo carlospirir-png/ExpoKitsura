@@ -20,8 +20,20 @@ public class FoxJump extends JFrame implements JuegoBase {
     // fuente2 = KGPerfectPenmanship (USADA EN TITULOS, ETIQUETAS Y BOTONES)
     private Font fuente1, fuente2;
     
+    // ── SISTEMA DE VIDAS DINAMICO ────────────────────────────────────────────
+    // CAMBIA ESTE VALOR PARA QUE EL JUEGO TENGA MAS O MENOS VIDAS/CORAZONES.
+    // ESTE ES EL TOPE ABSOLUTO: "vidas" NUNCA PUEDE SUPERAR ESTE NUMERO,
+    // SIN IMPORTAR DESDE DONDE SE INTENTE SUMAR VIDAS (VER agregarVidas()).
+    private static final int MAX_VIDAS = 3;
+
+    // CANTIDAD DE CORAZONES POR FILA. SI MAX_VIDAS NO ES MULTIPLO EXACTO,
+    // LA ULTIMA FILA SIMPLEMENTE QUEDA INCOMPLETA (SE ACOMODAN LOS QUE SOBREN).
+    private static final int CORAZONES_POR_FILA = 5;
+
+    // ARREGLO DE LABELS DE CORAZONES, GENERADO DINAMICAMENTE SEGUN MAX_VIDAS
+    private JLabel[] corazones;
+
     // LABELS UTILIZADOS EN LA PANTALLA DEL JUEGO 
-    private JLabel vida1, vida2, vida3;
     private JLabel titulo, tiempoTexto, tiempo;
     private JLabel nivelLabel, dificultadLabel, categoriaLabel;
     private JLabel mascota, florMascota;
@@ -84,8 +96,8 @@ public class FoxJump extends JFrame implements JuegoBase {
     // TRUE SI LA OPCION CORRECTA DE LA PREGUNTA ACTUAL ES "VERDADERO"
     private boolean respuestaCorrecta;
 
-    // VIDAS ACTUALES DEL JUGADOR, EMPIEZA EN 3 Y DISMINUYE CON CADA ERROR
-    private int vidas = 1;
+    // VIDAS ACTUALES DEL JUGADOR, EMPIEZA EN MAX_VIDAS Y DISMINUYE CON CADA ERROR
+    private int vidas = MAX_VIDAS;
 
     // TOTAL DE PREGUNTAS DISPONIBLES EN EL NIVEL ACTUAL (ACTIVAS EN BD)
     private int totalPreguntas = 0;
@@ -407,7 +419,9 @@ public class FoxJump extends JFrame implements JuegoBase {
      * CONSULTA LA TABLA Ayuda EN DB Y MUESTRA LA PISTA CORRESPONDIENTE
      * A LA PREGUNTA QUE SE ESTA MOSTRANDO EN ESTE MOMENTO.
      *
-     * MIENTRAS EL DIALOGO DE PISTA ESTA ABIERTO, EL COUNTDOWN SE PAUSA
+     * MIENTRAS LA VENTANA DE PISTA (PistasTexto) ESTA ABIERTA, EL COUNTDOWN
+     * SE PAUSA. AL CERRARSE (BOTON "SALIR" -> dispose()), SE DISPARA
+     * windowClosed Y AHI SE REANUDA EL COUNTDOWN SI CORRESPONDE.
      *
      * SI LA PREGUNTA NO TIENE PISTA REGISTRADA EN DB, SE MUESTRA UN
      * MENSAJE INDICANDO QUE NO ESTA DISPONIBLE.
@@ -440,22 +454,19 @@ public class FoxJump extends JFrame implements JuegoBase {
                 // PAUSAR EL TIEMPO MIENTRAS EL JUGADOR LEE LA PISTA
                 detenerCountdown();
 
-                // MOSTRAR LA PISTA EN MODO HTML 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "<html><body style='width:380px; font-size:13px;'>"
-                        + "<b>💡 Pista:</b><br><br>"
-                        + contenido
-                        + "</body></html>",
-                        "Pista — pregunta",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
+                // MOSTRAR LA PISTA EN LA VENTANA PERSONALIZADA PistasTexto
+                PistasTexto ventanaPista = new PistasTexto(contenido);
 
-                // REANUDAR EL COUNTDOWN SOLO SI EL JUEGO SIGUE ACTIVO Y NO SE ESTA
-                // PROCESANDO UNA RESPUESTA (POR SI EL DIALOGO SE CERRO TARDE)
-                if (!finJuegoActivo && !procesandoRespuesta && segundosRestantes > 0) {
-                    reanudarCountdown();
-                }
+                // REANUDAR EL COUNTDOWN SOLO CUANDO EL JUGADOR CIERRE LA VENTANA
+                // (Y SOLO SI EL JUEGO SIGUE ACTIVO Y NO SE ESTA PROCESANDO UNA RESPUESTA)
+                ventanaPista.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent e) {
+                        if (!finJuegoActivo && !procesandoRespuesta && segundosRestantes > 0) {
+                            reanudarCountdown();
+                        }
+                    }
+                });
 
             } else {
                 // ESTA PREGUNTA NO TIENE PISTA REGISTRADA EN LA TABLA Ayuda
@@ -516,8 +527,8 @@ public class FoxJump extends JFrame implements JuegoBase {
         new javax.swing.Timer(800, e -> {
             ((javax.swing.Timer) e.getSource()).stop();
 
-            // SI CONSERVO LAS 3 VIDAS = VICTORIA PERFECTA, SINO = VICTORIA NORMAL
-            if (vidas == 3) {
+            // SI CONSERVO TODAS LAS VIDAS = VICTORIA PERFECTA, SINO = VICTORIA NORMAL
+            if (vidas == MAX_VIDAS) {
                 VictoriaPerfecta vp = new VictoriaPerfecta(e2 -> {}, this);
                 fadeTo(() -> setContentPane(vp.getFondo()), 400);
             } else {
@@ -557,14 +568,13 @@ public class FoxJump extends JFrame implements JuegoBase {
         panelLago.revalidate();
         panelLago.repaint();
 
-        // RESTAURAR LOS TRES CORAZONES LLENOS
-        vidas = 3;
-        vida1.setIcon(iconoCorazonLleno);
-        vida2.setIcon(iconoCorazonLleno);
-        vida3.setIcon(iconoCorazonLleno);
-        vida1.setVisible(true);
-        vida2.setVisible(true);
-        vida3.setVisible(true);
+        // RESTAURAR TODOS LOS CORAZONES LLENOS (LA CANTIDAD LA DEFINE MAX_VIDAS)
+        // SE ASIGNA DIRECTO A MAX_VIDAS, NUNCA MAS ALTO, PORQUE MAX_VIDAS ES EL TOPE
+        vidas = MAX_VIDAS;
+        for (JLabel corazon : corazones) {
+            corazon.setIcon(iconoCorazonLleno);
+            corazon.setVisible(true);
+        }
 
         // VOLVER LA MASCOTA A SU POSICION E ICONO ORIGINALES
         mascota.setIcon(iconoKitsura);
@@ -717,15 +727,26 @@ public class FoxJump extends JFrame implements JuegoBase {
     /**
      * CALCULA LOS PUNTOS A GANAR SEGUN QUE TAN RAPIDO RESPONDIO EL JUGADOR.
      *
-     * LA FORMULA DA UN MAXIMO DE 100 PUNTOS SI RESPONDE AL INSTANTE,
-     * Y UN MINIMO DE 10 PUNTOS AUNQUE TARDE TODO EL TIEMPO DISPONIBLE.
-     * ASI SE MEJORA LA COMPETITIVIDAD ENTRE USUARIOS .
+     * SI EL JUGADOR RESPONDIO EN 5 SEGUNDOS O MENOS, SE LE OTORGA EL
+     * PUNTAJE MAXIMO (100) DIRECTAMENTE, SIN IMPORTAR EL TIEMPO LIMITE
+     * DE LA PREGUNTA. ESTO PREMIA LA RAPIDEZ EXTREMA POR ENCIMA DE LA
+     * FORMULA PROPORCIONAL NORMAL.
+     *
+     * SI TARDO MAS DE 5 SEGUNDOS, SE APLICA LA FORMULA PROPORCIONAL:
+     * MAXIMO DE 100 PUNTOS SI RESPONDE CASI AL INSTANTE, Y UN MINIMO
+     * DE 10 PUNTOS AUNQUE TARDE TODO EL TIEMPO DISPONIBLE.
      *
      * @param tiempoUsado  SEGUNDOS QUE TARDO EN RESPONDER
      * @param tiempoMaximo SEGUNDOS MAXIMOS DISPONIBLES PARA ESTA PREGUNTA
      * @return PUNTOS CALCULADOS (ENTRE 10 Y 100)
      */
     private int calcularPuntosPorTiempo(int tiempoUsado, int tiempoMaximo) {
+
+        // RESPUESTA SUPER RAPIDA: PUNTAJE MAXIMO GARANTIZADO
+        if (tiempoUsado <= 5) {
+            return 100;
+        }
+
         double porcentajeRapidez = 1.0 - ((double) tiempoUsado / tiempoMaximo);
         int puntos = (int) (100 * porcentajeRapidez);
         if (puntos < 10) puntos = 10;
@@ -985,36 +1006,70 @@ public class FoxJump extends JFrame implements JuegoBase {
     // =========================================================================
 
     /**
-     * DESCUENTA UNA VIDA Y ACTUALIZA EL ICONO CORRESPONDIENTE.
+     * DESCUENTA UNA VIDA Y ACTUALIZA EL CORAZON CORRESPONDIENTE.
      *
-     * EL ORDEN DE LOS CORAZONES ROTOS ES DE DERECHA A IZQUIERDA:
-     * 3 VIDAS -> ROMPER vida3 (DERECHO)
-     * 2 VIDAS -> ROMPER vida2 (CENTRAL)
-     * 1 VIDA  -> ROMPER vida1 (IZQUIERDO) Y MOSTRAR PANTALLA DE DERROTA
+     * EL ORDEN DE LOS CORAZONES ROTOS ES DE DERECHA A IZQUIERDA. COMO
+     * corazones[] SE LLENA DE IZQUIERDA A DERECHA (INDICE 0 = PRIMER
+     * CORAZON), Y vidas VA BAJANDO DESDE MAX_VIDAS HASTA 0, EL INDICE
+     * DEL CORAZON QUE SE ROMPE EN CADA PASO ES SIEMPRE EL NUEVO VALOR
+     * DE vidas (DESPUES DE RESTAR 1). ESTO FUNCIONA SIN IMPORTAR
+     * CUANTAS VIDAS TENGA EL JUEGO (MAX_VIDAS).
      *
-     * LA PANTALLA DE DERROTA SE MUESTRA CON UNA ESPERA DE 400ms PARA
-     * QUE EL JUGADOR VEA EL ULTIMO CORAZON ROMPERSE ANTES DE SALIR.
+     * CUANDO vidas LLEGA A 0, SE MUESTRA LA PANTALLA DE DERROTA CON
+     * UNA ESPERA DE 400ms PARA QUE EL JUGADOR VEA EL ULTIMO CORAZON
+     * ROMPERSE ANTES DE SALIR.
      */
     private void perderVida() {
 
         vidas--;
 
-        switch (vidas) {
-            case 2 -> vida3.setIcon(iconoCorazonRoto);
-            case 1 -> vida2.setIcon(iconoCorazonRoto);
-            case 0 -> {
-                vida1.setIcon(iconoCorazonRoto);
-                bloquearNenufares();
-                new javax.swing.Timer(400, e -> {
-                    ((javax.swing.Timer) e.getSource()).stop();
-                    mostrarHaPerdido();
-                }).start();
-                return;
-            }
+        // ROMPER EL CORAZON QUE CORRESPONDE A ESTA VIDA PERDIDA
+        if (vidas >= 0 && vidas < corazones.length) {
+            corazones[vidas].setIcon(iconoCorazonRoto);
+        }
+
+        if (vidas <= 0) {
+            bloquearNenufares();
+            new javax.swing.Timer(400, e -> {
+                ((javax.swing.Timer) e.getSource()).stop();
+                mostrarHaPerdido();
+            }).start();
+            return;
         }
 
         // SI AUN LE QUEDAN VIDAS, CARGAR LA SIGUIENTE PREGUNTA
         cargarPregunta();
+    }
+
+    /**
+     * SUMA VIDAS AL JUGADOR (POR EJEMPLO, SI EN EL FUTURO SE AGREGA UNA
+     * RECOMPENSA O POWER-UP QUE OTORGUE VIDAS EXTRA).
+     *
+     * ESTE ES EL UNICO LUGAR DONDE "vidas" PUEDE AUMENTAR, Y ESTA
+     * BLINDADO CON Math.min() PARA QUE NUNCA, BAJO NINGUNA CIRCUNSTANCIA,
+     * SUPERE MAX_VIDAS. SI SE INTENTA SUMAR MAS DE LO QUE CABE, EL
+     * EXCEDENTE SIMPLEMENTE SE IGNORA.
+     *
+     * TAMBIEN SE ENCARGA DE RESTAURAR VISUALMENTE LOS CORAZONES ROTOS
+     * QUE VUELVEN A ESTAR "LLENOS" TRAS LA RECUPERACION.
+     *
+     * @param cantidad CUANTAS VIDAS SE INTENTAN AGREGAR (DEBE SER POSITIVO)
+     */
+    public void agregarVidas(int cantidad) {
+
+        if (cantidad <= 0) return;
+
+        int vidasAnteriores = vidas;
+
+        // TOPE DURO: NUNCA PASAR DE MAX_VIDAS, SIN IMPORTAR "cantidad"
+        vidas = Math.min(MAX_VIDAS, vidas + cantidad);
+
+        // RESTAURAR LOS CORAZONES QUE PASARON DE ROTOS A LLENOS
+        for (int i = vidasAnteriores; i < vidas; i++) {
+            if (i >= 0 && i < corazones.length) {
+                corazones[i].setIcon(iconoCorazonLleno);
+            }
+        }
     }
 
 
@@ -1098,7 +1153,7 @@ public class FoxJump extends JFrame implements JuegoBase {
      *
      * SE ORGANIZA EN ESTE ORDEN:
      * 1. PRECARGAR ICONOS (MASCOTA Y CORAZONES) PARA REUTILIZARLOS SIN RECARGAR
-     * 2. CREAR LAS VIDAS (CORAZONES)
+     * 2. CREAR LAS VIDAS (CORAZONES) DE FORMA DINAMICA SEGUN MAX_VIDAS, EN FILAS
      * 3. BOTON DE AYUDA CON SU LISTENER
      * 4. TITULO DE LA PREGUNTA
      * 5. ETIQUETAS DE TIEMPO
@@ -1136,7 +1191,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             Image imgLleno = new ImageIcon(
                     getClass().getResource(
                             "/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"))
-                    .getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                    .getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
             iconoCorazonLleno = new ImageIcon(imgLleno);
         } catch (Exception e) {
             iconoCorazonLleno = null;
@@ -1147,37 +1202,48 @@ public class FoxJump extends JFrame implements JuegoBase {
             Image imgRoto = new ImageIcon(
                     getClass().getResource(
                             "/Multimedia/utiles/ElementosGraficos/imagenes/corazon-roto.png"))
-                    .getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                    .getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
             iconoCorazonRoto = new ImageIcon(imgRoto);
         } catch (Exception e) {
             iconoCorazonRoto = null;
         }
 
-        // ── VIDAS ─────────────────────────────────────────────────────────────
-        // SI LOS ICONOS NO CARGARON, SE USAN CARACTERES DE TEXTO COMO RESPALDO
-        if (iconoCorazonLleno != null) {
-            vida1 = new JLabel(iconoCorazonLleno);
-            vida2 = new JLabel(iconoCorazonLleno);
-            vida3 = new JLabel(iconoCorazonLleno);
-        } else {
-            vida1 = new JLabel("♥");
-            vida2 = new JLabel("♥");
-            vida3 = new JLabel("♥");
-            vida1.setFont(fuente1.deriveFont(55f)); vida1.setForeground(Color.RED);
-            vida2.setFont(fuente1.deriveFont(55f)); vida2.setForeground(Color.RED);
-            vida3.setFont(fuente1.deriveFont(55f)); vida3.setForeground(Color.RED);
+        // ── VIDAS (CORAZONES) DINAMICAS SEGUN MAX_VIDAS, ACOMODADAS EN FILAS ────
+        // SI CAMBIAS MAX_VIDAS O CORAZONES_POR_FILA, AQUI SE RECALCULA SOLO
+        // LA CANTIDAD Y POSICION DE CADA CORAZON, SIN TOCAR NADA MAS DEL CODIGO.
+        // EL TOPE REAL DE VIDAS LO IMPONE MAX_VIDAS EN TODA LA CLASE
+        // (perderVida() NUNCA BAJA DE 0, Y agregarVidas() NUNCA SUBE DE MAX_VIDAS).
+        corazones = new JLabel[MAX_VIDAS];
+        int xInicialCorazon = 70;
+        int yInicialCorazon = 20;
+        int espaciadoX = 55;
+        int espaciadoY = 55;
+        int tamanoCorazon = 50;
+
+        for (int i = 0; i < MAX_VIDAS; i++) {
+            int fila    = i / CORAZONES_POR_FILA;
+            int columna = i % CORAZONES_POR_FILA;
+
+            JLabel corazon;
+            if (iconoCorazonLleno != null) {
+                corazon = new JLabel(iconoCorazonLleno);
+            } else {
+                corazon = new JLabel("♥");
+                corazon.setFont(fuente1.deriveFont(40f));
+                corazon.setForeground(Color.RED);
+            }
+            corazon.setBounds(
+                    xInicialCorazon + (columna * espaciadoX),
+                    yInicialCorazon + (fila * espaciadoY),
+                    tamanoCorazon, tamanoCorazon);
+            corazones[i] = corazon;
+            fondo.add(corazon);
         }
-        vida1.setBounds(70,  25, 60, 60);
-        vida2.setBounds(135, 25, 60, 60);
-        vida3.setBounds(200, 25, 60, 60);
-        fondo.add(vida1);
-        fondo.add(vida2);
-        fondo.add(vida3);
 
         // ── BOTON DE AYUDA ────────────────────────────────────────────────────
-        // UNA VEZ USADO EN UNA PREGUNTA SE DESACTIVA HASTA LA SIGUIENTE
+        // SE BAJA UN POCO PARA NO CHOCAR CON LAS DOS FILAS DE CORAZONES
         btnAyuda = new JButton("¿Necesitas ayuda?");
-        btnAyuda.setBounds(60, 120, 280, 55);
+        btnAyuda.setBounds(60, 140, 280, 55);
         btnAyuda.setFocusPainted(false);
         btnAyuda.setFont(fuente2.deriveFont(18f));
 
