@@ -55,6 +55,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //Puntaje máximo posible de la categoria -> X aciertos por nivel, 3 niveles, da como resultado: (x*3) cuyo puntaje máximo es de 100 (3x*100
     private final int puntajeMaximo = CORRECTAS * 3 * 100;
 
+    //Este atributo indica si la partida ya terminó. Se utiliza para deshabilitar otros comportamientos cuando la partida finalice.
+    private boolean partidaTerminada = false;
+
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
         this.nivelActual = nivel;
@@ -104,36 +107,51 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     //--------------- TERMINAR NIVEL ---------------
     public void terminarNivel() {
-        //Si el nivel actual es menor al nivel en el que acaba la categoría
-        if (nivelActual < nivelFinal) {
 
-            respuestas_Correctas = 0;
+        //Si la variable partidaTerminada es true (efectivamente la partida terminó)
+        if (partidaTerminada) {
+            return; //Devuelve
 
-            pantallaDificultad = new PantallaDificultad(this,
-                    nivelActual + 1);
-            fadeTo(() -> {
-                setContentPane(pantallaDificultad.getFondo());
-            }, 400);
-            //si ya no hay más categorías por recorrer, se muestra pantalla del final
+            //Si la partida aún no ha sido terminado por otra acción (como derrota por tiempo o vidas)
         } else {
 
-            if (vidas == 3 && puntos == puntajeMaximo && !usoPista) {
+            //Si aún hay más preguntas y niveles por pasar, cambia de dificultad
+            if (nivelActual < nivelFinal) {
+                
+                //Si el nivel actual es menor al nivel en el que acaba la categoría
+                respuestas_Correctas = 0;
 
-                VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
-                }, this);
-
+                pantallaDificultad = new PantallaDificultad(this,
+                        nivelActual + 1);
                 fadeTo(() -> {
-                    setContentPane(vp.getFondo());
+                    setContentPane(pantallaDificultad.getFondo());
                 }, 400);
+                
+            //Si ya no hay más categorías por recorrer, se muestra la pantalla del final
             } else {
-                Victoria v = new Victoria(e -> {
-                }, this);
+                
+                //Entonces se establece la partidaTerminada por Victoria
+                partidaTerminada = true;
+                
+                if (vidas == 3 && puntos == puntajeMaximo && !usoPista) {
 
-                fadeTo(() -> {
-                    setContentPane(v.getFondo());
-                }, 400);
+                    VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
+                    }, this);
+
+                    fadeTo(() -> {
+                        setContentPane(vp.getFondo());
+                    }, 400);
+                } else {
+                    Victoria v = new Victoria(e -> {
+                    }, this);
+
+                    fadeTo(() -> {
+                        setContentPane(v.getFondo());
+                    }, 400);
+                }
             }
         }
+
     }
 
     //----------- PARTIDA -------------------
@@ -236,19 +254,30 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     }
 
     private void FinTiempo() {
+        //Si la variable partidaTerminada es true (efectivamente la partida terminó)
+        if (partidaTerminada) {
+            return; //Devuelve
 
-        if (countdown != null) {
-            countdown.stop();
-            countdown = null;
+            //Si la partida aún no ha sido terminado por otra acción (como una victoria u otro tipo de derrota)
+        } else { //Pero el tiempo ya se acabó
+
+            //Es el tiempo quien acaba la partida entonces
+            partidaTerminada = true; //Se cambia el valor de la variable a True
+
+            if (countdown != null) {
+                countdown.stop();
+                countdown = null;
+            }
+
+            habilitarBotones(false);
+
+            dispose();
+
+            new SeAcaboTiempo(this, e -> {
+                new MenuHiddenFox().setVisible(true);
+            });
         }
 
-        habilitarBotones(false);
-
-        dispose();
-
-        new SeAcaboTiempo(this, e -> {
-            new MenuHiddenFox().setVisible(true);
-        });
     }
 
     private int calcularPuntosPorTiempo() {
