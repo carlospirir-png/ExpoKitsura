@@ -227,7 +227,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         // Se agrega el tamaño y tipo de fuente a la letra
         btnRespuesta1.setFont(fuente2.deriveFont(20f));
         // Se indica la posición y tamaño del componente 
-        btnRespuesta1.setBounds(500, 730, 300, 75);
+        btnRespuesta1.setBounds(500, 730, 350, 75);
         // Al momento de hacer click al botón, cambiará su diseño
         btnRespuesta1.estiloBotonDeshabilitado(DecoracionBotones.GRIS, DecoracionBotones.ROSA, DecoracionBotones.BLANCO);
 
@@ -246,7 +246,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         // Se agrega el tamaño y tipo de fuente a la letra
         btnRespuesta2.setFont(fuente2.deriveFont(20f));
         // Se indica la posición y tamaño del componente 
-        btnRespuesta2.setBounds(1020, 730, 300, 75);
+        btnRespuesta2.setBounds(1050, 730, 350, 75);
         // Al momento de hacer click al botón, cambiará su diseño
         btnRespuesta2.estiloBotonDeshabilitado(DecoracionBotones.GRIS, DecoracionBotones.ROSA, DecoracionBotones.BLANCO);
         // Al realizar la acción de click, indicará su la respuesta es correcta 
@@ -262,7 +262,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         // Se agrega el tamaño y tipo de fuente a la letra
         btnRespuesta3.setFont(fuente2.deriveFont(20f));
         // Se indica la posición y tamaño 
-        btnRespuesta3.setBounds(500, 840, 300, 75);
+        btnRespuesta3.setBounds(500, 840, 350, 75);
         // Al momento de hacer click al botón, cambiará su diseño
         btnRespuesta3.estiloBotonDeshabilitado(DecoracionBotones.GRIS, DecoracionBotones.ROSA, DecoracionBotones.BLANCO);
         // Al realizar la acción de click, indicará su la respuesta es correcta 
@@ -279,7 +279,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         // Se agrega el tamaño y tipo de fuente
         btnRespuesta4.setFont(fuente2.deriveFont(20f));
         // Se indica el tamaño y posición
-        btnRespuesta4.setBounds(1020, 840, 300, 75);
+        btnRespuesta4.setBounds(1050, 840, 350, 75);
         // Al momento de hacer click al botón, cambiará su diseño
         btnRespuesta4.estiloBotonDeshabilitado(DecoracionBotones.GRIS, DecoracionBotones.ROSA, DecoracionBotones.BLANCO);
         // Al realizar la acción de click, indicará su la respuesta es correcta 

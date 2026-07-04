@@ -36,8 +36,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int puntos = 0;
     // Indica si el jugador a utilizado alguna pista durante la partida
     private boolean usoPista = false;
-    //Puntaje máximo posible de la categoria -> 5 aciertos por nivel, 3 niveles, da como resultado: (5*3) 15  aciertos mínimos cuyo puntaje máximo es de 100 (15*100) = 1500
-    private final int puntajeMaximo = 1500;
+
     private int puntajeTotal;
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
@@ -48,10 +47,16 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private PantallaDificultad pantallaDificultad;
 
     //Esta variable defina la cantidad de respuestas correctas que se necesitan para pasar a la siguiente dificultad.
-    private static final int CORRECTAS = 1;
+    private static final int CORRECTAS = 5;
 
     //Esta variable almacena las respuestas correctas totales que lleva el jugador.
     private int respuestas_Correctas = 0;
+
+    //Puntaje máximo posible de la categoria -> X aciertos por nivel, 3 niveles, da como resultado: (x*3) cuyo puntaje máximo es de 100 (3x*100
+    private final int puntajeMaximo = CORRECTAS * 3 * 100;
+
+    //Este atributo indica si la partida ya terminó. Se utiliza para deshabilitar otros comportamientos cuando la partida finalice.
+    private boolean partidaTerminada = false;
 
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
@@ -84,15 +89,36 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //------------- SIGUIENTE PREGUNTA ------------
     public void SiguientePregunta() {
         System.out.println("Comparando: " + nivelActual + " < " + nivelFinal);
-        if (respuestas_Correctas < CORRECTAS) {
 
-            MostrarPregunta();
-
+        //PRIMERA CONDICIÓN:
+        //Si las respuestas correctas son menores a las necesarias para pasar de nivel
+        //"¿El jugador ya respondió correctamente las necesarias?"
+        //SEGUNDA CONDICIÓN:
+        //Si la pregunta actual supera las preguntas por partida del ArrayList
+        //ES DECIR:
+        //Que a sea que el jugador conteste todaslas necesarias para pasar, o directamente
+        //ya no haya más preguntas por mostrar que finalice ese nivel y pase al siguiente.
+        if (respuestas_Correctas < CORRECTAS || preguntaActual >= preguntasPartida.size()) {
+            MostrarPregunta(); //Muestra la pregunta
         } else {
-            //Si el nivel actual es menor al nivel en el que acaba la categoría
+            terminarNivel(); //Termina ese nivel y se muestra pantalla de cambio de dificultad
+        }
+    }
 
+    //--------------- TERMINAR NIVEL ---------------
+    public void terminarNivel() {
+
+        //Si la variable partidaTerminada es true (efectivamente la partida terminó)
+        if (partidaTerminada) {
+            return; //Devuelve
+
+            //Si la partida aún no ha sido terminado por otra acción (como derrota por tiempo o vidas)
+        } else {
+
+            //Si aún hay más preguntas y niveles por pasar, cambia de dificultad
             if (nivelActual < nivelFinal) {
-
+                
+                //Si el nivel actual es menor al nivel en el que acaba la categoría
                 respuestas_Correctas = 0;
 
                 pantallaDificultad = new PantallaDificultad(this,
@@ -100,9 +126,13 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 fadeTo(() -> {
                     setContentPane(pantallaDificultad.getFondo());
                 }, 400);
-
+                
+            //Si ya no hay más categorías por recorrer, se muestra la pantalla del final
             } else {
-
+                
+                //Entonces se establece la partidaTerminada por Victoria
+                partidaTerminada = true;
+                
                 if (vidas == 3 && puntos == puntajeMaximo && !usoPista) {
 
                     VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
@@ -121,6 +151,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 }
             }
         }
+
     }
 
     //----------- PARTIDA -------------------
@@ -134,12 +165,32 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         SiguientePregunta();
     }
 
+    /*------------------------- OBTENER PREGUNTA ACTUAL -----------------------
+      Este método se encarga de devolver el id de la pregunta actual siempre y
+      cuando el índice sea válido (no se pase de las preguntas en la base de datos).
+      Si no existe una pregunta en esa posición, devuelve null.
+    --------------------------------------------------------------------------*/
+    private Integer obtenerIdPreguntaActual() {
+        if (preguntaActual < 0 && preguntaActual >= preguntasPartida.size()) {
+            return null;
+        }
+        return preguntasPartida.get(preguntaActual);
+    }
+
     //--------- MOSTRAR PREGUNTA -----------
     public void MostrarPregunta() {
 
         habilitarBotones(true);
 
-        int id_pregunta = preguntasPartida.get(preguntaActual);
+        //Es integer porque sí puede devolver null
+        //Se llama al método para que obtenga el id de la pregunta actual
+        Integer id_pregunta = obtenerIdPreguntaActual();
+
+        //Por si la pregunta se encuentra vacía por el ArrayList al intentar sobrepasar las preguntas que están en la base de datos
+        if (id_pregunta == null) {
+            return; //devuelve
+        }
+
         //DEBUG
         System.out.println(
                 "Mostrando pregunta ID: "
@@ -203,19 +254,30 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     }
 
     private void FinTiempo() {
+        //Si la variable partidaTerminada es true (efectivamente la partida terminó)
+        if (partidaTerminada) {
+            return; //Devuelve
 
-        if (countdown != null) {
-            countdown.stop();
-            countdown = null;
+            //Si la partida aún no ha sido terminado por otra acción (como una victoria u otro tipo de derrota)
+        } else { //Pero el tiempo ya se acabó
+
+            //Es el tiempo quien acaba la partida entonces
+            partidaTerminada = true; //Se cambia el valor de la variable a True
+
+            if (countdown != null) {
+                countdown.stop();
+                countdown = null;
+            }
+
+            habilitarBotones(false);
+
+            dispose();
+
+            new SeAcaboTiempo(this, e -> {
+                new MenuHiddenFox().setVisible(true);
+            });
         }
 
-        habilitarBotones(false);
-
-        dispose();
-
-        new SeAcaboTiempo(this, e -> {
-            new MenuHiddenFox().setVisible(true);
-        });
     }
 
     private int calcularPuntosPorTiempo() {
@@ -246,6 +308,15 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //---------------- ACTION LISTENER -----------------
     @Override
     public void respuestaSeleccionada(JButton boton) {
+
+        //Es integer porque sí puede devolver null
+        //Se llama al método para que obtenga el id de la pregunta actual
+        Integer id_pregunta = obtenerIdPreguntaActual();
+
+        //Por si la pregunta se encuentra vacía por el ArrayList al intentar sobrepasar las preguntas que están en la base de datos
+        if (id_pregunta == null) {
+            return; //devuelve
+        }
 
         habilitarBotones(false);
 
@@ -279,7 +350,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             // Revela la imagen
             cambiarImagen(
                     dao.obtenerRutaImagen(
-                            preguntasPartida.get(preguntaActual),
+                            id_pregunta,
                             true));
             Esperar();
         } else {
@@ -316,13 +387,21 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     // --------------- ABRIR VENTANA ---------------
     @Override
     public void ayuda() {
+        //Es integer porque sí puede devolver null
+        //Se llama al método para que obtenga el id de la pregunta actual
+        Integer id_pregunta = obtenerIdPreguntaActual();
+
+        //Por si la pregunta se encuentra vacía por el ArrayList al intentar sobrepasar las preguntas que están en la base de datos
+        if (id_pregunta == null) {
+            return; //devuelve
+        }
+
         Random random = new Random();
         boolean esTexto = random.nextBoolean();
 
         //esTexto | true = texto  | false = audio.
         penalizacion = dao.obtenerPenalizacionPista(
-                preguntasPartida.get(preguntaActual),
-                esTexto);
+                id_pregunta, esTexto);
 
         int opcion = JOptionPane.showConfirmDialog(
                 this,
@@ -345,10 +424,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         if (esTexto) {
             ventana = new PistasTexto(
-                    dao.obtenerPista(preguntasPartida.get(preguntaActual)));
+                    dao.obtenerPista(id_pregunta));
         } else {
             ventana = new PistasAudio(
-                    dao.obtenerRutaAudio(preguntasPartida.get(preguntaActual)));
+                    dao.obtenerRutaAudio(id_pregunta));
         }
 
         ventana.addWindowListener(new WindowAdapter() {
