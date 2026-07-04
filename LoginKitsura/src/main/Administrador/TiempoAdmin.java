@@ -32,6 +32,8 @@ public class TiempoAdmin extends JFrame {
     // Temporalmente se mantiene fijo
     private int idNivel = 1;
     
+    private DatosConfiguracion datos;
+    
     public TiempoAdmin() {
 
         try {
@@ -187,7 +189,7 @@ public class TiempoAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e ->{
-            new MenuAdmin();
+            new MenuAdmin(datos);
             dispose();
                 });
 

@@ -11,8 +11,20 @@ public class MenuAdmin extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    // Recibe los datos temporales: minijuego, categoría y nivel
+    private DatosConfiguracion datos;
+    
+    public MenuAdmin(){
+       inicializar();
+    }
+    
+    public MenuAdmin(DatosConfiguracion datos){
+        this.datos = datos;
+        inicializar();
+    }
 
-    public MenuAdmin() {
+   private void inicializar() {
+        
         try {
             fuente1 = Font.createFont(Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
@@ -70,12 +82,16 @@ public class MenuAdmin extends JFrame {
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
         
+        // Se agrega al botón la fuente y tamaño deseado
         btnVidas.setFont(fuente2.deriveFont(26f));
+        // Se asigna el tamaño y posición del botón
         btnVidas.setBounds(180, 430, 430, 65);
+        // Dirige a la clase de VidasAdmin y cierra el menú
         btnVidas.addActionListener(e -> {
-            new VidasAdmin();
+            new VidasAdmin(datos);
             dispose();
         });
+        // Se agrega el botón al panel principal
         fondo.add(btnVidas);
         // ---------------- TIEMPO ----------------
         JButton btnTiempo = new DecoracionBotones("TIEMPO",
@@ -144,8 +160,11 @@ public class MenuAdmin extends JFrame {
         fondo.add(volver);
         setVisible(true);
     }
+    
 
     public static void main(String[] args) {
-        new MenuAdmin();
+        DatosConfiguracion datos= new DatosConfiguracion("HiddenFox","Animales","Fácil");
+        new MenuAdmin(datos);
     }
+
 }
