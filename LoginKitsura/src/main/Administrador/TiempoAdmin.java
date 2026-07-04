@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-// AUN ME FALTA MODIFICAR ERROREEEEEES
+
 public class TiempoAdmin extends JFrame {
 
     private FondoPanel fondo;
