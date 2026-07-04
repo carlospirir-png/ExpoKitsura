@@ -29,8 +29,6 @@ public class DatosConfiguracion {
     public String getNivel() {
         return nivel;
     }
-
-    
 }
 
 

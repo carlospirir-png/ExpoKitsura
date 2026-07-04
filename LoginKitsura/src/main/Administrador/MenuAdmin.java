@@ -14,6 +14,7 @@ public class MenuAdmin extends JFrame {
     // Recibe los datos temporales: minijuego, categoría y nivel
     private DatosConfiguracion datos;
     
+    // Constructor sobrecargado: 
     public MenuAdmin(){
        inicializar();
     }
