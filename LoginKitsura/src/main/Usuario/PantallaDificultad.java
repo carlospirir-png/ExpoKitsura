@@ -226,6 +226,7 @@ public class PantallaDificultad extends JFrame {
             } else if (ventanaAnterior instanceof HiddenFox_Codigo hiddenFox) {
                 hiddenFox.continuarDespuesDeDificultad(nivel);
             } else if (ventanaAnterior instanceof MaulwurfRennt maulwurf) {
+                dispose();
                 maulwurf.continuarDespuesDeDificultad();
             }
         });
