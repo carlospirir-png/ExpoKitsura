@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-// AUN ME FALTA MODIFICAR ERROREEEEEES
+
 public class TiempoAdmin extends JFrame {
 
     private FondoPanel fondo;
@@ -31,6 +31,8 @@ public class TiempoAdmin extends JFrame {
     private final String PASSWORD = "";
     // Temporalmente se mantiene fijo
     private int idNivel = 1;
+    
+    private DatosConfiguracion datos;
     
     public TiempoAdmin() {
 
@@ -187,7 +189,7 @@ public class TiempoAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e ->{
-            new MenuAdmin();
+            new MenuAdmin(datos);
             dispose();
                 });
 

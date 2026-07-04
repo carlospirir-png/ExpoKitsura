@@ -40,7 +40,7 @@ public class PantallaTutorial extends JFrame {
         setTitle("Tutorial");
         setSize(600, 420);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
 
         crearComponentes();

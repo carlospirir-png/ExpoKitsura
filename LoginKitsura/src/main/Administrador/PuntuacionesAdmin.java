@@ -11,6 +11,8 @@ public class PuntuacionesAdmin extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    
+    private DatosConfiguracion datos;
 
     public PuntuacionesAdmin() {
 
@@ -174,7 +176,7 @@ public class PuntuacionesAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e -> {
-            new MenuAdmin();
+            new MenuAdmin(datos);
             dispose();
                 });
 

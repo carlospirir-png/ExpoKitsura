@@ -10,6 +10,8 @@ public class PistasMenu extends JFrame{
     private Font fuente1;
     private Font fuente2;
     
+    private DatosConfiguracion datos;
+    
     public PistasMenu() {
         try{
             // LettersForLearners
@@ -99,7 +101,7 @@ public class PistasMenu extends JFrame{
         btnVolver.addActionListener(e -> 
                 
         {
-            new MenuAdmin();
+            new MenuAdmin(datos);
             dispose();
         });
         fondo.add(btnVolver);

@@ -2,9 +2,10 @@ package main.Usuario;
 
 import java.awt.*;
 import java.util.*;
+import javax.swing.Timer;
 import javax.swing.*;
 
-// Clase principal que gestiona la interfaz gráfica del minijuego "Atrapa al topo" (hereda de JFrame).
+// Clase principal que gestiona la interfaz gráfica del minijuego "MaulwurfRennt".
 public class MaulwurfRennt extends JFrame {
 
     // Componentes principales, recursos de texto, imágenes y fuentes del juego.
@@ -17,7 +18,7 @@ public class MaulwurfRennt extends JFrame {
             tiempoTexto, tiempo,
             nivel, dificultad, categoria,
             mascota,
-            tablero, lblPuntos;
+            tablero, lblPuntos, lblProgreso;
 
     private JButton btnAyuda;
 
@@ -29,6 +30,7 @@ public class MaulwurfRennt extends JFrame {
     private JLabel[] carteles = new JLabel[MAX_TOPOS];
     private ImageIcon[] imagenesNormal = new ImageIcon[MAX_TOPOS];
     private ImageIcon[] imagenesGolpeado = new ImageIcon[MAX_TOPOS];
+    private Point[] posicionOriginal = new Point[7];
 
     // Constructor de la clase: Inicializa fuentes, configura el Frame y prepara el escenario gráfico.
     public MaulwurfRennt() {
@@ -128,7 +130,7 @@ public class MaulwurfRennt extends JFrame {
         panelv.setBounds(60, 20, 200, 70);
 //        panelv.setBackground(Color.false);
         panelv.setBackground(new Color(0, 0, 0, 0));
-panelv.setOpaque(false);
+        panelv.setOpaque(false);
         panelv.add(vida1);
         panelv.add(vida2);
         panelv.add(vida3);
@@ -142,7 +144,7 @@ panelv.setOpaque(false);
 
         // Título o enunciado de la pregunta.
         titulo = new JLabel("PREGUNTA", SwingConstants.CENTER);
-        titulo.setFont(fuente1.deriveFont(Font.BOLD, 40f));
+        titulo.setFont(fuente2.deriveFont(40f));
         titulo.setForeground(Color.BLACK);
         titulo.setBounds(500, 20, 900, 150);
         fondo.add(titulo);
@@ -184,12 +186,21 @@ panelv.setOpaque(false);
         // Inicialización de los topos dentro del tablero.
         crearTopos();
 
+        //---------------- PROGRESO ----------------
+        lblProgreso = new JLabel("Progreso: 0/5");
+
+        lblProgreso.setFont(fuente2.deriveFont(24f));
+        lblProgreso.setForeground(Color.BLACK);
+        lblProgreso.setBounds(80, 750, 250, 40);
+
+        fondo.add(lblProgreso);
+
         //---------------- PUNTOS ----------------
         lblPuntos = new JLabel("Puntos: 0");
 
         lblPuntos.setFont(fuente2.deriveFont(24f));
         lblPuntos.setForeground(Color.BLACK);
-        lblPuntos.setBounds(80, 750, 250, 40);
+        lblPuntos.setBounds(80, 800, 250, 40);
 
         fondo.add(lblPuntos);
 
@@ -197,19 +208,19 @@ panelv.setOpaque(false);
         nivel = new JLabel("Nivel: ***");
         nivel.setFont(fuente2.deriveFont(25f));
         nivel.setForeground(Color.BLACK);
-        nivel.setBounds(80, 800, 250, 40);
+        nivel.setBounds(80, 850, 250, 40);
         fondo.add(nivel);
 
         dificultad = new JLabel("Dificultad: ***");
         dificultad.setFont(fuente2.deriveFont(25f));
         dificultad.setForeground(Color.BLACK);
-        dificultad.setBounds(80, 850, 250, 40);
+        dificultad.setBounds(80, 900, 250, 40);
         fondo.add(dificultad);
 
         categoria = new JLabel("Categoría: ***");
         categoria.setFont(fuente2.deriveFont(25f));
         categoria.setForeground(Color.BLACK);
-        categoria.setBounds(80, 900, 250, 40);
+        categoria.setBounds(80, 950, 500, 40);
         fondo.add(categoria);
 
         // Ilustración de la mascota guía.
@@ -233,8 +244,10 @@ panelv.setOpaque(false);
 
     public void cambiarColorFondo(Color color) {
 
-        tablero.setBackground(color);
-        tablero.repaint();
+        fondo.setOpaque(true);
+        fondo.setBackground(color);
+        fondo.revalidate();
+        fondo.repaint();
 
     }
 
@@ -302,7 +315,8 @@ panelv.setOpaque(false);
             topos[i] = new JLabel();
 
             try {
-                // Configura imagen del estado normal.
+
+                // Imagen normal
                 ImageIcon iconoNormal = new ImageIcon(
                         getClass().getResource(imagenes[i]));
 
@@ -311,7 +325,7 @@ panelv.setOpaque(false);
 
                 imagenesNormal[i] = new ImageIcon(imgNormal);
 
-                // Configura imagen del estado herido.
+                // Imagen golpeado
                 ImageIcon iconoHerido = new ImageIcon(
                         getClass().getResource(imagenesHerido[i]));
 
@@ -323,34 +337,120 @@ panelv.setOpaque(false);
                 topos[i].setIcon(imagenesNormal[i]);
 
             } catch (Exception e) {
+
                 topos[i].setText("TOPO");
             }
 
+            // Posición del topo
             topos[i].setBounds(
                     posiciones[i][0],
                     posiciones[i][1],
                     200,
                     280);
 
-            // Creación del letrero contenedor para los textos de respuesta.
+            // Guarda la posición original para las animaciones
+            posicionOriginal[i] = new Point(
+                    posiciones[i][0],
+                    posiciones[i][1]);
+
+            // Cartel de respuestas
             carteles[i] = new JLabel("", SwingConstants.CENTER);
             carteles[i].setOpaque(true);
             carteles[i].setBackground(new Color(150, 150, 150));
             carteles[i].setFont(fuente2.deriveFont(24f));
 
-            // Posicionamiento calculado para quedar encima de su respectivo topo.
             carteles[i].setBounds(
                     posiciones[i][0] + 15,
                     posiciones[i][1] + 160,
-                    170,
+                    220,
                     90);
 
             tablero.add(carteles[i]);
             tablero.add(topos[i]);
         }
 
-        // Muestra 5 topos por defecto al iniciar.
+        // Muestra cinco topos al iniciar el juego
         mostrarTopos(5);
+    }
+
+    public void ocultarTopo(int indice) {
+
+        JLabel topo = topos[indice];
+
+        int yFinal = posicionOriginal[indice].y + 90;
+
+        Timer timer = new Timer(10, null);
+
+        timer.addActionListener(e -> {
+
+            if (topo.getY() < yFinal) {
+
+                topo.setLocation(
+                        topo.getX(),
+                        topo.getY() + 5);
+
+            } else {
+
+                ((Timer) e.getSource()).stop();
+            }
+
+        });
+
+        timer.start();
+    }
+
+    public void mostrarTopo(int indice) {
+
+        JLabel topo = topos[indice];
+
+        topo.setLocation(
+                topo.getX(),
+                posicionOriginal[indice].y + 90);
+
+        Timer timer = new Timer(10, null);
+
+        timer.addActionListener(e -> {
+
+            if (topo.getY() > posicionOriginal[indice].y) {
+
+                topo.setLocation(
+                        topo.getX(),
+                        topo.getY() - 5);
+
+            } else {
+
+                topo.setLocation(
+                        topo.getX(),
+                        posicionOriginal[indice].y);
+
+                ((Timer) e.getSource()).stop();
+            }
+
+        });
+
+        timer.start();
+    }
+
+    public void animarEntradaTopos() {
+
+        for (int i = 0; i < topos.length; i++) {
+
+            if (topos[i].isVisible()) {
+
+                mostrarTopo(i);
+            }
+        }
+    }
+
+    public void animarSalidaTopos() {
+
+        for (int i = 0; i < topos.length; i++) {
+
+            if (topos[i].isVisible()) {
+
+                ocultarTopo(i);
+            }
+        }
     }
 
     // Controla cuántos topos y carteles se hacen visibles en la pantalla según el nivel.
@@ -390,6 +490,12 @@ panelv.setOpaque(false);
                     p.x + 15,
                     p.y + 160);
         }
+    }
+
+    public void actualizarProgreso(int realizadas, int total) {
+
+        lblProgreso.setText("Progreso: " + realizadas + "/" + total);
+
     }
 
     public void actualizarPuntos(int puntos) {
