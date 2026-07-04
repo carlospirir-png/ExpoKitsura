@@ -10,10 +10,11 @@ public class VidasAdmin extends JFrame {
 
     private FondoPanel fondo;
     private Font fuente1;
-    private Font fuente2;
+    private Font fuente2;    
+    private DatosConfiguracion datos;
 
-    public VidasAdmin() {
-
+    public VidasAdmin(DatosConfiguracion datos) {
+        this.datos = datos;
         try {
 
             // LettersForLearners
@@ -122,19 +123,22 @@ public class VidasAdmin extends JFrame {
         lblModificando.setBounds(60, 430, 350, 35);
         panelVidas.add(lblModificando);
 
-        JLabel lblMinijuego = new JLabel("Minijuego: ****");
+        JLabel lblMinijuego = new JLabel("Minijuego: ");
+        lblMinijuego.setText("Minijuego: " + datos.getMinijuego());
         lblMinijuego.setFont(fuente1.deriveFont(40f));
         lblMinijuego.setForeground(Color.WHITE);
         lblMinijuego.setBounds(60, 485, 600, 35);
         panelVidas.add(lblMinijuego);
 
-        JLabel lblCategoria = new JLabel("Categoría: ****");
+        JLabel lblCategoria = new JLabel("Categoría: ");
+        lblCategoria.setText("Categoría: " + datos.getCategoria());
         lblCategoria.setFont(fuente1.deriveFont(40f));
         lblCategoria.setForeground(Color.WHITE);
         lblCategoria.setBounds(60, 525, 600, 35);
         panelVidas.add(lblCategoria);
 
-        JLabel lblNivel = new JLabel("Nivel: ****");
+        JLabel lblNivel = new JLabel("Nivel: ");
+        lblNivel.setText("Nivel" + datos.getNivel());
         lblNivel.setFont(fuente1.deriveFont(40f));
         lblNivel.setForeground(Color.WHITE);
         lblNivel.setBounds(60, 565, 600, 35);
@@ -176,14 +180,14 @@ public class VidasAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e ->{
-                new MenuAdmin();
+                new MenuAdmin(datos);
                 dispose();
                         });
 
         fondo.add(btnVolver);
     }
 
-    public static void main(String[] args) {
-        new VidasAdmin();
-    }
+//    public static void main(String[] args) {
+        //new VidasAdmin(datos);
+   // }
 }

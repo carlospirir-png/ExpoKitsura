@@ -5,52 +5,63 @@ import javax.swing.*;
 import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanelSemi;
+import main.Administrador.DatosConfiguracion;
 
-public class PedirMCN extends JFrame{
+public class PedirMCN extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    
+    // Atributos que permiten obtener información de la base de datos sobre
+    // Minijuego 
+    private JTextField txtMinijuego;
+    // Categoria
+    private JTextField txtCategoria;
+    // Nivel 
+    private JTextField txtNivel;
+    // Datos temporales
+
+
     public PedirMCN() {
-        try{
+        try {
             // LettersForLearners
             fuente1 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
             // KGPerfectPenmanship
             fuente2 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-            
-        } catch (Exception e){
-            e.printStackTrace();            
-        fuente1 = new Font("Arial", Font.PLAIN,20);
-        fuente2 = new Font("Arial", Font.PLAIN,20);
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png"); 
-        setContentPane(fondo);       
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
+        setContentPane(fondo);
         setTitle("Pedir M, C, N");
-        setSize(1980, 1080); 
+        setSize(1980, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        fondo.setLayout(null);       
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        fondo.setLayout(null);
         crearComponentes();
         setVisible(true);
     }
-    
+
     private void crearComponentes() {
         FondoPanelSemi recuadroFormulario = new FondoPanelSemi(new Color(0, 0, 0, 120));
         recuadroFormulario.setBounds(900, 160, 900, 650);
         recuadroFormulario.setLayout(null);
         fondo.add(recuadroFormulario);
-        
+
         JLabel lblTituloCentral = new JLabel("Minijuegos, Categoría y Nivel", JLabel.LEFT);
         lblTituloCentral.setFont(fuente2.deriveFont(35f));
         lblTituloCentral.setForeground(Color.decode("#82D3E0"));
         lblTituloCentral.setBounds(80, 40, 540, 50);
         recuadroFormulario.add(lblTituloCentral);
-        
+
         // Minijuego
         JLabel lblMinijuego = new JLabel("Ingrese el minijuego a modificar:");
         lblMinijuego.setFont(fuente2.deriveFont(27f));
@@ -58,7 +69,7 @@ public class PedirMCN extends JFrame{
         lblMinijuego.setBounds(80, 160, 700, 30);
         recuadroFormulario.add(lblMinijuego);
 
-        JTextField txtMinijuego = new JTextField();
+        txtMinijuego = new JTextField();
         txtMinijuego.setFont(fuente1.deriveFont(25f));
         txtMinijuego.setBounds(80, 205, 700, 45);
         recuadroFormulario.add(txtMinijuego);
@@ -70,7 +81,7 @@ public class PedirMCN extends JFrame{
         lblCategoria.setBounds(80, 290, 700, 30);
         recuadroFormulario.add(lblCategoria);
 
-        JTextField txtCategoria = new JTextField();
+        txtCategoria = new JTextField();
         txtCategoria.setFont(fuente1.deriveFont(25f));
         txtCategoria.setBounds(80, 335, 700, 45);
         recuadroFormulario.add(txtCategoria);
@@ -82,7 +93,7 @@ public class PedirMCN extends JFrame{
         lblNivel.setBounds(80, 420, 700, 30);
         recuadroFormulario.add(lblNivel);
 
-        JTextField txtNivel = new JTextField();
+        txtNivel = new JTextField();
         txtNivel.setFont(fuente1.deriveFont(25f));
         txtNivel.setBounds(80, 465, 700, 45);
         recuadroFormulario.add(txtNivel);
@@ -92,32 +103,46 @@ public class PedirMCN extends JFrame{
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        // Se selecciona la fuente y el tamaño de la letra del botón
         btnContinuar.setFont(fuente2.deriveFont(20f));
+        // Se asigna el tamaño y posición del botón
         btnContinuar.setBounds(560, 560, 220, 55);
+        // Se agrega al panel principal
         recuadroFormulario.add(btnContinuar);
-        
+
+        // Indica que obtiene los datos de la clase DatosConfiguracion
+        btnContinuar.addActionListener(e -> {
+            DatosConfiguracion datos = new DatosConfiguracion(
+                    txtMinijuego.getText().trim(),
+                    txtCategoria.getText().trim(),
+                    txtNivel.getText().trim()
+            );
+            new MenuAdmin(datos);
+            dispose();
+        });
+
         // MASCOTA
-            JLabel mascotaControl = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
-            Image imgEscalada = iconMascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH);
-            mascotaControl.setIcon(new ImageIcon(imgEscalada));
-            mascotaControl.setBounds(200, 180, 650, 650);
-            fondo.add(mascotaControl);
+        JLabel mascotaControl = new JLabel();
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        Image imgEscalada = iconMascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH);
+        mascotaControl.setIcon(new ImageIcon(imgEscalada));
+        mascotaControl.setBounds(200, 180, 650, 650);
+        fondo.add(mascotaControl);
 
         // BOTÓN REGRESAR
         JButton btnRegresar = new DecoracionBotones("REGRESAR",
-                                //ColorBase             ColorBorde              ColorLetra
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
         btnRegresar.setFont(fuente2.deriveFont(20f));
         btnRegresar.setBounds(380, 800, 220, 55);
-        btnRegresar.addActionListener(e -> dispose()); 
+        btnRegresar.addActionListener(e -> dispose());
         fondo.add(btnRegresar);
     }
-    
+
     public static void main(String[] args) {
         new PedirMCN();
     }
-    
+
 }
