@@ -350,162 +350,229 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         fondo.add(mascota);
     }
 
-
-    /*---------------------------- M É T O D O S -------------------
+/*---------------------------- M É T O D O S -----------------------------------
       Este es el apartado para los métodos que modifiquen la interfaz.*/
- /*-------------------- M O D I F I C A R ----------------
-      Este es el apartado donde se modifican cosas de la Interfaz Gráfica a través
-      de HiddenFox_Codigo, pero aquí no se mantiene nada lógico, solo cumple con
-      modificar según lo que le llegue. 
-    ---------------------------------------------------------*/
+    /*---------------------- M O D I F I C A R -------------------------
+      Este es el apartado donde se modifican cosas de la Interfaz 
+      Gráfica a través de HiddenFox_Codigo, pero aquí no se mantiene nada
+      lógico, solo cumple con modificar según lo que le llegue. 
+    -------------------------------------------------------------------*/
+    
     //----------------------- T E X T O S 
     //---------------------  PREGUNTA ------------------------
     public void modificarPregunta(String pregunta) {
+        //Recibe el texto de la pregunta por el parámetro
+        //Y luego establece el texto en el label correspondiente
         titulo.setText(pregunta);
     }
 
     //---------------------  CATEGORÍA -----------------------
     public void modificarCategoria(String nombreCategoria) {
+        //Recibe el nombre de la categoría por el parámetro
+        //Luego se establece la categoría en el label correspondiente
         categoria.setText("Categoría: " + nombreCategoria);
     }
 
-    //-------------- DIFICULTAD ----------------------
+    //---------------------  DIFICULTAD ----------------------
     public void modificarDificultad(String dificultadTexto) {
+        //Recibe la dificultad a través del parámetro
+        //Luego se establece la dificultad en el label correspondiente
         dificultad.setText("Dificultad: " + dificultadTexto);
     }
 
-    //------------ ACIERTO --------------------------
+    //---------------------  ACIERTO -------------------------
     public void modificarAcierto(String texto) {
+        //Recibe el acierto a través del parámetro
+        //Luego se establece el acierto en el label correspondiente
         acierto.setText(texto);
     }
 
-    //---------------- PUNTOS --------------------------
+    //---------------------  PUNTOS --------------------------
     public void actualizarPuntos(int puntosObtenidos) {
+        //Recibe la cantidad de puntos obtenidos por el parámetro
+        //Luego se establece la cantidad de puntos en el label
         puntos.setText("Puntos: " + puntosObtenidos);
     }
 
     //--------------------- I M Á G E N E S   Y  F O N D O S
     //---------------- IMAGEN SOMBRA Y A COLOR ----------------     
     public void cambiarImagen(String rutaImagen) {
-
+        /*El método recibe un String llamado rutaImagen a través del parámetro.
+        Se usa getResorce para obtener la URL del recurso.*/
+        
         URL ruta = getClass().getResource(rutaImagen);
 
         try {
-
+       
+            //Si getResource() no encontró el recurso
             if (ruta == null) {
+                //Se lanza una excepción no comprobada
                 throw new RuntimeException("No se encontró la imagen.");
             }
-
+            
+            //Se crea un nuevo ImageIcon con la imagen de la ruta
             ImageIcon icono = new ImageIcon(ruta);
-
-            Image iconoEscalado = icono.getImage().getScaledInstance(350, 320, Image.SCALE_SMOOTH);
-
-            imagenSombra.setIcon(new ImageIcon(iconoEscalado));
-
+            
+            //Obtenemos la imagen del ImageIcon para poder escalarla
+            Image imagen = icono.getImage();
+            
+            //Se escala la imagen a 350px X 320px con el algoritmo smooth
+            Image iconoEscalado = imagen.getScaledInstance(350, 320, Image.SCALE_SMOOTH);
+            
+            //Se crea una nueva ImageIcon con la imagen escalada
+            ImageIcon imagenEscalada = new ImageIcon(iconoEscalado);
+            
+            //Se le coloca al label la nueva ImageIcon.
+            imagenSombra.setIcon(imagenEscalada);
+            
+            //Revalida
             imagenSombra.revalidate();
+            
+            //Re-dibuja
             imagenSombra.repaint();
-
-        } catch (Exception e) {
-
+            
+        //Captura la excepción
+        } catch (RuntimeException e) {
+            //Imprime el StackTrace
             e.printStackTrace();
-
+            
+            //Se le coloca el texto de error
             imagenSombra.setText("ERROR AL CARGAR IMAGEN");
+            //Centramos
             imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
+            //Letra roja
             imagenSombra.setForeground(Color.RED);
         }
     }
 
     //------------------ FONDO DE LA SOMBRA --------------------
     public void cambiarFondoPapel(String rutaImagen) {
-
+        //Recibe la ruta a través del parámetro
+        
+        //Se obtiene la imagen
         URL ruta = getClass().getResource(rutaImagen);
 
         try {
-
+            
+            //si no se encuentra
             if (ruta == null) {
+                //Lanza excepción
                 throw new RuntimeException("No se encontró la imagen.");
             }
-
+            
+            //Se le coloca un nuevo icon con la imagen
             fondoPapelIcon = new ImageIcon(ruta);
-
+            
+            //Se obtiene la imagen del icon, se escala a 1050px X 450px y con el algoritmo Smooth
             fondoPapelEscalado = fondoPapelIcon.getImage().getScaledInstance(1050, 450, Image.SCALE_SMOOTH);
-
+            
+            //Se le coloca un nuevo icon con la imagen escalada
             fondoPapel.setIcon(new ImageIcon(fondoPapelEscalado));
-
-            imagenSombra.revalidate();
-            imagenSombra.repaint();
 
             fondoPapel.add(imagenSombra); //Se añade la sombra al fondo papel
 
             fondo.add(fondoPapel); //Se añade el fondo papel al fondo
+            
+            //Revalida
+            imagenSombra.revalidate();
+            
+            //Re-dibuja
+            imagenSombra.repaint();
+            
             setVisible(true); //Se vuelve visible
 
-        } catch (Exception e) {
+        //Captura la excepción
+        } catch (RuntimeException e) {
+            //Imprime el StackTrace
             e.printStackTrace();
-
+            
+            //Se le coloca el texto de error
             imagenSombra.setText("ERROR AL CARGAR IMAGEN");
+            //Centramos
             imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
+            //Letra roja
             imagenSombra.setForeground(Color.RED);
         }
     }
 
     //------------------------- CAMBIAR FONDO -----------------
     public void modificarColorFondo(Color color) {
-        fondo.setBackground(color);
+        //Recibe el color del parámetro
+        fondo.setBackground(color); //Coloca el color de fondo
     }
 
     //------------------------- CORAZONES -----------------
     public void modificarCorazones(int vidas) {
+        //Recibe las vidas en el parámetro
+        
+        //Se crea un vector de JLabels
         JLabel[] corazones = {
+            //Se almacenan los labels destinados a ser vidas
             vida1,
             vida2,
             vida3
         };
-
+        
+        //Mientras no supere la cantidad de JLabel del vector
         for (int i = 0; i < corazones.length; i++) {
-
+            
+            //Si el índice no supera la cantidad de vidas
             if (i < vidas) {
+                //Ese label se le coloca el corazón completo
                 corazones[i].setIcon(corazonFinal);
+            //Si ahora hay menos corazones ingresados, el faltante:
             } else {
+                //Se le coloca el corazón roto
                 corazones[i].setIcon(corazonRotoFinal);
             }
         }
+        
+        //Re-dibuja
         fondo.repaint();
     }
 
     //--------------------- B O T O N E S
     //-------------------- MOSTRAR RESPUESTAS ------------------
     public void mostrarRespuestas(String[] respuestas, boolean[] correctas) {
-
+        //Recibe el vector de Respuestas y si esas respuestas son correctas o no
+        
+        //Se crea el vector de JButton
         JButton[] botones = {
+            //Se almacenan los botones
             btnRespuesta1,
             btnRespuesta2,
             btnRespuesta3,
             btnRespuesta4
         };
-
+        
+        //Mientras no sobrepase la cantidad de botones
         for (int i = 0; i < botones.length; i++) {
-
+            
+            //A ese botón se le cambia el texto por la respuesta almacenada
             botones[i].setText(respuestas[i]);
-            botones[i].putClientProperty(
-                    "correcta",
-                    correctas[i]);
+            
+            //Guarda en cada botón la propiedad "correcta"".
+            //Indica si la respuesta que está en el botón es correcta.
+            botones[i].putClientProperty("correcta", correctas[i]);
+                                        // Clave         valor
         }
     }
 
-    //------------------DESHABILITARLOS ----------------------
+    //------------------HABILITAR ----------------------
     public void habilitarBotones(boolean estado) {
-
+        //Recibe a través del parámetro si los botones se habilitan o no
         btnRespuesta1.setEnabled(estado);
         btnRespuesta2.setEnabled(estado);
         btnRespuesta3.setEnabled(estado);
         btnRespuesta4.setEnabled(estado);
-
     }
 
     //--------------------- T I E M P O
-    public void modificarTiempo(String tiempo) {
-        this.tiempo.setText(tiempo);
+    //------------------ MODIFICAR TIEMPO --------------
+    public void modificarTiempo(String tiempoActual) {
+        //Recibe a través del parámetro el tiempo
+        //Se establece el tiempo en el componente
+        tiempo.setText(tiempoActual);
     }
 
     /*----------------- A B S T R A C T O S --------------
@@ -513,16 +580,17 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
       cuya lógica se encuentra en HiddenFox_Codigo, pero como estos
       métodos dependen de las acciones de los botones se colocan aquí.
     --------------------------------------------------------------*/
-    public abstract void ayuda();
-
+    public abstract void ayuda(); //Para el botón ayuda
+    
+    //Para la respuesta seleccionada en el botón
     public abstract void respuestaSeleccionada(JButton boton);
-
 
     /*-------------------------- G E T S -------------------------
       Este es el apartado donde se encuentran los GETS conforme se
       vayan necesitando en HiddenFox_Codigo.
     --------------------------------------------------------------*/
+    //------------------ FONDO --------------
     public JPanel getFondo() {
-        return fondo;
+        return fondo; //Devuelve el fondo
     }
 }
