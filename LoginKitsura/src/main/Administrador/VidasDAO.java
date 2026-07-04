@@ -1,3 +1,4 @@
+// Obtener las vidas actuales y actualizar las vidas
 package main.Administrador;
 
 import java.sql.Connection;
@@ -60,9 +61,9 @@ public class VidasDAO {
      
      // minijuego Nombre del minijuego.
      // categoria: Categoría.
-     // * nivel Dificultad.
-     // *  vidas Nueva: cantidad de vidas.
-     // * return true si la actualización fue correcta.
+     // nivel Dificultad.
+     // vidas Nueva: cantidad de vidas.
+     // return true si la actualización fue correcta.
      
     public boolean actualizarVidas(String minijuego,
             String categoria,
@@ -96,5 +97,4 @@ public class VidasDAO {
 
         return false;
     }
-
 }
