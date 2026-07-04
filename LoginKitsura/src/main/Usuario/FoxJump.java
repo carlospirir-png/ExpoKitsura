@@ -407,7 +407,9 @@ public class FoxJump extends JFrame implements JuegoBase {
      * CONSULTA LA TABLA Ayuda EN DB Y MUESTRA LA PISTA CORRESPONDIENTE
      * A LA PREGUNTA QUE SE ESTA MOSTRANDO EN ESTE MOMENTO.
      *
-     * MIENTRAS EL DIALOGO DE PISTA ESTA ABIERTO, EL COUNTDOWN SE PAUSA
+     * MIENTRAS LA VENTANA DE PISTA (PistasTexto) ESTA ABIERTA, EL COUNTDOWN
+     * SE PAUSA. AL CERRARSE (BOTON "SALIR" -> dispose()), SE DISPARA
+     * windowClosed Y AHI SE REANUDA EL COUNTDOWN SI CORRESPONDE.
      *
      * SI LA PREGUNTA NO TIENE PISTA REGISTRADA EN DB, SE MUESTRA UN
      * MENSAJE INDICANDO QUE NO ESTA DISPONIBLE.
@@ -440,22 +442,19 @@ public class FoxJump extends JFrame implements JuegoBase {
                 // PAUSAR EL TIEMPO MIENTRAS EL JUGADOR LEE LA PISTA
                 detenerCountdown();
 
-                // MOSTRAR LA PISTA EN MODO HTML 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "<html><body style='width:380px; font-size:13px;'>"
-                        + "<b>💡 Pista:</b><br><br>"
-                        + contenido
-                        + "</body></html>",
-                        "Pista — pregunta",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
+                // MOSTRAR LA PISTA EN LA VENTANA PERSONALIZADA PistasTexto
+                PistasTexto ventanaPista = new PistasTexto(contenido);
 
-                // REANUDAR EL COUNTDOWN SOLO SI EL JUEGO SIGUE ACTIVO Y NO SE ESTA
-                // PROCESANDO UNA RESPUESTA (POR SI EL DIALOGO SE CERRO TARDE)
-                if (!finJuegoActivo && !procesandoRespuesta && segundosRestantes > 0) {
-                    reanudarCountdown();
-                }
+                // REANUDAR EL COUNTDOWN SOLO CUANDO EL JUGADOR CIERRE LA VENTANA
+                // (Y SOLO SI EL JUEGO SIGUE ACTIVO Y NO SE ESTA PROCESANDO UNA RESPUESTA)
+                ventanaPista.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent e) {
+                        if (!finJuegoActivo && !procesandoRespuesta && segundosRestantes > 0) {
+                            reanudarCountdown();
+                        }
+                    }
+                });
 
             } else {
                 // ESTA PREGUNTA NO TIENE PISTA REGISTRADA EN LA TABLA Ayuda
