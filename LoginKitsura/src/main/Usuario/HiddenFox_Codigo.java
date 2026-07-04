@@ -21,7 +21,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     /*Segundos que quedan en el turno actual.*/
     int segundosRestantes;
 
-    private HiddenFoxDAO dao = new HiddenFoxDAO();
+    private HiddenFoxDAO dao = new HiddenFoxDAO();  
 
     //Son 5 preguntas las que se muestran
     private ArrayList<Integer> preguntasPartida = new ArrayList<>();
