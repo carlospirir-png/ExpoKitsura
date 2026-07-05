@@ -21,7 +21,6 @@ public class MenuHiddenFox extends MenuMinijuegosC {
         });
         
         setTitle("Hidden Fox");
-        ComoJugar();
     }
     
     @Override

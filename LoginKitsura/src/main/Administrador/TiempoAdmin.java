@@ -28,7 +28,7 @@ public class TiempoAdmin extends JFrame {
     */
     private final String URL = "jdbc:mysql://localhost:3306/KITSURA_DB";
     private final String USER = "root";
-    private final String PASSWORD = "";
+    private final String PASSWORD = "admin";
     // Temporalmente se mantiene fijo
     private int idNivel = 1;
     
