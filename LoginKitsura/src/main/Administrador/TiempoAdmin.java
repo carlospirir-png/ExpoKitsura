@@ -26,9 +26,13 @@ public class TiempoAdmin extends JFrame {
     // CONEXION MYSQL
     /* Verificar datos segun en que maquina estan trabajando 
     */
-    private final String URL = "jdbc:mysql://localhost:3306/KITSURA_DB";
+ private static String URL =
+    "jdbc:mysql://localhost:3306/KITSURA_DB"
+    + "?useSSL=false"
+    + "&allowPublicKeyRetrieval=true"
+    + "&serverTimezone=America/Guatemala";
     private final String USER = "root";
-    private final String PASSWORD = "";
+    private final String PASSWORD = "admin";
     // Temporalmente se mantiene fijo
     private int idNivel = 1;
     
