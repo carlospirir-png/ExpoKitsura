@@ -19,14 +19,14 @@ public class DatosConfiguracion {
     }
 
     public String getMinijuego() {
-        return "Hidden Fox";
+        return minijuego;
     }
 
     public String getCategoria() {
-        return "Animales";
+        return categoria;
     }
 
     public String getNivel() {
-        return "Fácil";
+        return nivel;
     }
 }
