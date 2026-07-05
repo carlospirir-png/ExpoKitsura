@@ -38,10 +38,10 @@ public class MenuAdmin extends JFrame {
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
         setTitle("Menú Administrador");
-        setSize(1000, 650);
+        setSize(1980, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         fondo.setLayout(null);
         FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
         panelTitulo.setLayout(null);
@@ -164,7 +164,7 @@ public class MenuAdmin extends JFrame {
     
 
     public static void main(String[] args) {
-        DatosConfiguracion datos= new DatosConfiguracion("HiddenFox","Animales","Fácil");
+        DatosConfiguracion datos= new DatosConfiguracion("Hidden Fox","Animales","Fácil");
         new MenuAdmin(datos);
     }
 

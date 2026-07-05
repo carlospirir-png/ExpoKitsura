@@ -27,7 +27,10 @@ public class FoxJump extends JFrame implements JuegoBase {
     private int maxVidas;
 
     // ES LA VARIABLE QUE CONTIENE LA INFORMACIÓN DE LA BASE DE DATOS
-    private VidasDAO vidasDAO;
+    // BUG CORREGIDO: antes se declaraba sin inicializar y provocaba un
+    // NullPointerException apenas se abría el minijuego (vidasDAO.obtenerVidas
+    // se llamaba sobre un objeto null en el constructor).
+    private VidasDAO vidasDAO = new VidasDAO();
 
     // CANTIDAD DE CORAZONES POR FILA. SI MAX_VIDAS NO ES MULTIPLO EXACTO,
     // LA ULTIMA FILA SIMPLEMENTE QUEDA INCOMPLETA (SE ACOMODAN LOS QUE SOBREN).
@@ -140,7 +143,10 @@ public class FoxJump extends JFrame implements JuegoBase {
         this.categoriaSeleccionada = categoria;
 
         // EL JUEFO COMIENZA EN FÁCIL, CUANDO SE QUIERE PASAR A OTRO NIVEL, SE VA ACTUALIZAR EL VALOR
-        maxVidas = vidasDAO.obtenerVidas("FoxJump!", categoriaSeleccionada, "Fácil");
+        // BUG CORREGIDO: el nombre debe coincidir EXACTAMENTE con el de la tabla Minijuego
+        // ("Fox Jump!", con espacio). Antes decía "FoxJump!" y nunca encontraba coincidencia,
+        // por lo que siempre caía en el valor por defecto sin avisar del error.
+        maxVidas = vidasDAO.obtenerVidas("Fox Jump!", categoriaSeleccionada, "Fácil");
 
         // SEGURIDAD
         if (maxVidas < 3) {

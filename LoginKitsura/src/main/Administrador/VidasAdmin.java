@@ -234,7 +234,11 @@ public class VidasAdmin extends JFrame {
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
+            // Temporales
+            System.out.println("Minijuego: " + datos.getMinijuego());
+            System.out.println("Categoría: " + datos.getCategoria());
+            System.out.println("Nivel: " + datos.getNivel());
+            System.out.println("Nuevas vidas: " + nuevasVidas);
             // Actualiza la base de datos
             boolean actualizado = vidasDAO.actualizarVidas(
                     datos.getMinijuego(),

@@ -14,13 +14,20 @@ public class MaulwurfRennt extends JFrame {
     private ImageIcon corazonNormal, mascotaIcon, corazonRoto;
 
     // Componentes gráficos para mostrar textos dinámicos, fondos e indicadores.
-    private JLabel vida1, vida2, vida3, titulo,
+    private JLabel titulo,
             tiempoTexto, tiempo,
             nivel, dificultad, categoria,
             mascota,
             tablero, lblPuntos, lblProgreso;
 
     private JButton btnAyuda;
+
+    // ---------------- SISTEMA DE VIDAS DINÁMICO ----------------
+    // Cantidad máxima de vidas configurada por el administrador (VidasAdmin).
+    // Reemplaza los antiguos vida1, vida2, vida3 fijos, que limitaban el juego a 3.
+    private int maxVidas;
+    private JLabel[] corazones;
+    private static final int CORAZONES_POR_FILA = 5;
 
     // Constante que define el número máximo de topos que soporta el tablero.
     private static final int MAX_TOPOS = 7;
@@ -33,7 +40,11 @@ public class MaulwurfRennt extends JFrame {
     private Point[] posicionOriginal = new Point[7];
 
     // Constructor de la clase: Inicializa fuentes, configura el Frame y prepara el escenario gráfico.
-    public MaulwurfRennt() {
+    // "maxVidas" es la cantidad de corazones a dibujar, obtenida desde la base de
+    // datos (VidasDAO) por JuegoMaulwurfRennt antes de crear esta ventana.
+    public MaulwurfRennt(int maxVidas) {
+        this.maxVidas = (maxVidas < 1) ? 1 : maxVidas;
+
         // Intento de carga de fuentes tipográficas desde los recursos del sistema.
         try {
             fuente1 = Font.createFont(
@@ -59,7 +70,8 @@ public class MaulwurfRennt extends JFrame {
         setContentPane(fondo);
 
         // Propiedades de la ventana de la aplicación.
-        setTitle("Hidden Fox");
+        // BUG CORREGIDO: tenía el título de otro minijuego (copy-paste de Hidden Fox).
+        setTitle("Maulwurf Rennt");
         setSize(1880, 1080);
         setLocationRelativeTo(null); // Centra la ventana en pantalla.
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -101,40 +113,42 @@ public class MaulwurfRennt extends JFrame {
 
             corazonRoto = new ImageIcon(corazonRotoEscalado);
 
-            // Crear las vidas usando el corazón normal
-            vida1 = new JLabel(corazonNormal);
-            vida2 = new JLabel(corazonNormal);
-            vida3 = new JLabel(corazonNormal);
-
         } catch (Exception e) {
-
-            vida1 = new JLabel("♥");
-            vida2 = new JLabel("♥");
-            vida3 = new JLabel("♥");
-
-            vida1.setFont(fuente1.deriveFont(55f));
-            vida2.setFont(fuente1.deriveFont(55f));
-            vida3.setFont(fuente1.deriveFont(55f));
-
-            vida1.setForeground(Color.RED);
-            vida2.setForeground(Color.RED);
-            vida3.setForeground(Color.RED);
+            // Si fallan las imágenes, se recurre al carácter de texto "♥" como respaldo
+            corazonNormal = null;
+            corazonRoto = null;
         }
 
-        vida1.setBounds(70, 25, 60, 60);
-        vida2.setBounds(135, 25, 60, 60);
-        vida3.setBounds(200, 25, 60, 60);
+        // Se generan dinámicamente tantos corazones como "maxVidas" indique,
+        // en vez de los 3 JLabels fijos (vida1, vida2, vida3) que había antes.
+        corazones = new JLabel[maxVidas];
 
-        // Panel contenedor para alinear horizontalmente las vidas.
-        JPanel panelv = new JPanel();
-        panelv.setBounds(60, 20, 200, 70);
-//        panelv.setBackground(Color.false);
-        panelv.setBackground(new Color(0, 0, 0, 0));
-        panelv.setOpaque(false);
-        panelv.add(vida1);
-        panelv.add(vida2);
-        panelv.add(vida3);
-        fondo.add(panelv);
+        int xInicial = 70;
+        int yInicial = 25;
+        int espaciado = 65;
+        int tamano = 60;
+
+        for (int i = 0; i < maxVidas; i++) {
+            int fila = i / CORAZONES_POR_FILA;
+            int columna = i % CORAZONES_POR_FILA;
+
+            JLabel corazon;
+            if (corazonNormal != null) {
+                corazon = new JLabel(corazonNormal);
+            } else {
+                corazon = new JLabel("♥");
+                corazon.setFont(fuente1.deriveFont(55f));
+                corazon.setForeground(Color.RED);
+            }
+
+            corazon.setBounds(
+                    xInicial + (columna * espaciado),
+                    yInicial + (fila * espaciado),
+                    tamano, tamano);
+
+            corazones[i] = corazon;
+            fondo.add(corazon);
+        }
 
         // Botón de ayuda.
         btnAyuda = new JButton("¿Necesitas ayuda?");
@@ -559,8 +573,7 @@ public class MaulwurfRennt extends JFrame {
     // Muestra u oculta los corazones de vida según el número de vidas restantes.
     public void actualizarVidas(int vidas) {
 
-        JLabel[] corazones = {vida1, vida2, vida3};
-
+        // Recorre el arreglo dinámico (tamaño = maxVidas), ya no limitado a 3.
         for (int i = 0; i < corazones.length; i++) {
 
             if (i < vidas) {
@@ -571,6 +584,12 @@ public class MaulwurfRennt extends JFrame {
 
         }
 
+    }
+
+    // Permite que JuegoMaulwurfRennt conozca el tope de vidas configurado
+    // (por ejemplo, para decidir si la partida fue "perfecta").
+    public int getMaxVidas() {
+        return maxVidas;
     }
 
     // Cambia el enunciado de la pregunta usando HTML para habilitar el salto de línea automático y centrado.

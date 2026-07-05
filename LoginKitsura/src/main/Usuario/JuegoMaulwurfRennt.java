@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
+import main.Administrador.VidasDAO;
 
 // Clase controladora que gestiona la lógica del minijuego "MaulwurfRennt       ".
 // Conecta la interfaz gráfica, el estado de la sesión y las consultas a la base de datos.
@@ -24,7 +25,11 @@ public class JuegoMaulwurfRennt implements JuegoBase {
     private final int idMinijuego = 3;
 
     // Variables de estado del flujo de juego: vidas, puntuación, tiempo acumulado y progresión de niveles.
-    private int vidas = 3;
+    // "vidas" ya no arranca fija en 3: se calcula en el constructor a partir de VidasDAO.
+    private int vidas;
+    // Tope máximo de vidas configurado por el administrador (para saber si la
+    // partida fue "perfecta" y para dibujar la cantidad correcta de corazones).
+    private int maxVidas;
     private int puntos = 0;
     private int tiempoTotalJugado = 0;
     private int nivel = 1;
@@ -48,7 +53,13 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         this.idUsuario = idUsuario;
         this.idCategoria = idCategoria;
 
-        vista = new MaulwurfRennt();
+        // Se consulta a la base de datos (VidasAdmin -> VidasDAO) cuántas vidas
+        // corresponden a este minijuego/categoría en dificultad "Fácil" (con la
+        // que siempre arranca la partida). Antes este valor venía fijo en 3.
+        maxVidas = resolverVidasIniciales();
+        vidas = maxVidas;
+
+        vista = new MaulwurfRennt(maxVidas);
         preguntaDAO = new PreguntaDAO_MaulwurfRennt();
         partidaDAO = new PartidaDAO_MaulwurfRennt();
         ayudaDAO = new AyudaDAO_MaulwurfRennt();
@@ -67,6 +78,26 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         vista.actualizarNivel(nivel);
         vista.actualizarDificultad("Fácil");
         vista.actualizarPuntos(puntos);
+    }
+
+    /*------------------ RESOLVER VIDAS INICIALES ------------------
+      Consulta en la base de datos (misma tabla que administra VidasAdmin)
+      cuántas vidas corresponden al minijuego "Maulwurf Rennt", la categoría
+      seleccionada y la dificultad "Fácil" (nivel inicial).
+    ------------------------------------------------------------------*/
+    private int resolverVidasIniciales() {
+        VidasDAO vidasDAO = new VidasDAO();
+
+        String categoria = obtenerNombreCategoria();
+
+        int vidasConfiguradas = vidasDAO.obtenerVidas("Maulwurf Rennt", categoria, "Fácil");
+
+        // Resguardo: si el nombre no coincide con la BD, se usa 3 por defecto.
+        if (vidasConfiguradas < 1) {
+            vidasConfiguradas = 3;
+        }
+
+        return vidasConfiguradas;
     }
 
     // Configura las métricas del juego (dificultad, topos concurrentes en pantalla y límite de tiempo) basándose en el nivel actual.
@@ -423,7 +454,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         if (estado.equals("completada")) {
 
-            if (vidas == 3) {
+            if (vidas == maxVidas) {
 
                 System.out.println("Entró a Victoria Perfecta");
 

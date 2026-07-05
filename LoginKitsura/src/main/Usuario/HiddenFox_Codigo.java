@@ -8,6 +8,7 @@ import main.conexion.Conexion;
 import java.sql.*;
 import java.util.Random;
 import java.util.ArrayList;
+import main.Administrador.VidasDAO;
 
 public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
@@ -59,7 +60,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private boolean partidaTerminada = false;
 
     //---------------- CONSTRUCTOR ----------------
+    // "vidas" ahora representa también el tope máximo de corazones a dibujar,
+    // por eso se le pasa a HiddenFox mediante super(vidas): así la interfaz
+    // ya no está limitada a 3 corazones fijos.
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
+        super(vidas);
+
         this.nivelActual = nivel;
         this.vidas = vidas;
         this.puntos = puntos;
@@ -81,9 +87,61 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         Partida(nivelActual);
     }
 
-    // Segundo contructor que indica cuando el jugador inicia una categoria desde el menu
+    // Segundo contructor que indica cuando el jugador inicia una categoria desde el menu.
+    // Antes las vidas venían fijas en 3; ahora se consultan en la base de datos
+    // (tabla Configuracion_nivel) según el minijuego, categoría y dificultad
+    // que le correspondan a "nivel", usando el mismo VidasDAO que usa VidasAdmin.
     public HiddenFox_Codigo(int nivel) {
-        this(nivel, 3, 0, false, 0);
+        this(nivel, resolverVidasIniciales(nivel), 0, false, 0);
+    }
+
+    /*------------------ RESOLVER VIDAS INICIALES ------------------
+      Traduce el número de "nivel" (1-9, interno del minijuego) a la
+      categoría y dificultad reales de la base de datos, y con eso
+      consulta cuántas vidas configuró el administrador en VidasAdmin.
+      Es estático porque se necesita ANTES de poder llamar a super(vidas).
+    ------------------------------------------------------------------*/
+    private static int resolverVidasIniciales(int nivel) {
+        HiddenFoxDAO daoTemporal = new HiddenFoxDAO();
+        VidasDAO vidasDAO = new VidasDAO();
+
+        String categoria = daoTemporal.obtenerCategoria(mapearIdCategoria(nivel));
+        String dificultad = mapearDificultad(nivel);
+
+        int vidas = vidasDAO.obtenerVidas("Hidden Fox", categoria, dificultad);
+
+        // Resguardo: si por algún motivo no se encontró coincidencia en la BD
+        // (por ejemplo, un nombre mal escrito), se usa 3 como valor por defecto.
+        if (vidas < 1) {
+            vidas = 3;
+        }
+
+        return vidas;
+    }
+
+    // Nivel 1-3 -> Categoría 1 (Animales) | 4-6 -> Categoría 2 (Territorios) | 7-9 -> Categoría 3 (Caricaturas)
+    private static int mapearIdCategoria(int nivel) {
+        if (nivel >= 1 && nivel <= 3) {
+            return 1;
+        } else if (nivel >= 4 && nivel <= 6) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    // Dentro de cada categoría, la posición 1 es Fácil, la 2 Intermedio y la 3 Difícil.
+    private static String mapearDificultad(int nivel) {
+        int posicion = ((nivel - 1) % 3) + 1;
+
+        switch (posicion) {
+            case 1:
+                return "Fácil";
+            case 2:
+                return "Intermedio";
+            default:
+                return "Difícil";
+        }
     }
 
     //------------- SIGUIENTE PREGUNTA ------------
@@ -133,7 +191,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 //Entonces se establece la partidaTerminada por Victoria
                 partidaTerminada = true;
                 
-                if (vidas == 3 && puntos == puntajeMaximo && !usoPista) {
+                if (vidas == getMaxVidas() && puntos == puntajeMaximo && !usoPista) {
 
                     VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
                     }, this);
