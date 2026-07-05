@@ -130,6 +130,48 @@ public class IniciarSesion extends JFrame {
         txtPassword.setBounds(760, 525, 400, 50);
 
         fondo.add(txtPassword);
+        //---------------- PANEL SEMITRANSPARENTE CONTRASEÑA ----------------
+        JPanel pnlcontrasena = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(0, 0, 0, 100)); // Negro con 100 de opacidad (semi-transparente)
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bordes redondeados estilizados
+            }
+        };
+        pnlcontrasena.setOpaque(false);
+        pnlcontrasena.setLayout(null);
+        pnlcontrasena.setBounds(760, 580, 400, 50); // Un poco más grande que el texto para el margen
+        
+        
+        //---------------- LABEL RECUPERAR CONTRASEÑA
+        JLabel lblRC = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>", SwingConstants.CENTER);
+        lblRC.setFont(fuente2.deriveFont(30f));
+        lblRC.setForeground(Color.WHITE);
+        lblRC.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblRC.setBounds(0, 0, 400, 50); // Se acopla completamente al tamaño del panel contenedor
+
+        lblRC.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                new RecuperarContrasena();
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                lblRC.setForeground(Color.decode("#EE9797"));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                lblRC.setForeground(Color.WHITE);
+            }
+        });
+        
+        pnlcontrasena.add(lblRC);
+        fondo.add(pnlcontrasena);
 
         //---------------- BOTON ----------------
         btnLogIn = new DecoracionBotones("INICIAR SESIÓN",
