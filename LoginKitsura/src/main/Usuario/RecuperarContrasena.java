@@ -34,7 +34,7 @@ public class RecuperarContrasena extends JFrame {
         }
         
         fondo = new JPanel();
-        fondo.setBackground(new Color(145, 191, 75));
+        fondo.setBackground(new Color(130, 211, 224));
         setContentPane(fondo);
 
         setTitle("Recuperar Contraseña");
