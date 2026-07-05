@@ -5,8 +5,8 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.sql.*;
 import javax.swing.*;
+import main.Administrador.VidasDAO;
 import main.conexion.Conexion;
-
 
 // CLASE PRINCIPAL DEL MINIJUEGO FOX JUMP!
 public class FoxJump extends JFrame implements JuegoBase {
@@ -19,12 +19,18 @@ public class FoxJump extends JFrame implements JuegoBase {
     // fuente1 = LettersForLearners (USADA EN TEXTOS DE NENUFARES Y VIDAS)
     // fuente2 = KGPerfectPenmanship (USADA EN TITULOS, ETIQUETAS Y BOTONES)
     private Font fuente1, fuente2;
-    
+
     // ── SISTEMA DE VIDAS DINAMICO ────────────────────────────────────────────
     // CAMBIA ESTE VALOR PARA QUE EL JUEGO TENGA MAS O MENOS VIDAS/CORAZONES.
     // ESTE ES EL TOPE ABSOLUTO: "vidas" NUNCA PUEDE SUPERAR ESTE NUMERO,
     // SIN IMPORTAR DESDE DONDE SE INTENTE SUMAR VIDAS (VER agregarVidas()).
-    private static final int MAX_VIDAS = 3;
+    private int maxVidas;
+
+    // ES LA VARIABLE QUE CONTIENE LA INFORMACIÓN DE LA BASE DE DATOS
+    // BUG CORREGIDO: antes se declaraba sin inicializar y provocaba un
+    // NullPointerException apenas se abría el minijuego (vidasDAO.obtenerVidas
+    // se llamaba sobre un objeto null en el constructor).
+    private VidasDAO vidasDAO = new VidasDAO();
 
     // CANTIDAD DE CORAZONES POR FILA. SI MAX_VIDAS NO ES MULTIPLO EXACTO,
     // LA ULTIMA FILA SIMPLEMENTE QUEDA INCOMPLETA (SE ACOMODAN LOS QUE SOBREN).
@@ -54,10 +60,10 @@ public class FoxJump extends JFrame implements JuegoBase {
     // ── POSICION Y DIMENSIONES ORIGINALES DE LA MASCOTA 
     // ESTAS CONSTANTES SON EL PUNTO DE RETORNO DESPUES DE CADA ANIMACION
     // LA MASCOTA SIEMPRE VUELVE AQUI ANTES DE CARGAR LA SIGUIENTE PREGUNTA
-    private static final int MASCOTA_W      = 450;
-    private static final int MASCOTA_H      = 450;
-    private static final int MASCOTA_X_ORIG = (1880 - MASCOTA_W) / 2; 
-    private static final int MASCOTA_Y_ORIG = 1080 - MASCOTA_H - 10;  
+    private static final int MASCOTA_W = 450;
+    private static final int MASCOTA_H = 450;
+    private static final int MASCOTA_X_ORIG = (1880 - MASCOTA_W) / 2;
+    private static final int MASCOTA_Y_ORIG = 1080 - MASCOTA_H - 10;
 
     // ICONO NORMAL DE KITSURA 
     private ImageIcon iconoKitsura;
@@ -97,7 +103,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     private boolean respuestaCorrecta;
 
     // VIDAS ACTUALES DEL JUGADOR, EMPIEZA EN MAX_VIDAS Y DISMINUYE CON CADA ERROR
-    private int vidas = MAX_VIDAS;
+    private int vidas;
 
     // TOTAL DE PREGUNTAS DISPONIBLES EN EL NIVEL ACTUAL (ACTIVAS EN BD)
     private int totalPreguntas = 0;
@@ -125,22 +131,30 @@ public class FoxJump extends JFrame implements JuegoBase {
     // SE RESETEA A false EN cargarPregunta() PARA CADA NUEVA PREGUNTA
     private boolean pistaMostradaEnPreguntaActual = false;
 
-
-
     // CONSTRUCTOR***********
-
-
     /**
-     * INICIALIZA EL JUEGO CON LA CATEGORIA RECIBIDA DESDE EL MENU.
-     * 1. CREAR TODOS LOS COMPONENTES GRAFICOS
-     * 2. REGISTRAR LISTENERS DE VENTANA (PARA PAUSAR AL MINIMIZAR)
-     * 3. HACER VISIBLE EL FRAME
-     * 4. CONECTAR A LA BD Y CARGAR LA PRIMERA PREGUNTA
-     * 5. CARGA TODAS LAS FUENTES
+     * INICIALIZA EL JUEGO CON LA CATEGORIA RECIBIDA DESDE EL MENU. 1. CREAR
+     * TODOS LOS COMPONENTES GRAFICOS 2. REGISTRAR LISTENERS DE VENTANA (PARA
+     * PAUSAR AL MINIMIZAR) 3. HACER VISIBLE EL FRAME 4. CONECTAR A LA BD Y
+     * CARGAR LA PRIMERA PREGUNTA 5. CARGA TODAS LAS FUENTES
      */
     public FoxJump(String categoria) {
 
         this.categoriaSeleccionada = categoria;
+
+        // EL JUEFO COMIENZA EN FÁCIL, CUANDO SE QUIERE PASAR A OTRO NIVEL, SE VA ACTUALIZAR EL VALOR
+        // BUG CORREGIDO: el nombre debe coincidir EXACTAMENTE con el de la tabla Minijuego
+        // ("Fox Jump!", con espacio). Antes decía "FoxJump!" y nunca encontraba coincidencia,
+        // por lo que siempre caía en el valor por defecto sin avisar del error.
+        maxVidas = vidasDAO.obtenerVidas("Fox Jump!", categoriaSeleccionada, "Fácil");
+
+        // SEGURIDAD
+        if (maxVidas < 3) {
+            maxVidas = 3;
+        }
+
+        // OBTENER LAS VIDAS
+        vidas = maxVidas;
 
         cargarFuentes();
 
@@ -206,33 +220,43 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
 //          MUESTRA LA PANTALLA DE RESULTADO FINAL CON EFECTO DE TRANSICION.
-
-  
     public void mostrarResultadoConFade() {
         ResultadoFinal resultado = new ResultadoFinal(this, puntajeTotal, tiempoTotalJugado);
         resultado.mostrar();
     }
 
-
     // RESOLUCION DEL NIVEL EN BASE DE DATOS************************
-
-
     /**
      * BUSCA EN LA DB EL id_nivel QUE CORRESPONDE A LA COMBINACION ACTUAL DE:
      * MINIJUEGO ("FOX JUMP!") + CATEGORIA + DIFICULTAD
      *
-     * SI NO EXISTE EL NIVEL EN BD, MUESTRA UN DIALOGO DE ERROR Y RETORNA SIN HACER NADA.
-     * ESTO PUEDE PASAR SI LOS DATOS DE LA BD NO ESTAN BIEN CONFIGURADOS.
+     * SI NO EXISTE EL NIVEL EN BD, MUESTRA UN DIALOGO DE ERROR Y RETORNA SIN
+     * HACER NADA. ESTO PUEDE PASAR SI LOS DATOS DE LA BD NO ESTAN BIEN
+     * CONFIGURADOS.
      */
     private void resolverIdNivel() {
 
         // CONVERTIR EL ENUM A LA CADENA QUE USA LA DB 
         String difStr = switch (dificultadActual) {
-            case FACIL       -> "Fácil";
-            case INTERMEDIO  -> "Intermedio";
-            case DIFICIL     -> "Difícil";
+            case FACIL ->
+                "Fácil";
+            case INTERMEDIO ->
+                "Intermedio";
+            case DIFICIL ->
+                "Difícil";
         };
 
+        maxVidas = vidasDAO.obtenerVidas(
+                "Fox Jump!",
+                categoriaSeleccionada,
+                difStr);
+
+        if (maxVidas < 1) {
+            maxVidas = 3;
+        }
+        // El jugador inicia con el máximo de vidas configurado
+        vidas = maxVidas;
+        
         // CONSULTA QUE CRUZA TRES TABLAS PARA ENCONTRAR EL NIVEL CORRECTO
         // SE FILTRA POR NOMBRE DEL MINIJUEGO, NOMBRE DE CATEGORIA Y DIFICULTAD
         String sqlNivel = """
@@ -296,28 +320,25 @@ public class FoxJump extends JFrame implements JuegoBase {
         // CAMBIAR EL COLOR DE FONDO SEGUN LA DIFICULTAD ACTUAL
         // VERDE = FACIL, AMARILLO = INTERMEDIO, ROJO = DIFICIL
         Color colorFondo = switch (dificultadActual) {
-            case FACIL      -> new Color(178, 197, 178);
-            case INTERMEDIO -> new Color(239, 218, 154 );
-            case DIFICIL    -> new Color(218, 77, 88);
+            case FACIL ->
+                new Color(178, 197, 178);
+            case INTERMEDIO ->
+                new Color(239, 218, 154);
+            case DIFICIL ->
+                new Color(218, 77, 88);
         };
         fondo.setBackground(colorFondo);
     }
 
-
-
     // CARGA DE PREGUNTAS****************************
-
-
     /**
-     * OBTIENE UNA PREGUNTA ALEATORIA DE LA BD QUE AUN NO SE HAYA MOSTRADO
-     * EN ESTA RONDA Y ACTUALIZA TODOS LOS ELEMENTOS DE LA PANTALLA.
+     * OBTIENE UNA PREGUNTA ALEATORIA DE LA BD QUE AUN NO SE HAYA MOSTRADO EN
+     * ESTA RONDA Y ACTUALIZA TODOS LOS ELEMENTOS DE LA PANTALLA.
      *
-     * EL METODO HACE LO SIGUIENTE EN ORDEN:
-     * 1. DETIENE EL COUNTDOWN ANTERIOR 
-     * 2. RESETEA EL BOTON DE AYUDA PARA LA NUEVA PREGUNTA
-     * 3. EJECUTA LA CONSULTA Y LLENA LOS CAMPOS DE LA UI
-     * 4. INICIA EL NUEVO COUNTDOWN
-     * 7. ALEATORIZA LA POSICION DE LOS NENUFARES 
+     * EL METODO HACE LO SIGUIENTE EN ORDEN: 1. DETIENE EL COUNTDOWN ANTERIOR 2.
+     * RESETEA EL BOTON DE AYUDA PARA LA NUEVA PREGUNTA 3. EJECUTA LA CONSULTA Y
+     * LLENA LOS CAMPOS DE LA UI 4. INICIA EL NUEVO COUNTDOWN 7. ALEATORIZA LA
+     * POSICION DE LOS NENUFARES
      */
     private void cargarPregunta() {
 
@@ -410,21 +431,17 @@ public class FoxJump extends JFrame implements JuegoBase {
         generarPosiciones();
     }
 
-
-
     // SISTEMA DE PISTAS (BOTON DE AYUDA)********************************
-
-
     /**
-     * CONSULTA LA TABLA Ayuda EN DB Y MUESTRA LA PISTA CORRESPONDIENTE
-     * A LA PREGUNTA QUE SE ESTA MOSTRANDO EN ESTE MOMENTO.
+     * CONSULTA LA TABLA Ayuda EN DB Y MUESTRA LA PISTA CORRESPONDIENTE A LA
+     * PREGUNTA QUE SE ESTA MOSTRANDO EN ESTE MOMENTO.
      *
-     * MIENTRAS LA VENTANA DE PISTA (PistasTexto) ESTA ABIERTA, EL COUNTDOWN
-     * SE PAUSA. AL CERRARSE (BOTON "SALIR" -> dispose()), SE DISPARA
-     * windowClosed Y AHI SE REANUDA EL COUNTDOWN SI CORRESPONDE.
+     * MIENTRAS LA VENTANA DE PISTA (PistasTexto) ESTA ABIERTA, EL COUNTDOWN SE
+     * PAUSA. AL CERRARSE (BOTON "SALIR" -> dispose()), SE DISPARA windowClosed
+     * Y AHI SE REANUDA EL COUNTDOWN SI CORRESPONDE.
      *
-     * SI LA PREGUNTA NO TIENE PISTA REGISTRADA EN DB, SE MUESTRA UN
-     * MENSAJE INDICANDO QUE NO ESTA DISPONIBLE.
+     * SI LA PREGUNTA NO TIENE PISTA REGISTRADA EN DB, SE MUESTRA UN MENSAJE
+     * INDICANDO QUE NO ESTA DISPONIBLE.
      */
     private void mostrarPista() {
 
@@ -481,20 +498,21 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     // FIN DE JUEGO Y REINICIO*******************************************
-
     /**
-     * ACTIVA LA SECUENCIA DE FIN DE JUEGO CUANDO EL JUGADOR COMPLETA TODAS
-     * LAS PREGUNTAS DEL NIVEL DIFICIL.
+     * ACTIVA LA SECUENCIA DE FIN DE JUEGO CUANDO EL JUGADOR COMPLETA TODAS LAS
+     * PREGUNTAS DEL NIVEL DIFICIL.
      *
-     * TRANSICIONA A LA PANTALLA
-     * DE VICTORIA (PERFECTA O NORMAL SEGUN LAS VIDAS QUE LE QUEDARON AL JUGADOR).
+     * TRANSICIONA A LA PANTALLA DE VICTORIA (PERFECTA O NORMAL SEGUN LAS VIDAS
+     * QUE LE QUEDARON AL JUGADOR).
      *
-     * EL FLAG finJuegoActivo EVITA QUE ESTE METODO SE LLAME DOS VECES
-     * SI ALGUN EVENTO  INTENTA DISPARARLO DE NUEVO.
+     * EL FLAG finJuegoActivo EVITA QUE ESTE METODO SE LLAME DOS VECES SI ALGUN
+     * EVENTO INTENTA DISPARARLO DE NUEVO.
      */
     private void activarFinJuego() {
 
-        if (finJuegoActivo) return;
+        if (finJuegoActivo) {
+            return;
+        }
         finJuegoActivo = true;
 
         detenerCountdown();
@@ -528,19 +546,21 @@ public class FoxJump extends JFrame implements JuegoBase {
             ((javax.swing.Timer) e.getSource()).stop();
 
             // SI CONSERVO TODAS LAS VIDAS = VICTORIA PERFECTA, SINO = VICTORIA NORMAL
-            if (vidas == MAX_VIDAS) {
-                VictoriaPerfecta vp = new VictoriaPerfecta(e2 -> {}, this);
+            if (vidas == maxVidas) {
+                VictoriaPerfecta vp = new VictoriaPerfecta(e2 -> {
+                }, this);
                 fadeTo(() -> setContentPane(vp.getFondo()), 400);
             } else {
-                Victoria v = new Victoria(e2 -> {}, this);
+                Victoria v = new Victoria(e2 -> {
+                }, this);
                 fadeTo(() -> setContentPane(v.getFondo()), 400);
             }
         }).start();
     }
 
     /**
-     * RESETEA TODOS LOS VALORES DEL JUEGO A SU ESTADO INICIAL
-     * PARA EMPEZAR UNA PARTIDA NUEVA DESDE CERO.
+     * RESETEA TODOS LOS VALORES DEL JUEGO A SU ESTADO INICIAL PARA EMPEZAR UNA
+     * PARTIDA NUEVA DESDE CERO.
      */
     private void reiniciarJuego() {
 
@@ -570,7 +590,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         // RESTAURAR TODOS LOS CORAZONES LLENOS (LA CANTIDAD LA DEFINE MAX_VIDAS)
         // SE ASIGNA DIRECTO A MAX_VIDAS, NUNCA MAS ALTO, PORQUE MAX_VIDAS ES EL TOPE
-        vidas = MAX_VIDAS;
+        vidas = maxVidas;
         for (JLabel corazon : corazones) {
             corazon.setIcon(iconoCorazonLleno);
             corazon.setVisible(true);
@@ -584,12 +604,12 @@ public class FoxJump extends JFrame implements JuegoBase {
         fondo.setBackground(new Color(178, 197, 178));
 
         // REINICIAR TODOS LOS CONTADORES Y FLAGS DE LA PARTIDA
-        dificultadActual  = Dificultad.FACIL;
-        correctasTotales  = 0;
-        idPreguntaActual  = 0;
-        finJuegoActivo    = false;
+        dificultadActual = Dificultad.FACIL;
+        correctasTotales = 0;
+        idPreguntaActual = 0;
+        finJuegoActivo = false;
         procesandoRespuesta = false;
-        puntajeTotal      = 0;
+        puntajeTotal = 0;
         tiempoTotalJugado = 0;
         preguntasVistas.clear();
 
@@ -619,13 +639,10 @@ public class FoxJump extends JFrame implements JuegoBase {
         }).start();
     }
 
-
-
     // SISTEMA DE CUENTA REGRESIVA**********************************************
-  
     /**
-     * INICIA UN NUEVO COUNTDOWN CON EL NUMERO DE SEGUNDOS INDICADO.
-     * CADA SEGUNDO ACTUALIZA EL LABEL DE TIEMPO Y SUMA UN SEGUNDO AL TOTAL.
+     * INICIA UN NUEVO COUNTDOWN CON EL NUMERO DE SEGUNDOS INDICADO. CADA
+     * SEGUNDO ACTUALIZA EL LABEL DE TIEMPO Y SUMA UN SEGUNDO AL TOTAL.
      *
      */
     private void iniciarCountdown(int segundos) {
@@ -654,7 +671,9 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             if (segundosRestantes <= 0) {
                 detenerCountdown();
-                if (finJuegoActivo) return;
+                if (finJuegoActivo) {
+                    return;
+                }
                 finJuegoActivo = true;
                 mostrarTiempoAgotado();
             }
@@ -665,8 +684,8 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * DETIENE EL COUNTDOWN SI ESTA CORRIENDO.
-     * SE LLAMA ANTES DE MOSTRAR DIALOGOS, PISTAS, O INICIAR ANIMACIONES.
+     * DETIENE EL COUNTDOWN SI ESTA CORRIENDO. SE LLAMA ANTES DE MOSTRAR
+     * DIALOGOS, PISTAS, O INICIAR ANIMACIONES.
      */
     private void detenerCountdown() {
         if (countdown != null && countdown.isRunning()) {
@@ -675,16 +694,18 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * CREA Y ARRANCA UN NUEVO COUNTDOWN CON LOS SEGUNDOS QUE QUEDABAN.
-     * SE USA AL REANUDAR DESPUES DE QUE EL JUGADOR CIERRA UN DIALOGO DE PISTA
-     * O CUANDO VUELVE A ABRIR LA VENTANA QUE HABIA MINIMIZADO.
+     * CREA Y ARRANCA UN NUEVO COUNTDOWN CON LOS SEGUNDOS QUE QUEDABAN. SE USA
+     * AL REANUDAR DESPUES DE QUE EL JUGADOR CIERRA UN DIALOGO DE PISTA O CUANDO
+     * VUELVE A ABRIR LA VENTANA QUE HABIA MINIMIZADO.
      *
      * NO HACE NADA SI EL TIEMPO YA SE AGOTO, EL JUEGO TERMINO, O SE ESTA
      * PROCESANDO UNA RESPUESTA EN ESTE MOMENTO.
      */
     private void reanudarCountdown() {
 
-        if (segundosRestantes <= 0 || finJuegoActivo || procesandoRespuesta) return;
+        if (segundosRestantes <= 0 || finJuegoActivo || procesandoRespuesta) {
+            return;
+        }
 
         // POR SI QUEDO UN COUNTDOWN VIEJO CORRIENDO, LO DETENEMOS ANTES DE CREAR OTRO
         // (EVITA TENER DOS TIMERS EN PARALELO QUE PUEDAN DISPARAR EL GAME OVER)
@@ -704,7 +725,9 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             if (segundosRestantes <= 0) {
                 detenerCountdown();
-                if (finJuegoActivo) return;
+                if (finJuegoActivo) {
+                    return;
+                }
                 finJuegoActivo = true;
                 mostrarTiempoAgotado();
             }
@@ -715,8 +738,8 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * REINICIA LOS SEGUNDOS RESTANTES EN MM:SS Y LOS MUESTRA EN EL LABEL.
-     * SE LLAMA CADA VEZ QUE EL TIMER CAMBIA (O SEA, CADA SEGUNDO).
+     * REINICIA LOS SEGUNDOS RESTANTES EN MM:SS Y LOS MUESTRA EN EL LABEL. SE
+     * LLAMA CADA VEZ QUE EL TIMER CAMBIA (O SEA, CADA SEGUNDO).
      */
     private void actualizarLabelTiempo() {
         int min = segundosRestantes / 60;
@@ -727,16 +750,16 @@ public class FoxJump extends JFrame implements JuegoBase {
     /**
      * CALCULA LOS PUNTOS A GANAR SEGUN QUE TAN RAPIDO RESPONDIO EL JUGADOR.
      *
-     * SI EL JUGADOR RESPONDIO EN 5 SEGUNDOS O MENOS, SE LE OTORGA EL
-     * PUNTAJE MAXIMO (100) DIRECTAMENTE, SIN IMPORTAR EL TIEMPO LIMITE
-     * DE LA PREGUNTA. ESTO PREMIA LA RAPIDEZ EXTREMA POR ENCIMA DE LA
-     * FORMULA PROPORCIONAL NORMAL.
+     * SI EL JUGADOR RESPONDIO EN 5 SEGUNDOS O MENOS, SE LE OTORGA EL PUNTAJE
+     * MAXIMO (100) DIRECTAMENTE, SIN IMPORTAR EL TIEMPO LIMITE DE LA PREGUNTA.
+     * ESTO PREMIA LA RAPIDEZ EXTREMA POR ENCIMA DE LA FORMULA PROPORCIONAL
+     * NORMAL.
      *
-     * SI TARDO MAS DE 5 SEGUNDOS, SE APLICA LA FORMULA PROPORCIONAL:
-     * MAXIMO DE 100 PUNTOS SI RESPONDE CASI AL INSTANTE, Y UN MINIMO
-     * DE 10 PUNTOS AUNQUE TARDE TODO EL TIEMPO DISPONIBLE.
+     * SI TARDO MAS DE 5 SEGUNDOS, SE APLICA LA FORMULA PROPORCIONAL: MAXIMO DE
+     * 100 PUNTOS SI RESPONDE CASI AL INSTANTE, Y UN MINIMO DE 10 PUNTOS AUNQUE
+     * TARDE TODO EL TIEMPO DISPONIBLE.
      *
-     * @param tiempoUsado  SEGUNDOS QUE TARDO EN RESPONDER
+     * @param tiempoUsado SEGUNDOS QUE TARDO EN RESPONDER
      * @param tiempoMaximo SEGUNDOS MAXIMOS DISPONIBLES PARA ESTA PREGUNTA
      * @return PUNTOS CALCULADOS (ENTRE 10 Y 100)
      */
@@ -749,20 +772,20 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         double porcentajeRapidez = 1.0 - ((double) tiempoUsado / tiempoMaximo);
         int puntos = (int) (100 * porcentajeRapidez);
-        if (puntos < 10) puntos = 10;
+        if (puntos < 10) {
+            puntos = 10;
+        }
         return puntos;
     }
-
 
     // =========================================================================
     // LOGICA DE RESPUESTA Y ANIMACION
     // =========================================================================
-
     /**
      * CALCULA EL CENTRO ABSOLUTO DE UN NENUFAR EN COORDENADAS DEL PANEL FONDO.
      *
-     * NECESARIO PORQUE LOS NENUFARES VIVEN DENTRO DE panelLago, ENTONCES
-     * SUS COORDENADAS SON RELATIVAS AL LAGO, NO AL PANEL DE FONDO.
+     * NECESARIO PORQUE LOS NENUFARES VIVEN DENTRO DE panelLago, ENTONCES SUS
+     * COORDENADAS SON RELATIVAS AL LAGO, NO AL PANEL DE FONDO.
      *
      * @param nenufar EL JLabel DEL NENUFAR OBJETIVO
      * @return PUNTO CON LAS COORDENADAS ABSOLUTAS DEL CENTRO DEL NENUFAR
@@ -770,31 +793,31 @@ public class FoxJump extends JFrame implements JuegoBase {
     private Point centroNenufar(JLabel nenufar) {
         int lagoX = panelLago.getX();
         int lagoY = panelLago.getY();
-        int nx = nenufar.getX() + nenufar.getWidth()  / 2;
+        int nx = nenufar.getX() + nenufar.getWidth() / 2;
         int ny = nenufar.getY() + nenufar.getHeight() / 2;
         return new Point(lagoX + nx, lagoY + ny);
     }
 
     /**
-     * ANIMA LA MASCOTA DESDE SU POSICION ACTUAL HASTA LA POSICION DESEADA
-     * EN EL TIEMPO INDICADO, USANDO UNA FORMULA
+     * ANIMA LA MASCOTA DESDE SU POSICION ACTUAL HASTA LA POSICION DESEADA EN EL
+     * TIEMPO INDICADO, USANDO UNA FORMULA
      *
-     * SE DIVIDE EL MOVIMIENTO EN 20 PASOS Y SE USA UN TIMER DE SWING
-     * PARA ACTUALIZAR LA POSICION EN CADA PASO.
+     * SE DIVIDE EL MOVIMIENTO EN 20 PASOS Y SE USA UN TIMER DE SWING PARA
+     * ACTUALIZAR LA POSICION EN CADA PASO.
      *
-     * DURANTE LA ANIMACION SE FUERZA EL Z-ORDER DE LA MASCOTA A 0 (FRENTE)
-     * PARA QUE NUNCA QUEDE TAPADA POR OTRO COMPONENTE.
+     * DURANTE LA ANIMACION SE FUERZA EL Z-ORDER DE LA MASCOTA A 0 (FRENTE) PARA
+     * QUE NUNCA QUEDE TAPADA POR OTRO COMPONENTE.
      *
-     * @param destX     COORDENADA X DESTINO (EN COORDENADAS DE fondo)
-     * @param destY     COORDENADA Y DESTINO (EN COORDENADAS DE fondo)
+     * @param destX COORDENADA X DESTINO (EN COORDENADAS DE fondo)
+     * @param destY COORDENADA Y DESTINO (EN COORDENADAS DE fondo)
      * @param duracionMs DURACION TOTAL DE LA ANIMACION EN MILISEGUNDOS
-     * @param onFin     CODIGO A EJECUTAR AL TERMINAR LA ANIMACION (PUEDE SER NULL)
+     * @param onFin CODIGO A EJECUTAR AL TERMINAR LA ANIMACION (PUEDE SER NULL)
      */
     private void animarMascota(int destX, int destY, int duracionMs, Runnable onFin) {
 
         int startX = mascota.getX();
         int startY = mascota.getY();
-        int pasos   = 20;
+        int pasos = 20;
         int intervalo = duracionMs / pasos;
         int[] paso = {0};
 
@@ -812,7 +835,9 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             if (paso[0] >= pasos) {
                 anim.stop();
-                if (onFin != null) onFin.run();
+                if (onFin != null) {
+                    onFin.run();
+                }
             }
         });
         anim.start();
@@ -822,10 +847,11 @@ public class FoxJump extends JFrame implements JuegoBase {
      * BLOQUEA LOS DOS NENUFARES PARA QUE NO SE PUEDAN VOLVER A CLICKEAR
      * MIENTRAS HAY UNA ANIMACION O RESPUESTA EN PROCESO.
      *
-     * IMPORTANTE: nenufarVerdadero Y nenufarFalso SON JLabel, NO JButton,
-     * ASI QUE setEnabled(false) NO IMPIDE POR SI SOLO QUE EL MouseListener
-     * SIGA RECIBIENDO CLICKS. POR ESO SIEMPRE SE COMBINA CON EL FLAG
-     * procesandoRespuesta Y CON LA VALIDACION isEnabled() DENTRO DE CADA LISTENER.
+     * IMPORTANTE: nenufarVerdadero Y nenufarFalso SON JLabel, NO JButton, ASI
+     * QUE setEnabled(false) NO IMPIDE POR SI SOLO QUE EL MouseListener SIGA
+     * RECIBIENDO CLICKS. POR ESO SIEMPRE SE COMBINA CON EL FLAG
+     * procesandoRespuesta Y CON LA VALIDACION isEnabled() DENTRO DE CADA
+     * LISTENER.
      */
     private void bloquearNenufares() {
         nenufarVerdadero.setEnabled(false);
@@ -833,9 +859,8 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * DESBLOQUEA LOS DOS NENUFARES PARA QUE VUELVAN A ACEPTAR CLICKS.
-     * SE LLAMA CUANDO TERMINA LA ANIMACION DE RESPUESTA O AL CARGAR
-     * UNA PREGUNTA NUEVA.
+     * DESBLOQUEA LOS DOS NENUFARES PARA QUE VUELVAN A ACEPTAR CLICKS. SE LLAMA
+     * CUANDO TERMINA LA ANIMACION DE RESPUESTA O AL CARGAR UNA PREGUNTA NUEVA.
      */
     private void desbloquearNenufares() {
         nenufarVerdadero.setEnabled(true);
@@ -845,19 +870,16 @@ public class FoxJump extends JFrame implements JuegoBase {
     /**
      * PROCESA EL CLIC DEL USUARIO EN UN NENUFAR.
      *
-     * FLUJO CUANDO ES CORRECTO:
-     * 1. ANIMAR HACIA EL NENUFAR ELEGIDO (700ms)
-     * 2. ANIMAR DE REGRESO AL ORIGEN (500ms)
-     * 3. LLAMAR A procesarRespuestaCorrecta()
+     * FLUJO CUANDO ES CORRECTO: 1. ANIMAR HACIA EL NENUFAR ELEGIDO (700ms) 2.
+     * ANIMAR DE REGRESO AL ORIGEN (500ms) 3. LLAMAR A
+     * procesarRespuestaCorrecta()
      *
-     * FLUJO CUANDO ES INCORRECTO:
-     * 1. ANIMAR HACIA EL NENUFAR ELEGIDO (700ms)
-     * 2. MOSTRAR ICONO DE CAMBIO DE DIFICULTAD POR 900ms
-     * 3. RESTAURAR ICONO NORMAL Y ANIMAR DE REGRESO (500ms)
-     * 4. LLAMAR A procesarRespuestaIncorrecta()
+     * FLUJO CUANDO ES INCORRECTO: 1. ANIMAR HACIA EL NENUFAR ELEGIDO (700ms) 2.
+     * MOSTRAR ICONO DE CAMBIO DE DIFICULTAD POR 900ms 3. RESTAURAR ICONO NORMAL
+     * Y ANIMAR DE REGRESO (500ms) 4. LLAMAR A procesarRespuestaIncorrecta()
      *
-     * LOS NENUFARES SE DESHABILITAN DURANTE TODA LA ANIMACION
-     * PARA EVITAR QUE EL USUARIO HAGA CLICK VARIAS  VECES.
+     * LOS NENUFARES SE DESHABILITAN DURANTE TODA LA ANIMACION PARA EVITAR QUE
+     * EL USUARIO HAGA CLICK VARIAS VECES.
      *
      * @param respuestaUsuario LA RESPUESTA BOOLEANA QUE ELIGIO EL JUGADOR
      */
@@ -865,7 +887,9 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         // DOBLE CANDADO: SI EL JUEGO TERMINO O YA HAY UNA RESPUESTA EN PROCESO,
         // IGNORAR POR COMPLETO ESTE CLICK (EVITA DOBLE CLICK Y CLICK EN LOS 2 A LA VEZ)
-        if (finJuegoActivo || procesandoRespuesta) return;
+        if (finJuegoActivo || procesandoRespuesta) {
+            return;
+        }
         procesandoRespuesta = true;
 
         detenerCountdown();
@@ -912,11 +936,10 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * MANEJA TODA LA LOGICA POSTERIOR A UNA RESPUESTA CORRECTA:
-     * - SUMA UNO A LOS ACIERTOS 
-     * - CALCULA Y ACUMULA EL PUNTAJE SEGUN EL TIEMPO UTILIZADO
-     * - INTENTA SUBIR DE DIFICULTAD
-     * - SI NO SUBIO, MUESTRA MENSAJE Y CARGA LA SIGUIENTE PREGUNTA
+     * MANEJA TODA LA LOGICA POSTERIOR A UNA RESPUESTA CORRECTA: - SUMA UNO A
+     * LOS ACIERTOS - CALCULA Y ACUMULA EL PUNTAJE SEGUN EL TIEMPO UTILIZADO -
+     * INTENTA SUBIR DE DIFICULTAD - SI NO SUBIO, MUESTRA MENSAJE Y CARGA LA
+     * SIGUIENTE PREGUNTA
      */
     private void procesarRespuestaCorrecta() {
 
@@ -924,7 +947,9 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         // CALCULAR CUANTOS SEGUNDOS TARDO EL JUGADOR EN RESPONDER
         int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
-        if (tiempoUsado < 0) tiempoUsado = tiempoMaximoPregunta;
+        if (tiempoUsado < 0) {
+            tiempoUsado = tiempoMaximoPregunta;
+        }
 
         puntajeTotal += calcularPuntosPorTiempo(tiempoUsado, tiempoMaximoPregunta);
 
@@ -943,8 +968,8 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * MANEJA LA LOGICA POSTERIOR A UNA RESPUESTA INCORRECTA:
-     * MUESTRA EL MENSAJE DE ERROR Y LLAMA A perderVida().
+     * MANEJA LA LOGICA POSTERIOR A UNA RESPUESTA INCORRECTA: MUESTRA EL MENSAJE
+     * DE ERROR Y LLAMA A perderVida().
      */
     private void procesarRespuestaIncorrecta() {
         JOptionPane.showMessageDialog(this, "¡Incorrecto!");
@@ -954,19 +979,20 @@ public class FoxJump extends JFrame implements JuegoBase {
     /**
      * VERIFICA SI EL JUGADOR ACUMULO SUFICIENTES ACIERTOS PARA SUBIR DE NIVEL.
      *
-     * SI CORRESPONDE SUBIR:
-     * - CAMBIA dificultadActual AL SIGUIENTE NIVEL
-     * - RESETEA EL CONTADOR DE CORRECTAS
-     * - RESUELVE EL NUEVO id_nivel EN BD
-     * - MUESTRA LA PantallaDificultad CON TRANSICION
+     * SI CORRESPONDE SUBIR: - CAMBIA dificultadActual AL SIGUIENTE NIVEL -
+     * RESETEA EL CONTADOR DE CORRECTAS - RESUELVE EL NUEVO id_nivel EN BD -
+     * MUESTRA LA PantallaDificultad CON TRANSICION
      *
-     * SI YA ESTA EN DIFICIL Y LLEGO A 5, SE ACTIVA EL FIN DE JUEGO DIRECTAMENTE.
+     * SI YA ESTA EN DIFICIL Y LLEGO A 5, SE ACTIVA EL FIN DE JUEGO
+     * DIRECTAMENTE.
      *
      * @return TRUE SI SE SUBIO DE DIFICULTAD, FALSE SI NO CORRESPONDIA SUBIR
      */
     private boolean intentarSubirDificultad() {
 
-        if (correctasTotales < CORRECTAS_SUBIR) return false;
+        if (correctasTotales < CORRECTAS_SUBIR) {
+            return false;
+        }
 
         boolean subio = switch (dificultadActual) {
             case FACIL -> {
@@ -977,7 +1003,8 @@ public class FoxJump extends JFrame implements JuegoBase {
                 dificultadActual = Dificultad.DIFICIL;
                 yield true;
             }
-            case DIFICIL -> false;
+            case DIFICIL ->
+                false;
         };
 
         if (subio) {
@@ -1000,24 +1027,21 @@ public class FoxJump extends JFrame implements JuegoBase {
         return subio;
     }
 
-
     // =========================================================================
     // SISTEMA DE VIDAS
     // =========================================================================
-
     /**
      * DESCUENTA UNA VIDA Y ACTUALIZA EL CORAZON CORRESPONDIENTE.
      *
      * EL ORDEN DE LOS CORAZONES ROTOS ES DE DERECHA A IZQUIERDA. COMO
-     * corazones[] SE LLENA DE IZQUIERDA A DERECHA (INDICE 0 = PRIMER
-     * CORAZON), Y vidas VA BAJANDO DESDE MAX_VIDAS HASTA 0, EL INDICE
-     * DEL CORAZON QUE SE ROMPE EN CADA PASO ES SIEMPRE EL NUEVO VALOR
-     * DE vidas (DESPUES DE RESTAR 1). ESTO FUNCIONA SIN IMPORTAR
-     * CUANTAS VIDAS TENGA EL JUEGO (MAX_VIDAS).
+     * corazones[] SE LLENA DE IZQUIERDA A DERECHA (INDICE 0 = PRIMER CORAZON),
+     * Y vidas VA BAJANDO DESDE MAX_VIDAS HASTA 0, EL INDICE DEL CORAZON QUE SE
+     * ROMPE EN CADA PASO ES SIEMPRE EL NUEVO VALOR DE vidas (DESPUES DE RESTAR
+     * 1). ESTO FUNCIONA SIN IMPORTAR CUANTAS VIDAS TENGA EL JUEGO (MAX_VIDAS).
      *
-     * CUANDO vidas LLEGA A 0, SE MUESTRA LA PANTALLA DE DERROTA CON
-     * UNA ESPERA DE 400ms PARA QUE EL JUGADOR VEA EL ULTIMO CORAZON
-     * ROMPERSE ANTES DE SALIR.
+     * CUANDO vidas LLEGA A 0, SE MUESTRA LA PANTALLA DE DERROTA CON UNA ESPERA
+     * DE 400ms PARA QUE EL JUGADOR VEA EL ULTIMO CORAZON ROMPERSE ANTES DE
+     * SALIR.
      */
     private void perderVida() {
 
@@ -1045,24 +1069,26 @@ public class FoxJump extends JFrame implements JuegoBase {
      * SUMA VIDAS AL JUGADOR (POR EJEMPLO, SI EN EL FUTURO SE AGREGA UNA
      * RECOMPENSA O POWER-UP QUE OTORGUE VIDAS EXTRA).
      *
-     * ESTE ES EL UNICO LUGAR DONDE "vidas" PUEDE AUMENTAR, Y ESTA
-     * BLINDADO CON Math.min() PARA QUE NUNCA, BAJO NINGUNA CIRCUNSTANCIA,
-     * SUPERE MAX_VIDAS. SI SE INTENTA SUMAR MAS DE LO QUE CABE, EL
-     * EXCEDENTE SIMPLEMENTE SE IGNORA.
+     * ESTE ES EL UNICO LUGAR DONDE "vidas" PUEDE AUMENTAR, Y ESTA BLINDADO CON
+     * Math.min() PARA QUE NUNCA, BAJO NINGUNA CIRCUNSTANCIA, SUPERE MAX_VIDAS.
+     * SI SE INTENTA SUMAR MAS DE LO QUE CABE, EL EXCEDENTE SIMPLEMENTE SE
+     * IGNORA.
      *
-     * TAMBIEN SE ENCARGA DE RESTAURAR VISUALMENTE LOS CORAZONES ROTOS
-     * QUE VUELVEN A ESTAR "LLENOS" TRAS LA RECUPERACION.
+     * TAMBIEN SE ENCARGA DE RESTAURAR VISUALMENTE LOS CORAZONES ROTOS QUE
+     * VUELVEN A ESTAR "LLENOS" TRAS LA RECUPERACION.
      *
      * @param cantidad CUANTAS VIDAS SE INTENTAN AGREGAR (DEBE SER POSITIVO)
      */
     public void agregarVidas(int cantidad) {
 
-        if (cantidad <= 0) return;
+        if (cantidad <= 0) {
+            return;
+        }
 
         int vidasAnteriores = vidas;
 
         // TOPE DURO: NUNCA PASAR DE MAX_VIDAS, SIN IMPORTAR "cantidad"
-        vidas = Math.min(MAX_VIDAS, vidas + cantidad);
+        vidas = Math.min(maxVidas, vidas + cantidad);
 
         // RESTAURAR LOS CORAZONES QUE PASARON DE ROTOS A LLENOS
         for (int i = vidasAnteriores; i < vidas; i++) {
@@ -1072,18 +1098,16 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-
     // =========================================================================
     // ALEATORIZACION DE NENUFARES
     // =========================================================================
-
     /**
      * DECIDE ALEATORIAMENTE SI "VERDADERO" QUEDA A LA IZQUIERDA O DERECHA.
      *
-     * ACTUALIZA TANTO EL TEXTO VISIBLE DEL NENUFAR COMO LA clientProperty
-     * QUE GUARDA SU VALOR BOOLEANO REAL. ASI, AL HACER CLIC, EL LISTENER
-     * PUEDE SABER QUE RESPUESTA REPRESENTA CADA NENUFAR SIN IMPORTAR
-     * EN QUE POSICION QUEDO.
+     * ACTUALIZA TANTO EL TEXTO VISIBLE DEL NENUFAR COMO LA clientProperty QUE
+     * GUARDA SU VALOR BOOLEANO REAL. ASI, AL HACER CLIC, EL LISTENER PUEDE
+     * SABER QUE RESPUESTA REPRESENTA CADA NENUFAR SIN IMPORTAR EN QUE POSICION
+     * QUEDO.
      *
      * ESTO EVITA QUE EL JUGADOR APRENDA LA POSICION EN LUGAR DE LA RESPUESTA.
      */
@@ -1107,14 +1131,12 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-
     // =========================================================================
     // UTILIDADES GENERALES
     // =========================================================================
-
     /**
-     * MUESTRA UN DIALOGO DE ERROR CON EL MENSAJE DE LA EXCEPCION SQL.
-     * SE LLAMA DESDE TODOS LOS BLOQUES CATCH DE LAS CONSULTAS A BD.
+     * MUESTRA UN DIALOGO DE ERROR CON EL MENSAJE DE LA EXCEPCION SQL. SE LLAMA
+     * DESDE TODOS LOS BLOQUES CATCH DE LAS CONSULTAS A BD.
      *
      * @param ex LA EXCEPCION SQL CAPTURADA
      */
@@ -1125,11 +1147,11 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * CARGA LAS FUENTES PERSONALIZADAS DESDE LOS RECURSOS DEL PROYECTO.
-     * SI ALGUNA FALLA, SE USA ARIAL COMO RESPALDO PARA NO ROMPER LA UI.
+     * CARGA LAS FUENTES PERSONALIZADAS DESDE LOS RECURSOS DEL PROYECTO. SI
+     * ALGUNA FALLA, SE USA ARIAL COMO RESPALDO PARA NO ROMPER LA UI.
      *
-     * SE LLAMA LO PRIMERO EN EL CONSTRUCTOR PORQUE LOS COMPONENTES
-     * DEPENDEN DE ESTAS FUENTES PARA CONFIGURAR SU TEXTO.
+     * SE LLAMA LO PRIMERO EN EL CONSTRUCTOR PORQUE LOS COMPONENTES DEPENDEN DE
+     * ESTAS FUENTES PARA CONFIGURAR SU TEXTO.
      */
     private void cargarFuentes() {
         try {
@@ -1143,23 +1165,18 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-
     // =========================================================================
     // CONSTRUCTOR DE LA INTERFAZ GRAFICA
     // =========================================================================
-
     /**
      * CREA Y POSICIONA TODOS LOS COMPONENTES VISUALES DEL JUEGO.
      *
-     * SE ORGANIZA EN ESTE ORDEN:
-     * 1. PRECARGAR ICONOS (MASCOTA Y CORAZONES) PARA REUTILIZARLOS SIN RECARGAR
-     * 2. CREAR LAS VIDAS (CORAZONES) DE FORMA DINAMICA SEGUN MAX_VIDAS, EN FILAS
-     * 3. BOTON DE AYUDA CON SU LISTENER
-     * 4. TITULO DE LA PREGUNTA
-     * 5. ETIQUETAS DE TIEMPO
-     * 6. PANEL DEL LAGO CON SUS NENUFARES
-     * 7. ETIQUETAS DE NIVEL, DIFICULTAD Y CATEGORIA
-     * 8. MASCOTA (SE AGREGA AL FINAL PARA QUEDAR ENCIMA DE TODO)
+     * SE ORGANIZA EN ESTE ORDEN: 1. PRECARGAR ICONOS (MASCOTA Y CORAZONES) PARA
+     * REUTILIZARLOS SIN RECARGAR 2. CREAR LAS VIDAS (CORAZONES) DE FORMA
+     * DINAMICA SEGUN MAX_VIDAS, EN FILAS 3. BOTON DE AYUDA CON SU LISTENER 4.
+     * TITULO DE LA PREGUNTA 5. ETIQUETAS DE TIEMPO 6. PANEL DEL LAGO CON SUS
+     * NENUFARES 7. ETIQUETAS DE NIVEL, DIFICULTAD Y CATEGORIA 8. MASCOTA (SE
+     * AGREGA AL FINAL PARA QUEDAR ENCIMA DE TODO)
      *
      */
     private void crearComponentes() {
@@ -1213,15 +1230,15 @@ public class FoxJump extends JFrame implements JuegoBase {
         // LA CANTIDAD Y POSICION DE CADA CORAZON, SIN TOCAR NADA MAS DEL CODIGO.
         // EL TOPE REAL DE VIDAS LO IMPONE MAX_VIDAS EN TODA LA CLASE
         // (perderVida() NUNCA BAJA DE 0, Y agregarVidas() NUNCA SUBE DE MAX_VIDAS).
-        corazones = new JLabel[MAX_VIDAS];
+        corazones = new JLabel[maxVidas];
         int xInicialCorazon = 70;
         int yInicialCorazon = 20;
         int espaciadoX = 55;
         int espaciadoY = 55;
         int tamanoCorazon = 50;
 
-        for (int i = 0; i < MAX_VIDAS; i++) {
-            int fila    = i / CORAZONES_POR_FILA;
+        for (int i = 0; i < maxVidas; i++) {
+            int fila = i / CORAZONES_POR_FILA;
             int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon;
@@ -1250,7 +1267,9 @@ public class FoxJump extends JFrame implements JuegoBase {
         btnAyuda.addActionListener(e -> {
 
             // VERIFICAR QUE NO SE HAYA USADO YA LA PISTA EN ESTA PREGUNTA
-            if (pistaMostradaEnPreguntaActual) return;
+            if (pistaMostradaEnPreguntaActual) {
+                return;
+            }
 
             // MARCAR COMO USADA Y DESHABILITAR EL BOTON VISUALMENTE
             pistaMostradaEnPreguntaActual = true;
@@ -1342,16 +1361,22 @@ public class FoxJump extends JFrame implements JuegoBase {
             public void mouseClicked(MouseEvent e) {
                 // VALIDACION EXPLICITA: NO CONFIAR SOLO EN QUE Swing "BLOQUEE"
                 // EL CLICK DE UN JLabel DESHABILITADO, PORQUE NO LO HACE
-                if (!nenufarVerdadero.isEnabled() || procesandoRespuesta || finJuegoActivo) return;
+                if (!nenufarVerdadero.isEnabled() || procesandoRespuesta || finJuegoActivo) {
+                    return;
+                }
                 responder((Boolean) nenufarVerdadero.getClientProperty("respuesta"));
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (!nenufarVerdadero.isEnabled()) return;
+                if (!nenufarVerdadero.isEnabled()) {
+                    return;
+                }
                 nenufarVerdadero.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 // EFECTO DE AGRANDADO AL PASAR EL MOUSE POR ENCIMA
                 nenufarVerdadero.setBounds(175, 135, 250, 190);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 nenufarVerdadero.setBounds(180, 140, 240, 180);
@@ -1381,15 +1406,21 @@ public class FoxJump extends JFrame implements JuegoBase {
         nenufarFalso.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (!nenufarFalso.isEnabled() || procesandoRespuesta || finJuegoActivo) return;
+                if (!nenufarFalso.isEnabled() || procesandoRespuesta || finJuegoActivo) {
+                    return;
+                }
                 responder((Boolean) nenufarFalso.getClientProperty("respuesta"));
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (!nenufarFalso.isEnabled()) return;
+                if (!nenufarFalso.isEnabled()) {
+                    return;
+                }
                 nenufarFalso.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 nenufarFalso.setBounds(645, 135, 250, 190);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 nenufarFalso.setBounds(650, 140, 240, 180);
@@ -1448,39 +1479,44 @@ public class FoxJump extends JFrame implements JuegoBase {
         fondo.setComponentZOrder(mascota, 0);
     }
 
-
     // =========================================================================
     // METODOS PUBLICOS (USADOS POR OTRAS CLASES)
     // =========================================================================
-
     /**
-     * DEVUELVE EL PANEL 
-     * LO USAN CLASES COMO PantallaDificultad, Victoria, ETC.
+     * DEVUELVE EL PANEL LO USAN CLASES COMO PantallaDificultad, Victoria, ETC.
      * PARA PODER HACER setContentPane(foxJump.getFondo()) Y VOLVER AL JUEGO.
      */
     public JPanel getFondo() {
         return fondo;
     }
 
-    /** @return PUNTAJE TOTAL ACUMULADO HASTA ESTE MOMENTO */
+    /**
+     * @return PUNTAJE TOTAL ACUMULADO HASTA ESTE MOMENTO
+     */
     @Override
     public int getPuntajeTotal() {
         return puntajeTotal;
     }
 
-    /** @return SEGUNDOS TOTALES QUE EL JUGADOR HA ESTADO RESPONDIENDO */
+    /**
+     * @return SEGUNDOS TOTALES QUE EL JUGADOR HA ESTADO RESPONDIENDO
+     */
     @Override
     public int getTiempoTotalJugado() {
         return tiempoTotalJugado;
     }
 
-    /** IMPLEMENTACION DE JuegoBase: DELEGA EN jugarDeNuevo() */
+    /**
+     * IMPLEMENTACION DE JuegoBase: DELEGA EN jugarDeNuevo()
+     */
     @Override
     public void reiniciar() {
         jugarDeNuevo();
     }
 
-    /** IMPLEMENTACION DE JuegoBase: CIERRA ESTE FRAME Y ABRE EL MENU */
+    /**
+     * IMPLEMENTACION DE JuegoBase: CIERRA ESTE FRAME Y ABRE EL MENU
+     */
     @Override
     public void irAlMenu() {
         fadeTo(() -> {
@@ -1489,32 +1525,36 @@ public class FoxJump extends JFrame implements JuegoBase {
         }, 400);
     }
 
-    /** IMPLEMENTACION DE JuegoBase: DEVUELVE ESTE MISMO FRAME */
+    /**
+     * IMPLEMENTACION DE JuegoBase: DEVUELVE ESTE MISMO FRAME
+     */
     @Override
     public JFrame getFrame() {
         return this;
     }
 
     /**
-     * MUESTRA LA PANTALLA DE DERROTA POR VIDAS AGOTADAS.
-     * SE LLAMA CON UN RETARDO DESDE perderVida() PARA DAR TIEMPO
-     * A VER EL ULTIMO CORAZON ROMPERSE.
+     * MUESTRA LA PANTALLA DE DERROTA POR VIDAS AGOTADAS. SE LLAMA CON UN
+     * RETARDO DESDE perderVida() PARA DAR TIEMPO A VER EL ULTIMO CORAZON
+     * ROMPERSE.
      */
     private void mostrarHaPerdido() {
         fadeTo(() -> {
-            new SeAcaboVidas(this, e -> {}).setVisible(true);
+            new SeAcaboVidas(this, e -> {
+            }).setVisible(true);
             dispose();
         }, 400);
     }
 
     /**
-     * MUESTRA LA PANTALLA DE DERROTA POR TIEMPO AGOTADO.
-     * SE LLAMA CUANDO EL COUNTDOWN LLEGA A CERO.
+     * MUESTRA LA PANTALLA DE DERROTA POR TIEMPO AGOTADO. SE LLAMA CUANDO EL
+     * COUNTDOWN LLEGA A CERO.
      */
     private void mostrarTiempoAgotado() {
         bloquearNenufares();
         fadeTo(() -> {
-            new SeAcaboTiempo(this, e -> {}).setVisible(true);
+            new SeAcaboTiempo(this, e -> {
+            }).setVisible(true);
             dispose();
         }, 400);
     }
@@ -1523,10 +1563,11 @@ public class FoxJump extends JFrame implements JuegoBase {
      * EFECTO DE TRANSICION: OSCURECE GRADUALMENTE LA PANTALLA HASTA NEGRO,
      * EJECUTA onMidpoint EN EL PUNTO MAS OSCURO, LUEGO ACLARA DE NUEVO.
      *
-     * SE USA PARA TODAS LAS TRANSICIONES ENTRE PANTALLAS DEL JUEGO.
-     * USA EL GLASS PANE DEL FRAME COMO CAPA SEMITRANSPARENTE.
+     * SE USA PARA TODAS LAS TRANSICIONES ENTRE PANTALLAS DEL JUEGO. USA EL
+     * GLASS PANE DEL FRAME COMO CAPA SEMITRANSPARENTE.
      *
-     * @param onMidpoint CODIGO A EJECUTAR CUANDO LA PANTALLA ESTA COMPLETAMENTE NEGRA
+     * @param onMidpoint CODIGO A EJECUTAR CUANDO LA PANTALLA ESTA COMPLETAMENTE
+     * NEGRA
      * @param duracionMs DURACION TOTAL DE LA ANIMACION (FADE IN + FADE OUT)
      */
     private void fadeTo(Runnable onMidpoint, int duracionMs) {
@@ -1547,10 +1588,10 @@ public class FoxJump extends JFrame implements JuegoBase {
         glass.add(overlay, BorderLayout.CENTER);
         glass.setVisible(true);
 
-        int pasos    = 20;
+        int pasos = 20;
         int intervalo = (duracionMs / 2) / pasos;
-        int[] alpha  = {0};
-        int[] fase   = {0}; // FASE 0 = OSCURECIENDO | FASE 1 = ACLARANDO
+        int[] alpha = {0};
+        int[] fase = {0}; // FASE 0 = OSCURECIENDO | FASE 1 = ACLARANDO
 
         javax.swing.Timer fadeTimer = new javax.swing.Timer(intervalo, null);
 
@@ -1598,8 +1639,8 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * SE LLAMA DESDE PantallaDificultad CUANDO EL JUGADOR ELIGE CONTINUAR.
-     * HACE EL FADE DE REGRESO AL PANEL DEL JUEGO Y LUEGO CARGA LA PROXIMA PREGUNTA.
+     * SE LLAMA DESDE PantallaDificultad CUANDO EL JUGADOR ELIGE CONTINUAR. HACE
+     * EL FADE DE REGRESO AL PANEL DEL JUEGO Y LUEGO CARGA LA PROXIMA PREGUNTA.
      * EL RETARDO DE 420ms COINCIDE CON EL PUNTO MEDIO DEL FADE.
      */
     public void continuarDespuesDeDificultad() {
@@ -1611,8 +1652,8 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
-     * MAIN PARA LA FASE DE PRUEBAS DURANTE EL DESAROLLO
-     * .DURANTE EL JUEGO REAL SOLO SE LLAMA DURANTE EL MENU 
+     * MAIN PARA LA FASE DE PRUEBAS DURANTE EL DESAROLLO .DURANTE EL JUEGO REAL
+     * SOLO SE LLAMA DURANTE EL MENU
      */
     public static void main(String[] args) {
         new FoxJump("Animales");

@@ -104,7 +104,7 @@ public class IniciarSesion extends JFrame {
         panelEslogan.add(titulo);
 
         //---------------- USUARIO ----------------
-        lblUsuario = new JLabel("Nombre:");
+        lblUsuario = new JLabel("Correo:");
         lblUsuario.setFont(fuente2.deriveFont(25f));
         lblUsuario.setForeground(Color.WHITE);
         lblUsuario.setBounds(760, 380, 200, 30);
@@ -118,7 +118,7 @@ public class IniciarSesion extends JFrame {
         fondo.add(txtUsuario);
 
         //---------------- PASSWORD ----------------
-        lblPassword = new JLabel("Password:");
+        lblPassword = new JLabel("Contraseña:");
         lblPassword.setFont(fuente2.deriveFont(25f));
         lblPassword.setForeground(Color.WHITE);
         lblPassword.setBounds(760, 490, 200, 30);
@@ -202,7 +202,7 @@ public class IniciarSesion extends JFrame {
 
             String sql
                     = "SELECT * FROM Usuario "
-                    + "WHERE nombre_usuario = ? "
+                    + "WHERE correo = ? "
                     + "AND contrasena = ? "
                     + "AND estado = 'activo'";
 

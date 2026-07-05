@@ -3,9 +3,10 @@ package main.Administrador;
 import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
-import main.Menu.DecoracionBotones; 
+import main.Menu.DecoracionBotones;
 
 public class M2_crearNuevo extends JFrame {
+
     private FondoPanelSemi fondo;
     private FondoPanelSemi panelSemi;
     private Font fuente1;
@@ -26,24 +27,24 @@ public class M2_crearNuevo extends JFrame {
 
     private JButton btnSiguiente;
     private DecoracionBotones btnSalir;
-    
+
     private JLabel lblMascota;
 
     public M2_crearNuevo() {
-        try{
+        try {
             // LettersForLearners
             fuente1 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
             // KGPerfectPenmanship
             fuente2 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-            
-        } catch (Exception e){
-            e.printStackTrace();            
-            fuente1 = new Font("Arial", Font.PLAIN,20);
-            fuente2 = new Font("Arial", Font.PLAIN,20);
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
@@ -171,10 +172,10 @@ public class M2_crearNuevo extends JFrame {
         lblMascota.setBounds(1280, 180, 650, 650);
 
         fondo.add(lblMascota);
-        
+
         // --- BOTÓN VOLVER---
         btnSalir = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
@@ -183,7 +184,8 @@ public class M2_crearNuevo extends JFrame {
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);
     }
-  public static void main(String[] args) {
+
+    public static void main(String[] args) {
         new M2_crearNuevo();
     }
 }

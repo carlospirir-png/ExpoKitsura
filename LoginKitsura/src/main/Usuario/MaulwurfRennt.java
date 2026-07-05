@@ -2,9 +2,10 @@ package main.Usuario;
 
 import java.awt.*;
 import java.util.*;
+import javax.swing.Timer;
 import javax.swing.*;
 
-// Clase principal que gestiona la interfaz gráfica del minijuego "Atrapa al topo" (hereda de JFrame).
+// Clase principal que gestiona la interfaz gráfica del minijuego "MaulwurfRennt".
 public class MaulwurfRennt extends JFrame {
 
     // Componentes principales, recursos de texto, imágenes y fuentes del juego.
@@ -13,13 +14,20 @@ public class MaulwurfRennt extends JFrame {
     private ImageIcon corazonNormal, mascotaIcon, corazonRoto;
 
     // Componentes gráficos para mostrar textos dinámicos, fondos e indicadores.
-    private JLabel vida1, vida2, vida3, titulo,
+    private JLabel titulo,
             tiempoTexto, tiempo,
             nivel, dificultad, categoria,
             mascota,
-            tablero, lblPuntos;
+            tablero, lblPuntos, lblProgreso;
 
     private JButton btnAyuda;
+
+    // ---------------- SISTEMA DE VIDAS DINÁMICO ----------------
+    // Cantidad máxima de vidas configurada por el administrador (VidasAdmin).
+    // Reemplaza los antiguos vida1, vida2, vida3 fijos, que limitaban el juego a 3.
+    private int maxVidas;
+    private JLabel[] corazones;
+    private static final int CORAZONES_POR_FILA = 5;
 
     // Constante que define el número máximo de topos que soporta el tablero.
     private static final int MAX_TOPOS = 7;
@@ -29,9 +37,14 @@ public class MaulwurfRennt extends JFrame {
     private JLabel[] carteles = new JLabel[MAX_TOPOS];
     private ImageIcon[] imagenesNormal = new ImageIcon[MAX_TOPOS];
     private ImageIcon[] imagenesGolpeado = new ImageIcon[MAX_TOPOS];
+    private Point[] posicionOriginal = new Point[7];
 
     // Constructor de la clase: Inicializa fuentes, configura el Frame y prepara el escenario gráfico.
-    public MaulwurfRennt() {
+    // "maxVidas" es la cantidad de corazones a dibujar, obtenida desde la base de
+    // datos (VidasDAO) por JuegoMaulwurfRennt antes de crear esta ventana.
+    public MaulwurfRennt(int maxVidas) {
+        this.maxVidas = (maxVidas < 1) ? 1 : maxVidas;
+
         // Intento de carga de fuentes tipográficas desde los recursos del sistema.
         try {
             fuente1 = Font.createFont(
@@ -57,7 +70,8 @@ public class MaulwurfRennt extends JFrame {
         setContentPane(fondo);
 
         // Propiedades de la ventana de la aplicación.
-        setTitle("Hidden Fox");
+        // BUG CORREGIDO: tenía el título de otro minijuego (copy-paste de Hidden Fox).
+        setTitle("Maulwurf Rennt");
         setSize(1880, 1080);
         setLocationRelativeTo(null); // Centra la ventana en pantalla.
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -99,40 +113,42 @@ public class MaulwurfRennt extends JFrame {
 
             corazonRoto = new ImageIcon(corazonRotoEscalado);
 
-            // Crear las vidas usando el corazón normal
-            vida1 = new JLabel(corazonNormal);
-            vida2 = new JLabel(corazonNormal);
-            vida3 = new JLabel(corazonNormal);
-
         } catch (Exception e) {
-
-            vida1 = new JLabel("♥");
-            vida2 = new JLabel("♥");
-            vida3 = new JLabel("♥");
-
-            vida1.setFont(fuente1.deriveFont(55f));
-            vida2.setFont(fuente1.deriveFont(55f));
-            vida3.setFont(fuente1.deriveFont(55f));
-
-            vida1.setForeground(Color.RED);
-            vida2.setForeground(Color.RED);
-            vida3.setForeground(Color.RED);
+            // Si fallan las imágenes, se recurre al carácter de texto "♥" como respaldo
+            corazonNormal = null;
+            corazonRoto = null;
         }
 
-        vida1.setBounds(70, 25, 60, 60);
-        vida2.setBounds(135, 25, 60, 60);
-        vida3.setBounds(200, 25, 60, 60);
+        // Se generan dinámicamente tantos corazones como "maxVidas" indique,
+        // en vez de los 3 JLabels fijos (vida1, vida2, vida3) que había antes.
+        corazones = new JLabel[maxVidas];
 
-        // Panel contenedor para alinear horizontalmente las vidas.
-        JPanel panelv = new JPanel();
-        panelv.setBounds(60, 20, 200, 70);
-//        panelv.setBackground(Color.false);
-        panelv.setBackground(new Color(0, 0, 0, 0));
-panelv.setOpaque(false);
-        panelv.add(vida1);
-        panelv.add(vida2);
-        panelv.add(vida3);
-        fondo.add(panelv);
+        int xInicial = 70;
+        int yInicial = 25;
+        int espaciado = 65;
+        int tamano = 60;
+
+        for (int i = 0; i < maxVidas; i++) {
+            int fila = i / CORAZONES_POR_FILA;
+            int columna = i % CORAZONES_POR_FILA;
+
+            JLabel corazon;
+            if (corazonNormal != null) {
+                corazon = new JLabel(corazonNormal);
+            } else {
+                corazon = new JLabel("♥");
+                corazon.setFont(fuente1.deriveFont(55f));
+                corazon.setForeground(Color.RED);
+            }
+
+            corazon.setBounds(
+                    xInicial + (columna * espaciado),
+                    yInicial + (fila * espaciado),
+                    tamano, tamano);
+
+            corazones[i] = corazon;
+            fondo.add(corazon);
+        }
 
         // Botón de ayuda.
         btnAyuda = new JButton("¿Necesitas ayuda?");
@@ -142,7 +158,7 @@ panelv.setOpaque(false);
 
         // Título o enunciado de la pregunta.
         titulo = new JLabel("PREGUNTA", SwingConstants.CENTER);
-        titulo.setFont(fuente1.deriveFont(Font.BOLD, 40f));
+        titulo.setFont(fuente2.deriveFont(20f));
         titulo.setForeground(Color.BLACK);
         titulo.setBounds(500, 20, 900, 150);
         fondo.add(titulo);
@@ -184,12 +200,21 @@ panelv.setOpaque(false);
         // Inicialización de los topos dentro del tablero.
         crearTopos();
 
+        //---------------- PROGRESO ----------------
+        lblProgreso = new JLabel("Progreso: 0/5");
+
+        lblProgreso.setFont(fuente2.deriveFont(24f));
+        lblProgreso.setForeground(Color.BLACK);
+        lblProgreso.setBounds(80, 750, 250, 40);
+
+        fondo.add(lblProgreso);
+
         //---------------- PUNTOS ----------------
         lblPuntos = new JLabel("Puntos: 0");
 
         lblPuntos.setFont(fuente2.deriveFont(24f));
         lblPuntos.setForeground(Color.BLACK);
-        lblPuntos.setBounds(80, 750, 250, 40);
+        lblPuntos.setBounds(80, 800, 250, 40);
 
         fondo.add(lblPuntos);
 
@@ -197,19 +222,19 @@ panelv.setOpaque(false);
         nivel = new JLabel("Nivel: ***");
         nivel.setFont(fuente2.deriveFont(25f));
         nivel.setForeground(Color.BLACK);
-        nivel.setBounds(80, 800, 250, 40);
+        nivel.setBounds(80, 850, 250, 40);
         fondo.add(nivel);
 
         dificultad = new JLabel("Dificultad: ***");
         dificultad.setFont(fuente2.deriveFont(25f));
         dificultad.setForeground(Color.BLACK);
-        dificultad.setBounds(80, 850, 250, 40);
+        dificultad.setBounds(80, 900, 250, 40);
         fondo.add(dificultad);
 
         categoria = new JLabel("Categoría: ***");
         categoria.setFont(fuente2.deriveFont(25f));
         categoria.setForeground(Color.BLACK);
-        categoria.setBounds(80, 900, 250, 40);
+        categoria.setBounds(80, 950, 500, 40);
         fondo.add(categoria);
 
         // Ilustración de la mascota guía.
@@ -233,8 +258,10 @@ panelv.setOpaque(false);
 
     public void cambiarColorFondo(Color color) {
 
-        tablero.setBackground(color);
-        tablero.repaint();
+        fondo.setOpaque(true);
+        fondo.setBackground(color);
+        fondo.revalidate();
+        fondo.repaint();
 
     }
 
@@ -302,7 +329,8 @@ panelv.setOpaque(false);
             topos[i] = new JLabel();
 
             try {
-                // Configura imagen del estado normal.
+
+                // Imagen normal
                 ImageIcon iconoNormal = new ImageIcon(
                         getClass().getResource(imagenes[i]));
 
@@ -311,7 +339,7 @@ panelv.setOpaque(false);
 
                 imagenesNormal[i] = new ImageIcon(imgNormal);
 
-                // Configura imagen del estado herido.
+                // Imagen golpeado
                 ImageIcon iconoHerido = new ImageIcon(
                         getClass().getResource(imagenesHerido[i]));
 
@@ -323,34 +351,120 @@ panelv.setOpaque(false);
                 topos[i].setIcon(imagenesNormal[i]);
 
             } catch (Exception e) {
+
                 topos[i].setText("TOPO");
             }
 
+            // Posición del topo
             topos[i].setBounds(
                     posiciones[i][0],
                     posiciones[i][1],
                     200,
                     280);
 
-            // Creación del letrero contenedor para los textos de respuesta.
+            // Guarda la posición original para las animaciones
+            posicionOriginal[i] = new Point(
+                    posiciones[i][0],
+                    posiciones[i][1]);
+
+            // Cartel de respuestas
             carteles[i] = new JLabel("", SwingConstants.CENTER);
             carteles[i].setOpaque(true);
             carteles[i].setBackground(new Color(150, 150, 150));
             carteles[i].setFont(fuente2.deriveFont(24f));
 
-            // Posicionamiento calculado para quedar encima de su respectivo topo.
             carteles[i].setBounds(
                     posiciones[i][0] + 15,
                     posiciones[i][1] + 160,
-                    170,
+                    220,
                     90);
 
             tablero.add(carteles[i]);
             tablero.add(topos[i]);
         }
 
-        // Muestra 5 topos por defecto al iniciar.
+        // Muestra cinco topos al iniciar el juego
         mostrarTopos(5);
+    }
+
+    public void ocultarTopo(int indice) {
+
+        JLabel topo = topos[indice];
+
+        int yFinal = posicionOriginal[indice].y + 90;
+
+        Timer timer = new Timer(10, null);
+
+        timer.addActionListener(e -> {
+
+            if (topo.getY() < yFinal) {
+
+                topo.setLocation(
+                        topo.getX(),
+                        topo.getY() + 5);
+
+            } else {
+
+                ((Timer) e.getSource()).stop();
+            }
+
+        });
+
+        timer.start();
+    }
+
+    public void mostrarTopo(int indice) {
+
+        JLabel topo = topos[indice];
+
+        topo.setLocation(
+                topo.getX(),
+                posicionOriginal[indice].y + 90);
+
+        Timer timer = new Timer(10, null);
+
+        timer.addActionListener(e -> {
+
+            if (topo.getY() > posicionOriginal[indice].y) {
+
+                topo.setLocation(
+                        topo.getX(),
+                        topo.getY() - 5);
+
+            } else {
+
+                topo.setLocation(
+                        topo.getX(),
+                        posicionOriginal[indice].y);
+
+                ((Timer) e.getSource()).stop();
+            }
+
+        });
+
+        timer.start();
+    }
+
+    public void animarEntradaTopos() {
+
+        for (int i = 0; i < topos.length; i++) {
+
+            if (topos[i].isVisible()) {
+
+                mostrarTopo(i);
+            }
+        }
+    }
+
+    public void animarSalidaTopos() {
+
+        for (int i = 0; i < topos.length; i++) {
+
+            if (topos[i].isVisible()) {
+
+                ocultarTopo(i);
+            }
+        }
     }
 
     // Controla cuántos topos y carteles se hacen visibles en la pantalla según el nivel.
@@ -390,6 +504,12 @@ panelv.setOpaque(false);
                     p.x + 15,
                     p.y + 160);
         }
+    }
+
+    public void actualizarProgreso(int realizadas, int total) {
+
+        lblProgreso.setText("Progreso: " + realizadas + "/" + total);
+
     }
 
     public void actualizarPuntos(int puntos) {
@@ -453,8 +573,7 @@ panelv.setOpaque(false);
     // Muestra u oculta los corazones de vida según el número de vidas restantes.
     public void actualizarVidas(int vidas) {
 
-        JLabel[] corazones = {vida1, vida2, vida3};
-
+        // Recorre el arreglo dinámico (tamaño = maxVidas), ya no limitado a 3.
         for (int i = 0; i < corazones.length; i++) {
 
             if (i < vidas) {
@@ -465,6 +584,12 @@ panelv.setOpaque(false);
 
         }
 
+    }
+
+    // Permite que JuegoMaulwurfRennt conozca el tope de vidas configurado
+    // (por ejemplo, para decidir si la partida fue "perfecta").
+    public int getMaxVidas() {
+        return maxVidas;
     }
 
     // Cambia el enunciado de la pregunta usando HTML para habilitar el salto de línea automático y centrado.
