@@ -158,7 +158,7 @@ public class MaulwurfRennt extends JFrame {
 
         // Título o enunciado de la pregunta.
         titulo = new JLabel("PREGUNTA", SwingConstants.CENTER);
-        titulo.setFont(fuente2.deriveFont(40f));
+        titulo.setFont(fuente2.deriveFont(20f));
         titulo.setForeground(Color.BLACK);
         titulo.setBounds(500, 20, 900, 150);
         fondo.add(titulo);
