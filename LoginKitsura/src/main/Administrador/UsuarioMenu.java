@@ -76,7 +76,8 @@ public class UsuarioMenu extends JFrame {
 
         btnAgregarAdmin.addActionListener(e -> {
 
-            // Acción para añadir administrador
+            new NuevoAdmin();
+            dispose();
 
         });
 
@@ -93,7 +94,8 @@ public class UsuarioMenu extends JFrame {
 
         btnEditar.addActionListener(e -> {
 
-            // Acción para editar usuario
+            new editarUsuario();
+            dispose();
 
         });
 
