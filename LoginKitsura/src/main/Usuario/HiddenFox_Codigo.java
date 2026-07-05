@@ -4,8 +4,6 @@ package main.Usuario;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import main.conexion.Conexion;
-import java.sql.*;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -37,7 +35,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     // Indica si el jugador a utilizado alguna pista durante la partida
     private boolean usoPista = false;
 
-    private int puntajeTotal;
     /*Timer de Swing que descuenta el tiempo cada segundo.*/
     private Timer countdown;
 

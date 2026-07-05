@@ -65,17 +65,28 @@ public class MenuAdmin extends JFrame {
         });
         fondo.add(btnUsuario);
         // ---------------- PUNTUACIONES ----------------
+        //Se inicializa el botón de puntuaciones
         JButton btnPuntuaciones = new DecoracionBotones("PUNTUACIONES",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO   
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO
+        
+        //Se el coloca al botón la fuente 2 y tamaño a dicha fuente
         btnPuntuaciones.setFont(fuente2.deriveFont(26f));
+      
+        //Se le coloca la posición y tamaño al botón
         btnPuntuaciones.setBounds(180, 335, 430, 65);
+        
+        //ActionListener
         btnPuntuaciones.addActionListener(e -> {
-            new PuntuacionesAdmin();
-            dispose();
+            //Se abre una nueva ventana de puntuacionesAdmin
+            new PuntuacionesAdmin(datos); //se envían los datos
+            dispose();//se cierra esta ventana
         });
+        
+        //Se agrega el botón al panel
         fondo.add(btnPuntuaciones);
+        
         // ---------------- VIDAS ----------------
         JButton btnVidas = new DecoracionBotones("VIDAS",
                 //ColorBase             ColorBorde              ColorLetra
@@ -163,7 +174,7 @@ public class MenuAdmin extends JFrame {
     
 
     public static void main(String[] args) {
-        DatosConfiguracion datos= new DatosConfiguracion("HiddenFox","Animales","Fácil");
+        DatosConfiguracion datos = new DatosConfiguracion("HiddenFox","Animales","Fácil");
         new MenuAdmin(datos);
     }
 
