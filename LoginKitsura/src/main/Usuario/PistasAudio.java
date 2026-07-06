@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.net.URL;
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -16,9 +17,9 @@ public class PistasAudio extends JFrame {
     private Clip clip;
     private String rutaAudio;
 
-public PistasAudio(String rutaAudio) {
+    public PistasAudio(String rutaAudio) {
 
-    this.rutaAudio = rutaAudio;
+        this.rutaAudio = rutaAudio;
         try {
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -35,7 +36,7 @@ public PistasAudio(String rutaAudio) {
         }
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
-        
+
         setTitle("Pistas de Audio");
         setSize(700, 450);
         setLocationRelativeTo(null);
@@ -44,64 +45,45 @@ public PistasAudio(String rutaAudio) {
         crearComponentes();
 
         reproducirAudio();
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                detenerAudio();
+            }
+        });
+
         setVisible(true);
+
     }
 
     private void crearComponentes() {
-        //---------------- BARRA SUPERIOR ----------------
-        JPanel barra = new JPanel();
-        barra.setLayout(null);
-        barra.setBackground(Color.WHITE);
-        barra.setBounds(0, 0, 600, 40);
-        fondo.add(barra);
-
-        JButton btnCerrar = new JButton("X");
-        btnCerrar.setFont(fuente1.deriveFont(15f));
-        btnCerrar.setBounds(520, 5, 60, 30);
-        btnCerrar.setFocusable(false);
-        btnCerrar.setBorderPainted(false);
-        btnCerrar.setBackground(new Color(245, 245, 245));
-        btnCerrar.setForeground(new Color(180, 50, 50));
-        btnCerrar.addActionListener(e -> {
-            detenerAudio();
-            dispose();
-        });
-        barra.add(btnCerrar);
-
-        JSeparator linea = new JSeparator();
-        linea.setBounds(0, 39, 600, 1);
-        barra.add(linea);
 
         //---------------- RECUADRO AUDIO ----------------
         JPanel recuadroAudio = new JPanel();
         recuadroAudio.setLayout(null);
         recuadroAudio.setBackground(Color.WHITE);
-        recuadroAudio.setBounds(40, 100, 340, 120);
+        recuadroAudio.setBounds(40, 100, 340, 100);
         fondo.add(recuadroAudio);
 
         JLabel lblTiempoInicio = new JLabel("1:46");
         lblTiempoInicio.setFont(fuente2.deriveFont(16f));
-        lblTiempoInicio.setBounds(20, 35, 40, 25);
+        lblTiempoInicio.setBounds(20, 40, 40, 25);
         recuadroAudio.add(lblTiempoInicio);
 
         JPanel barraProgreso = new JPanel();
         barraProgreso.setBackground(Color.LIGHT_GRAY);
-        barraProgreso.setBounds(65, 43, 200, 10);
+        barraProgreso.setBounds(65, 48, 200, 10);
         recuadroAudio.add(barraProgreso);
 
         JLabel lblTiempoFin = new JLabel("3:32");
         lblTiempoFin.setFont(fuente2.deriveFont(16f));
-        lblTiempoFin.setBounds(275, 35, 40, 25);
+        lblTiempoFin.setBounds(275, 40, 40, 25);
         recuadroAudio.add(lblTiempoFin);
-
-        JLabel lblIdAudio = new JLabel("M1-D1-N1", JLabel.CENTER);
-        lblIdAudio.setFont(fuente2.deriveFont(22f));
-        lblIdAudio.setBounds(20, 75, 300, 30);
-        recuadroAudio.add(lblIdAudio);
 
         //---------------- BOTON SALIR ----------------
         JButton btnSalir = new DecoracionBotones("SALIR",
-                                //ColorBase             ColorBorde              ColorLetra
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
@@ -123,21 +105,6 @@ public PistasAudio(String rutaAudio) {
         btnRepetir.setBounds(230, 290, 150, 45);
         btnRepetir.addActionListener(e -> reproducirAudio());
         
-        btnSalir.setFont(fuente1.deriveFont(20f));
-        btnSalir.setBounds(40, 320, 150, 45);
-        btnSalir.addActionListener(e -> {
-            detenerAudio();
-            dispose();
-        });
-
-        fondo.add(btnSalir);
-
-        //---------------- BOTON REPETIR ----------------
-        
-        btnRepetir.setFont(fuente1.deriveFont(20f));
-        btnRepetir.setBounds(230, 320, 150, 45);
-        btnRepetir.addActionListener(e -> reproducirAudio());
-
         fondo.add(btnRepetir);
 
         //---------------- MASCOTA ----------------
@@ -150,7 +117,7 @@ public PistasAudio(String rutaAudio) {
         fondo.add(mascotaAudifonos);
     }
 
-    private void detenerAudio() {
+    public void detenerAudio() {
         if (clip != null) {
             clip.stop();
             clip.close();
@@ -158,7 +125,7 @@ public PistasAudio(String rutaAudio) {
         }
     }
 
-    private void reproducirAudio() {
+    public void reproducirAudio() {
 
         try {
 
@@ -168,7 +135,7 @@ public PistasAudio(String rutaAudio) {
             }
             System.out.println("Ruta en BD: " + rutaAudio);
             System.out.println(getClass().getResource(rutaAudio));
-            
+
             URL url = getClass().getResource(rutaAudio);
 
             System.out.println("URL encontrada: " + url);
@@ -183,4 +150,5 @@ public PistasAudio(String rutaAudio) {
             e.printStackTrace();
         }
     }
+
 }

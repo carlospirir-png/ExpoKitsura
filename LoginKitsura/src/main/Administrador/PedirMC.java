@@ -49,7 +49,7 @@ public class PedirMC extends JFrame {
 
         JLabel lblTituloCentral = new JLabel("Minijuegos y Categoría", JLabel.LEFT);
         lblTituloCentral.setFont(fuente2.deriveFont(40f));
-        lblTituloCentral.setForeground(Color.decode("#447A9C")); 
+        lblTituloCentral.setForeground(Color.decode("#82D3E0")); 
         lblTituloCentral.setBounds(80, 40, 700, 55);
         recuadroFormulario.add(lblTituloCentral);
 
@@ -81,8 +81,7 @@ public class PedirMC extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnModificar.setFont(fuente2.deriveFont(25f));
-        btnModificar.setForeground(Color.WHITE);
+        btnModificar.setFont(fuente2.deriveFont(20f));
         btnModificar.setBounds(280, 470, 300, 60); 
         recuadroFormulario.add(btnModificar);
         
@@ -100,7 +99,7 @@ public class PedirMC extends JFrame {
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnRegresar.setFont(fuente2.deriveFont(25f));
+        btnRegresar.setFont(fuente2.deriveFont(20f));
         btnRegresar.setBounds(410, 850, 220, 55);
         btnRegresar.addActionListener(e -> dispose()); 
         fondo.add(btnRegresar);

@@ -1,6 +1,8 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
@@ -9,25 +11,50 @@ public class PantallaImagenPerfil extends JFrame {
     private FondoPanelSemi fondo;
     private JLabel lblTitulo,lblLogo,lblMascota;
     private DecoracionBotones btnVolver;
-    
+
     private Font fuente1, fuente2;
     private JPanel panelImagenes;
     private JScrollPane scrollImagenes;
 
-    public PantallaImagenPerfil() {
+    // Referencia a la pantalla de perfil que abrió esta ventana
+    private PantallaPerfil perfilAnterior;
+
+    private static final String RUTA_BASE = "/Multimedia/utiles/ImagenesPerfil/";
+
+    private static final String[] SECCION1 = {
+        "PE_S1_N11.png", "PE_S1_N2.png", "PE_S1_N4.png", "PE_S1_N9.png"
+    };
+    private static final String[] SECCION2 = {
+        "PE_S2_N1.png", "PE_S2_N3.png", "PE_S2_N4.png", "PE_S2_N5.png"
+    };
+    private static final String[] SECCION3 = {
+        "PE_S3_N1.png", "PE_S3_N10.png", "PE_S3_N11.png", "PE_S3_N12.png",
+        "PE_S3_N13.png", "PE_S3_N14.png", "PE_S3_N2.png", "PE_S3_N4.png",
+        "PE_S3_N5.png", "PE_S3_N6.png", "PE_S3_N7.png", "PE_S3_N8.png",
+        "PE_S3_N9.png"
+    };
+
+    private int cursorX = 10;
+    private int cursorY = 10;
+    private static final int ANCHO_IMG = 110;
+    private static final int ALTO_IMG = 80;
+    private static final int ESPACIO_X = 20;
+    private static final int ESPACIO_Y = 30;
+    private static final int COLUMNAS = 4;
+    private int columnaActual = 0;
+
+    public PantallaImagenPerfil(PantallaPerfil perfilAnterior) {
+        this.perfilAnterior = perfilAnterior;
+
         try {
-            // LettersForLearners
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
-            // KGPerfectPenmanship
             fuente2 = Font.createFont(
                     Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
         } catch (Exception e) {
-
             e.printStackTrace();
-
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
@@ -63,47 +90,141 @@ public class PantallaImagenPerfil extends JFrame {
 
         panelImagenes = new JPanel();
         panelImagenes.setLayout(null);
-        panelImagenes.setPreferredSize(new java.awt.Dimension(500,220));
 
-        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",10,10);
-        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",130,10);
-        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",250,10);
-        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",370,10);
+        // Sección 1
+        agregarTituloSeccion("Sección 1");
+        for (String nombre : SECCION1) {
+            agregarImagen(RUTA_BASE + "Seccion1/" + nombre);
+        }
+        saltarLinea();
 
-        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",10,110);
-        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",130,110);
-        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",250,110);
-        agregarImagen("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png",370,110);
+        // Sección 2
+        agregarTituloSeccion("Sección 2");
+        for (String nombre : SECCION2) {
+            agregarImagen(RUTA_BASE + "Seccion2/" + nombre);
+        }
+        saltarLinea();
+
+        // Sección 3
+        agregarTituloSeccion("Sección 3");
+        for (String nombre : SECCION3) {
+            agregarImagen(RUTA_BASE + "Seccion3/" + nombre);
+        }
+
+        int altoTotal = cursorY + ALTO_IMG + 20;
+        panelImagenes.setPreferredSize(new Dimension(
+                COLUMNAS * (ANCHO_IMG + ESPACIO_X) + 10, altoTotal));
 
         scrollImagenes = new JScrollPane(panelImagenes);
         scrollImagenes.setBounds(75,95,500,220);
         fondo.add(scrollImagenes);
 
         JButton btnVolver = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
 
         btnVolver.setFont(fuente2.deriveFont(15f));
         btnVolver.setBounds(250,350,140,40);
+        btnVolver.addActionListener(e -> dispose());
         fondo.add(btnVolver);
     }
 
-    private void agregarImagen(String ruta, int x, int y) {
+    private void agregarTituloSeccion(String texto) {
+        if (columnaActual != 0) {
+            saltarLinea();
+        }
+
+        JLabel titulo = new JLabel(texto);
+        titulo.setFont(fuente2 != null ? fuente2.deriveFont(16f) : new Font("Arial", Font.BOLD, 16));
+        titulo.setForeground(new Color(196,221,227));
+        titulo.setBounds(10, cursorY, 300, 20);
+        panelImagenes.add(titulo);
+
+        cursorY += 25;
+        cursorX = 10;
+        columnaActual = 0;
+    }
+
+    private void agregarImagen(String ruta) {
 
         JLabel imagen = new JLabel();
 
-        ImageIcon icono = new ImageIcon(getClass().getResource(ruta));
-        Image escalada = icono.getImage().getScaledInstance(110,80,Image.SCALE_SMOOTH);
+        java.net.URL recurso = getClass().getResource(ruta);
+        if (recurso == null) {
+            System.err.println("No se encontró la imagen: " + ruta);
+            return;
+        }
+
+        ImageIcon icono = new ImageIcon(recurso);
+        Image escalada = icono.getImage().getScaledInstance(ANCHO_IMG, ALTO_IMG, Image.SCALE_SMOOTH);
 
         imagen.setIcon(new ImageIcon(escalada));
-        imagen.setBounds(x,y,110,80);
+        imagen.setBounds(cursorX, cursorY, ANCHO_IMG, ALTO_IMG);
+        imagen.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        imagen.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+
+        // Al hacer clic, se pide confirmación antes de aplicar la imagen como nueva foto de perfil
+        imagen.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                confirmarSeleccion(ruta, escalada);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                imagen.setBorder(BorderFactory.createLineBorder(Color.decode("#447A9C"), 2));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                imagen.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+            }
+        });
 
         panelImagenes.add(imagen);
+
+        columnaActual++;
+        if (columnaActual >= COLUMNAS) {
+            saltarLinea();
+        } else {
+            cursorX += ANCHO_IMG + ESPACIO_X;
+        }
     }
-    
+
+    /**
+     * Muestra un diálogo de confirmación con una vista previa de la imagen elegida.
+     * Solo si el usuario confirma, se aplica el cambio en PantallaPerfil y se cierra esta ventana.
+     */
+    private void confirmarSeleccion(String ruta, Image vistaPrevia) {
+
+        ImageIcon iconoVistaPrevia = new ImageIcon(
+                vistaPrevia.getScaledInstance(150, 110, Image.SCALE_SMOOTH));
+
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Deseas usar esta imagen como tu nueva foto de perfil?",
+                "Confirmar cambio de foto",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                iconoVistaPrevia);
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            if (perfilAnterior != null) {
+                perfilAnterior.actualizarFotoPerfil(ruta);
+            }
+            dispose();
+        }
+        // Si elige "No" o cierra el diálogo, se queda en esta pantalla sin cambiar nada
+    }
+
+    private void saltarLinea() {
+        cursorX = 10;
+        cursorY += ALTO_IMG + ESPACIO_Y;
+        columnaActual = 0;
+    }
+
     public static void main(String[] args) {
-        new PantallaImagenPerfil();
+        new PantallaImagenPerfil(null);
     }
 
 }

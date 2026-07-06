@@ -53,9 +53,9 @@ public class MenuMinijuegos extends JFrame {
 
         //---------------- BOTONES MINIJUEGOS ----------------
         JButton btnHiddenFox = new DecoracionBotones("HIDDEN FOX",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO  
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         
         btnHiddenFox.setFont(fuente2.deriveFont(25f));
         btnHiddenFox.setBounds(780, 340, 400, 65);
@@ -66,9 +66,9 @@ public class MenuMinijuegos extends JFrame {
         fondo.add(btnHiddenFox);
 
         JButton btnFoxJump = new DecoracionBotones("FOX JUMP !",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                 //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO 
 
         btnFoxJump.setFont(fuente2.deriveFont(25f));
         btnFoxJump.setBounds(780, 460, 400, 65);
@@ -79,9 +79,9 @@ public class MenuMinijuegos extends JFrame {
         fondo.add(btnFoxJump);
 
         JButton btnMaulwurf = new DecoracionBotones("MAULWURF RENNT",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                               //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO  
 
         btnMaulwurf.setFont(fuente2.deriveFont(25f));
         btnMaulwurf.setBounds(780, 580, 400, 65);
