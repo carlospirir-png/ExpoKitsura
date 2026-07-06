@@ -80,34 +80,31 @@ public class IniciarSesion extends JFrame {
 
         //---------------- MASCOTA ----------------
         mascota = new JLabel();
-
         ImageIcon mascotaIcon
                 = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
-
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
-                        350, 350, Image.SCALE_SMOOTH);
-
+                        400, 400, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(1250, 560, 350, 350);
+        mascota.setBounds(1210, 540, 400, 400);
 
         fondo.add(mascota);
         
         FondoPanelSemi panelEslogan = new FondoPanelSemi(new Color(0, 0, 0, 140));
-        panelEslogan.setBounds(825, 210, 300, 35);
+        panelEslogan.setBounds(815, 210, 320, 35);
         panelEslogan.setLayout(null);
         fondo.add(panelEslogan);
         
         //---------------- ESLOGAN ----------------
         titulo = new JLabel("No es magia, es mente");
-        titulo.setFont(fuente1.deriveFont(30f));
-        titulo.setForeground(Color.decode("#82D3E0"));
-        titulo.setBounds(35, -8, 280, 50);
+        titulo.setFont(fuente1.deriveFont(34f));
+        titulo.setForeground(Color.decode("#EBBF66"));
+        titulo.setBounds(30, -8, 280, 50);
 
         panelEslogan.add(titulo);
 
         //---------------- USUARIO ----------------
-        lblUsuario = new JLabel("Nombre:");
+        lblUsuario = new JLabel("Correo:");
         lblUsuario.setFont(fuente2.deriveFont(25f));
         lblUsuario.setForeground(Color.WHITE);
         lblUsuario.setBounds(760, 380, 200, 30);
@@ -121,7 +118,7 @@ public class IniciarSesion extends JFrame {
         fondo.add(txtUsuario);
 
         //---------------- PASSWORD ----------------
-        lblPassword = new JLabel("Password:");
+        lblPassword = new JLabel("Contraseña:");
         lblPassword.setFont(fuente2.deriveFont(25f));
         lblPassword.setForeground(Color.WHITE);
         lblPassword.setBounds(760, 490, 200, 30);
@@ -133,6 +130,48 @@ public class IniciarSesion extends JFrame {
         txtPassword.setBounds(760, 525, 400, 50);
 
         fondo.add(txtPassword);
+        //---------------- PANEL SEMITRANSPARENTE CONTRASEÑA ----------------
+        JPanel pnlcontrasena = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(0, 0, 0, 100)); // Negro con 100 de opacidad (semi-transparente)
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15); // Bordes redondeados estilizados
+            }
+        };
+        pnlcontrasena.setOpaque(false);
+        pnlcontrasena.setLayout(null);
+        pnlcontrasena.setBounds(760, 580, 400, 50); // Un poco más grande que el texto para el margen
+        
+        
+        //---------------- LABEL RECUPERAR CONTRASEÑA
+        JLabel lblRC = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>", SwingConstants.CENTER);
+        lblRC.setFont(fuente2.deriveFont(30f));
+        lblRC.setForeground(Color.WHITE);
+        lblRC.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblRC.setBounds(0, 0, 400, 50); // Se acopla completamente al tamaño del panel contenedor
+
+        lblRC.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                new RecuperarContrasena();
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                lblRC.setForeground(Color.decode("#EE9797"));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                lblRC.setForeground(Color.WHITE);
+            }
+        });
+        
+        pnlcontrasena.add(lblRC);
+        fondo.add(pnlcontrasena);
 
         //---------------- BOTON ----------------
         btnLogIn = new DecoracionBotones("INICIAR SESIÓN",
@@ -163,10 +202,10 @@ public class IniciarSesion extends JFrame {
         //---------------- BOTON VOLVER ----------------
         JButton btnVolver = new DecoracionBotones("VOLVER",
                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnVolver.setFont(fuente2.deriveFont(10f));
-        btnVolver.setBounds(40, 975, 120, 40);
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO 
+        btnVolver.setFont(fuente2.deriveFont(13f));
+        btnVolver.setBounds(40, 945, 150, 40);
         
         btnVolver.addActionListener(e -> {
 
@@ -205,7 +244,7 @@ public class IniciarSesion extends JFrame {
 
             String sql
                     = "SELECT * FROM Usuario "
-                    + "WHERE nombre_usuario = ? "
+                    + "WHERE correo = ? "
                     + "AND contrasena = ? "
                     + "AND estado = 'activo'";
 
@@ -218,6 +257,11 @@ public class IniciarSesion extends JFrame {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+
+                // Se guarda el id del usuario que inició sesión, para que
+                // MenuPrincipal / PantallaPerfil sepan de quién es la partida
+                int idUsuario = rs.getInt("id_usuario");
+                Sesion.setIdUsuarioActual(idUsuario);
 
                 rs.close();
                 ps.close();

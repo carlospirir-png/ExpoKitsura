@@ -1,17 +1,24 @@
 package main.Administrador;
 
 import java.awt.*;
+import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
+import main.conexion.Conexion;
 
 public class UsuarioMostrar extends JFrame {
 
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+
+    // Se convierten en atributos de instancia para poder usarlos en varios métodos
+    private JTextField txtID;
+    private DefaultTableModel modelo;
+    private JTable tablaUsuarios;
 
     public UsuarioMostrar() {
 
@@ -46,11 +53,13 @@ public class UsuarioMostrar extends JFrame {
 
         crearComponentes();
 
+        // Se cargan los usuarios apenas se abre la ventana
+        cargarDatos();
+
         setVisible(true);
     }
 
     private void crearComponentes() {
-
 
         //---------------- PANEL IZQUIERDO ----------------
         FondoPanelSemi panelIzquierdo = new FondoPanelSemi(new Color(0, 0, 0, 130));
@@ -58,36 +67,25 @@ public class UsuarioMostrar extends JFrame {
         panelIzquierdo.setBounds(100, 170, 520, 700);
         fondo.add(panelIzquierdo);
 
-        JButton btnEliminar = new DecoracionBotones("ELIMINAR", 
-                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-
+        JButton btnEliminar = new DecoracionBotones("ELIMINAR",
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO,
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA);
 
         btnEliminar.setFont(fuente2.deriveFont(24f));
         btnEliminar.setBounds(40, 40, 190, 60);
 
-        btnEliminar.addActionListener(e -> {
-
-            // Acción eliminar usuario
-
-        });
+        btnEliminar.addActionListener(e -> eliminarUsuario());
 
         panelIzquierdo.add(btnEliminar);
 
+        JButton btnBuscar = new DecoracionBotones("BUSCAR",
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO,
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA);
 
-        JButton btnBuscar = new DecoracionBotones("BUSCAR", //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-         
         btnBuscar.setFont(fuente2.deriveFont(24f));
         btnBuscar.setBounds(280, 40, 190, 60);
 
-        btnBuscar.addActionListener(e -> {
-
-            // Acción buscar usuario
-
-        });
+        btnBuscar.addActionListener(e -> buscarUsuario());
 
         panelIzquierdo.add(btnBuscar);
 
@@ -97,7 +95,7 @@ public class UsuarioMostrar extends JFrame {
         lblID.setBounds(35, 150, 440, 35);
         panelIzquierdo.add(lblID);
 
-        JTextField txtID = new JTextField();
+        txtID = new JTextField();
         txtID.setFont(fuente1.deriveFont(34f));
         txtID.setBounds(35, 200, 440, 55);
         panelIzquierdo.add(txtID);
@@ -110,17 +108,12 @@ public class UsuarioMostrar extends JFrame {
             ImageIcon mascota = new ImageIcon(
                     getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
 
-            Image img = mascota.getImage().getScaledInstance(
-                    430,
-                    430,
-                    Image.SCALE_SMOOTH);
+            Image img = mascota.getImage().getScaledInstance(430, 430, Image.SCALE_SMOOTH);
 
             lblMascota.setIcon(new ImageIcon(img));
 
         } catch (Exception e) {
-
             lblMascota.setText("~");
-
         }
 
         lblMascota.setBounds(40, 280, 430, 430);
@@ -139,21 +132,16 @@ public class UsuarioMostrar extends JFrame {
         panelTabla.add(lblTabla);
 
         //---------------- TABLA ----------------
-        DefaultTableModel modelo = new DefaultTableModel(
+        modelo = new DefaultTableModel(
                 new String[]{"ID", "NOMBRE", "CORREO", "CONTRASEÑA"}, 0) {
 
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-
         };
 
-        for (int i = 0; i < 8; i++) {
-            modelo.addRow(new Object[]{"", "", "", ""});
-        }
-
-        JTable tablaUsuarios = new JTable(modelo);
+        tablaUsuarios = new JTable(modelo);
 
         tablaUsuarios.setFont(fuente1.deriveFont(18f));
         tablaUsuarios.setRowHeight(55);
@@ -173,9 +161,8 @@ public class UsuarioMostrar extends JFrame {
 
         //---------------- BOTÓN VOLVER ----------------
         JButton btnVolver = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
 
         btnVolver.setFont(fuente2.deriveFont(28f));
         btnVolver.setBounds(1550, 900, 300, 65);
@@ -183,9 +170,163 @@ public class UsuarioMostrar extends JFrame {
         btnVolver.addActionListener(e -> {
             new UsuarioMenu();
             dispose();
-                });
+        });
 
         fondo.add(btnVolver);
+    }
+
+    private void buscarUsuario() {
+
+        String texto = txtID.getText().trim();
+
+        if (texto.isEmpty()) {
+            // Si no se ingresó nada, mostramos todos
+            cargarDatos();
+            return;
+        }
+
+        int id;
+        try {
+            id = Integer.parseInt(texto);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "El ID debe ser un número válido.",
+                    "Dato inválido",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        modelo.setRowCount(0);
+
+        String sql = "SELECT id_usuario, nombre_usuario, correo, contrasena FROM Usuario WHERE id_usuario = ?";
+
+        try (Connection conx = new Conexion().getConnection(); PreparedStatement ps = conx.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                boolean encontrado = false;
+
+                while (rs.next()) {
+                    encontrado = true;
+                    modelo.addRow(new Object[]{
+                        rs.getInt("id_usuario"),
+                        rs.getString("nombre_usuario"),
+                        rs.getString("correo"),
+                        rs.getString("contrasena")
+                    });
+                }
+
+                if (!encontrado) {
+                    JOptionPane.showMessageDialog(this,
+                            "No se encontró ningún usuario con ese ID.",
+                            "Sin resultados",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al buscar el usuario: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Consulta todos los usuarios registrados en la base de datos y los carga
+     * en la tabla.
+     */
+    private void cargarDatos() {
+
+        modelo.setRowCount(0); // Se limpia la tabla antes de llenarla
+
+        String sql = "SELECT id_usuario, nombre_usuario, correo, contrasena FROM Usuario";
+
+        try (Connection conx = new Conexion().getConnection(); PreparedStatement ps = conx.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                modelo.addRow(new Object[]{
+                    rs.getInt("id_usuario"),
+                    rs.getString("nombre_usuario"),
+                    rs.getString("correo"),
+                    rs.getString("contrasena")
+                });
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al mostrar los usuarios: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Elimina un usuario según el ID ingresado en el TextField, previa
+     * confirmación del usuario.
+     */
+    private void eliminarUsuario() {
+
+        String texto = txtID.getText().trim();
+
+        if (texto.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe ingresar un ID de usuario.",
+                    "Campo vacío",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int id;
+        try {
+            id = Integer.parseInt(texto);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "El ID debe ser un número válido.",
+                    "Dato inválido",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro que desea eliminar al usuario con ID " + id + "?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String sql = "DELETE FROM Usuario WHERE id_usuario = ?";
+
+        try (Connection conx = new Conexion().getConnection(); PreparedStatement ps = conx.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Usuario eliminado correctamente.",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                txtID.setText("");
+                cargarDatos(); // Se refresca la tabla
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "No se encontró ningún usuario con ese ID.",
+                        "Sin resultados",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al eliminar el usuario: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
 
     }
 

@@ -5,6 +5,16 @@ import javax.swing.*;
 import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanel;
 
+// Importaciones para MySQL
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.util.regex.Pattern;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 public class editarUsuario extends JFrame {
 
     private FondoPanel fondo;
@@ -16,6 +26,14 @@ public class editarUsuario extends JFrame {
     private JTextField txtID, txtNombre, txtCorreo;
     private JPasswordField txtContra;
     private JButton btnCargar, btnEditar;
+    
+    // Conexion MySQL
+    private final String URL = "jdbc:mysql://localhost:3306/KITSURA_DB";
+    private final String USER = "root";
+    private final String PASSWORD = "";
+    
+    // ruta de la imagen 
+    private String rutaImagen = "";
 
     public editarUsuario() {
 
@@ -104,9 +122,11 @@ public class editarUsuario extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO   
-
         btnEditar.setFont(fuente2.deriveFont(26f));
         btnEditar.setBounds(190, 790, 220, 65);
+        btnEditar.addActionListener(e -> {
+            editarUsuario();
+        });
         panelSemi.add(btnEditar);
 
         lblImagen = new JLabel("Cargue la imagen de perfil:");
@@ -121,7 +141,7 @@ public class editarUsuario extends JFrame {
         lblPreview.setBounds(660, 360, 320, 220);
         panelSemi.add(lblPreview);
 
-
+        // Boton Cargar 
         btnCargar=new DecoracionBotones("CARGAR",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
@@ -129,8 +149,12 @@ public class editarUsuario extends JFrame {
 
         btnCargar.setFont(fuente2.deriveFont(26f));
         btnCargar.setBounds(720, 610, 200, 60);
+        btnCargar.addActionListener(e -> {
+            cargarImagen();
+        });
         panelSemi.add(btnCargar);
 
+        // Mascota
         lblMascota = new JLabel();
         ImageIcon mascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
         lblMascota.setIcon(new ImageIcon(mascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH)));
@@ -154,6 +178,148 @@ public class editarUsuario extends JFrame {
         setVisible(true);
     }
 
+        // CARGAR IMAGEN DE PERFIL
+        // Permite seleccionar una imagen y mostrar una vista previa
+
+        private void cargarImagen() {
+        /* Cuando se presiona el boton Cargar se abre el explorador,
+        se guarda la ruta y cambia la imagen de vista previa */
+        
+            JFileChooser selector = new JFileChooser();
+            selector.setDialogTitle("Seleccione una imagen");
+            selector.setFileFilter(
+
+                    new FileNameExtensionFilter(
+                            "Imágenes",
+                            "png",
+                            "jpg",
+                            "jpeg"));
+
+            int opcion = selector.showOpenDialog(this);
+
+            if (opcion == JFileChooser.APPROVE_OPTION) {
+                File archivo = selector.getSelectedFile();
+                rutaImagen = archivo.getAbsolutePath();
+                ImageIcon icono = new ImageIcon(rutaImagen);
+                Image imagenEscalada = icono.getImage().getScaledInstance(320, 220, Image.SCALE_SMOOTH);
+
+                lblPreview.setIcon(
+                        new ImageIcon(imagenEscalada));
+            }
+        }
+        
+        /* Valida los datos ingresados y actualiza la información
+         del usuario en la base de datos */
+
+        private void editarUsuario() {
+
+            // OBTENER LOS DATOS INGRESADOS
+            String idTexto = txtID.getText().trim();
+            String nombre = txtNombre.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String contrasena = String.valueOf(txtContra.getPassword()).trim();
+
+            // VALIDAR QUE LOS CAMPOS NO ESTÉN VACÍOS
+            if (idTexto.isEmpty() || nombre.isEmpty()
+                    || correo.isEmpty() || contrasena.isEmpty()) {
+
+                JOptionPane.showMessageDialog( this, "Complete todos los campos.");
+                return;
+            }
+
+            // VALIDAR QUE EL ID SEA NUMÉRICO
+            int idUsuario;
+            try {
+                idUsuario = Integer.parseInt(idTexto);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "El ID debe contener únicamente números.");
+                return;
+            }
+
+            //------------------------------------------------------
+            // VALIDAR EL FORMATO DEL CORREO
+            //------------------------------------------------------
+            String patronCorreo = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+            if (!Pattern.matches(patronCorreo, correo)) {
+                JOptionPane.showMessageDialog(this, "Ingrese un correo válido.");
+                return;
+            }
+
+            // CONECTAR A MYSQL
+            try {
+                Connection con = DriverManager.getConnection(
+                        URL,
+                        USER,
+                        PASSWORD);
+
+                // VERIFICAR SI EL USUARIO EXISTE
+                String consulta =
+                        "SELECT id_usuario "
+                        + "FROM Usuario "
+                        + "WHERE id_usuario = ?";
+
+                PreparedStatement psBuscar =
+                        con.prepareStatement(consulta);
+                psBuscar.setInt(1, idUsuario);
+
+                if (!psBuscar.executeQuery().next()) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "No existe un usuario con ese ID.");
+                    psBuscar.close();
+                    con.close();
+                    return;
+                }
+
+                psBuscar.close();
+
+                
+                
+                // ACTUALIZAR USUARIO
+                String sql =
+                        "UPDATE Usuario "
+                        + "SET nombre_usuario = ?, "
+                        + "correo = ?, "
+                        + "contrasena = ?, "
+                        + "imagen_perfil = ? "
+                        + "WHERE id_usuario = ?";
+
+                PreparedStatement ps =
+                        con.prepareStatement(sql);
+
+                ps.setString(1, nombre);
+                ps.setString(2, correo);
+                ps.setString(3, contrasena);
+                ps.setString(4, rutaImagen);
+                ps.setInt(5, idUsuario);
+
+                int filas = ps.executeUpdate();
+
+                if (filas > 0) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Usuario actualizado correctamente.");
+                    // LIMPIAR CAMPOS
+                    txtID.setText("");
+                    txtNombre.setText("");
+                    txtCorreo.setText("");
+                    txtContra.setText("");
+
+                } else {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "No fue posible actualizar el usuario.");
+                }
+
+                ps.close();
+                con.close();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Error:\n" + e.getMessage());
+            }
+        }
+    
     public static void main(String[] args) {
         new editarUsuario();
     }

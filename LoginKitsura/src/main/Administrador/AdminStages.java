@@ -2,9 +2,7 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;   // Importamos panel semi-transparente
-import main.Menu.DecoracionBotones; // Importamos la clase de Decoracion Botones
+import main.Menu.*;
 
 public class AdminStages extends JFrame{
     private FondoPanel fondo;
@@ -42,11 +40,6 @@ public class AdminStages extends JFrame{
     }
     
     private void crearComponentes() {
-        JLabel lblTituloVentana = new JLabel("Administrar Stages");
-        lblTituloVentana.setFont(new Font("Arial", Font.PLAIN, 18));
-        lblTituloVentana.setBounds(50, 40, 200, 30);
-        fondo.add(lblTituloVentana);
-
         // --- AGREGANDO EL PANEL SEMI-TRANSPARENTE PARA EL TÍTULO ---
         // Lo posicionamos centrado abarcando el espacio del título principal (X: 75, Y: 130, Ancho: 1800, Alto: 95)
         FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 120)); 
@@ -62,28 +55,36 @@ public class AdminStages extends JFrame{
 
         btnCrearUno = new DecoracionBotones("CREAR UNO",
                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO_APAGADO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        // PD. Intente cambiarle el color por un amarillo pero senti que ningun otro color quedaba  
         
         btnCrearUno.setFont(fuente2.deriveFont(20f));
-        btnCrearUno.setForeground(Color.WHITE); // Letras blancas fijas al inicio
-        btnCrearUno.setBounds(350, 500, 320, 60);
+        btnCrearUno.setBounds(325, 500, 360, 70);
+        btnCrearUno.addActionListener(e -> {
+            
+        });
         fondo.add(btnCrearUno);
+        
 
         btnEditarExistente = new DecoracionBotones("EDITAR UNO EXISTENTE",
                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO_APAGADO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnEditarExistente.setFont(fuente2.deriveFont(20f));
-        btnEditarExistente.setForeground(Color.WHITE); // Letras blancas fijas al inicio
-        btnEditarExistente.setBounds(1270, 500, 320, 60);
+        btnEditarExistente.setBounds(1245, 500, 360, 70);
+        btnEditarExistente.addActionListener(e ->{
+            new EditarStages();
+            dispose();
+        });
+        
         fondo.add(btnEditarExistente);
         
         JLabel staticMascotaControl = new JLabel();
         ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         staticMascotaControl.setIcon(new ImageIcon(imgEscalada));
-        staticMascotaControl.setBounds(680, 290, 600, 600);
+        staticMascotaControl.setBounds(655, 290, 600, 600);
         fondo.add(staticMascotaControl);
 
         btnSalir = new DecoracionBotones("VOLVER",
@@ -91,10 +92,12 @@ public class AdminStages extends JFrame{
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnSalir.setFont(fuente2.deriveFont(30f));
-        btnSalir.setForeground(Color.WHITE);
-        btnSalir.setBounds(1695, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.setFont(fuente2.deriveFont(20F));
+        btnSalir.setBounds(1680, 950, 210, 45);
+        btnSalir.addActionListener(e -> {
+            new MenuAdmin();
+            dispose();
+                });
         fondo.add(btnSalir);
     }
     

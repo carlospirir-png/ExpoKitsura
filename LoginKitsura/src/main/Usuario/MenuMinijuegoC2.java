@@ -2,6 +2,8 @@ package main.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
@@ -11,6 +13,9 @@ public class MenuMinijuegoC2 extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    private TutorialFoxJump tutorial;
+    private boolean tutorialAbierto = false;
+    private JButton btnComoJugar;
 
     public MenuMinijuegoC2() {
 
@@ -32,7 +37,7 @@ public class MenuMinijuegoC2 extends JFrame {
         setTitle("Fox Jump!");
         setSize(1880, 1080);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         fondo.setLayout(null);
 
@@ -43,7 +48,7 @@ public class MenuMinijuegoC2 extends JFrame {
     private void crearComponentes() {
 
         //---------------- BOTÓN ¿CÓMO JUGAR? ----------------
-        JButton btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
+        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
@@ -51,17 +56,26 @@ public class MenuMinijuegoC2 extends JFrame {
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
         btnComoJugar.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this,
-                    """
-                    Fox Jump!
 
-                    • Selecciona la categoría que deseas jugar.
-                    • Lee la pregunta.
-                    • Salta al nenúfar de Verdadero o Falso.
-                    • Responde correctamente para avanzar.
-                    • Después de 5 respuestas correctas subirás de dificultad.
-                    • Si pierdes las 3 vidas termina la partida.
-                    """);
+            if (tutorialAbierto) {
+                return;
+            }
+
+            tutorialAbierto = true;
+            btnComoJugar.setVisible(false); // Oculta el botón
+
+            tutorial = new TutorialFoxJump();
+
+            tutorial.addWindowListener(new WindowAdapter() {
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    tutorialAbierto = false;
+                    tutorial = null;
+                    btnComoJugar.setVisible(true); // Lo vuelve a mostrar
+                }
+
+            });
         });
         fondo.add(btnComoJugar);
 

@@ -11,8 +11,21 @@ public class MenuAdmin extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    // Recibe los datos temporales: minijuego, categoría y nivel
+    private DatosConfiguracion datos;
+    
+    // Constructor sobrecargado: 
+    public MenuAdmin(){
+       inicializar();
+    }
+    
+    public MenuAdmin(DatosConfiguracion datos){
+        this.datos = datos;
+        inicializar();
+    }
 
-    public MenuAdmin() {
+   private void inicializar() {
+        
         try {
             fuente1 = Font.createFont(Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
@@ -53,29 +66,44 @@ public class MenuAdmin extends JFrame {
         });
         fondo.add(btnUsuario);
         // ---------------- PUNTUACIONES ----------------
+        //Se inicializa el botón de puntuaciones
         JButton btnPuntuaciones = new DecoracionBotones("PUNTUACIONES",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO   
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO
+        
+        //Se el coloca al botón la fuente 2 y tamaño a dicha fuente
         btnPuntuaciones.setFont(fuente2.deriveFont(26f));
+      
+        //Se le coloca la posición y tamaño al botón
         btnPuntuaciones.setBounds(180, 335, 430, 65);
+        
+        //ActionListener
         btnPuntuaciones.addActionListener(e -> {
-            new PuntuacionesAdmin();
-            dispose();
+            //Se abre una nueva ventana de puntuacionesAdmin
+            new PuntuacionesAdmin(datos); //se envían los datos
+            dispose();//se cierra esta ventana
         });
+        
+        //Se agrega el botón al panel
         fondo.add(btnPuntuaciones);
+        
         // ---------------- VIDAS ----------------
         JButton btnVidas = new DecoracionBotones("VIDAS",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
         
+        // Se agrega al botón la fuente y tamaño deseado
         btnVidas.setFont(fuente2.deriveFont(26f));
+        // Se asigna el tamaño y posición del botón
         btnVidas.setBounds(180, 430, 430, 65);
+        // Dirige a la clase de VidasAdmin y cierra el menú
         btnVidas.addActionListener(e -> {
-            new VidasAdmin();
+            new VidasAdmin(datos);
             dispose();
         });
+        // Se agrega el botón al panel principal
         fondo.add(btnVidas);
         // ---------------- TIEMPO ----------------
         JButton btnTiempo = new DecoracionBotones("TIEMPO",
@@ -144,8 +172,11 @@ public class MenuAdmin extends JFrame {
         fondo.add(volver);
         setVisible(true);
     }
+    
 
     public static void main(String[] args) {
-        new MenuAdmin();
+        DatosConfiguracion datos = new DatosConfiguracion("HiddenFox","Animales","Fácil");
+        new MenuAdmin(datos);
     }
+
 }

@@ -8,12 +8,16 @@ public class FondoPanelSemi extends JPanel {
     private Image imagen;
     private Color colorSemi;
 
-
     public FondoPanelSemi(String ruta) {
-        imagen = new ImageIcon(
-                getClass().getResource(ruta)).getImage();
-    }
 
+        java.net.URL url = getClass().getResource(ruta);
+
+        if (url == null) {
+            throw new RuntimeException("No se encontró la imagen: " + ruta);
+        }
+
+        imagen = new ImageIcon(url).getImage();
+    }
 
     public FondoPanelSemi(Color color) {
         colorSemi = color;

@@ -1,10 +1,14 @@
-package main.Usuario;
+//------------------------------ HIDDEN FOX DAO ------------------------
 
-import java.sql.*;
-import main.conexion.*;
+package main.Usuario; //Paquete
 
+import java.sql.*; //Se importa el sql
+import main.conexion.*; //Se importa la conexion
+import java.util.*; //Se importan los útiles
+
+//Clase HiddenFoxDAO
 public class HiddenFoxDAO {
-
+    //----------------- ATRIBUTOS ----------------
     private Connection con;
 
     public HiddenFoxDAO() {
@@ -211,27 +215,40 @@ public class HiddenFoxDAO {
     }
 
     //------------ GENERAR PARTIDA ------------
-    public int[] generarPartida(int id_nivel) {
-        int[] preguntas = new int[5];
-
-        String sql = "SELECT id_pregunta FROM Pregunta WHERE id_nivel = ? ORDER BY RAND() LIMIT 5";
-
+    //Método que devuelve un ArrayList de tipo Integer
+    public ArrayList<Integer> generarPartida(int id_nivel) {
+        //Recibimos el id del nivel a través del parámetro
+        
+        //Creamos el ArrayList vacío (por ahora) de tipo Integer
+        ArrayList<Integer> preguntas = new ArrayList<>();
+        
+        //Consulta:
+        //Selecciona el id pregunta de la tabla Pregunta cuando el id nivel coincida con el parámetro en orden al azar (RAND())
+        String sql = "SELECT id_pregunta FROM Pregunta WHERE id_nivel = ? ORDER BY RAND() ";
+        
+        //Se prepara el sql
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-
+            
+            //Se llenan los parámetros
             ps.setInt(1, id_nivel);
-
+            
+            //Se ejecuta la consulta
             ResultSet rs = ps.executeQuery();
 
-            int i = 0;
+            //Mientras haya un dato en la siguiente fila
             while (rs.next()) {
-                preguntas[i] = rs.getInt("id_pregunta");
-                i++;
+                //Se obtiene el valor de la columna y fila que apunta el rs
+                //ese valor obtenido se agrega al ArrayList
+                preguntas.add(rs.getInt("id_pregunta"));
             }
-
+        
+            //Captura la excepción SQL
         } catch (SQLException e) {
+            
             System.out.println("Error al generar partida: " + e.getMessage());
         }
-
+        
+        //Devuelve el ArrayList con los id de nivel
         return preguntas;
     }
 }

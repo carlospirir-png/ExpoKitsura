@@ -49,13 +49,13 @@ public class PistasTexto extends JFrame {
         JPanel recuadroTexto = new JPanel();
         recuadroTexto.setLayout(null);
         recuadroTexto.setBackground(Color.WHITE);
-        recuadroTexto.setBounds(40, 75, 320, 180);
+        recuadroTexto.setBounds(40, 75, 380, 210);
         fondo.add(recuadroTexto);
 
         lblPista = new JLabel();
         
-        lblPista.setFont(fuente1.deriveFont(26f)); 
-        lblPista.setForeground(Color.decode("#9E9E9E")); 
+        lblPista.setFont(fuente1.deriveFont(18f)); 
+        lblPista.setForeground(Color.BLACK); 
         
         lblPista.setBounds(12, 20, 280, 140);
         recuadroTexto.add(lblPista);
@@ -66,18 +66,18 @@ public class PistasTexto extends JFrame {
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnSalir.setFont(fuente1.deriveFont(25f));
+        btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(120, 320, 160, 45);
         btnSalir.addActionListener(e -> dispose());
         fondo.add(btnSalir);
 
         //---------------- MASCOTA ----------------
         JLabel mascotaLector = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MENÚ-PRINCIPAL-LINTERNA.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/Zorro_Foco.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
 
         mascotaLector.setIcon(new ImageIcon(imgEscalada));
-        mascotaLector.setBounds(360, 60, 350, 350);
+        mascotaLector.setBounds(355, 60, 350, 350);
         fondo.add(mascotaLector);
     }
 

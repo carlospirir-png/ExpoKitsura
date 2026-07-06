@@ -3,9 +3,14 @@ package main.Usuario;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.net.URL;
+import java.sql.*;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
+import main.conexion.Conexion;
 
 public class PantallaPerfil extends JFrame {
 
@@ -29,15 +34,41 @@ public class PantallaPerfil extends JFrame {
     private JTextField txtUsuario;
     private JLabel lblFotoPerfil;
 
+    // Se vuelven campos de instancia para poder actualizarlos al cargar datos reales
+    private JLabel lblIdValor;
+    private JLabel lblFechaValor;
+    private JLabel lblEstadoValor;
+
     private DecoracionBotones btnEditarNombre;
+    private DecoracionBotones btnCambiarFoto;
 
     private Font fuente1, fuente2;
-    private JScrollPane scrollImagenes;
 
     private boolean editandoNombre = false;
-    private boolean editandoPassword = false;
+
+    // id y correo del usuario actualmente logueado (se llenan al cargar datos)
+    private int idUsuario;
+    private String correoUsuario;
+
+    // Ruta de la imagen de perfil actualmente seleccionada (relativa a resources)
+    private String rutaImagenPerfilActual;
+    private static final String IMAGEN_PERFIL_DEFECTO =
+            "/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Imperfecta.png";
+
+    private final Conexion conexion = new Conexion();
 
     public PantallaPerfil() {
+
+        if (!Sesion.haySesionActiva()) {
+            JOptionPane.showMessageDialog(null,
+                    "No hay una sesión activa. Inicia sesión nuevamente.",
+                    "Sesión no encontrada",
+                    JOptionPane.ERROR_MESSAGE);
+            dispose();
+            return;
+        }
+        this.idUsuario = Sesion.getIdUsuarioActual();
+
         try {
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
@@ -63,6 +94,7 @@ public class PantallaPerfil extends JFrame {
         fondo.setLayout(null);
 
         crearComponentes();
+        cargarDatosUsuario();
 
         setVisible(true);
     }
@@ -105,7 +137,7 @@ public class PantallaPerfil extends JFrame {
         lblCorreo.setBounds(40, 120, 300, 40);
         panelCuenta.add(lblCorreo);
 
-        txtCorreo = new JTextField("usuario@correo.com");
+        txtCorreo = new JTextField("Cargando...");
         txtCorreo.setFont(fuente1.deriveFont(28f));
         txtCorreo.setBounds(40, 170, 420, 50);
         txtCorreo.setEditable(false);
@@ -118,13 +150,13 @@ public class PantallaPerfil extends JFrame {
         lblPassword.setBounds(40, 270, 250, 40);
         panelCuenta.add(lblPassword);
 
-        txtPassword = new JPasswordField("123456789");
+        txtPassword = new JPasswordField("Cargando...");
         txtPassword.setFont(fuente1.deriveFont(30f));
         txtPassword.setBounds(40, 320, 420, 50);
         txtPassword.setEditable(false);
         panelCuenta.add(txtPassword);
 
-        //---------------- EDITAR CONTRASEÑA ----------------
+        //---------------- EDITAR CONTRASEÑA (abre PantallaCContra) ----------------
         lblEditarPassword = new JLabel("<html><u>Editar</u></html>");
         lblEditarPassword.setFont(fuente1.deriveFont(22f));
         lblEditarPassword.setForeground(Color.BLACK);
@@ -141,16 +173,24 @@ public class PantallaPerfil extends JFrame {
             }
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (!editandoPassword) {
-                    txtPassword.setEditable(true);
-                    txtPassword.requestFocus();
-                    lblEditarPassword.setText("<html><u>Confirmar</u></html>");
-                    editandoPassword = true;
-                } else {
-                    txtPassword.setEditable(false);
-                    lblEditarPassword.setText("<html><u>Editar</u></html>");
-                    editandoPassword = false;
+                if (correoUsuario == null || correoUsuario.isBlank()) {
+                    JOptionPane.showMessageDialog(PantallaPerfil.this,
+                            "No se pudo determinar el correo del usuario.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
+                PantallaCContra pantallaContra = new PantallaCContra(correoUsuario);
+
+                // Al cerrarse la ventana de cambio de contraseña, se refrescan los datos
+                // por si la contraseña fue actualizada exitosamente
+                pantallaContra.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent evt) {
+                        cargarDatosUsuario();
+                    }
+                });
             }
         });
         panelCuenta.add(lblEditarPassword);
@@ -161,7 +201,7 @@ public class PantallaPerfil extends JFrame {
         lblIdTitulo.setBounds(700, 150, 220, 35);
         panelCuenta.add(lblIdTitulo);
 
-        JLabel lblIdValor = new JLabel("19503236");
+        lblIdValor = new JLabel("---");
         lblIdValor.setFont(fuente1.deriveFont(36f));
         lblIdValor.setBounds(700, 185, 220, 35);
         panelCuenta.add(lblIdValor);
@@ -172,7 +212,7 @@ public class PantallaPerfil extends JFrame {
         lblFechaTitulo.setBounds(700, 290, 250, 35);
         panelCuenta.add(lblFechaTitulo);
 
-        JLabel lblFechaValor = new JLabel("00/00/2026");
+        lblFechaValor = new JLabel("--/--/----");
         lblFechaValor.setFont(fuente1.deriveFont(36f));
         lblFechaValor.setBounds(700, 325, 250, 35);
         panelCuenta.add(lblFechaValor);
@@ -190,22 +230,20 @@ public class PantallaPerfil extends JFrame {
         lblEstadoTitulo.setBounds(210, 20, 120, 50);
         panelPerfil.add(lblEstadoTitulo);
 
-        JLabel lblEstadoValor = new JLabel("Activo");
+        lblEstadoValor = new JLabel("---");
         lblEstadoValor.setFont(fuente1.deriveFont(55f));
-        lblEstadoValor.setBounds(335, 20, 150, 50);
+        lblEstadoValor.setBounds(335, 20, 200, 50);
         panelPerfil.add(lblEstadoValor);
 
         //---------------- FOTO PERFIL ----------------
         lblFotoPerfil = new JLabel();
-        ImageIcon fotoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Imperfecta.png"));
-        Image fotoEscalada = fotoIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
-        lblFotoPerfil.setIcon(new ImageIcon(fotoEscalada));
+        cargarImagenEnLabel(IMAGEN_PERFIL_DEFECTO);
         lblFotoPerfil.setBounds(190, 90, 250, 250);
         lblFotoPerfil.setBorder(BorderFactory.createLineBorder(Color.GRAY, 4));
         panelPerfil.add(lblFotoPerfil);
 
         //---------------- NOMBRE USUARIO ----------------
-        txtUsuario = new JTextField("Nombre de usuario");
+        txtUsuario = new JTextField("Cargando...");
         txtUsuario.setFont(fuente1.deriveFont(26f));
         txtUsuario.setBounds(180, 370, 300, 45);
         txtUsuario.setEditable(false);
@@ -225,24 +263,39 @@ public class PantallaPerfil extends JFrame {
                 btnEditarNombre.setText("CONFIRMAR");
                 editandoNombre = true;
             } else {
-                txtUsuario.setEditable(false);
-                btnEditarNombre.setText("EDITAR NOMBRE");
-                editandoNombre = false;
+                String nuevoNombre = txtUsuario.getText().trim();
+
+                if (nuevoNombre.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "El nombre de usuario no puede estar vacío.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return; // No se sale del modo edición hasta que sea válido
+                }
+
+                if (guardarNombreUsuario(nuevoNombre)) {
+                    txtUsuario.setEditable(false);
+                    btnEditarNombre.setText("EDITAR NOMBRE");
+                    editandoNombre = false;
+                    JOptionPane.showMessageDialog(this,
+                            "Nombre de usuario actualizado correctamente.",
+                            "Éxito",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                // Si guardarNombreUsuario devuelve false, ya se mostró el error dentro del método
             }
         });
         panelPerfil.add(btnEditarNombre);
 
-        //---------------- IMAGEN SELECCIONADA ----------------
-        JLabel lblImagenActual = new JLabel("Imagen seleccionada actualmente");
-        lblImagenActual.setFont(fuente2.deriveFont(16f));
-        lblImagenActual.setBounds(205, 530, 320, 30);
-        panelPerfil.add(lblImagenActual);
-
-        JPanel panelImagenes = new JPanel();
-        panelImagenes.setPreferredSize(new java.awt.Dimension(450, 350));
-        scrollImagenes = new JScrollPane(panelImagenes);
-        scrollImagenes.setBounds(100, 580, 450, 250);
-        panelPerfil.add(scrollImagenes);
+        //---------------- BOTÓN CAMBIAR FOTO (abre PantallaImagenPerfil) ----------------
+        btnCambiarFoto = new DecoracionBotones("CAMBIAR FOTO",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        btnCambiarFoto.setFont(fuente2.deriveFont(20f));
+        btnCambiarFoto.setBounds(190, 530, 280, 60);
+        btnCambiarFoto.addActionListener(e -> new PantallaImagenPerfil(this));
+        panelPerfil.add(btnCambiarFoto);
 
         //---------------- BOTÓN VOLVER ----------------
         JButton btnVolver = new DecoracionBotones("VOLVER",
@@ -258,4 +311,163 @@ public class PantallaPerfil extends JFrame {
         });
         fondo.add(btnVolver);
     }
-}
+
+    /**
+     * Carga desde KITSURA_DB los datos del usuario actualmente logueado
+     * (Sesion.getIdUsuarioActual()) y los muestra en pantalla.
+     */
+    private void cargarDatosUsuario() {
+        String sql = "SELECT nombre_usuario, correo, contrasena, fecha_registro, estado, imagen_perfil "
+                + "FROM Usuario WHERE id_usuario = ?";
+
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idUsuario);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String nombreUsuario = rs.getString("nombre_usuario");
+                    String correo = rs.getString("correo");
+                    String contrasena = rs.getString("contrasena");
+                    Timestamp fechaRegistro = rs.getTimestamp("fecha_registro");
+                    String estado = rs.getString("estado");
+                    String imagenPerfil = rs.getString("imagen_perfil");
+
+                    txtUsuario.setText(nombreUsuario);
+                    txtCorreo.setText(correo);
+                    this.correoUsuario = correo;
+
+                    txtPassword.setText(contrasena);
+
+                    lblIdValor.setText(String.valueOf(idUsuario));
+
+                    if (fechaRegistro != null) {
+                        java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                        lblFechaValor.setText(formato.format(fechaRegistro));
+                    }
+
+                    lblEstadoValor.setText(
+                            estado != null && estado.equalsIgnoreCase("activo") ? "Activo" : "Inactivo");
+
+                    if (imagenPerfil != null && !imagenPerfil.isBlank()) {
+                        cargarImagenEnLabel(imagenPerfil);
+                    } else {
+                        cargarImagenEnLabel(IMAGEN_PERFIL_DEFECTO);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "No se encontró información para este usuario.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar los datos del usuario:\n" + e.getMessage(),
+                    "Error de base de datos",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Actualiza el nombre_usuario en la base de datos.
+     * @return true si se guardó correctamente, false si hubo un error.
+     */
+    private boolean guardarNombreUsuario(String nuevoNombre) {
+        String sql = "UPDATE Usuario SET nombre_usuario = ? WHERE id_usuario = ?";
+
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nuevoNombre);
+            ps.setInt(2, idUsuario);
+
+            int filasActualizadas = ps.executeUpdate();
+            return filasActualizadas > 0;
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Ese nombre de usuario ya está en uso o no es válido.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error al actualizar el nombre de usuario:\n" + e.getMessage(),
+                    "Error de base de datos",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    /**
+     * Llamado desde PantallaImagenPerfil cuando el usuario selecciona una nueva imagen.
+     * Actualiza la vista y guarda la ruta seleccionada en la base de datos.
+     */
+    public void actualizarFotoPerfil(String rutaImagen) {
+        if (!guardarImagenPerfil(rutaImagen)) {
+            return; // Si falló el guardado en BD, no se actualiza la vista
+        }
+        cargarImagenEnLabel(rutaImagen);
+        JOptionPane.showMessageDialog(this,
+                "Foto de perfil actualizada correctamente.",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Actualiza la columna imagen_perfil en la base de datos.
+     * @return true si se guardó correctamente, false si hubo un error.
+     */
+    private boolean guardarImagenPerfil(String rutaImagen) {
+        String sql = "UPDATE Usuario SET imagen_perfil = ? WHERE id_usuario = ?";
+
+        try (Connection con = conexion.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, rutaImagen);
+            ps.setInt(2, idUsuario);
+
+            int filasActualizadas = ps.executeUpdate();
+            return filasActualizadas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error al actualizar la foto de perfil:\n" + e.getMessage(),
+                    "Error de base de datos",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    /**
+     * Carga una imagen (por ruta de resource) en lblFotoPerfil, escalada a 250x250.
+     * Si el recurso no existe, se conserva/usa la imagen por defecto.
+     */
+    private void cargarImagenEnLabel(String ruta) {
+        URL recurso = getClass().getResource(ruta);
+
+        if (recurso == null) {
+            System.err.println("No se encontró la imagen de perfil: " + ruta);
+            if (!ruta.equals(IMAGEN_PERFIL_DEFECTO)) {
+                cargarImagenEnLabel(IMAGEN_PERFIL_DEFECTO);
+            }
+            return;
+        }
+
+        ImageIcon icono = new ImageIcon(recurso);
+        Image escalada = icono.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+        lblFotoPerfil.setIcon(new ImageIcon(escalada));
+        this.rutaImagenPerfilActual = ruta;
+    }
+
+    public static void main (String[] args){
+        new PantallaPerfil();
+    }
+}   
