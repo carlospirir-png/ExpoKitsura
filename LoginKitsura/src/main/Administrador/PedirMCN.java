@@ -7,6 +7,7 @@ import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanelSemi;
 import main.Administrador.DatosConfiguracion;
+import main.Usuario.IniciarSesion;
 
 public class PedirMCN extends JFrame {
 
@@ -175,7 +176,10 @@ public class PedirMCN extends JFrame {
 
         btnRegresar.setFont(fuente2.deriveFont(20f));
         btnRegresar.setBounds(380, 800, 220, 55);
-        btnRegresar.addActionListener(e -> dispose());
+        btnRegresar.addActionListener(e -> {
+            new IniciarSesion();
+            dispose();
+                });
         fondo.add(btnRegresar);
     }
 

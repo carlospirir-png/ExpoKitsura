@@ -168,7 +168,10 @@ public class MenuAdmin extends JFrame {
         }
         volver.setFont(fuente2.deriveFont(28f));
         volver.setBounds(1500, 870, 300, 65);
-        volver.addActionListener(e -> dispose());
+        volver.addActionListener(e -> {
+            new PedirMCN();
+            dispose();
+                });
         fondo.add(volver);
         setVisible(true);
     }

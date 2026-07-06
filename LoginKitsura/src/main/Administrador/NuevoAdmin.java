@@ -3,8 +3,7 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanelSemi;
-import main.Menu.DecoracionBotones;
+import main.Menu.*;
 import java.sql.*; //Importamos sql
 import main.conexion.Conexion; //Importamos la conexión
 
@@ -167,7 +166,10 @@ public class NuevoAdmin extends JFrame {
         btnSalir.setFont(fuente2.deriveFont(30f));
         btnSalir.setForeground(Color.WHITE);
         btnSalir.setBounds(1695, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e -> {
+            new UsuarioMenu();
+            dispose();
+                });
         fondo.add(btnSalir);
     }
 
