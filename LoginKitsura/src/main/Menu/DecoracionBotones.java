@@ -53,6 +53,7 @@ public class DecoracionBotones extends JButton {
     public static final String AMARILLO_SUAVE = "#F0D060";
     public static final String VERDE = "#91BF4B";
     public static final String VERDE_SUAVE = "#B4DC64";
+    public static final String TURQUESA = "#76A9AA";
     
 
     //---------------------- C O N S T R U C T O R E S -------------------------

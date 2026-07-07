@@ -16,6 +16,7 @@ public class ResultadoFinal extends JDialog {
     private int puntajeFinal;
     private int tiempoFinal;
 
+    private SeAcaboVidas seAcaboVidas;
     private JuegoBase juego;
 
     public ResultadoFinal(JuegoBase juego, int puntaje, int tiempoSegundos) {
@@ -74,63 +75,96 @@ public class ResultadoFinal extends JDialog {
         lblTiempo.setBounds(25, 140, 270, 30);
         panelContenedor.add(lblTiempo);
 
-        //---------------- BOTÓN REINTENTAR ----------------
-        JButton btnJugarDeNuevo = new DecoracionBotones("Jugar de nuevo",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+        //---------------- BOTÓN JUGAR DE NUEVO ----------------
+        JButton btnJugarDeNuevo = new DecoracionBotones(
+                "Jugar de nuevo",
+                DecoracionBotones.AZUL,
+                DecoracionBotones.GRIS,
+                DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE,
+                DecoracionBotones.AZUL,
+                DecoracionBotones.AZUL);
 
-        btnJugarDeNuevo.setFont(fuente1.deriveFont(18f));
+        btnJugarDeNuevo.setFont(fuente2.deriveFont(12f));
         btnJugarDeNuevo.setBounds(75, 300, 180, 45);
+
         btnJugarDeNuevo.addActionListener(e -> {
+
+            if (seAcaboVidas != null) {
+                seAcaboVidas.dispose();
+            }
+
             dispose();
+
             new MenuMinijuegos();
         });
+
         fondo.add(btnJugarDeNuevo);
 
         //---------------- BOTÓN MENÚ ----------------
         JButton btnMenu = new DecoracionBotones("Menú",
                                 //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
 
-        btnMenu.setFont(fuente1.deriveFont(18f));
+        btnMenu.setFont(fuente2.deriveFont(15f));
         btnMenu.setBounds(275, 300, 160, 45);
+
         btnMenu.addActionListener(e -> {
+
+            if (seAcaboVidas != null) {
+                seAcaboVidas.dispose();
+            }
+
             dispose();
+
             new MenuPrincipal();
         });
+
         fondo.add(btnMenu);
 
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
+
         try {
             ImageIcon icon = new ImageIcon(
                     getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VENTANITA.png"));
+
             Image img = icon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
             mascota.setIcon(new ImageIcon(img));
+
         } catch (Exception e) {
             mascota.setText("Mascota");
         }
-        mascota.setBounds(400, 190, 350, 350);
+
+        mascota.setBounds(400, 215, 350, 350);
+
+
         fondo.add(mascota);
 
         animarPuntaje();
     }
 
     private void animarPuntaje() {
+
         int duracionMs = 1500;
         int pasos = 60;
         int intervalo = duracionMs / pasos;
         int[] contador = {0};
 
         Timer timer = new Timer(intervalo, null);
+
         timer.addActionListener(e -> {
+
             contador[0]++;
+
             float progreso = (float) contador[0] / pasos;
             float eased = 1 - (1 - progreso) * (1 - progreso);
+
             int valor = (int) (puntajeFinal * eased);
+
             lblPuntaje.setText("Puntaje: " + valor);
+
             if (contador[0] >= pasos) {
                 lblPuntaje.setText("Puntaje: " + puntajeFinal);
                 ((Timer) e.getSource()).stop();
@@ -138,5 +172,11 @@ public class ResultadoFinal extends JDialog {
         });
 
         timer.start();
+    }
+
+
+    // Setter para guardar la referencia de SeAcaboVidas
+    public void setSeAcaboVidas(SeAcaboVidas seAcaboVidas) {
+        this.seAcaboVidas = seAcaboVidas;
     }
 }

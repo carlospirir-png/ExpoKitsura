@@ -2,9 +2,7 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;   // Importamos panel semi-transparente
-import main.Menu.DecoracionBotones; // Importamos la clase de Decoracion Botones
+import main.Menu.*;
 
 public class AdminStages extends JFrame{
     private FondoPanel fondo;
@@ -63,7 +61,11 @@ public class AdminStages extends JFrame{
         
         btnCrearUno.setFont(fuente2.deriveFont(20f));
         btnCrearUno.setBounds(325, 500, 360, 70);
+        btnCrearUno.addActionListener(e -> {
+            
+        });
         fondo.add(btnCrearUno);
+        
 
         btnEditarExistente = new DecoracionBotones("EDITAR UNO EXISTENTE",
                 //ColorBase             ColorBorde              ColorLetra
@@ -71,6 +73,11 @@ public class AdminStages extends JFrame{
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnEditarExistente.setFont(fuente2.deriveFont(20f));
         btnEditarExistente.setBounds(1245, 500, 360, 70);
+        btnEditarExistente.addActionListener(e ->{
+            new EditarStages();
+            dispose();
+        });
+        
         fondo.add(btnEditarExistente);
         
         JLabel staticMascotaControl = new JLabel();
@@ -87,7 +94,10 @@ public class AdminStages extends JFrame{
 
         btnSalir.setFont(fuente2.deriveFont(20F));
         btnSalir.setBounds(1680, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e -> {
+            new MenuAdmin();
+            dispose();
+                });
         fondo.add(btnSalir);
     }
     

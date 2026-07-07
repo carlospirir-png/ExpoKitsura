@@ -10,6 +10,8 @@ public class PistasMenu extends JFrame{
     private Font fuente1;
     private Font fuente2;
     
+    private DatosConfiguracion datos;
+    
     public PistasMenu() {
         try{
             // LettersForLearners
@@ -73,15 +75,24 @@ public class PistasMenu extends JFrame{
         JButton btnTexto = new DecoracionBotones("TEXTO",
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, 
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); 
-        btnTexto.setFont(fuente1.deriveFont(25f));
+        btnTexto.setFont(fuente1.deriveFont(45f));
         btnTexto.setBounds(400, 420, 415, 75);
+                btnTexto.addActionListener(e ->{
+                     dispose();    
+                    new PistasTxtAdmin();
+                });
         fondo.add(btnTexto);
 
         JButton btnAudio = new DecoracionBotones("AUDIO",
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, 
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); 
-        btnAudio.setFont(fuente1.deriveFont(25f));
+        btnAudio.setFont(fuente1.deriveFont(45f));
         btnAudio.setBounds(400, 650, 415, 75);
+                        btnAudio.addActionListener(e ->{
+                        dispose();
+                        new PistasAudioAdmin();
+                       
+                        });
         fondo.add(btnAudio);
 
         JLabel staticMascotaTablet = new JLabel();
@@ -99,7 +110,7 @@ public class PistasMenu extends JFrame{
         btnVolver.addActionListener(e -> 
                 
         {
-            new MenuAdmin();
+            new MenuAdmin(datos);
             dispose();
         });
         fondo.add(btnVolver);

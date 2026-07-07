@@ -84,7 +84,7 @@ public class MenuMinijuegoC3 extends JFrame {
         panelTitulo.setBounds(950, 100, 650, 70);
         fondo.add(panelTitulo);
 
-        JLabel lblTitulo = new JLabel("FOX JUMP!", SwingConstants.CENTER);
+        JLabel lblTitulo = new JLabel("MaulwurfRennt", SwingConstants.CENTER);
         lblTitulo.setFont(fuente2.deriveFont(40f));
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setBounds(0, 0, 650, 70);

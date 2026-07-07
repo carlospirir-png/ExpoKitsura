@@ -14,8 +14,7 @@ public class VictoriaPerfecta extends JFrame {
     private Font fuente2;
     private JuegoBase juego;
 
-    private DecoracionBotones btnVolver;
-
+    private DecoracionBotones btnVolver, btnResultados;
     
     public VictoriaPerfecta(ActionListener accion, JuegoBase juego) {
         this.juego = juego;
@@ -71,7 +70,7 @@ public class VictoriaPerfecta extends JFrame {
 
         //---------------- FRASE DE MOTIVACIÓN ----------------
         JLabel lblFrase = new JLabel("-- ¿Eres un perfeccionista? --", JLabel.CENTER);
-        lblFrase.setFont(fuente1.deriveFont(30f));
+        lblFrase.setFont(fuente1.deriveFont(45f));
         lblFrase.setForeground(Color.WHITE);
         lblFrase.setBounds(0, 105, 700, 35);
         panelIzquierdo.add(lblFrase);
@@ -96,7 +95,7 @@ public class VictoriaPerfecta extends JFrame {
         //---------------- DATOS DE USUARIO ----------------
         JLabel lblUsuario = new JLabel("Nombre de usuario");
         lblUsuario.setFont(fuente2.deriveFont(25f));
-        lblUsuario.setForeground(Color.WHITE); 
+        lblUsuario.setForeground(Color.decode("#FC767D")); 
         lblUsuario.setBounds(260, 115, 550, 40);
         panelDerecho.add(lblUsuario); 
         
@@ -121,10 +120,11 @@ public class VictoriaPerfecta extends JFrame {
         fondo.add(lblUsuario);
 
         //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
-        JButton btnResultados = new JButton("Ver resultados");
-        btnResultados.setFont(fuente1.deriveFont(25f));
-        btnResultados.setForeground(Color.BLACK);
-        btnResultados.setBounds(1225, 740, 200, 50);
+        btnResultados = new DecoracionBotones("VER RESULTADOS",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        btnResultados.setBounds(1410, 910, 200, 50);
         btnResultados.addActionListener(e -> {
             juego.mostrarResultadoConFade();
         });
@@ -148,6 +148,7 @@ public class VictoriaPerfecta extends JFrame {
     }
     
 }
+
 
 
 
