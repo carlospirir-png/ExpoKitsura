@@ -79,8 +79,8 @@ public class MenuAdmin extends JFrame {
         
         //ActionListener
         btnPuntuaciones.addActionListener(e -> {
-            //Se abre una nueva ventana de puntuacionesAdmin
-            new PuntuacionesAdmin(datos); //se envían los datos
+            //Se abre una nueva ventana de MCN
+            new PedirMCN(); //se envían los datos
             dispose();//se cierra esta ventana
         });
         
@@ -99,7 +99,7 @@ public class MenuAdmin extends JFrame {
         btnVidas.setBounds(180, 430, 430, 65);
         // Dirige a la clase de VidasAdmin y cierra el menú
         btnVidas.addActionListener(e -> {
-            new VidasAdmin(datos);
+            new PedirMCN(); 
             dispose();
         });
         // Se agrega el botón al panel principal
@@ -112,7 +112,7 @@ public class MenuAdmin extends JFrame {
         btnTiempo.setFont(fuente2.deriveFont(26f));
         btnTiempo.setBounds(180, 525, 430, 65);
         btnTiempo.addActionListener(e -> {
-            new TiempoAdmin();
+            new PedirMCN(); 
             dispose();
         });
         fondo.add(btnTiempo);
@@ -124,8 +124,9 @@ public class MenuAdmin extends JFrame {
         btnPistas.setFont(fuente2.deriveFont(26f));
         btnPistas.setBounds(180, 620, 430, 65);
         btnPistas.addActionListener(e -> {
-            new PistasMenu(datos);
-            dispose();
+           new PistasMenu(datos);
+          new PedirMCN(); 
+
         });
         fondo.add(btnPistas);
         // ---------------- ADMINISTRAR STAGES ----------------
@@ -136,7 +137,7 @@ public class MenuAdmin extends JFrame {
         btnStages.setFont(fuente2.deriveFont(24f));
         btnStages.setBounds(180, 715, 430, 65);
         btnStages.addActionListener(e -> {
-            new AdminStages();
+            new PedirMCN(); 
             dispose();
         });
         fondo.add(btnStages);
