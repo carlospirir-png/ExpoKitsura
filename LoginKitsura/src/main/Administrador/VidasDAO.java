@@ -26,12 +26,12 @@ public class VidasDAO {
         int vidas = 3;
 
         String sql = """
-            SELECT cn.vidas
-            FROM Configuracion_nivel cn
+            UPDATE Configuracion_nivel cn
             INNER JOIN Categoria c
                     ON cn.id_categoria = c.id_categoria
             INNER JOIN Minijuego m
                     ON c.id_minijuego = m.id_minijuego
+            SET cn.vidas_iniciales = ?
             WHERE m.nombre = ?
             AND c.nombre = ?
             AND cn.dificultad = ?
@@ -46,7 +46,7 @@ public class VidasDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                vidas = rs.getInt("vidas");
+                vidas = rs.getInt("vidas_iniciales");
             }
 
         } catch (Exception e) {

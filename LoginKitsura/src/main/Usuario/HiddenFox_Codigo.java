@@ -20,7 +20,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     /*Segundos que quedan en el turno actual.*/
     int segundosRestantes;
 
-    private HiddenFoxDAO dao = new HiddenFoxDAO();  
+    private HiddenFoxDAO dao = new HiddenFoxDAO();
 
     //Son 5 preguntas las que se muestran
     private ArrayList<Integer> preguntasPartida = new ArrayList<>();
@@ -56,6 +56,21 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //Este atributo indica si la partida ya terminó. Se utiliza para deshabilitar otros comportamientos cuando la partida finalice.
     private boolean partidaTerminada = false;
 
+    /*=====================================================================
+      NUEVO: ATRIBUTOS DE PERSISTENCIA
+    =====================================================================*/
+    // Id del minijuego "Hidden Fox" según la tabla Minijuego (INSERT inicial: 1 = Hidden Fox)
+    private static final int ID_MINIJUEGO = 1;
+
+    // Usuario actualmente logueado, obtenido de la sesión guardada en IniciarSesion
+    private int idUsuario;
+
+    // Id de la partida en curso (fila de la tabla Partida). -1 mientras no se ha creado.
+    private int idPartida = -1;
+
+    // Snapshot de las vidas con las que arrancó la partida (para la columna vidas_iniciales_snapshot)
+    private int vidasInicialesSnapshot;
+
     //---------------- CONSTRUCTOR ----------------
     // "vidas" ahora representa también el tope máximo de corazones a dibujar,
     // por eso se le pasa a HiddenFox mediante super(vidas): así la interfaz
@@ -68,6 +83,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         this.puntos = puntos;
         this.usoPista = usoPista;
         this.tiempoTotalJugado = tiempoTotalJugado;
+
+        // NUEVO: se obtiene el usuario que inició sesión (guardado por IniciarSesion)
+        this.idUsuario = Sesion.getIdUsuarioActual();
 
         if (nivelActual >= 1 && nivelActual <= 3) {
             nivelFinal = 3;
@@ -172,7 +190,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
             //Si aún hay más preguntas y niveles por pasar, cambia de dificultad
             if (nivelActual < nivelFinal) {
-                
+
                 //Si el nivel actual es menor al nivel en el que acaba la categoría
                 respuestas_Correctas = 0;
 
@@ -181,13 +199,17 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 fadeTo(() -> {
                     setContentPane(pantallaDificultad.getFondo());
                 }, 400);
-                
-            //Si ya no hay más categorías por recorrer, se muestra la pantalla del final
+
+                //Si ya no hay más categorías por recorrer, se muestra la pantalla del final
             } else {
-                
+
                 //Entonces se establece la partidaTerminada por Victoria
                 partidaTerminada = true;
-                
+
+                // NUEVO: se cierra la partida en la BD como "completada" y se
+                // actualiza la estadística del usuario para este minijuego.
+                guardarFinDePartida("completada");
+
                 if (vidas == getMaxVidas() && puntos == puntajeMaximo && !usoPista) {
 
                     VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
@@ -214,6 +236,20 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         preguntaActual = 0;
         preguntasPartida = dao.generarPartida(id_nivel);
         ConfiguracionNivel(id_nivel);
+
+        // NUEVO: la partida (fila en la tabla Partida) se crea UNA sola vez,
+        // la primera vez que se entra a este método. Los siguientes niveles
+        // de la misma categoría (llamados desde continuarDespuesDeDificultad)
+        // reutilizan el mismo idPartida, porque siguen siendo la misma partida.
+        if (idPartida == -1) {
+            vidasInicialesSnapshot = vidas;
+            idPartida = dao.crearPartida(idUsuario, ID_MINIJUEGO, vidasInicialesSnapshot);
+
+            if (idPartida == -1) {
+                System.out.println("ADVERTENCIA: no se pudo crear el registro de la partida en la base de datos.");
+            }
+        }
+
         // Metodo que realiza el aumento o disminución de puntos
         actualizarPuntos(puntos);
         modificarCorazones(vidas);
@@ -326,6 +362,17 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
             habilitarBotones(false);
 
+            // NUEVO: se registra la pregunta actual como no respondida (incorrecta,
+            // 0 puntos, tiempo agotado) antes de cerrar la partida.
+            Integer id_pregunta = obtenerIdPreguntaActual();
+            if (id_pregunta != null && idPartida != -1) {
+                dao.registrarDetalle(idPartida, id_pregunta, 0, tiempoMaximoPregunta, false);
+            }
+
+            // NUEVO: se cierra la partida como "abandonada" (no se completó) y
+            // se actualiza la estadística acumulada del usuario.
+            guardarFinDePartida("abandonada");
+
             dispose();
 
             new SeAcaboTiempo(this, e -> {
@@ -384,6 +431,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         boolean correcta
                 = (Boolean) boton.getClientProperty("correcta");
 
+        // NUEVO: tiempo que tardó en responder esta pregunta en particular,
+        // usado tanto para el cálculo de puntos como para el detalle de la partida.
+        int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
+
         if (correcta) {
             //suma puntos por responder correctamente
             int puntosGanados = calcularPuntosPorTiempo();
@@ -393,6 +444,11 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             puntos += puntosGanados;
 
             actualizarPuntos(puntos);
+
+            // NUEVO se guarda el detalle de esta pregunta como acierto
+            if (idPartida != -1) {
+                dao.registrarDetalle(idPartida, id_pregunta, puntosGanados, tiempoRespuesta, true);
+            }
 
             JOptionPane.showMessageDialog(
                     this,
@@ -418,6 +474,11 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 puntos -= 5;
             } else {
                 puntos = 0;
+            }
+
+            // NUEVO: se guarda el detalle de esta pregunta como error
+            if (idPartida != -1) {
+                dao.registrarDetalle(idPartida, id_pregunta, 0, tiempoRespuesta, false);
             }
 
             JOptionPane.showMessageDialog(
@@ -513,6 +574,22 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         }
 
         actualizarPuntos(puntos);
+    }
+
+
+     //---------------  GUARDAR FIN DE PARTIDA
+     /* Centraliza el cierre de la partida (usado tanto en victoria como en
+      derrota por tiempo o por vidas) para no repetir la lógica tres veces.*/
+  
+    private void guardarFinDePartida(String estado) {
+
+        if (idPartida == -1) {
+            System.out.println("ADVERTENCIA: no hay idPartida válido, no se guardó el resultado final.");
+            return;
+        }
+
+        dao.finalizarPartida(idPartida, puntos, tiempoTotalJugado, estado);
+        dao.actualizarEstadistica(idUsuario, ID_MINIJUEGO, puntos, tiempoTotalJugado);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -752,6 +829,17 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         if (vidas <= 0) {
 
             if (vidas == 0) {
+
+                // NUEVO: se protege contra un posible doble cierre de partida,
+                // igual que se hace en terminarNivel() y en FinTiempo().
+                if (partidaTerminada) {
+                    return;
+                }
+                partidaTerminada = true;
+
+                // NUEVO: se cierra la partida como "abandonada" y se
+                // actualiza la estadística acumulada del usuario.
+                guardarFinDePartida("abandonada");
 
                 JOptionPane.showMessageDialog(this, "Has perdido.");
 
