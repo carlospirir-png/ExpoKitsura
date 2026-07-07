@@ -166,24 +166,28 @@ public class PedirMCN extends JFrame {
             switch (ventanaAbrir){
                 case "Puntuaciones":
                     new PuntuacionesAdmin(datos);
+                    dispose();
                 break;
                 case "Vidas":
                     new VidasAdmin(datos);
+                    dispose();
                 break;
                 case "Tiempo":
                     new TiempoAdmin(datos);
+                    dispose();
                 break;
                 case "Pistas":
                     new PistasMenu(datos);
+                    dispose();
                 break;
                 case "Administrar Stages":
                     new AdminStages(datos);
+                    dispose();
                 break;
                 default:
                     JOptionPane.showMessageDialog(null, "Pedir MCN no sabe que ventana debe abrir.", "Error en abrir Interfaz", JOptionPane.ERROR_MESSAGE);
             }
             
-            dispose();
         });
 
         // MASCOTA
