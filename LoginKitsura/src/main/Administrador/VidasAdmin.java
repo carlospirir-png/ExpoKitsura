@@ -177,7 +177,7 @@ public class VidasAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e -> {
-            new MenuAdmin(datos);
+            new MenuAdmin();
             dispose();
         });
 

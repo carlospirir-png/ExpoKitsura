@@ -10,19 +10,12 @@ public class MenuAdmin extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    // Recibe los datos temporales: minijuego, categoría y nivel
-    private DatosConfiguracion datos;
     
     // Constructor sobrecargado: 
     public MenuAdmin(){
        inicializar();
     }
     
-    public MenuAdmin(DatosConfiguracion datos){
-        this.datos = datos;
-        inicializar();
-    }
-
    private void inicializar() {
         
         try {
@@ -80,7 +73,7 @@ public class MenuAdmin extends JFrame {
         //ActionListener
         btnPuntuaciones.addActionListener(e -> {
             //Se abre una nueva ventana de MCN
-            new PedirMCN(); //se envían los datos
+            new PedirMCN("Puntuaciones"); //se envían los datos
             dispose();//se cierra esta ventana
         });
         
@@ -99,7 +92,7 @@ public class MenuAdmin extends JFrame {
         btnVidas.setBounds(180, 430, 430, 65);
         // Dirige a la clase de VidasAdmin y cierra el menú
         btnVidas.addActionListener(e -> {
-            new PedirMCN(); 
+            new PedirMCN("Vidas"); 
             dispose();
         });
         // Se agrega el botón al panel principal
@@ -112,7 +105,7 @@ public class MenuAdmin extends JFrame {
         btnTiempo.setFont(fuente2.deriveFont(26f));
         btnTiempo.setBounds(180, 525, 430, 65);
         btnTiempo.addActionListener(e -> {
-            new PedirMCN(); 
+            new PedirMCN("Tiempo"); 
             dispose();
         });
         fondo.add(btnTiempo);
@@ -124,8 +117,7 @@ public class MenuAdmin extends JFrame {
         btnPistas.setFont(fuente2.deriveFont(26f));
         btnPistas.setBounds(180, 620, 430, 65);
         btnPistas.addActionListener(e -> {
-           new PistasMenu(datos);
-          new PedirMCN(); 
+          new PedirMCN("Pistas"); 
 
         });
         fondo.add(btnPistas);
@@ -137,7 +129,7 @@ public class MenuAdmin extends JFrame {
         btnStages.setFont(fuente2.deriveFont(24f));
         btnStages.setBounds(180, 715, 430, 65);
         btnStages.addActionListener(e -> {
-            new PedirMCN(); 
+            new PedirMCN("Administrar Stages"); 
             dispose();
         });
         fondo.add(btnStages);
@@ -178,8 +170,7 @@ public class MenuAdmin extends JFrame {
     
 
     public static void main(String[] args) {
-        DatosConfiguracion datos = new DatosConfiguracion("HiddenFox","Animales","Fácil");
-        new MenuAdmin(datos);
+        new MenuAdmin();
     }
 
 }
