@@ -9,7 +9,7 @@ import main.conexion.Conexion;
 
 public class RegistroUsuario extends JFrame {
 
-    private FondoPanel fondo;
+    private final FondoPanel fondo;
     private Font fuente1, fuente2;
 
     private JTextField txtNombre, txtCorreo;

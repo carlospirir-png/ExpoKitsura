@@ -2,9 +2,8 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
+import main.Menu.*;
+import main.Usuario.RegistroUsuario;
 
 public class MenuAdmin extends JFrame {
 
@@ -169,7 +168,7 @@ public class MenuAdmin extends JFrame {
         volver.setFont(fuente2.deriveFont(28f));
         volver.setBounds(1500, 870, 300, 65);
         volver.addActionListener(e -> {
-            new PedirMCN();
+            new RegistroUsuario();
             dispose();
                 });
         fondo.add(volver);

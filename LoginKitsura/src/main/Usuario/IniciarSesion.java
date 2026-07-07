@@ -4,7 +4,7 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import java.sql.*;
-import main.Administrador.PedirMCN;
+import main.Administrador.*;
 import main.Menu.*;
 import main.conexion.Conexion;
 
@@ -187,7 +187,7 @@ public class IniciarSesion extends JFrame {
             if (rol != null) {
 
                 if (rol.equalsIgnoreCase("administrador")) {
-                    new PedirMCN();
+                    new MenuAdmin();
                 } else {
                     new MenuPrincipal();
                 }
