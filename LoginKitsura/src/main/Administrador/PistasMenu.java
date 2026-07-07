@@ -12,7 +12,10 @@ public class PistasMenu extends JFrame{
     
     private DatosConfiguracion datos;
     
-    public PistasMenu() {
+    public PistasMenu(DatosConfiguracion datos) {
+        
+        this.datos = datos;
+        
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -79,7 +82,7 @@ public class PistasMenu extends JFrame{
         btnTexto.setBounds(400, 420, 415, 75);
                 btnTexto.addActionListener(e ->{
                      dispose();    
-                    new PistasTxtAdmin();
+                    new PistasTxtAdmin(datos);
                 });
         fondo.add(btnTexto);
 
@@ -90,7 +93,7 @@ public class PistasMenu extends JFrame{
         btnAudio.setBounds(400, 650, 415, 75);
                         btnAudio.addActionListener(e ->{
                         dispose();
-                        new PistasAudioAdmin();
+                        new PistasAudioAdmin(datos);
                        
                         });
         fondo.add(btnAudio);
@@ -116,7 +119,4 @@ public class PistasMenu extends JFrame{
         fondo.add(btnVolver);
     }
     
-    public static void main(String[] args) {
-        new PistasMenu();
-    }
 }
