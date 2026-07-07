@@ -2,6 +2,7 @@
 package main.Administrador;
 
 import java.sql.*;
+import javax.swing.JOptionPane;
 import main.conexion.Conexion;
 
 public class PistasDAO {
@@ -16,17 +17,26 @@ public class PistasDAO {
 
     //--------------------------- P I S T A   T E X T O --------------------------    
     //------------------------------- ACTUALIZAR PISTA -----------------------
-    public boolean actualizarPistaTexto(int id_ayuda, String pistaTexto) {
+    public boolean actualizarPistaTexto(String pistaTexto, String minijuego, String categoria, String nivel, int id_ayuda) {
         //Recibimos a través de los parámetros el id de la pista y el texto
 
         //Consulta
         //Actualiza la tabla ayuda con el contenido cuando el id coincida y el enum sea tipo texto
-        String sql = "UPDATE Ayuda SET contenido = ? WHERE id_ayuda = ? AND tipo = 'texto'";
+        String sql = "UPDATE Ayuda a "
+                + "INNER JOIN Pregunta p ON a.id_pregunta = p.id_pregunta "
+                + "INNER JOIN Configuracion_nivel cn ON p.id_nivel = cn.id_nivel "
+                + "INNER JOIN Categoria c ON cn.id_categoria = c.id_categoria "
+                + "INNER JOIN Minijuego m ON c.id_minijuego = m.id_minijuego "
+                + "SET contenido = ? "
+                + "WHERE m.nombre = ? AND c.nombre = ? AND cn.dificultad = ?  AND id_ayuda = ? AND tipo = 'texto'";
 
         try (PreparedStatement ps = con.prepareStatement(sql);) {
 
             ps.setString(1, pistaTexto);
-            ps.setInt(2, id_ayuda);
+            ps.setString(2, minijuego);
+            ps.setString(3, categoria);
+            ps.setString(4, nivel);
+            ps.setInt(5, id_ayuda);
 
             return ps.executeUpdate() > 0;
 

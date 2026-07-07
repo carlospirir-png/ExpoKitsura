@@ -21,9 +21,13 @@ public class PistasTxtAdmin extends JFrame {
     private DefaultTableModel modelo;
     private JTable tablaPistas;
 
-    PistasDAO dao = new PistasDAO();
+    private DatosConfiguracion datos;
+    private PistasDAO dao = new PistasDAO();
 
-    public PistasTxtAdmin() {
+    public PistasTxtAdmin(DatosConfiguracion datos) {
+
+        this.datos = datos;
+
         try {
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
@@ -173,18 +177,17 @@ public class PistasTxtAdmin extends JFrame {
         scrollPaneTabla.setBounds(30, 155, 820, 440);
         panelDerecho.add(scrollPaneTabla);
         cargarTabla(); //Carga la tabla
-        
+
         //Esto es para que cuando se presione una fila se carguen en los txt
         //getSelectionModel(): escucha que fila se selecciona
         tablaPistas.getSelectionModel().addListSelectionListener(e -> {
-            
+
             //Esto es por si se usa el teclado o se selecciona rápido, evite que el método se ejecute a medias
             if (!e.getValueIsAdjusting()) {
-                
+
                 //getSelectedRow(): te dice la fila que fue clickeada
                 int fila = tablaPistas.getSelectedRow();
-                
-                
+
                 if (fila != -1) {
                     //getValueAt(fila, columna) saca los datos de la tabla
                     //se parsean de una vez a String y se colocan de una vez en los txt
@@ -216,7 +219,7 @@ public class PistasTxtAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
         btnVolver.addActionListener(e
                 -> {
-            new PistasMenu();
+            new PistasMenu(datos);
             dispose();
         });
         fondo.add(btnVolver);
@@ -246,7 +249,7 @@ public class PistasTxtAdmin extends JFrame {
 
         //Recordemos que actualizarPistaTexto devuelve un boolean
         //Así que si es true, significa que se logró actualizar correctamente
-        if (dao.actualizarPistaTexto(id, contenido)) {
+        if (dao.actualizarPistaTexto(contenido, datos.getMinijuego(), datos.getCategoria(), datos.getNivel(), id)) {
             JOptionPane.showMessageDialog(
                     this,
                     "La pista fue actualizada correctamente.");
@@ -365,10 +368,6 @@ public class PistasTxtAdmin extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        new PistasTxtAdmin();
     }
 
 }

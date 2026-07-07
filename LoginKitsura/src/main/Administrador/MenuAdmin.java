@@ -124,7 +124,7 @@ public class MenuAdmin extends JFrame {
         btnPistas.setFont(fuente2.deriveFont(26f));
         btnPistas.setBounds(180, 620, 430, 65);
         btnPistas.addActionListener(e -> {
-            new PistasMenu();
+            new PistasMenu(datos);
             dispose();
         });
         fondo.add(btnPistas);
