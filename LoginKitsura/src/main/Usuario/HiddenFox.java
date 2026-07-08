@@ -1,3 +1,4 @@
+// ============== HIDDEN FOX ==============
 package main.Usuario;
 
 //------------------------ IMPORTACIONES ----------------------------
@@ -20,14 +21,12 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     // Variables utilizadas para inficar acierto, tiempo, cantidad de puntos, aumento de dificultad, etc.
     // Son textos o etiquetas que pueden almacenar rutas de imagen para convertirlas o redimensionar
     private JLabel titulo, tiempoTexto, tiempo, acierto, puntos, dificultad, categoria, mascota, imagenSombra;
-
-    // ---------------- SISTEMA DE VIDAS DINÁMICO ----------------
+    
     // Cantidad máxima de vidas configurada por el administrador (VidasAdmin) para
-    // el minijuego/categoría/dificultad correspondiente. Ya no está fija en 3.
+    // el minijuego/categoría/dificultad correspondiente. 
     private int maxVidas;
 
-    // Arreglo de corazones generado dinámicamente según "maxVidas" (en vez de
-    // los antiguos vida1, vida2, vida3 fijos, que limitaban el juego a 3 vidas).
+    // Arreglo de corazones generado dinámicamente según "maxVidas"
     private JLabel[] corazones;
 
     // Cantidad de corazones que se muestran por fila antes de saltar a la siguiente.
@@ -46,7 +45,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     // Constructor donde se encuentran las fuentes del programa
     // "maxVidas" es la cantidad de corazones que debe dibujar la interfaz,
     // obtenida previamente desde la base de datos (tabla Configuracion_nivel)
-    // por medio de VidasDAO, en vez de venir fija en 3.
+    // por medio de VidasDAO
     public HiddenFox(int maxVidas) {
         // Resguardo por si llega un valor inválido (0 o negativo)
         this.maxVidas = (maxVidas < 1) ? 1 : maxVidas;
@@ -157,8 +156,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         }
 
         // Se generan dinámicamente tantos corazones como "maxVidas" indique
-        // (valor obtenido desde la base de datos por medio de VidasAdmin/VidasDAO).
-        // Antes esto estaba fijo a 3 JLabels (vida1, vida2, vida3).
+        // Es el valor obtenido desde la base de datos por medio de VidasAdmin y VidasDAO
         corazones = new JLabel[maxVidas];
 
         int xInicial = 70;
@@ -551,10 +549,51 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     }
 
     //------------------------- MAX VIDAS -----------------
-    // Permite que HiddenFox_Codigo sepa cuál es el tope de vidas configurado
-    // (por ejemplo, para decidir si la partida fue "perfecta").
+    // Permite saber cuál es el tope de vidas configurado
     public int getMaxVidas() {
         return maxVidas;
+    }
+
+    //------------------- INICIALIZAR VIDAS (reconstrucción) -----------------
+    // Este método reconstruye el arreglo de corazones con el valor real,
+    public void inicializarVidas(int nuevoMaxVidas) {
+        if (nuevoMaxVidas < 1) {
+            nuevoMaxVidas = 1;
+        }
+        // Si el valor real coincide con el placeholder, no hay nada que rehacer
+        if (nuevoMaxVidas == this.maxVidas) {
+            return;
+        }
+
+        // Quita del panel los corazones dibujados con el valor placeholder
+        for (JLabel corazon : corazones) {
+            fondo.remove(corazon);
+        }
+
+        this.maxVidas = nuevoMaxVidas;
+        corazones = new JLabel[maxVidas];
+
+        int xInicial = 70;
+        int yInicial = 25;
+        int espaciado = 65;
+        int tamano = 60;
+
+        for (int i = 0; i < maxVidas; i++) {
+            int fila = i / CORAZONES_POR_FILA;
+            int columna = i % CORAZONES_POR_FILA;
+
+            JLabel corazon = new JLabel(corazonFinal);
+            corazon.setBounds(
+                    xInicial + (columna * espaciado),
+                    yInicial + (fila * espaciado),
+                    tamano, tamano);
+
+            corazones[i] = corazon;
+            fondo.add(corazon);
+        }
+
+        fondo.revalidate();
+        fondo.repaint();
     }
 
     //--------------------- B O T O N E S
