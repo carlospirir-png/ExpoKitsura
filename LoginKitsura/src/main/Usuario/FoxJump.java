@@ -1,3 +1,4 @@
+// ============== FOX JUMP ==============
 package main.Usuario;
 
 import java.awt.*;
@@ -148,8 +149,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         // por lo que siempre caía en el valor por defecto sin avisar del error.
         maxVidas = vidasDAO.obtenerVidas("Fox Jump!", categoriaSeleccionada, "Fácil");
 
-        // SEGURIDAD
-        if (maxVidas < 3) {
+        if (maxVidas < 1) {
             maxVidas = 3;
         }
 
@@ -256,6 +256,8 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
         // El jugador inicia con el máximo de vidas configurado
         vidas = maxVidas;
+        
+        reconstruirCorazones();
         
         // CONSULTA QUE CRUZA TRES TABLAS PARA ENCONTRAR EL NIVEL CORRECTO
         // SE FILTRA POR NOMBRE DEL MINIJUEGO, NOMBRE DE CATEGORIA Y DIFICULTAD
@@ -1477,6 +1479,44 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         // INDICE 0 = PRIMER PLANO: LA MASCOTA SIEMPRE SE DIBUJA SOBRE LOS DEMAS
         fondo.setComponentZOrder(mascota, 0);
+    }
+
+    private void reconstruirCorazones() {
+        if (corazones != null) {
+            for (JLabel corazon : corazones) {
+                fondo.remove(corazon);
+            }
+        }
+
+        corazones = new JLabel[maxVidas];
+        int xInicialCorazon = 70;
+        int yInicialCorazon = 20;
+        int espaciadoX = 55;
+        int espaciadoY = 55;
+        int tamanoCorazon = 50;
+
+        for (int i = 0; i < maxVidas; i++) {
+            int fila = i / CORAZONES_POR_FILA;
+            int columna = i % CORAZONES_POR_FILA;
+
+            JLabel corazon;
+            if (iconoCorazonLleno != null) {
+                corazon = new JLabel(iconoCorazonLleno);
+            } else {
+                corazon = new JLabel("♥");
+                corazon.setFont(fuente1.deriveFont(40f));
+                corazon.setForeground(Color.RED);
+            }
+            corazon.setBounds(
+                    xInicialCorazon + (columna * espaciadoX),
+                    yInicialCorazon + (fila * espaciadoY),
+                    tamanoCorazon, tamanoCorazon);
+            corazones[i] = corazon;
+            fondo.add(corazon);
+        }
+
+        fondo.revalidate();
+        fondo.repaint();
     }
 
     // =========================================================================

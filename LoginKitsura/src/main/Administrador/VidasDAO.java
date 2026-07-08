@@ -16,15 +16,11 @@ public class VidasDAO {
         conexion = new Conexion();
     }
 
-    // * Obtiene la cantidad de vidas configuradas para un nivel.
-    // * minijuego: Nombre del minijuego.
-    // * categoria: Nombre de la categoría.
-    // * nivel: Dificultad del nivel.
-    // * Cantidad de vidas.
+    // Obtiene la cantidad de vidas configuradas para un nivel.
     public int obtenerVidas(String minijuego, String categoria, String nivel) {
 
         int vidas = 3;
-
+        
         String sql = """
             SELECT cn.vidas
             FROM Configuracion_nivel cn
@@ -57,10 +53,6 @@ public class VidasDAO {
     }
 
     // Actualiza la cantidad de vidas de un nivel.
-    // minijuego Nombre del minijuego.
-    // categoria: Categoría.
-    // nivel Dificultad.
-    // vidas Nueva: cantidad de vidas.
     // return true si la actualización fue correcta.
     public boolean actualizarVidas(String minijuego,
             String categoria,

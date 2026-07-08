@@ -31,9 +31,13 @@ public class PistasAudioAdmin extends JFrame {
     private final String URL = "jdbc:mysql://localhost:3306/KITSURA_DB";
     private final String USER = "root";
     private final String PASSWORD = "";
+    
+    private DatosConfiguracion datos;
 
-    public PistasAudioAdmin() {
-
+    public PistasAudioAdmin(DatosConfiguracion datos) {
+        
+        this.datos = datos;
+        
         try {
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
@@ -212,7 +216,7 @@ public class PistasAudioAdmin extends JFrame {
         btnVolver.setBounds(1550, 860, 300, 65);
 
         btnVolver.addActionListener(e -> {
-            new PistasMenu();
+            new PistasMenu(datos);
             dispose();
         });
 
@@ -329,10 +333,4 @@ public class PistasAudioAdmin extends JFrame {
         }
     }
 
-    //---------------- MAIN ----------------
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new PistasAudioAdmin();
-        });
-    }
 }

@@ -1,59 +1,74 @@
+//--------------------------- PANTALLA CAMBIAR CONTRSEÑA ----------------------
+//Paquete
 package main.Usuario;
 
-import java.awt.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.*;
-import main.Menu.FondoPanelSemi;
-import main.conexion.Conexion;
+//Imports
+import java.awt.*; //Java AWT
+import java.sql.*; //SQL
+import javax.swing.*; //Java Swing
+import main.Menu.DecoracionBotones;
+import main.Menu.FondoPanelSemi; //Panel
+import main.conexion.Conexion; //La conexión
 
+//Clase de Cambiar Contraseña
 public class PantallaCContra extends JFrame {
 
-    Connection con = new Conexion().getConnection();
+    //-------------- A T R I B U T O S ----------------
+    //-------------- CONEXIÓN
+    private Connection con = new Conexion().getConnection();
 
+    //-------------- FONDO PANEL
     private FondoPanelSemi fondo;
     private FondoPanelSemi panelSemi;
 
+    //-------------- JLABEL
     private JLabel lblTitulo;
-
     private JLabel lblActual;
     private JLabel lblNueva;
-
-    private JPasswordField txtActual;
-    private JPasswordField txtNueva;
-
-    private JButton btnAceptar;
-
     private JLabel lblOlvido;
-
     private JLabel lblMascota;
     private JLabel lblLogo;
 
+    //-------------- JPASSWORD
+    private JPasswordField txtActual;
+    private JPasswordField txtNueva;
+
+    //-------------- BUTTON
+    private JButton btnAceptar;
+    
+    //------------- FUENTE
     private Font fuente1;
     private Font fuente2;
     
+    //------------- STRING
     private String correo;
-
+    
+    //---------------- C O N S T R U C T O R -------------
     public PantallaCContra(String correo) {
-          try{
+        //------------- INICIALIZAR -------------
+        
+        //Se recibe en los parámetros el correo.
+        //Se inicializa el correo, ya que nos servirá como clave para identificar al usuario
+        this.correo = correo;
+        
+        //------------- TRY - CATCH -------------
+        try {
             // LettersForLearners
             fuente1 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
             // KGPerfectPenmanship
             fuente2 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-            
-        } catch (Exception e){
-            e.printStackTrace();            
-        fuente1 = new Font("Arial", Font.PLAIN,20);
-        fuente2 = new Font("Arial", Font.PLAIN,20);
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        
-        this.correo = correo;
+
+        //----------------- JFRAME -----------------
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
@@ -63,27 +78,34 @@ public class PantallaCContra extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         fondo.setLayout(null);
-
+        
+        //------------------ COMPONENTES ---------
         crearComponentes();
 
         setVisible(true);
     }
-
+    
+    //------------------- M É T O D O S -----------------
+    //---------------- CREAR COMPONENTES ----------------
     private void crearComponentes() {
-
-        panelSemi = new FondoPanelSemi(new Color(0, 0, 0, 150));
+        
+        //--------------- PANEL SEMI -----------------
+        panelSemi = new FondoPanelSemi(new Color(118, 169, 170, 200));
         panelSemi.setLayout(null);
         panelSemi.setBounds(10, 10, 330, 340);
 
         fondo.add(panelSemi);
 
+        //--------------- L A B E L S
+        //--------------- TÍTULO
         lblTitulo = new JLabel("Editar Contraseña");
         lblTitulo.setFont(fuente2.deriveFont(28f));
         lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setBounds(20, 10, 565, 30);
+        lblTitulo.setBounds(40, 15, 565, 30);
 
         panelSemi.add(lblTitulo);
 
+        //-------------- CONTRASEÑA ACTUAL
         lblActual = new JLabel("Ingrese la contraseña actual:");
         lblActual.setFont(fuente1.deriveFont(28f));
         lblActual.setForeground(Color.WHITE);
@@ -91,44 +113,48 @@ public class PantallaCContra extends JFrame {
 
         panelSemi.add(lblActual);
 
-        txtActual = new JPasswordField();
-        txtActual.setBounds(20, 105, 280, 35);
-        txtActual.setBackground(new Color(90, 90, 90));
-        txtActual.setForeground(Color.WHITE);
-
-        panelSemi.add(txtActual);
-
+        //------------- CONTRASEÑA NUEVA
         lblNueva = new JLabel("Ingrese la contraseña nueva:");
         lblNueva.setFont(fuente1.deriveFont(28f));
         lblNueva.setForeground(Color.WHITE);
         lblNueva.setBounds(20, 170, 300, 30);
 
         panelSemi.add(lblNueva);
+        
+        //--------------- T X T
+        //-------------- TXT CONTRASEÑA ACTUAL
+        txtActual = new JPasswordField();
+        txtActual.setBounds(20, 105, 280, 35);
+        txtActual.setBackground(Color.WHITE);
+        txtActual.setForeground(Color.BLACK);
 
+        panelSemi.add(txtActual);
+
+        //--------------- TXT CONTRASEÑA NUEVA
         txtNueva = new JPasswordField();
         txtNueva.setBounds(20, 215, 280, 35);
-        txtNueva.setBackground(new Color(90, 90, 90));
-        txtNueva.setForeground(Color.WHITE);
+        txtNueva.setBackground(Color.WHITE);
+        txtNueva.setForeground(Color.BLACK);
 
         panelSemi.add(txtNueva);
-
-        btnAceptar = new JButton("ACEPTAR");
+        
+        //---------------- B O T O N E S ----------------
+        //---------------- ACEPTAR
+        btnAceptar = new DecoracionBotones("ACEPTAR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO 
         btnAceptar.setFont(fuente1.deriveFont(28f));
-        btnAceptar.setBackground(new Color(74, 110, 157));
         btnAceptar.setForeground(Color.WHITE);
         btnAceptar.setFocusPainted(false);
         btnAceptar.setBounds(95, 265, 140, 42);
-        
+
         btnAceptar.addActionListener(e -> compararContrasena());
 
         panelSemi.add(btnAceptar);
-
-        lblOlvido = new JLabel("¿Olvidaste tu contraseña?");
-        lblOlvido.setFont(fuente1.deriveFont(22f));
-        lblOlvido.setForeground(Color.WHITE);
-        lblOlvido.setBounds(80, 315, 220, 20);
-
-        panelSemi.add(lblOlvido);
+        
+        
+        //------------------ M A S C O T A -----------------
 
         lblMascota = new JLabel();
 
@@ -147,7 +173,9 @@ public class PantallaCContra extends JFrame {
 
         fondo.add(lblMascota);
     }
-
+    
+    
+    //------------ O B T E N E R    C O N T R A S E Ñ A ------------
     public String ObtenerContrasena() {
 
         String sql = "SELECT contrasena FROM Usuario WHERE correo = ?";
@@ -166,7 +194,8 @@ public class PantallaCContra extends JFrame {
 
         return null;
     }
-
+    
+    //--------------- C O M P A R A R   C O N T R A S E Ñ A ------------
     public void compararContrasena() {
         try {
             String contraActual = new String(txtActual.getPassword());
@@ -183,7 +212,8 @@ public class PantallaCContra extends JFrame {
             e.printStackTrace();
         }
     }
-
+    
+    //--------------- C A M B I A R     C O N T R A S E Ñ A -------------
     public void cambiarContrasena() {
         String nueva = new String(txtNueva.getPassword());
 
@@ -198,7 +228,7 @@ public class PantallaCContra extends JFrame {
             if (filas > 0) {
                 JOptionPane.showMessageDialog(null, "Contraseña actualizada correctamente.", "Actualización realizada.", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Errro al actualizar la contraseña.", "ERRROR de actualización", JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException e) {
