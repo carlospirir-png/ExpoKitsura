@@ -2,9 +2,7 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
+import main.Menu.*;
 
 public class PuntuacionesAdmin extends JFrame {
 
@@ -59,7 +57,7 @@ public class PuntuacionesAdmin extends JFrame {
     private void crearComponentes() {
 
         //---------------- PANEL TÍTULO ----------------
-        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
+        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(130, 211, 224, 200));
         panelTitulo.setLayout(null);
         panelTitulo.setBounds(90, 65, 1800, 75);
         fondo.add(panelTitulo);
@@ -71,7 +69,7 @@ public class PuntuacionesAdmin extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- PANEL PRINCIPAL ----------------
-        FondoPanelSemi panelPuntuacion = new FondoPanelSemi(new Color(0, 0, 0, 130));
+        FondoPanelSemi panelPuntuacion = new FondoPanelSemi(new Color(68, 122, 156, 200));
         panelPuntuacion.setLayout(null);
         panelPuntuacion.setBounds(100, 170, 950, 650);
         fondo.add(panelPuntuacion);
@@ -127,7 +125,7 @@ public class PuntuacionesAdmin extends JFrame {
         //---------------- I N F O R M A C I Ó N ----------------
         //Se inicializan los Labels
         //---------------- MODIFICANDO -----------------
-        JLabel lblModificando = new JLabel("Está modificando:");
+        JLabel lblModificando = new JLabel("Estás modificando:");
         //Fuente y tamaño de fuente
         lblModificando.setFont(fuente2.deriveFont(28f));
         //Color de fuente
@@ -279,7 +277,7 @@ public class PuntuacionesAdmin extends JFrame {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Ingrese únicamente números enteros.",
+                    "Ingrese únicamente números enteros.\n" + ex.getMessage(),
                     "Dato inválido",
                     JOptionPane.ERROR_MESSAGE);
         }
