@@ -1,4 +1,8 @@
-//-------------------------- HIDDEN FOX CÓDIGO ----------------------
+// ============== HIDDEN FOX CODIGO (VERSIÓN FINAL) ==============
+// IMPORTANTE: esta es la ÚNICA versión de esta clase que debe existir en el
+// proyecto. Reemplaza por completo a la versión anterior, que usaba métodos
+// static (resolverVidasIniciales, mapearIdCategoria, mapearDificultad) antes
+// de super(vidas). Esa versión anterior debe eliminarse del archivo/proyecto.
 package main.Usuario;
 
 import java.awt.*;
@@ -56,10 +60,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //Este atributo indica si la partida ya terminó. Se utiliza para deshabilitar otros comportamientos cuando la partida finalice.
     private boolean partidaTerminada = false;
 
-    // Indica si ya se consultó VidasDAO y se construyeron los corazones para
-    // esta partida. Evita repetir la consulta/creación al avanzar de dificultad.
-    private boolean vidasInicializadas = false;
-
+    /*=====================================================================
+      ATRIBUTOS DE PERSISTENCIA
+    =====================================================================*/
     // Id del minijuego "Hidden Fox" según la tabla Minijuego (INSERT inicial: 1 = Hidden Fox)
     private static final int ID_MINIJUEGO = 1;
 
@@ -72,9 +75,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     // Snapshot de las vidas con las que arrancó la partida (para la columna vidas_iniciales_snapshot)
     private int vidasInicialesSnapshot;
 
-    //---------------- CONSTRUCTOR ---------------
-    // Al ser una clase abstracta, debe de tener super(vidas), para compilar. 
-    // La variable "vidas" es un placeholder, el valor puede llegar más abajo
+    //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
         super(vidas);
 
@@ -102,9 +103,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         Partida(nivelActual);
     }
 
-    // Este segundo constructor indica cuando el jugador inicia categoría desde el menu.
-    // El número 3 es un valor temporal, predefinido al iniciar. Para el cambio, se consulta en la 
-    // base de datos, para que se construyan los corazones de acuerdo a la información encontrada
+
     public HiddenFox_Codigo(int nivel) {
         this(nivel, 3, 0, false, 0);
     }
@@ -171,10 +170,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         preguntasPartida = dao.generarPartida(id_nivel);
         ConfiguracionNivel(id_nivel);
 
-        // La partida (fila en la tabla Partida) se crea UNA sola vez, la
-        // primera vez que se entra a este método. En este punto "vidas" ya
-        // refleja el valor real configurado en la BD, porque
-        // ConfiguracionNivel() ya llamó a establecerVidasSiPrimeraVez().
         if (idPartida == -1) {
             vidasInicialesSnapshot = vidas;
             idPartida = dao.crearPartida(idUsuario, ID_MINIJUEGO, vidasInicialesSnapshot);
@@ -613,16 +608,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
       del minijuego.
     ------------------------------------------------------------------*/
     public void ConfiguracionNivel(int nivel) {
-        /*NIVELES: 
-        1. Animales - Fácil
-        2. Animales - Intermedio
-        3. Animales - Difícil
-        4. Territorios - Fácil
-        5. Territorios - Intermedio
-        6. Territorios - Difícil
-        7. Caricaturas - Fácil
-        8. Caricaturas - Intermedio
-        9. Caricaturas - Difícil*/
 
         // Se van guardando aquí la categoría y dificultad que el switch ya
         // resuelve para este nivel, para poder consultar VidasDAO al final
@@ -707,18 +692,18 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
         }
 
-        // Solo la primera vez que se configura un nivel en esta partida se
-        // consulta VidasDAO y se construyen los corazones (ver método abajo).
-        establecerVidasSiPrimeraVez(categoriaResuelta, dificultadResuelta);
+        // Se reconsulta VidasDAO y se reconstruyen los corazones en CADA
+        // cambio de nivel (ver comentario del método más abajo).
+        establecerVidasPorNivel(categoriaResuelta, dificultadResuelta);
     }
 
- /*------------------ ESTABLECER VIDAS (una sola vez) ------------------
-    Al consultar la clase "VidasDAO", con la categoría y el nivel, se construyen los corazones 
-    Según lo configurado en la clase VidasAdmin(), solo se ejecuta una primera vez
-    si el jugador avanza de dificultad dentro de la partida, las vidas se mantienen
+    /*------------------ ESTABLECER VIDAS POR NIVEL ------------------
+      Consulta VidasDAO con la categoría y dificultad que ConfiguracionNivel
+      ya resolvió, y reconstruye los corazones según lo configurado en
+      VidasAdmin PARA ESE NIVEL/DIFICULTAD.
     ------------------------------------------------------------------------*/
-    private void establecerVidasSiPrimeraVez(String categoria, String dificultad) {
-        if (vidasInicializadas || categoria == null || dificultad == null) {
+    private void establecerVidasPorNivel(String categoria, String dificultad) {
+        if (categoria == null || dificultad == null) {
             return;
         }
 
@@ -731,7 +716,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         inicializarVidas(vidasConfiguradas);
         this.vidas = vidasConfiguradas;
-        vidasInicializadas = true;
     }
 
     public void DerrotaVidas() {

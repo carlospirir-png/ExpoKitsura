@@ -1,3 +1,4 @@
+// ============== MAULWURF RENNT ==============
 package main.Usuario;
 
 import java.awt.*;
@@ -590,6 +591,57 @@ public class MaulwurfRennt extends JFrame {
     // (por ejemplo, para decidir si la partida fue "perfecta").
     public int getMaxVidas() {
         return maxVidas;
+    }
+
+    // FIX: método nuevo. maxVidas antes solo se fijaba UNA vez, en el
+    // constructor, siempre con la dificultad "Fácil". Al avanzar de nivel
+    // (Intermedio, Difícil), nunca se volvía a consultar VidasDAO, así que
+    // los corazones nunca reflejaban lo configurado para esas dificultades.
+    // Este método reconstruye el arreglo de corazones con el nuevo tope real.
+    public void reconstruirVidas(int nuevoMaxVidas) {
+        if (nuevoMaxVidas < 1) {
+            nuevoMaxVidas = 1;
+        }
+        if (nuevoMaxVidas == this.maxVidas) {
+            return;
+        }
+
+        for (JLabel corazon : corazones) {
+            fondo.remove(corazon);
+        }
+
+        this.maxVidas = nuevoMaxVidas;
+        corazones = new JLabel[maxVidas];
+
+        int xInicial = 70;
+        int yInicial = 25;
+        int espaciado = 65;
+        int tamano = 60;
+
+        for (int i = 0; i < maxVidas; i++) {
+            int fila = i / CORAZONES_POR_FILA;
+            int columna = i % CORAZONES_POR_FILA;
+
+            JLabel corazon;
+            if (corazonNormal != null) {
+                corazon = new JLabel(corazonNormal);
+            } else {
+                corazon = new JLabel("♥");
+                corazon.setFont(fuente1.deriveFont(55f));
+                corazon.setForeground(Color.RED);
+            }
+
+            corazon.setBounds(
+                    xInicial + (columna * espaciado),
+                    yInicial + (fila * espaciado),
+                    tamano, tamano);
+
+            corazones[i] = corazon;
+            fondo.add(corazon);
+        }
+
+        fondo.revalidate();
+        fondo.repaint();
     }
 
     // Cambia el enunciado de la pregunta usando HTML para habilitar el salto de línea automático y centrado.
