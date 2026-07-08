@@ -118,7 +118,7 @@ public class MenuAdmin extends JFrame {
         btnPistas.setBounds(180, 620, 430, 65);
         btnPistas.addActionListener(e -> {
           new PedirMCN("Pistas"); 
-
+          dispose();
         });
         fondo.add(btnPistas);
         // ---------------- ADMINISTRAR STAGES ----------------
