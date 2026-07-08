@@ -3,10 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/VidasAdmin.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/PuntuacionesAdmin.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/MenuAdmin.java</file>
-            <file>file:/C:/Users/jovf1/Downloads/Kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/PedirMCN.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/Pregunta_MaulwurfRennt.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/PreguntaDAO_MaulwurfRennt.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/NuevoAdmin.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFoxDAO.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/VidasAdmin.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuPrincipal.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/DatosConfiguracion.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/AyudaDAO_MaulwurfRennt.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/SeleccionDAO_Vidas.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/MenuAdmin.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Administrador/PedirMCN.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
+            <file>file:/C:/Users/Glorial%20Xol/Documents/kitsura/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
         </group>
     </open-files>
 </project-private>
