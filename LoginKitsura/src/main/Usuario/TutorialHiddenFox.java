@@ -21,18 +21,19 @@ public class TutorialHiddenFox extends PantallaTutorial {
         lblTitulo = new JLabel("Reglas", SwingConstants.CENTER);
         lblTitulo.setFont(fuente2.deriveFont(Font.BOLD, 30f));
         lblTitulo.setBounds(0, 20, 540, 40);
+        lblTitulo.setForeground(new Color(218, 77, 88));
         panelContenido.add(lblTitulo);
 
         //---------------- MASCOTA ----------------
         lblMascota = new JLabel();
         try {
             ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/Zorro_kimono_rosa.png"));
-            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
             lblMascota.setIcon(new ImageIcon(mascotaEscalada));
         } catch (Exception e) {
             lblMascota.setText("~");
         }
-        lblMascota.setBounds(20, 80, 180, 180);
+        lblMascota.setBounds(0, 100, 300, 300);
         panelContenido.add(lblMascota);
 
         // ----------------Titulo de Introducción----------------------
