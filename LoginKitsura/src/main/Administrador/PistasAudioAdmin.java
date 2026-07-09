@@ -3,11 +3,11 @@ package main.Administrador;
 import java.awt.*;
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import main.conexion.Conexion;
 
 import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
@@ -25,12 +25,8 @@ public class PistasAudioAdmin extends JFrame {
 
     private String rutaAudioSeleccionado = "";
 
-    // DATOS MYSQL
-    // Verificar datos dependiendo de donde se ejecuta
-    // (Yo trabaje en mi laptop asi que solo tuve que añadir la contraseña de mi SQL)
-    private final String URL = "jdbc:mysql://localhost:3306/KITSURA_DB";
-    private final String USER = "root";
-    private final String PASSWORD = "";
+   // CONEXIÓN A LA BASE DE DATOS
+    private Conexion conexion = new Conexion();
     
     private DatosConfiguracion datos;
 
@@ -48,7 +44,6 @@ public class PistasAudioAdmin extends JFrame {
                     getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
 
         } catch (Exception e) {
-
             e.printStackTrace();
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
@@ -88,10 +83,11 @@ public class PistasAudioAdmin extends JFrame {
         panelTitulo.add(lblTituloSeccion);
 
         //---------------- PANEL IZQUIERDO ----------------
+        // Se aumenta el alto de 420 a 630 para albergar el nuevo panel interno
         FondoPanelSemi panelIzquierdo = new FondoPanelSemi(new Color(0, 0, 0, 130));
 
         panelIzquierdo.setLayout(null);
-        panelIzquierdo.setBounds(100, 200, 500, 420);
+        panelIzquierdo.setBounds(100, 200, 500, 630);
 
         fondo.add(panelIzquierdo);
 
@@ -121,11 +117,9 @@ public class PistasAudioAdmin extends JFrame {
         //---------------- BOTÓN CARGAR AUDIO ----------------
         JButton btnCargar = new DecoracionBotones(
                 "CARGAR",
-
                 DecoracionBotones.ROSA,
                 DecoracionBotones.ROJO,
                 DecoracionBotones.AMARILLO,
-
                 DecoracionBotones.ROJO,
                 DecoracionBotones.ROSA,
                 DecoracionBotones.ROSA);
@@ -134,6 +128,39 @@ public class PistasAudioAdmin extends JFrame {
         btnCargar.setBounds(130, 230, 240, 65);
 
         panelIzquierdo.add(btnCargar);
+
+        //---------------- PANEL DE OPERACIONES (BAJO CARGAR) ----------------
+        FondoPanelSemi panelOperaciones = new FondoPanelSemi(new Color(0, 0, 0, 100));
+        panelOperaciones.setLayout(null);
+        panelOperaciones.setBounds(30, 320, 440, 270);
+        panelIzquierdo.add(panelOperaciones);
+
+        // Botón Buscar
+        JButton btnBuscar = new DecoracionBotones(
+                "BUSCAR",
+                DecoracionBotones.AZUL, DecoracionBotones.CELESTE, DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
+        btnBuscar.setFont(fuente2.deriveFont(24f));
+        btnBuscar.setBounds(50, 25, 340, 55);
+        panelOperaciones.add(btnBuscar);
+
+        // Botón Editar
+        JButton btnEditar = new DecoracionBotones(
+                "EDITAR",
+                DecoracionBotones.AZUL, DecoracionBotones.CELESTE, DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
+        btnEditar.setFont(fuente2.deriveFont(24f));
+        btnEditar.setBounds(50, 105, 340, 55);
+        panelOperaciones.add(btnEditar);
+
+        // Botón Eliminar
+        JButton btnEliminar = new DecoracionBotones(
+                "ELIMINAR",
+                DecoracionBotones.AZUL, DecoracionBotones.CELESTE, DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
+        btnEliminar.setFont(fuente2.deriveFont(24f));
+        btnEliminar.setBounds(50, 185, 340, 55);
+        panelOperaciones.add(btnEliminar);
 
         //---------------- PANEL DERECHO ----------------
         FondoPanelSemi panelDerecho = new FondoPanelSemi(new Color(0, 0, 0, 130));
@@ -159,7 +186,6 @@ public class PistasAudioAdmin extends JFrame {
         panelDerecho.add(txtIdPista);
 
         //---------------- TABLA ----------------
-
         modelo = new DefaultTableModel(
                 new String[]{"ID Pregunta", "Audio"}, 0) {
 
@@ -186,11 +212,9 @@ public class PistasAudioAdmin extends JFrame {
         //---------------- BOTÓN GUARDAR ----------------
         JButton btnGuardar = new DecoracionBotones(
                 "GUARDAR",
-
                 DecoracionBotones.VERDE,
                 DecoracionBotones.AZUL,
                 DecoracionBotones.AMARILLO,
-
                 DecoracionBotones.AZUL,
                 DecoracionBotones.VERDE,
                 DecoracionBotones.VERDE);
@@ -200,14 +224,27 @@ public class PistasAudioAdmin extends JFrame {
 
         fondo.add(btnGuardar);
 
-        //---------------- BOTÓN VOLVER ----------------
-        JButton btnVolver = new DecoracionBotones(
-                "VOLVER",
-
+        //---------------- BOTÓN MOSTRAR (BAJO GUARDAR) ----------------
+        JButton btnMostrar = new DecoracionBotones(
+                "MOSTRAR",
                 DecoracionBotones.AZUL,
                 DecoracionBotones.GRIS,
                 DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE,
+                DecoracionBotones.AZUL,
+                DecoracionBotones.AZUL);
 
+        btnMostrar.setFont(fuente2.deriveFont(26f));
+        btnMostrar.setBounds(980, 850, 250, 70);
+
+        fondo.add(btnMostrar);
+
+        //---------------- BOTÓN VOLVER ----------------
+        JButton btnVolver = new DecoracionBotones(
+                "VOLVER",
+                DecoracionBotones.AZUL,
+                DecoracionBotones.GRIS,
+                DecoracionBotones.AMARILLO,
                 DecoracionBotones.CELESTE,
                 DecoracionBotones.AZUL,
                 DecoracionBotones.AZUL);
@@ -222,20 +259,20 @@ public class PistasAudioAdmin extends JFrame {
 
         fondo.add(btnVolver);
 
-        //---------------- EVENTO CARGAR AUDIO ----------------
+        //---------------- EVENTOS ----------------
         btnCargar.addActionListener(e -> seleccionarAudio());
-
-        //---------------- EVENTO GUARDAR ----------------
         btnGuardar.addActionListener(e -> guardarAudioBD());
+        btnBuscar.addActionListener(e -> buscarAudio());
+        btnEditar.addActionListener(e -> editarAudio());
+        btnEliminar.addActionListener(e -> eliminarAudio());
+        btnMostrar.addActionListener(e -> mostrarAudios());
 
         //---------------- MASCOTA ----------------
         JLabel staticMascotaLibro = new JLabel();
 
         try {
-
             ImageIcon iconMascota = new ImageIcon(
-                    getClass().getResource(
-                            "/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTA_TEXTUAL.png"));
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTA_TEXTUAL.png"));
 
             Image imgEscalada = iconMascota.getImage()
                     .getScaledInstance(550, 550, Image.SCALE_SMOOTH);
@@ -243,7 +280,6 @@ public class PistasAudioAdmin extends JFrame {
             staticMascotaLibro.setIcon(new ImageIcon(imgEscalada));
 
         } catch (Exception e) {
-
             staticMascotaLibro.setText("~");
         }
         staticMascotaLibro.setBounds(1490, 220, 550, 550);
@@ -258,9 +294,7 @@ public class PistasAudioAdmin extends JFrame {
 
         FileNameExtensionFilter filtro = new FileNameExtensionFilter(
                 "Archivos de Audio",
-                "mp3",
-                "wav",
-                "ogg");
+                "mp3", "wav", "ogg");
 
         chooser.setFileFilter(filtro);
 
@@ -275,62 +309,166 @@ public class PistasAudioAdmin extends JFrame {
                     "Audio seleccionado:\n" + archivo.getName());
         }
     }
+    
+    //--------------- MOSTRAR AUDIOS ----------------
+    private void mostrarAudios() {
+        modelo.setRowCount(0);
+        try {
+            Connection con = conexion.getConnection();
+            String sql = "SELECT id_pregunta, audio FROM Ayuda WHERE tipo='audio'";
+            PreparedStatement ps = con.prepareStatement(sql);
+            var rs = ps.executeQuery();
+            while (rs.next()) {
+                String nombreArchivo = new File(rs.getString("audio")).getName();
+                modelo.addRow(new Object[]{
+                    rs.getInt("id_pregunta"),
+                    nombreArchivo
+                });
+            }
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al mostrar los audios");
+        }
+    }
 
     //---------------- GUARDAR EN MYSQL ----------------
     private void guardarAudioBD() {
-
         String idTexto = txtIdPista.getText().trim();
         if (idTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                       "Ingrese el ID de la pregunta");
+            JOptionPane.showMessageDialog(this, "Ingrese el ID de la pregunta");
             return;
         }
-
         if (rutaAudioSeleccionado.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Seleccione un audio");
+            JOptionPane.showMessageDialog(this, "Seleccione un audio");
             return;
-        }
+        }   
         try {
-
             int idPregunta = Integer.parseInt(idTexto);
-            Connection con = DriverManager.getConnection(
-                    URL,
-                    USER,
-                    PASSWORD);
+            Connection con = conexion.getConnection();
 
-            String sql = "INSERT INTO Ayuda "
-                    + "(id_pregunta, tipo, audio) "
-                    + "VALUES (?, 'audio', ?)";
+            String sql = "INSERT INTO Ayuda (id_pregunta, tipo, audio) VALUES (?, 'audio', ?)";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, idPregunta);
             ps.setString(2, rutaAudioSeleccionado);
             ps.executeUpdate();
+            
             String nombreArchivo = new File(rutaAudioSeleccionado).getName();
             modelo.addRow(new Object[]{
                 idPregunta,
                 nombreArchivo
             });
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Audio guardado correctamente");
+            
+            JOptionPane.showMessageDialog(this, "Audio guardado correctamente");
+            mostrarAudios();
             txtIdPista.setText("");
             rutaAudioSeleccionado = "";
             ps.close();
             con.close();
 
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "El ID debe ser numérico");
+            JOptionPane.showMessageDialog(this, "El ID debe ser numérico");
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Error al guardar:\n" + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al guardar:\n" + e.getMessage());
         }
     }
-
+    
+    // ---------------- BUSCAR EN MYSQL ----------------
+    private void buscarAudio(){
+        if(txtIdPista.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(this,
+                    "Ingrese el ID");
+            return;
+        }
+        modelo.setRowCount(0);
+        try{
+            Connection con = conexion.getConnection();
+            String sql="SELECT id_pregunta,audio FROM Ayuda WHERE id_pregunta=? AND tipo='audio'";
+            PreparedStatement ps=con.prepareStatement(sql);
+            ps.setInt(1,Integer.parseInt(txtIdPista.getText()));
+            var rs=ps.executeQuery();
+            if(rs.next()){
+                modelo.addRow(new Object[]{
+                        rs.getInt("id_pregunta"),
+                        new File(rs.getString("audio")).getName()
+                });
+                txtIdPista.setText("");
+            }else{
+                JOptionPane.showMessageDialog(this,
+                        "No existe un audio para ese ID");
+            }
+            rs.close();
+            ps.close();
+            con.close();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this,
+                    "Error al buscar");
+        }
+    }
+    // --------------- ELIMINAR EN MYSQL ----------------
+    private void eliminarAudio(){
+        if(txtIdPista.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(this,
+                    "Ingrese el ID");
+            return;
+        }
+        try{
+            Connection con = conexion.getConnection();
+            String sql="DELETE FROM Ayuda WHERE id_pregunta=? AND tipo='audio'";
+            PreparedStatement ps=con.prepareStatement(sql);
+            ps.setInt(1,Integer.parseInt(txtIdPista.getText()));
+            int filas=ps.executeUpdate();
+            if(filas>0){
+                JOptionPane.showMessageDialog(this,
+                        "Audio eliminado");
+                        txtIdPista.setText("");
+                mostrarAudios();
+            }else{
+                JOptionPane.showMessageDialog(this,
+                        "No existe ese audio");
+            }
+            ps.close();
+            con.close();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this,
+                    "Error al eliminar");
+            }
+        }
+    // --------------- EDITAR EN MYSQL ----------------
+    private void editarAudio(){
+        if(txtIdPista.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(this,
+                    "Ingrese el ID");
+            return;
+        }
+        seleccionarAudio();
+        if(rutaAudioSeleccionado.isEmpty()){
+            return;
+        }
+        try{
+            Connection con = conexion.getConnection();
+            String sql="UPDATE Ayuda SET audio=? WHERE id_pregunta=? AND tipo='audio'";
+            PreparedStatement ps=con.prepareStatement(sql);
+            ps.setString(1,rutaAudioSeleccionado);
+            ps.setInt(2,Integer.parseInt(txtIdPista.getText()));
+            int filas=ps.executeUpdate();
+            if(filas>0){
+                JOptionPane.showMessageDialog(this,
+                        "Audio actualizado");
+                mostrarAudios();
+                txtIdPista.setText("");
+            }else{
+                JOptionPane.showMessageDialog(this,
+                        "No existe ese ID");
+            }
+            ps.close();
+            con.close();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this,
+                    "Error al editar");
+        }
+    }
 }

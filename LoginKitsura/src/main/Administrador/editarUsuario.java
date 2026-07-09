@@ -8,7 +8,7 @@ import main.Menu.FondoPanel;
 // Importaciones para MySQL
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import main.conexion.Conexion;
 import java.sql.PreparedStatement;
 import java.util.regex.Pattern;
 
@@ -26,11 +26,7 @@ public class editarUsuario extends JFrame {
     private JTextField txtID, txtNombre, txtCorreo;
     private JPasswordField txtContra;
     private JButton btnCargar, btnEditar;
-    
-    // Conexion MySQL
-    private final String URL = "jdbc:mysql://localhost:3306/KITSURA_DB";
-    private final String USER = "root";
-    private final String PASSWORD = "";
+    private Conexion conexion = new Conexion();
     
     // ruta de la imagen 
     private String rutaImagen = "";
@@ -247,10 +243,7 @@ public class editarUsuario extends JFrame {
 
             // CONECTAR A MYSQL
             try {
-                Connection con = DriverManager.getConnection(
-                        URL,
-                        USER,
-                        PASSWORD);
+                Connection con = conexion.getConnection();
 
                 // VERIFICAR SI EL USUARIO EXISTE
                 String consulta =
