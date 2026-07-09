@@ -6,7 +6,6 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.sql.*;
 import javax.swing.*;
-import main.Administrador.VidasDAO;
 import main.conexion.Conexion;
 
 // CLASE PRINCIPAL DEL MINIJUEGO FOX JUMP!
@@ -327,7 +326,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             case INTERMEDIO ->
                 new Color(239, 218, 154);
             case DIFICIL ->
-                new Color(218, 77, 88);
+                new Color(227, 157, 139);
         };
         fondo.setBackground(colorFondo);
     }

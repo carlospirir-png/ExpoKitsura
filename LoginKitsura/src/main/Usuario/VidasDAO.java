@@ -1,5 +1,5 @@
 // Obtener las vidas actuales y actualizar las vidas
-package main.Administrador;
+package main.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,7 +65,7 @@ public class VidasDAO {
                     ON cn.id_categoria = c.id_categoria
             INNER JOIN Minijuego m
                     ON c.id_minijuego = m.id_minijuego
-            SET cn.vidas = ?
+            SET cn.vidas  = ?
             WHERE m.nombre = ?
             AND c.nombre = ?
             AND cn.dificultad = ?
