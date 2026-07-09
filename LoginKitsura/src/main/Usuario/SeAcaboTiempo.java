@@ -1,78 +1,134 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 import main.Menu.FondoPanel;
+import main.Menu.DecoracionBotones;
 
 public class SeAcaboTiempo extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    
-    public SeAcaboTiempo() {
-        try{
+
+    private DecoracionBotones btnVolver; // Usada correctamente ahora
+    private JuegoBase juego;
+
+    public SeAcaboTiempo(JuegoBase juego, ActionListener accion) {
+
+        this.juego = juego;
+
+        try {
             // LettersForLearners
             fuente1 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
             // KGPerfectPenmanship
             fuente2 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-            
-        } catch (Exception e){
-            e.printStackTrace();            
-        fuente1 = new Font("Arial", Font.PLAIN,20);
-        fuente2 = new Font("Arial", Font.PLAIN,20);
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        fondo = new FondoPanel("/utilidades/fondoCuatroK.png"); 
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png");
         setContentPane(fondo);
         setTitle("Se acabo el tiempo");
-        setSize(1980, 1060); 
+
+        setSize(1980, 1060);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        fondo.setLayout(null);        
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        fondo.setLayout(null);
+
         crearComponentes();
+        //--------------- VOLVER --------------
+        btnVolver.addActionListener(e -> {
+            dispose();
+            new MenuMinijuegos();
+        });
+
         setVisible(true);
     }
-    
+
     private void crearComponentes() {
+        //---------------- PANEL SEMITRANSPARENTE ----------------
+        JPanel panelContenedor = new JPanel();
+        panelContenedor.setLayout(null);
+        panelContenedor.setBackground(new Color(0, 0, 0, 115));
+        panelContenedor.setBounds(930, 230, 650, 380);
+        fondo.add(panelContenedor);
+
         //---------------- TÍTULO PRINCIPAL ----------------
         JLabel lblGameOver = new JLabel("GAME OVER", JLabel.CENTER);
-        lblGameOver.setFont(fuente2.deriveFont(34f));
+        lblGameOver.setFont(fuente2.deriveFont(40f));
         lblGameOver.setForeground(Color.WHITE);
-        lblGameOver.setBounds(900, 100, 800, 60);
-        fondo.add(lblGameOver);
+        lblGameOver.setBounds(25, 35, 600, 55);
+        panelContenedor.add(lblGameOver);
 
-        //---------------- TITULO 2 ----------------
+        //---------------- SUBTÍTULO ----------------
         JLabel lblSubtitulo = new JLabel("Se acabó el tiempo", JLabel.CENTER);
-        lblSubtitulo.setFont(fuente2.deriveFont(28f));
+        lblSubtitulo.setFont(fuente2.deriveFont(32f));
         lblSubtitulo.setForeground(Color.WHITE);
-        lblSubtitulo.setBounds(900, 170, 800, 45);
-        fondo.add(lblSubtitulo);
+        lblSubtitulo.setBounds(25, 95, 600, 40);
+        panelContenedor.add(lblSubtitulo);
 
-        //---------------- CITA DE WINSTON CHURCHILL ----------------
-        JLabel lblCita = new JLabel("<<El éxito no es definitivo; el fracaso no es fatal. Lo que realmente cuenta es tener valor para continuar>>. -Winston churchill", JLabel.CENTER);
-        lblCita.setFont(fuente1.deriveFont(24f));
-        lblCita.setForeground(Color.WHITE);
-        lblCita.setBounds(900, 240, 800, 30);
-        fondo.add(lblCita);
+        //---------------- CITA LÍNEA 1 ----------------
+        JLabel lblCita1 = new JLabel(
+                "<<El éxito no es definitivo; el fracaso no es fatal. Lo que realmente cuenta",
+                JLabel.CENTER);
+        lblCita1.setFont(fuente1.deriveFont(25f));
+        lblCita1.setForeground(Color.WHITE);
+        lblCita1.setBounds(25, 200, 600, 25);
+        panelContenedor.add(lblCita1);
 
-        //---------------- MASCOTA  ----------------
-            JLabel mascotaReloj = new JLabel();
-            ImageIcon iconMascota = new ImageIcon(getClass().getResource("/utilidades/mascota6.png")); 
-            Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
-            mascotaReloj.setIcon(new ImageIcon(imgEscalada));
-            mascotaReloj.setBounds(150, 250, 600, 600);
-            fondo.add(mascotaReloj);
+        //---------------- CITA LÍNEA 2 ----------------
+        JLabel lblCita2 = new JLabel(
+                "es tener valor para continuar>>. -Winston Churchill",
+                JLabel.CENTER);
+        lblCita2.setFont(fuente1.deriveFont(25f));
+        lblCita2.setForeground(Color.WHITE);
+        lblCita2.setBounds(25, 235, 600, 25);
+        panelContenedor.add(lblCita2);
 
-        //---------------- BOTON VOLVER  ----------------
-        JButton btnVolver = new JButton("Volver");
-        btnVolver.setFont(fuente1.deriveFont(25f));
-        btnVolver.setForeground(Color.BLACK);
-        btnVolver.setBounds(1225, 770, 200, 50);
-        btnVolver.addActionListener(e -> dispose()); 
+        //---------------- BOTÓN VOLVER ----------------
+        btnVolver = new DecoracionBotones("VOLVER",
+                DecoracionBotones.AZUL,
+                DecoracionBotones.GRIS,
+                DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE,
+                DecoracionBotones.AZUL,
+                DecoracionBotones.AZUL);
+
+        btnVolver.setFont(fuente2.deriveFont(20f));
+        btnVolver.setBounds(1295, 645, 200, 50);
         fondo.add(btnVolver);
+        
+        //---------------- BOTÓN MENU ----------------
+        btnVolver = new DecoracionBotones("MENÚ",
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+
+        btnVolver.setFont(fuente2.deriveFont(20f));
+        btnVolver.setBounds(1000, 645, 200, 50);
+        fondo.add(btnVolver);
+
+        //---------------- MASCOTA ----------------
+        JLabel mascotaReloj = new JLabel();
+
+        ImageIcon iconMascota = new ImageIcon(
+                getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/DERROTA-por-tiempo.png"));
+
+        Image imgEscalada = iconMascota.getImage()
+                .getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+
+        mascotaReloj.setIcon(new ImageIcon(imgEscalada));
+        mascotaReloj.setBounds(165, 250, 600, 600);
+
+        fondo.add(mascotaReloj);
     }
 }

@@ -3,7 +3,10 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
+import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanelSemi;
+import main.Menu.SalirDelJuego;
+import main.Menu.VolverMenu;
 
 public class PantallaEstadisticas extends JFrame {
 
@@ -31,10 +34,28 @@ public class PantallaEstadisticas extends JFrame {
 
     private JLabel lblLogo;
     private JLabel lblMascota;
+    private Font fuente1;
+    private Font fuente2;
 
     public PantallaEstadisticas() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
+        try {
+            // LettersForLearners
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
+
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
         setTitle("Tabla Global");
@@ -53,9 +74,9 @@ public class PantallaEstadisticas extends JFrame {
     private void crearComponentes() {
 
         lblTitulo = new JLabel("Tabla Global");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 60));
+        lblTitulo.setFont(fuente2.deriveFont(55f));
         lblTitulo.setBounds(130, 60, 500, 80);
-        lblTitulo.setForeground(new Color(196, 221, 227));
+        lblTitulo.setForeground(Color.BLACK);
 
         fondo.add(lblTitulo);
 
@@ -71,16 +92,18 @@ public class PantallaEstadisticas extends JFrame {
             "99999"
         });
 
-        tabla = new JTable(modelo);
-
-        tabla.setFont(new Font("Arial", Font.PLAIN, 24));
+        tabla = new JTable(modelo) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        tabla.getTableHeader().setReorderingAllowed(false);
+        tabla.setFont(fuente1.deriveFont(34f));
         tabla.setRowHeight(50);
 
-        tabla.getTableHeader().setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        28));
+        tabla.getTableHeader().setFont(fuente2.deriveFont(34f));
 
         scrollTabla = new JScrollPane(tabla);
         scrollTabla.setBounds(120, 150, 1100, 570);
@@ -88,68 +111,78 @@ public class PantallaEstadisticas extends JFrame {
         fondo.add(scrollTabla);
 
         lblUltimaPartida = new JLabel("Última partida");
-        lblUltimaPartida.setFont(new Font("Arial", Font.BOLD, 36));
+        lblUltimaPartida.setFont(fuente2.deriveFont(38f));
         lblUltimaPartida.setBounds(120, 740, 250, 50);
         lblUltimaPartida.setForeground(new Color(196, 221, 227));
 
         fondo.add(lblUltimaPartida);
 
         txtUltimaPartida = new JTextField(" ");
-        txtUltimaPartida.setFont(new Font("Arial", Font.PLAIN, 30));
+        txtUltimaPartida.setFont(fuente2.deriveFont(38f));
+        txtUltimaPartida.setEditable(false);
         txtUltimaPartida.setBounds(120, 790, 340, 50);
 
         fondo.add(txtUltimaPartida);
 
         lblGanadas = new JLabel("Partidas Ganadas");
-        lblGanadas.setFont(new Font("Arial", Font.BOLD, 36));
+        lblGanadas.setFont(fuente2.deriveFont(38f));
         lblGanadas.setBounds(120, 850, 400, 50);
         lblGanadas.setForeground(new Color(196, 221, 227));
 
         fondo.add(lblGanadas);
 
         txtGanadas = new JTextField("0");
-        txtGanadas.setFont(new Font("Arial", Font.PLAIN, 30));
+        txtGanadas.setFont(fuente1.deriveFont(36f));
+        txtGanadas.setEditable(false);
         txtGanadas.setBounds(120, 900, 340, 50);
 
         fondo.add(txtGanadas);
 
         lblUltimaPuntuacion = new JLabel("Última puntuación");
-        lblUltimaPuntuacion.setFont(new Font("Arial", Font.BOLD, 36));
+        lblUltimaPuntuacion.setFont(fuente2.deriveFont(36f));
         lblUltimaPuntuacion.setBounds(850, 740, 400, 50);
         lblUltimaPuntuacion.setForeground(new Color(196, 221, 227));
 
         fondo.add(lblUltimaPuntuacion);
 
         txtUltimaPuntuacion = new JTextField("0 pts");
-        txtUltimaPuntuacion.setFont(new Font("Arial", Font.PLAIN, 30));
+        txtUltimaPuntuacion.setFont(fuente1.deriveFont(36f));
+        txtUltimaPuntuacion.setEditable(false);
         txtUltimaPuntuacion.setBounds(850, 790, 340, 50);
 
         fondo.add(txtUltimaPuntuacion);
 
         lblPuntuacionTotal = new JLabel("Puntuación total");
-        lblPuntuacionTotal.setFont(new Font("Arial", Font.BOLD, 36));
+        lblPuntuacionTotal.setFont(fuente2.deriveFont(36f));
         lblPuntuacionTotal.setBounds(850, 850, 340, 50);
         lblPuntuacionTotal.setForeground(new Color(196, 221, 227));
 
         fondo.add(lblPuntuacionTotal);
 
         txtPuntuacionTotal = new JTextField("9999 pts");
-        txtPuntuacionTotal.setFont(new Font("Arial", Font.PLAIN, 30));
+        txtPuntuacionTotal.setFont(fuente1.deriveFont(36f));
+        txtPuntuacionTotal.setEditable(false);
         txtPuntuacionTotal.setBounds(850, 900, 340, 50);
 
         fondo.add(txtPuntuacionTotal);
 
-        btnVolver = new JButton("Volver");
-        btnVolver.setFont(new Font("Arial", Font.BOLD, 40));
-        btnVolver.setBounds(1540, 900, 240, 50);
+        btnVolver = new DecoracionBotones("VOLVER",                 //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
+        btnVolver.setFont(fuente1.deriveFont(40f));
+        btnVolver.setBounds(1540, 900, 240, 70);
+        btnVolver.addActionListener(e -> {
+            new MenuPrincipal();
+            dispose();
+        });
         fondo.add(btnVolver);
 
         lblMascota = new JLabel();
 
         ImageIcon mascotaIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/ZorroTrofeo.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/ESTADÍSTICAS-TROFEO.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
@@ -169,5 +202,8 @@ public class PantallaEstadisticas extends JFrame {
         fondo.add(panelFondo);
     }
 
+    public static void main(String[] args) {
+        new PantallaEstadisticas();
+    }
 
 }

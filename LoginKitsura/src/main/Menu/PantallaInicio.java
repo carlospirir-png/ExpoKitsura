@@ -2,6 +2,7 @@ package main.Menu;
 
 import java.awt.*;
 import javax.swing.*;
+import main.Usuario.RegistroUsuario;
 
 public class PantallaInicio extends JFrame {
 
@@ -11,13 +12,30 @@ public class PantallaInicio extends JFrame {
 
     private JLabel lblLogo;
     private JLabel lblFrase;
+    private DecoracionBotones btnJugar;
+    private Font fuente1;
+    private Font fuente2;
 
     public PantallaInicio() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/FondoPrincipal2.png");
+        try {
+            // LettersForLearners
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            // KGPerfectPenmanship
+            fuente2 = Font.createFont(Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
+
+        fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/fondoPrincipal/FondoPrincipal2.png");
         setContentPane(fondo);
         setTitle("Kitsura");
-        setSize(1920,1080);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -29,37 +47,52 @@ public class PantallaInicio extends JFrame {
     private void crearComponentes() {
 
         panelDecoracion = new PanelDecoracion();
-        panelDecoracion.setBounds(590,0,700,700);
+        panelDecoracion.setBounds(590, 0, 700, 700);
 
         fondo.add(panelDecoracion);
 
-        FondoPanelSemi panelFrase = new FondoPanelSemi(new Color(0,0,0,140));
-        panelFrase.setBounds(550,690,800,70);
+        FondoPanelSemi panelFrase = new FondoPanelSemi(new Color(0, 0, 0, 140));
+        panelFrase.setBounds(550, 690, 800, 70);
         panelFrase.setLayout(null);
 
         fondo.add(panelFrase);
 
         lblLogo = new JLabel();
 
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logoKitsura3.png"));
-        Image logoEscalado = logoIcon.getImage().getScaledInstance(570,600,Image.SCALE_SMOOTH);
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/logotipo/LogoKitsura.png"));
+        Image logoEscalado = logoIcon.getImage().getScaledInstance(570, 600, Image.SCALE_SMOOTH);
 
         lblLogo.setIcon(new ImageIcon(logoEscalado));
-        lblLogo.setBounds(650,100,570,600);
+        lblLogo.setBounds(650, 100, 570,600);
 
         fondo.add(lblLogo);
 
-        fondo.setComponentZOrder(lblLogo,0);
+        fondo.setComponentZOrder(lblLogo, 0);
 
         lblFrase = new JLabel("\"No es magia, es mente\"", SwingConstants.CENTER);
-        lblFrase.setFont(new Font("Arial",Font.BOLD,40));
-        lblFrase.setForeground(new Color(196,221,227));
-        lblFrase.setBounds(530,690,850,60);
+        lblFrase.setFont(fuente1.deriveFont(55f));
+        lblFrase.setForeground(new Color(196, 221, 227));
+        lblFrase.setBounds(530, 690, 850, 60);
 
         fondo.add(lblFrase);
 
-        fondo.setComponentZOrder(lblFrase,0);
+        //---------------- BOTON JUGAR ----------------
+        btnJugar = new DecoracionBotones("JUGAR",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO      
+        btnJugar.setFont(fuente2.deriveFont(30f)); 
+        btnJugar.setBounds(810, 880, 250, 70);
+        btnJugar.addActionListener(e -> {
+            new RegistroUsuario();
+            dispose(); // Cierra PantallaInicio
+        });
+        fondo.add(btnJugar);
+        fondo.setComponentZOrder(btnJugar, 0);
+        fondo.setComponentZOrder(lblFrase, 0);
+        
     }
-
- 
+    public static void main(String[] args) {
+        new PantallaInicio();
+    }
 }

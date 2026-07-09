@@ -2,24 +2,42 @@ package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanel;
+import main.Menu.*;
 
 public class MenuPrincipal extends JFrame {
+
     private FondoPanel fondo;
+    private Font fuente1;
     private Font fuente2;
-    
-    public MenuPrincipal (){
-        try{
-            fuente2 = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
-        } catch(Exception e){
+    private int idUsuario;
+    private boolean esInvitado; // <-- NUEVA VARIABLE: identifica si el usuario es invitado
+
+    // Constructor para USUARIOS REGISTRADOS
+    public MenuPrincipal(int idUsuario) {
+        this.idUsuario = idUsuario;
+        this.esInvitado = false;
+        inicializar();
+    }
+
+     public MenuPrincipal() {
+
+        this.esInvitado = Sesion.isEsInvitado();
+
+        try {
+            fuente1 = Font.createFont(Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            fuente2 = Font.createFont(Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
             e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        
-        fondo = new FondoPanel("/Multimedia/utiles/fondoDosK.png");
+
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
         setTitle("Página Principal");
-        setSize(1880,1080);
+        setSize(1880, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -27,62 +45,156 @@ public class MenuPrincipal extends JFrame {
         crearComponentes();
         setVisible(true);
     }
-    private void crearComponentes(){
-        //---------------- T I T U L O ----------------
-        JLabel lblTitulo = new JLabel("MENÚ PRINCIPAL");
-        lblTitulo.setFont(fuente2.deriveFont(35f));
+
+
+    private void inicializar() {
+
+        try {
+            fuente1 = Font.createFont(Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            fuente2 = Font.createFont(Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
+
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
+        setContentPane(fondo);
+        setTitle("Página Principal");
+        setSize(1880, 1080);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        fondo.setLayout(null);
+        crearComponentes();
+        setVisible(true);
+    }
+
+    private void crearComponentes() {
+
+        //---------------- PANEL TÍTULO ----------------
+        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
+        panelTitulo.setLayout(null);
+        panelTitulo.setBounds(760, 100, 480, 70);
+        fondo.add(panelTitulo);
+
+        JLabel lblTitulo = new JLabel("MENÚ PRINCIPAL", JLabel.CENTER);
+        lblTitulo.setFont(fuente2.deriveFont(38f));
         lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setBounds(810, 120, 500, 50);
-        fondo.add(lblTitulo);
-        
-        //---------------- BOTON PERFIL ----------------
-        JButton btnPerfil = new JButton("PERFIL");
-        btnPerfil.setFont(fuente2.deriveFont(15f));
-        btnPerfil.setBounds(820, 320, 285, 65);    
-        btnPerfil.setIconTextGap(5);  
-        ImageIcon icoPerfil = new ImageIcon(getClass().getResource("/Multimedia/utiles/pencil.png"));
-        Image imgPerfil = icoPerfil.getImage().getScaledInstance(35,35, Image.SCALE_SMOOTH);
-        btnPerfil.setIcon(new ImageIcon(imgPerfil));        
-        fondo.add(btnPerfil);
-        
-        //---------------- BOTON MINIJUEGOS ----------------
-        JButton btnMinijuegos = new JButton("MINIJUEGOS");
-        btnMinijuegos.setFont(fuente2.deriveFont(15f));
-        btnMinijuegos.setBounds(820, 440, 285, 65);
-        btnMinijuegos.setIconTextGap(5);        
-        ImageIcon icoMinijuegos = new ImageIcon(getClass().getResource("/Multimedia/utiles/mandoo.png"));
-        Image imgMinijuegos = icoMinijuegos.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        btnMinijuegos.setIcon(new ImageIcon(imgMinijuegos));       
+        lblTitulo.setBounds(0, 0, 480, 70);
+        panelTitulo.add(lblTitulo);
+
+
+        // Definimos las posiciones Y según si es invitado o no,
+        // para que los botones existentes queden centrados/ordenados
+        int yMinijuegos, ySalir;
+
+
+        if (esInvitado) {
+            // Solo hay 2 botones -> los centramos en el espacio disponible
+            yMinijuegos = 440;
+            ySalir = 560;
+        } else {
+            // Hay 4 botones -> posiciones originales
+            yMinijuegos = 440;
+            ySalir = 680;
+        }
+
+        //---------------- BOTÓN PERFIL (solo usuarios registrados) ----------------
+        if (!esInvitado) {
+            JButton btnPerfil = new DecoracionBotones("PERFIL",
+                    //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+
+            btnPerfil.setFont(fuente2.deriveFont(25f));
+            btnPerfil.setBounds(820, 320, 320, 65);
+            btnPerfil.setIconTextGap(10);
+            try {
+                ImageIcon icoPerfil = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/pencil.png"));
+                Image imgPerfil = icoPerfil.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+                btnPerfil.setIcon(new ImageIcon(imgPerfil));
+            } catch (Exception e) {}
+            btnPerfil.addActionListener(e -> {
+                new PantallaPerfil();
+                dispose();
+            });
+            fondo.add(btnPerfil);
+        }
+
+        //---------------- BOTÓN MINIJUEGOS (siempre visible) ----------------
+        JButton btnMinijuegos = new DecoracionBotones("MINIJUEGOS",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO
+
+        btnMinijuegos.setFont(fuente2.deriveFont(25f));
+        btnMinijuegos.setBounds(820, yMinijuegos, 320, 65);
+        btnMinijuegos.setIconTextGap(10);
+        try {
+            ImageIcon icoMinijuegos = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/mandoo.png"));
+            Image imgMinijuegos = icoMinijuegos.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+            btnMinijuegos.setIcon(new ImageIcon(imgMinijuegos));
+        } catch (Exception e) {}
+        btnMinijuegos.addActionListener(e -> {
+            new MenuMinijuegos();
+            dispose();
+        });
         fondo.add(btnMinijuegos);
-        
-        //---------------- BOTON ESTADISTICAS ----------------
-        JButton btnLogIn = new JButton("ESTADISTICAS");
-        btnLogIn.setFont(fuente2.deriveFont(15f));
-        btnLogIn.setBounds(820,560,285,65);
-        btnLogIn.setIconTextGap(5);        
-        ImageIcon icoLogIn = new ImageIcon(getClass().getResource("/Multimedia/utiles/abaco.png"));
-        Image imgAbaco = icoLogIn.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        btnLogIn.setIcon(new ImageIcon(imgAbaco)); 
-        fondo.add(btnLogIn);
-        
-        //---------------- BOTON SALIR ----------------
-        JButton btnSalir = new JButton("SALIR");
-        btnSalir.setFont(fuente2.deriveFont(15f));
-        btnSalir.setBounds(820, 680, 285, 65);
-        btnSalir.setIconTextGap(5);        
-        ImageIcon icoSalir = new ImageIcon(getClass().getResource("/Multimedia/utiles/salir.png"));
-        Image imgSalir = icoSalir.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        btnSalir.setIcon(new ImageIcon(imgSalir));        
+
+        //---------------- BOTÓN ESTADÍSTICAS (solo usuarios registrados) ----------------
+        if (!esInvitado) {
+            JButton btnEstadisticas = new DecoracionBotones("ESTADÍSTICAS",
+                                    //ColorBase             ColorBorde              ColorLetra
+                    DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                    DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+
+            btnEstadisticas.setFont(fuente2.deriveFont(25f));
+            btnEstadisticas.setBounds(820, 560, 320, 65);
+            btnEstadisticas.setIconTextGap(10);
+            try {
+                ImageIcon icoEstadisticas = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/abaco.png"));
+                Image imgAbaco = icoEstadisticas.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+                btnEstadisticas.setIcon(new ImageIcon(imgAbaco));
+            } catch (Exception e) {}
+            btnEstadisticas.addActionListener(e -> {
+                new PantallaEstadisticas();
+                dispose();
+            });
+            fondo.add(btnEstadisticas);
+        }
+
+        //---------------- BOTÓN SALIR (siempre visible) ----------------
+        JButton btnSalir = new DecoracionBotones("SALIR",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO  
+
+        btnSalir.setFont(fuente2.deriveFont(25f));
+        btnSalir.setBounds(820, ySalir, 320, 65);
+        btnSalir.setIconTextGap(10);
+        try {
+            ImageIcon icoSalir = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/salir.png"));
+            Image imgSalir = icoSalir.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+            btnSalir.setIcon(new ImageIcon(imgSalir));
+        } catch (Exception e) {}
+        btnSalir.addActionListener(e -> {
+            new SalirDelJuego();
+        });
         fondo.add(btnSalir);
-        
+
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascota3.png"));
-        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
-        mascota.setIcon(new ImageIcon(mascotaEscalada));
-        mascota.setBounds(240, 300, 600, 600); 
+        try {
+            ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MENÚ-PRINCIPAL-LINTERNA.png"));
+            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+            mascota.setIcon(new ImageIcon(mascotaEscalada));
+        } catch (Exception e) {
+            mascota.setText("~");
+        }
+        mascota.setBounds(240, 300, 600, 600);
         fondo.add(mascota);
     }
-    
 }
-

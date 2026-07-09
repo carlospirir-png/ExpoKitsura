@@ -2,56 +2,63 @@ package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.FondoPanelSemi;
+import main.Menu.DecoracionBotones;
 
 public class PantallaTutorial extends JFrame {
 
-    private FondoPanelSemi fondo;
+    public JScrollPane scrollPane;
+    public JPanel panelContenido;
 
-    private JScrollPane scrollPane;
-    private JPanel panelContenido;
+    public JLabel lblTitulo;
+    public JLabel lblMascota;
+    public JLabel lblPaso1;
+    public JLabel lblTextoPaso1;
+    public JLabel lblImagen1;
+    public JLabel lblImagen2;
 
-    private JLabel lblTitulo;
-    private JLabel lblMascota;
-    private JLabel lblPaso1;
-    private JLabel lblTextoPaso1;
-    private JLabel lblImagen1;
-    private JLabel lblImagen2;
-    private JLabel lblInfo;
+    public JButton btnVolver;
 
-    private JButton btnVolver;
+    public Font fuente1;
+    public Font fuente2;
 
     public PantallaTutorial() {
 
-        fondo = new FondoPanelSemi("/Multimedia/utiles/fondoDosK.png");
-        setContentPane(fondo);
+        try {
+            fuente1 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+            fuente2 = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
+        }
 
+        getContentPane().setBackground(new Color(180, 180, 180));
         setTitle("Tutorial");
-        setSize(600, 400);
+        setSize(600, 420);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        fondo.setLayout(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(null);
 
         crearComponentes();
+        agregarContenido();
 
         setVisible(true);
     }
 
-    private void crearComponentes() {
+    public void crearComponentes() {
 
+        //---------------- PANEL CONTENIDO ----------------
         panelContenido = new JPanel() {
-
             @Override
             protected void paintComponent(Graphics g) {
-
                 Graphics2D g2 = (Graphics2D) g.create();
-
-                g2.setColor(new Color(255, 255, 255, 180));
+                g2.setColor(new Color(245, 245, 245));
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-
                 g2.dispose();
-
                 super.paintComponent(g);
             }
         };
@@ -60,124 +67,134 @@ public class PantallaTutorial extends JFrame {
         panelContenido.setLayout(null);
         panelContenido.setPreferredSize(new Dimension(540, 1000));
 
+        //---------------- TÍTULO ----------------
         lblTitulo = new JLabel("Reglas", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
-        lblTitulo.setBounds(200, 10, 150, 30);
-
+        lblTitulo.setFont(fuente2.deriveFont(Font.BOLD, 28f));
+        lblTitulo.setBounds(180, 10, 200, 40);
         panelContenido.add(lblTitulo);
 
+        //---------------- MASCOTA ----------------
         lblMascota = new JLabel();
-
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ZorroLeerV.png"));
-
-        Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-
-        lblMascota.setIcon(new ImageIcon(mascotaEscalada));
+        try {
+            ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroLeerVolteado.png"));
+            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            lblMascota.setIcon(new ImageIcon(mascotaEscalada));
+        } catch (Exception e) {
+            lblMascota.setText("~");
+        }
         lblMascota.setBounds(0, 70, 200, 200);
-
         panelContenido.add(lblMascota);
 
+        //---------------- PASO 1 ----------------
         lblPaso1 = new JLabel("Paso 1", SwingConstants.CENTER);
-        lblPaso1.setFont(new Font("Arial", Font.BOLD, 18));
-        lblPaso1.setBounds(170, 60, 120, 25);
-
+        lblPaso1.setFont(fuente2.deriveFont(Font.BOLD, 22f));
+        lblPaso1.setBounds(170, 60, 120, 30);
         panelContenido.add(lblPaso1);
 
         lblTextoPaso1 = new JLabel("Texto explicativo");
-        lblTextoPaso1.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblTextoPaso1.setBounds(200, 90, 180, 25);
-
+        lblTextoPaso1.setFont(fuente1.deriveFont(34f));
+        lblTextoPaso1.setBounds(200, 95, 280, 30);
         panelContenido.add(lblTextoPaso1);
 
+        //---------------- IMÁGENES ----------------
         lblImagen1 = new JLabel();
-
-        ImageIcon imagen1 = new ImageIcon(getClass().getResource("/Multimedia/utiles/ejemplo.png"));
-
-        Image imgEscalada1 = imagen1.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
-
-        lblImagen1.setIcon(new ImageIcon(imgEscalada1));
+        try {
+            ImageIcon imagen1 = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png"));
+            Image imgEscalada1 = imagen1.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+            lblImagen1.setIcon(new ImageIcon(imgEscalada1));
+        } catch (Exception e) {
+            lblImagen1.setText("[imagen]");
+        }
         lblImagen1.setBounds(200, 140, 150, 120);
-
         panelContenido.add(lblImagen1);
+
         lblImagen2 = new JLabel();
-
-        ImageIcon imagen2 = new ImageIcon(getClass().getResource("/Multimedia/utiles/ejemplo.png"));
-
-        Image imgEscalada2 = imagen2.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
-
-        lblImagen2.setIcon(new ImageIcon(imgEscalada2));
+        try {
+            ImageIcon imagen2 = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ejemplo.png"));
+            Image imgEscalada2 = imagen2.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+            lblImagen2.setIcon(new ImageIcon(imgEscalada2));
+        } catch (Exception e) {
+            lblImagen2.setText("[imagen]");
+        }
         lblImagen2.setBounds(370, 140, 150, 120);
-
         panelContenido.add(lblImagen2);
 
-        lblInfo = new JLabel(
-                "<html><center>"
-                + "Más información sobre el minijuego.<br>"
-                + "Aquí puedes explicar reglas,<br>"
-                + "objetivos y controles."
-                + "</center></html>");
+        //---------------- INFO ----------------
+        JLabel lblInfo1 = new JLabel("Más información sobre el minijuego.", SwingConstants.CENTER);
+        lblInfo1.setFont(fuente1.deriveFont(34f));
+        lblInfo1.setBounds(205, 270, 320, 25);
+        panelContenido.add(lblInfo1);
 
-        lblInfo.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblInfo.setBounds(205, 280, 320, 80);
-        lblInfo.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel lblInfo2 = new JLabel("Aquí puedes explicar reglas,", SwingConstants.CENTER);
+        lblInfo2.setFont(fuente1.deriveFont(34f));
+        lblInfo2.setBounds(205, 295, 320, 25);
+        panelContenido.add(lblInfo2);
 
-        panelContenido.add(lblInfo);
+        JLabel lblInfo3 = new JLabel("objetivos y controles.", SwingConstants.CENTER);
+        lblInfo3.setFont(fuente1.deriveFont(34f));
+        lblInfo3.setBounds(205, 320, 320, 25);
+        panelContenido.add(lblInfo3);
 
-        btnVolver = new JButton("Volver");
-        btnVolver.setFont(new Font("Arial", Font.BOLD, 16));
-        btnVolver.setBounds(50, 280, 120, 40);
+        //---------------- BOTÓN VOLVER ----------------
+        btnVolver = new DecoracionBotones("VOLVER",
+                                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
+        btnVolver.setFont(fuente2.deriveFont(20f));
+        btnVolver.setBounds(30, 270, 150, 50);
+        btnVolver.addActionListener(e -> dispose());
         panelContenido.add(btnVolver);
 
+        //---------------- PASO 2 ----------------
         JLabel lblPaso2 = new JLabel("Paso 2", SwingConstants.CENTER);
-
-        lblPaso2.setFont(new Font("Arial", Font.BOLD, 18));
-        lblPaso2.setBounds(180, 380, 120, 25);
-
+        lblPaso2.setFont(fuente2.deriveFont(Font.BOLD, 22f));
+        lblPaso2.setBounds(180, 380, 120, 30);
         panelContenido.add(lblPaso2);
 
-        JLabel lblTextoPaso2 = new JLabel(
-                "<html><center>"
-                + "Explicación adicional del juego.<br>"
-                + "Puedes agregar imágenes y texto."
-                + "</center></html>");
+        JLabel lblTextoPaso2a = new JLabel("Explicación adicional del juego.", SwingConstants.CENTER);
+        lblTextoPaso2a.setFont(fuente1.deriveFont(34f));
+        lblTextoPaso2a.setBounds(180, 415, 380, 25);
+        panelContenido.add(lblTextoPaso2a);
 
-        lblTextoPaso2.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblTextoPaso2.setBounds(210, 410, 380, 60);
-        lblTextoPaso2.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel lblTextoPaso2b = new JLabel("Puedes agregar imágenes y texto.", SwingConstants.CENTER);
+        lblTextoPaso2b.setFont(fuente1.deriveFont(34f));
+        lblTextoPaso2b.setBounds(180, 440, 380, 25);
+        panelContenido.add(lblTextoPaso2b);
 
-        panelContenido.add(lblTextoPaso2);
-
+        //---------------- PASO 3 ----------------
         JLabel lblPaso3 = new JLabel("Paso 3", SwingConstants.CENTER);
-
-        lblPaso3.setFont(new Font("Arial", Font.BOLD, 18));
-        lblPaso3.setBounds(190, 750, 120, 25);
-
+        lblPaso3.setFont(fuente2.deriveFont(Font.BOLD, 22f));
+        lblPaso3.setBounds(190, 750, 120, 30);
         panelContenido.add(lblPaso3);
 
-        JLabel lblTextoPaso3 = new JLabel(
-                "<html><div style='text-align:center;'>"
-                + "Última sección del tutorial.<br>"
-                + "Coloca aquí cualquier regla adicional."
-                + "</div></html>");
+        JLabel lblTextoPaso3a = new JLabel("Última sección del tutorial.", SwingConstants.CENTER);
+        lblTextoPaso3a.setFont(fuente1.deriveFont(34f));
+        lblTextoPaso3a.setBounds(180, 790, 380, 25);
+        panelContenido.add(lblTextoPaso3a);
 
-        lblTextoPaso3.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblTextoPaso3.setBounds(180, 790, 380, 60);
-        lblTextoPaso3.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel lblTextoPaso3b = new JLabel("Coloca aquí cualquier regla adicional.", SwingConstants.CENTER);
+        lblTextoPaso3b.setFont(fuente1.deriveFont(34f));
+        lblTextoPaso3b.setBounds(180, 815, 380, 25);
+        panelContenido.add(lblTextoPaso3b);
 
-        panelContenido.add(lblTextoPaso3);
-
+        //---------------- SCROLL ----------------
         scrollPane = new JScrollPane(panelContenido);
-
-        scrollPane.setBounds(10, 10, 565, 340);
+        scrollPane.setBounds(10, 10, 565, 360);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
-
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-        fondo.add(scrollPane);
+        getContentPane().add(scrollPane);
+        
+        
+    }
+    
+    public void agregarContenido(){
+        // Este método lo usará la clase hija
     }
 
-
+    public static void main(String[] args) {
+        new PantallaTutorial();
+    }
 }
