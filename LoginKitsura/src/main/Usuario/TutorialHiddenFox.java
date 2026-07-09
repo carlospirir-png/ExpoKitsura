@@ -2,6 +2,7 @@ package main.Usuario;
 
 import java.awt.*;
 import javax.swing.*;
+import main.Menu.FondoPanelSemi;
 
 public class TutorialHiddenFox extends PantallaTutorial {
 
@@ -21,47 +22,55 @@ public class TutorialHiddenFox extends PantallaTutorial {
         lblTitulo = new JLabel("Reglas", SwingConstants.CENTER);
         lblTitulo.setFont(fuente2.deriveFont(Font.BOLD, 30f));
         lblTitulo.setBounds(0, 20, 540, 40);
+        lblTitulo.setForeground(new Color(218, 77, 88));
         panelContenido.add(lblTitulo);
 
         //---------------- MASCOTA ----------------
         lblMascota = new JLabel();
         try {
             ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/Zorro_kimono_rosa.png"));
-            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
             lblMascota.setIcon(new ImageIcon(mascotaEscalada));
         } catch (Exception e) {
             lblMascota.setText("~");
         }
-        lblMascota.setBounds(20, 80, 180, 180);
+        lblMascota.setBounds(0, 30, 300, 300);
         panelContenido.add(lblMascota);
 
         // ----------------Titulo de Introducción----------------------
         JLabel lblIntro = new JLabel("Introducción");
         lblIntro.setFont(fuente2.deriveFont(Font.BOLD, 24f));
         lblIntro.setBounds(220, 80, 220, 30);
+        lblIntro.setForeground(new Color(238, 151, 151));
         panelContenido.add(lblIntro);
 
         // --------- Contenido de Introducción ---------------------
+        FondoPanelSemi pnlintro = new FondoPanelSemi(new Color(238, 151, 151, 150));
+        pnlintro.setBounds(210, 110, 300, 200);
+        
+        
         JTextArea txtcontenido = new JTextArea("Hidden Fox (\"Zorro Escondido\") es un minijuego educativo de "
                 + "\"Kitsura\" que pone a prueba la lógica, la observación y el "
                 + "conocimiento del jugador. El objetivo es identificar correctamente "
                 + "la figura representada por una silueta antes de que el tiempo se "
                 + "agote. Conforme se avanza, la dificultad aumenta y los desafíos "
                 + "se vuelven más complejos.");
-
-        txtcontenido.setBounds(220, 120, 280, 170);
+        
+        pnlintro.add(txtcontenido);
+        txtcontenido.setBounds(30, 30, 280, 170);
         txtcontenido.setOpaque(false);
         txtcontenido.setEditable(false);
         txtcontenido.setLineWrap(true);
         txtcontenido.setWrapStyleWord(true);
-        txtcontenido.setFont(fuente1.deriveFont(18f));
-        panelContenido.add(txtcontenido);
-
+        txtcontenido.setFont(fuente1.deriveFont(20f));
+        
+        panelContenido.add(pnlintro);
         // ------------------- Contenido: Paso 1 ---------------------------------
-        JLabel lblPaso1 = new JLabel("Paso 1");
-        lblPaso1.setFont(fuente2.deriveFont(Font.BOLD, 24f));
-        lblPaso1.setBounds(40, 300, 200, 30);
-        panelContenido.add(lblPaso1);
+        JLabel lblObjetivos = new JLabel("Objetivos");
+        lblObjetivos.setFont(fuente2.deriveFont(Font.BOLD, 24f));
+        lblObjetivos.setBounds(40, 300, 200, 30);
+        lblObjetivos.setForeground(new Color(238, 151, 151));
+        panelContenido.add(lblObjetivos);
 
         JTextArea txtPaso1 = new JTextArea("Observa la silueta y selecciona la respuesta correcta"
                 + "entre las cuatro opciones disponibles.\n"

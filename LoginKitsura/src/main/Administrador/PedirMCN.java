@@ -6,7 +6,6 @@ import javax.swing.*;
 import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanelSemi;
-import main.Administrador.DatosConfiguracion;
 import main.Usuario.IniciarSesion;
 
 public class PedirMCN extends JFrame {
@@ -30,8 +29,14 @@ public class PedirMCN extends JFrame {
     // Bandera para evitar que, mientras se están recargando los combos por
     // código, sus propios listeners se disparen en cadena innecesariamente.
     private boolean cargandoCombos = false;
+    
+    //Indica la ventana que se va a abrir.
+    private String ventanaAbrir;
 
-    public PedirMCN() {
+    public PedirMCN(String ventanaAbrir) {
+        
+        this.ventanaAbrir = ventanaAbrir;
+        
         try {
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -156,8 +161,33 @@ public class PedirMCN extends JFrame {
             }
 
             DatosConfiguracion datos = new DatosConfiguracion(minijuego, categoria, nivel);
-            new MenuAdmin(datos);
-            dispose();
+            
+            //Según cuál ventana se indicó
+            switch (ventanaAbrir){
+                case "Puntuaciones":
+                    new PuntuacionesAdmin(datos);
+                    dispose();
+                break;
+                case "Vidas":
+                    new VidasAdmin(datos);
+                    dispose();
+                break;
+                case "Tiempo":
+                    new TiempoAdmin(datos);
+                    dispose();
+                break;
+                case "Pistas":
+                    new PistasMenu(datos);
+                    dispose();
+                break;
+                case "Administrar Stages":
+                    new AdminStages(datos);
+                    dispose();
+                break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Pedir MCN no sabe que ventana debe abrir.", "Error en abrir Interfaz", JOptionPane.ERROR_MESSAGE);
+            }
+            
         });
 
         // MASCOTA
@@ -240,10 +270,6 @@ public class PedirMCN extends JFrame {
         }
 
         cargandoCombos = false;
-    }
-
-    public static void main(String[] args) {
-        new PedirMCN();
     }
 
 }

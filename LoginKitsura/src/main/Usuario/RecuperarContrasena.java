@@ -13,7 +13,7 @@ public class RecuperarContrasena extends JFrame {
     private static String codigoRecuperacion;
 
     /* Variable global que nos ayudara a generar el
-                                                codigo para el recuperar contraseña*/
+     codigo para el recuperar contraseña*/
 
     public RecuperarContrasena() {
         try {
@@ -54,17 +54,17 @@ public class RecuperarContrasena extends JFrame {
         fondo.add(panelContenedor);
 
         //---------------- T I T U L O ----------------
-        JLabel lblIndicacion = new JLabel("Ingrese su nombre de usuario: ");
+        JLabel lblIndicacion = new JLabel("Ingrese su correo electronico: ");
         lblIndicacion.setFont(fuente2.deriveFont(25F));
         lblIndicacion.setForeground(Color.WHITE);
         lblIndicacion.setBounds(20, 20, 365, 45);
         panelContenedor.add(lblIndicacion);
 
         //---------------- CAMPO DE TEXTO ----------------
-        JTextField txtUsuario = new JTextField();
-        txtUsuario.setBounds(20, 95, 350, 40);
-        txtUsuario.setFont(fuente1.deriveFont(20f));
-        panelContenedor.add(txtUsuario);
+        JTextField txtCorreo = new JTextField();
+        txtCorreo.setBounds(20, 95, 350, 40);
+        txtCorreo.setFont(fuente1.deriveFont(20f));
+        panelContenedor.add(txtCorreo);
 
         //---------------- BOTON ACEPTAR ----------------
         JButton btnAceptar = new DecoracionBotones("ENVIAR CÓDIGO",
@@ -75,24 +75,25 @@ public class RecuperarContrasena extends JFrame {
         btnAceptar.setBounds(95, 230, 200, 45);
         panelContenedor.add(btnAceptar);
         btnAceptar.addActionListener(e -> {
-            // Programamos el boton que nos ayudara a:
-            String usuario = txtUsuario.getText().trim();
-            // Verificar si el usuario ha dejado vacio el campo
-            if (usuario.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Ingrese un nombre de usuario.");
-                return; // mostrara la frase "Ingrese un nombre de usuario."
-            }
-
-            codigoRecuperacion = generarCodigo(); // es igual al metodo creado
-
+            String correo = txtCorreo.getText().trim();
+        if (correo.isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Su código de recuperación es:\n\n" + codigoRecuperacion);
-            // Abre la nueva interfaz donde el usuario ingresara el codigo generado
-            new VerificarCodigo();
-            dispose();
+                    "Ingrese su correo electrónico");
+            return;
+        }
+        if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese un correo electrónico válido.");
+            return;
+        }
+        codigoRecuperacion = generarCodigo();
+        JOptionPane.showMessageDialog(
+                this,
+                "Su código de recuperación es:\n\n" + codigoRecuperacion);
+        new VerificarCodigo();
+        dispose();
         });
 
         //---------------- MASCOTA ----------------

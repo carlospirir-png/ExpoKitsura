@@ -11,6 +11,7 @@ public class DatosConfiguracion {
     private String minijuego;
     private String categoria;
     private String nivel;
+    private int tiempoLimite;
 
     public DatosConfiguracion(String minijuego, String categoria, String nivel) {
         this.minijuego = minijuego;
@@ -28,5 +29,12 @@ public class DatosConfiguracion {
 
     public String getNivel() {
         return nivel;
+    }
+    public int getTiempoLimite() {
+    return tiempoLimite;
+    }
+    
+    public void setTiempoLimite(int tiempoLimite) {
+    this.tiempoLimite = tiempoLimite;
     }
 }
