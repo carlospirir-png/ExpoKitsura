@@ -10,7 +10,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.Random;
 import java.util.ArrayList;
-import main.Administrador.VidasDAO;
+import main.Administrador.*;
 
 public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
@@ -74,6 +74,18 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     // Snapshot de las vidas con las que arrancó la partida (para la columna vidas_iniciales_snapshot)
     private int vidasInicialesSnapshot;
+    
+    //se 
+    private PuntuacionesDAO puntuacionesDAO = new PuntuacionesDAO();
+    
+    //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
+   private int puntosDB;
+
+    private String categoriaResuelta = null;
+    private String dificultadResuelta = null;
+    
+    //El tiempo en el que se repsondió la pregunta
+     private int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
 
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
@@ -95,6 +107,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         } else {
             nivelFinal = 9;
         }
+        
+        //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
+        puntosDB = puntuacionesDAO.obtenerPuntuacion("Hidden Fox", categoriaResuelta, dificultadResuelta);
 
         //DEBUG
         System.out.println("Nivel actual: " + nivelActual);
@@ -102,7 +117,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         //DEBUG
         Partida(nivelActual);
     }
-
 
     public HiddenFox_Codigo(int nivel) {
         this(nivel, 3, 0, false, 0);
@@ -287,13 +301,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     private int calcularPuntosPorTiempo() {
 
-        int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
-
-        if (tiempoUsado > 2) {
+        if (tiempoRespuesta > 2) {
             double porcentajeRapidez
-                    = 1.0 - ((double) tiempoUsado / tiempoMaximoPregunta);
+                    = 1.0 - ((double) tiempoRespuesta / tiempoMaximoPregunta);
 
-            int puntos = (int) (100 * porcentajeRapidez);
+            //los puntos que estén en l abase de datos se multiplican por la rapiz en la que se respondió
+            int puntos = (int) (puntosDB * porcentajeRapidez);
 
             if (puntos < 10) {
                 puntos = 10;
@@ -302,7 +315,8 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             return puntos;
 
         } else {
-            return 100;
+            //devuelve el punteo completo
+            return puntosDB;
         }
 
     }
@@ -327,8 +341,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         boolean correcta
                 = (Boolean) boton.getClientProperty("correcta");
-
-        int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
 
         if (correcta) {
             int puntosGanados = calcularPuntosPorTiempo();
@@ -612,9 +624,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         // Se van guardando aquí la categoría y dificultad que el switch ya
         // resuelve para este nivel, para poder consultar VidasDAO al final
         // sin tener que volver a calcularlas en otro método aparte.
-        String categoriaResuelta = null;
-        String dificultadResuelta = null;
-
         switch (nivel) {
             case 1:
                 modificarColorFondo(facil);
