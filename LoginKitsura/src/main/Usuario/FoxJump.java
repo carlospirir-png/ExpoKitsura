@@ -327,7 +327,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             case INTERMEDIO ->
                 new Color(239, 218, 154);
             case DIFICIL ->
-                new Color(218, 77, 88);
+                new Color(227, 157, 139);
         };
         fondo.setBackground(colorFondo);
     }
