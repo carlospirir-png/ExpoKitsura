@@ -213,20 +213,27 @@ public class EditarStages extends JFrame {
 
         btnSalir.setFont(fuente2.deriveFont(20F));
         btnSalir.setBounds(1680, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e -> 
+                new PedirMCN("Datos"));
         fondo.add(btnSalir);
     }
 
-    /**
+   /**
      * Carga en la tabla ÚNICAMENTE las preguntas que pertenecen al id_nivel
-     * resuelto desde la selección hecha en Pedir M,C,N. Cualquier pregunta de
-     * otro minijuego, categoría o dificultad queda fuera y nunca se muestra.
+     * resuelto desde la selección hecha en Pedir M,C,N, junto con su
+     * respuesta correcta (la que tiene es_correcta = TRUE en Opcion_respuesta).
+     * Cualquier pregunta de otro minijuego, categoría o dificultad queda
+     * fuera y nunca se muestra.
      */
     private void cargarPreguntas() {
-        String sql = "SELECT id_pregunta, pregunta FROM Pregunta "
-                + "WHERE id_nivel = ? AND estado = 'activo' ORDER BY id_pregunta";
+        String sql = "SELECT p.id_pregunta, p.pregunta, o.texto_opcion AS respuesta_correcta "
+                + "FROM Pregunta p "
+                + "LEFT JOIN Opcion_respuesta o "
+                + "       ON o.id_pregunta = p.id_pregunta AND o.es_correcta = TRUE "
+                + "WHERE p.id_nivel = ? AND p.estado = 'activo' "
+                + "ORDER BY p.id_pregunta";
 
-        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"ID", "Pregunta"}, 0) {
+        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"ID", "Pregunta", "Respuesta correcta"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -243,7 +250,11 @@ public class EditarStages extends JFrame {
             ps.setInt(1, idNivel);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    modelo.addRow(new Object[]{rs.getInt("id_pregunta"), rs.getString("pregunta")});
+                    modelo.addRow(new Object[]{
+                        rs.getInt("id_pregunta"),
+                        rs.getString("pregunta"),
+                        rs.getString("respuesta_correcta") // puede venir null si aún no tiene opciones cargadas
+                    });
                 }
             }
         } catch (SQLException ex) {
@@ -255,6 +266,11 @@ public class EditarStages extends JFrame {
 
         tablaPreguntas.setModel(modelo);
 
+        // Ajuste de anchos para que la columna de pregunta/respuesta se lea bien
+        tablaPreguntas.getColumnModel().getColumn(0).setPreferredWidth(60);
+        tablaPreguntas.getColumnModel().getColumn(1).setPreferredWidth(800);
+        tablaPreguntas.getColumnModel().getColumn(2).setPreferredWidth(400);
+
         if (modelo.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this,
                     "Todavía no hay preguntas guardadas para "
@@ -262,7 +278,8 @@ public class EditarStages extends JFrame {
                     "Sin preguntas", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
+    
+    
     private void abrirEdicionDePreguntaSeleccionada() {
         int fila = tablaPreguntas.getSelectedRow();
         if (fila == -1) {
