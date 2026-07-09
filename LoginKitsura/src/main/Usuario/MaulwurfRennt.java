@@ -227,7 +227,7 @@ public class MaulwurfRennt extends JFrame {
         fondo.add(nivel);
 
         dificultad = new JLabel("Dificultad: ***");
-        dificultad.setFont(fuente2.deriveFont(25f));
+        dificultad.setFont(fuente2.deriveFont(23f));
         dificultad.setForeground(Color.BLACK);
         dificultad.setBounds(80, 900, 250, 40);
         fondo.add(dificultad);
@@ -298,10 +298,10 @@ public class MaulwurfRennt extends JFrame {
             {210, 17},
             {440, 22},
             {675, 22},
-            {100, 195},
+            {100, 200},
             {330, 200},
-            {550, 200},
-            {790, 200}
+            {570, 195},
+            {810, 200}
         };
 
         // Rutas de los recursos de imagen para estados normales y heridos.
@@ -371,14 +371,14 @@ public class MaulwurfRennt extends JFrame {
             // Cartel de respuestas
             carteles[i] = new JLabel("", SwingConstants.CENTER);
             carteles[i].setOpaque(true);
-            carteles[i].setBackground(new Color(150, 150, 150));
-            carteles[i].setFont(fuente2.deriveFont(24f));
+            carteles[i].setBackground(new Color(118, 169, 170));
+            carteles[i].setFont(fuente2.deriveFont(22f));
 
             carteles[i].setBounds(
-                    posiciones[i][0] + 15,
+                    posiciones[i][0] + 5,
                     posiciones[i][1] + 160,
-                    220,
-                    90);
+                    210,
+                    80);
 
             tablero.add(carteles[i]);
             tablero.add(topos[i]);
@@ -479,32 +479,32 @@ public class MaulwurfRennt extends JFrame {
 
     // Reubica aleatoriamente las coordenadas de los topos activos para desordenar el tablero.
     public void mezclarTopos(int cantidad) {
-        Point[] posiciones = {
-            new Point(180, 0),
-            new Point(430, 0),
-            new Point(680, 0),
-            new Point(60, 180),
-            new Point(310, 180),
-            new Point(560, 180),
-            new Point(800, 180)
-        };
-
-        java.util.ArrayList<Point> lista = new java.util.ArrayList<>();
-        for (Point p : posiciones) {
-            lista.add(p);
-        }
-
-        // Desordena aleatoriamente la lista de puntos.
-        Collections.shuffle(lista);
-
-        // Aplica las nuevas posiciones a los componentes visibles.
-        for (int i = 0; i < cantidad; i++) {
-            Point p = lista.get(i);
-            topos[i].setLocation(p);
-            carteles[i].setLocation(
-                    p.x + 15,
-                    p.y + 160);
-        }
+//        Point[] posiciones = {
+//            new Point(180, 0),
+//            new Point(430, 0),
+//            new Point(680, 0),
+//            new Point(60, 180),
+//            new Point(310, 180),
+//            new Point(560, 180),
+//            new Point(800, 180)
+//        };
+//
+//        java.util.ArrayList<Point> lista = new java.util.ArrayList<>();
+//        for (Point p : posicionOriginal) {
+//            lista.add(p);
+//        }
+//
+//        // Desordena aleatoriamente la lista de puntos.
+//        Collections.shuffle(lista);
+//
+//        // Aplica las nuevas posiciones a los componentes visibles.
+//        for (int i = 0; i < cantidad; i++) {
+//            Point p = lista.get(i);
+//            topos[i].setLocation(p);
+//            carteles[i].setLocation(
+//                    p.x + 15,
+//                    p.y + 160);
+//        }
     }
 
     public void actualizarProgreso(int realizadas, int total) {
