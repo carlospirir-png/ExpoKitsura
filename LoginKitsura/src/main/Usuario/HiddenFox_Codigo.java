@@ -1,8 +1,4 @@
-// ============== HIDDEN FOX CODIGO (VERSIÓN FINAL) ==============
-// IMPORTANTE: esta es la ÚNICA versión de esta clase que debe existir en el
-// proyecto. Reemplaza por completo a la versión anterior, que usaba métodos
-// static (resolverVidasIniciales, mapearIdCategoria, mapearDificultad) antes
-// de super(vidas). Esa versión anterior debe eliminarse del archivo/proyecto.
+// ==================== HIDDEN FOX CODIGO ==================== 
 package main.Usuario;
 
 import java.awt.*;
@@ -32,6 +28,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int preguntaActual = 0;
     // Las vidas por defecto son 3 para el jugador
     private int vidas;
+    // Indica si ya se fijaron las vidas iniciales de esta partida. Solo la
+    // primera vez que se llama a establecerVidasPorNivel() al iniciar la partida
+    private boolean vidasYaInicializadas = false;
     // Nivel actual y final de la categoria
     private int nivelActual;
     private int nivelFinal;
@@ -60,9 +59,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //Este atributo indica si la partida ya terminó. Se utiliza para deshabilitar otros comportamientos cuando la partida finalice.
     private boolean partidaTerminada = false;
 
-    /*=====================================================================
-      ATRIBUTOS DE PERSISTENCIA
-    =====================================================================*/
     // Id del minijuego "Hidden Fox" según la tabla Minijuego (INSERT inicial: 1 = Hidden Fox)
     private static final int ID_MINIJUEGO = 1;
 
@@ -706,11 +702,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         establecerVidasPorNivel(categoriaResuelta, dificultadResuelta);
     }
 
-    /*------------------ ESTABLECER VIDAS POR NIVEL ------------------
-      Consulta VidasDAO con la categoría y dificultad que ConfiguracionNivel
-      ya resolvió, y reconstruye los corazones según lo configurado en
-      VidasAdmin PARA ESE NIVEL/DIFICULTAD.
-    ------------------------------------------------------------------------*/
     private void establecerVidasPorNivel(String categoria, String dificultad) {
         if (categoria == null || dificultad == null) {
             return;
@@ -723,8 +714,19 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             vidasConfiguradas = 3;
         }
 
+        // El tope de corazones (estructura visual) se actualiza siempre, por
+        // si el administrador cambió el máximo configurado para la categoría.
         inicializarVidas(vidasConfiguradas);
-        this.vidas = vidasConfiguradas;
+
+        if (!vidasYaInicializadas) {
+            //Al empezar la partida, las vidas arrancan en el máximo.
+            this.vidas = vidasConfiguradas;
+            vidasYaInicializadas = true;
+        } else {
+            // En los siguientes niveles de la misma partida se conservan las
+            // vidas que el jugador ya tiene (o ya perdió). 
+            this.vidas = Math.min(this.vidas, vidasConfiguradas);
+        }
     }
 
     public void DerrotaVidas() {
