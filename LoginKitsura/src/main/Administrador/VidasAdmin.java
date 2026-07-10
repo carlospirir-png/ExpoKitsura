@@ -2,9 +2,8 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
+import main.Menu.*;
+import main.Usuario.VidasDAO;
 
 public class VidasAdmin extends JFrame {
 
@@ -177,7 +176,7 @@ public class VidasAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e -> {
-            new MenuAdmin(datos);
+            new MenuAdmin();
             dispose();
         });
 
@@ -234,7 +233,11 @@ public class VidasAdmin extends JFrame {
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
+            // Temporales
+            System.out.println("Minijuego: " + datos.getMinijuego());
+            System.out.println("Categoría: " + datos.getCategoria());
+            System.out.println("Nivel: " + datos.getNivel());
+            System.out.println("Nuevas vidas: " + nuevasVidas);
             // Actualiza la base de datos
             boolean actualizado = vidasDAO.actualizarVidas(
                     datos.getMinijuego(),

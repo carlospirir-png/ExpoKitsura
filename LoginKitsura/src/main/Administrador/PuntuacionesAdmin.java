@@ -2,19 +2,23 @@ package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
+import main.Menu.*;
 
 public class PuntuacionesAdmin extends JFrame {
 
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    
-    private DatosConfiguracion datos;
 
-    public PuntuacionesAdmin() {
+    private JLabel lblValorActual;
+    private JTextField txtNuevaPuntuacion;
+
+    private DatosConfiguracion datos;
+    private PuntuacionesDAO dao = new PuntuacionesDAO(); //Creamos un objeto del dao
+
+    public PuntuacionesAdmin(DatosConfiguracion datos) {
+
+        this.datos = datos;
 
         try {
 
@@ -53,8 +57,7 @@ public class PuntuacionesAdmin extends JFrame {
     private void crearComponentes() {
 
         //---------------- PANEL TÍTULO ----------------
-
-        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
+        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(130, 211, 224, 200));
         panelTitulo.setLayout(null);
         panelTitulo.setBounds(90, 65, 1800, 75);
         fondo.add(panelTitulo);
@@ -66,8 +69,7 @@ public class PuntuacionesAdmin extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- PANEL PRINCIPAL ----------------
-
-        FondoPanelSemi panelPuntuacion = new FondoPanelSemi(new Color(0, 0, 0, 130));
+        FondoPanelSemi panelPuntuacion = new FondoPanelSemi(new Color(68, 122, 156, 200));
         panelPuntuacion.setLayout(null);
         panelPuntuacion.setBounds(100, 170, 950, 650);
         fondo.add(panelPuntuacion);
@@ -78,11 +80,17 @@ public class PuntuacionesAdmin extends JFrame {
         lblPuntosActuales.setBounds(60, 50, 800, 35);
         panelPuntuacion.add(lblPuntosActuales);
 
-        JLabel lblValorActual = new JLabel("****");
+        lblValorActual = new JLabel("****");
         lblValorActual.setFont(fuente1.deriveFont(32f));
         lblValorActual.setForeground(Color.WHITE);
         lblValorActual.setBounds(60, 95, 200, 40);
         panelPuntuacion.add(lblValorActual);
+
+        //Se obtienen los puntos Actuales
+        int puntosActuales = dao.obtenerPuntuacion(datos.getMinijuego(), datos.getCategoria(), datos.getNivel());
+
+        //se cambia el valor
+        lblValorActual.setText(String.valueOf(puntosActuales));
 
         JLabel lblInstruccion = new JLabel("Ingrese la nueva puntuación:");
         lblInstruccion.setFont(fuente2.deriveFont(26f));
@@ -90,58 +98,92 @@ public class PuntuacionesAdmin extends JFrame {
         lblInstruccion.setBounds(60, 180, 800, 35);
         panelPuntuacion.add(lblInstruccion);
 
-        JTextField txtNuevaPuntuacion = new JTextField();
+        txtNuevaPuntuacion = new JTextField();
         txtNuevaPuntuacion.setFont(fuente1.deriveFont(34f));
         txtNuevaPuntuacion.setBounds(60, 225, 830, 55);
         panelPuntuacion.add(txtNuevaPuntuacion);
 
         //---------------- BOTÓN EDITAR ----------------
-
-
-        JButton btnEditar = new DecoracionBotones("EDITAR", 
-                    //ColorBase             ColorBorde              ColorLetra
+        //Se inicializa el botón de editar
+        JButton btnEditar = new DecoracionBotones("EDITAR",
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        
+
+        //se le coloca fuente y tamaño a la fuente
         btnEditar.setFont(fuente2.deriveFont(26f));
+        //Se le posiciona y coloca tamaño
         btnEditar.setBounds(340, 315, 260, 60);
 
+        //ActionListener
         btnEditar.addActionListener(e -> {
-
-            // Acción editar puntuación
-
+            Editar();
         });
 
         panelPuntuacion.add(btnEditar);
 
-        //---------------- INFORMACIÓN ----------------
-
-        JLabel lblModificando = new JLabel("Está modificando:");
+        //---------------- I N F O R M A C I Ó N ----------------
+        //Se inicializan los Labels
+        //---------------- MODIFICANDO -----------------
+        JLabel lblModificando = new JLabel("Estás modificando:");
+        //Fuente y tamaño de fuente
         lblModificando.setFont(fuente2.deriveFont(28f));
+        //Color de fuente
         lblModificando.setForeground(Color.WHITE);
+        //Posición y tamaño del label
         lblModificando.setBounds(60, 430, 400, 35);
+        //Se añade al panel
         panelPuntuacion.add(lblModificando);
 
-        JLabel lblMinijuego = new JLabel("Minijuego: ****");
+        //---------------- MINIJUEGO -------------------
+        //Se inicializa el label
+        JLabel lblMinijuego = new JLabel("Minijuego: ");
+        //Se le coloca la fuente y su respectivo tamaño
         lblMinijuego.setFont(fuente1.deriveFont(40f));
+        //Color de fuente
         lblMinijuego.setForeground(Color.WHITE);
+        //Posición y tamaño del label
         lblMinijuego.setBounds(60, 485, 600, 35);
+        //Se añade al panel
         panelPuntuacion.add(lblMinijuego);
 
-        JLabel lblCategoria = new JLabel("Categoría: ****");
+        //Colocamos la información
+        //Llamamos los datos de DatosConfiguración
+        lblMinijuego.setText("Minijuego: " + datos.getMinijuego());
+
+        //---------------- CATEGORÍA -------------------
+        //Se inicializa el label
+        JLabel lblCategoria = new JLabel("Categoría: ");
+        //Se le coloca la fuente y su respectivo tamaño
         lblCategoria.setFont(fuente1.deriveFont(40f));
+        //Se le coloca color a la fuente
         lblCategoria.setForeground(Color.WHITE);
+        //Posición y tamaño al label
         lblCategoria.setBounds(60, 525, 600, 35);
+        //Se agrega al panel
         panelPuntuacion.add(lblCategoria);
 
-        JLabel lblNivel = new JLabel("Nivel: ****");
+        //Colocamos la información
+        //Llamamos los datos de DatosConfiguración
+        lblCategoria.setText("Categoría: " + datos.getCategoria());
+
+        //---------------- NIVEL -----------------------
+        //Se inicializa el label
+        JLabel lblNivel = new JLabel("Nivel: ");
+        //Se le coloca la fuente y el tamaño
         lblNivel.setFont(fuente1.deriveFont(40f));
+        //Se le coloca color a la fuente
         lblNivel.setForeground(Color.WHITE);
+        //se le coloca posición y tamaño al label
         lblNivel.setBounds(60, 565, 600, 35);
+        //Se agrega al panel
         panelPuntuacion.add(lblNivel);
 
-        //---------------- MASCOTA ----------------
+        //Colocamos la información
+        //Llamamos los datos de DatosConfiguración
+        lblNivel.setText("Nivel: " + datos.getNivel());
 
+        //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
 
         try {
@@ -166,9 +208,8 @@ public class PuntuacionesAdmin extends JFrame {
         fondo.add(mascota);
 
         //---------------- BOTÓN VOLVER ----------------
-
         JButton btnVolver = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
@@ -176,16 +217,70 @@ public class PuntuacionesAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e -> {
-            new MenuAdmin(datos);
+            new MenuAdmin();
             dispose();
-                });
+        });
 
         fondo.add(btnVolver);
 
     }
 
-    public static void main(String[] args) {
-        new PuntuacionesAdmin();
+    public void Editar() {
+
+        //Obtenemos lo que se escribió en el textbox
+        String punto = txtNuevaPuntuacion.getText().trim();
+
+        //Si los puntos que se ingresaron están vacíos
+        if (punto.isEmpty()) {
+
+            //Mensaje
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debe ingresar una puntuación.");
+
+            return; //regresa
+        }
+
+        try {
+
+            //Declaramos una nueva puntuacion
+            int nuevaPuntuacion;
+
+            //parseamos los números obtenidos del textbox
+            nuevaPuntuacion = Integer.parseInt(punto);
+            
+            //Si la nueva puntuación es negativa
+            if (nuevaPuntuacion < 0) {
+                
+                //mensaje
+                JOptionPane.showMessageDialog(
+                        this,
+                        "La puntuación no puede ser negativa.");
+
+                return;
+            }
+
+            //Llamamos al método para actualizar la puntuacion
+            dao.actualizarPuntuacion(
+                    datos.getMinijuego(),
+                    datos.getCategoria(),
+                    datos.getNivel(),
+                    nuevaPuntuacion);
+
+            lblValorActual.setText(String.valueOf(nuevaPuntuacion));
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "La puntuación fue actualizada correctamente.");
+
+        } catch (NumberFormatException ex) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese únicamente números enteros.\n" + ex.getMessage(),
+                    "Dato inválido",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }

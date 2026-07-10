@@ -1,3 +1,4 @@
+// ============== FOX JUMP ==============
 package main.Usuario;
 
 import java.awt.*;
@@ -5,7 +6,6 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.sql.*;
 import javax.swing.*;
-import main.Administrador.VidasDAO;
 import main.conexion.Conexion;
 
 // CLASE PRINCIPAL DEL MINIJUEGO FOX JUMP!
@@ -27,7 +27,10 @@ public class FoxJump extends JFrame implements JuegoBase {
     private int maxVidas;
 
     // ES LA VARIABLE QUE CONTIENE LA INFORMACIÓN DE LA BASE DE DATOS
-    private VidasDAO vidasDAO;
+    // BUG CORREGIDO: antes se declaraba sin inicializar y provocaba un
+    // NullPointerException apenas se abría el minijuego (vidasDAO.obtenerVidas
+    // se llamaba sobre un objeto null en el constructor).
+    private VidasDAO vidasDAO = new VidasDAO();
 
     // CANTIDAD DE CORAZONES POR FILA. SI MAX_VIDAS NO ES MULTIPLO EXACTO,
     // LA ULTIMA FILA SIMPLEMENTE QUEDA INCOMPLETA (SE ACOMODAN LOS QUE SOBREN).
@@ -140,10 +143,12 @@ public class FoxJump extends JFrame implements JuegoBase {
         this.categoriaSeleccionada = categoria;
 
         // EL JUEFO COMIENZA EN FÁCIL, CUANDO SE QUIERE PASAR A OTRO NIVEL, SE VA ACTUALIZAR EL VALOR
-        maxVidas = vidasDAO.obtenerVidas("FoxJump!", categoriaSeleccionada, "Fácil");
+        // BUG CORREGIDO: el nombre debe coincidir EXACTAMENTE con el de la tabla Minijuego
+        // ("Fox Jump!", con espacio). Antes decía "FoxJump!" y nunca encontraba coincidencia,
+        // por lo que siempre caía en el valor por defecto sin avisar del error.
+        maxVidas = vidasDAO.obtenerVidas("Fox Jump!", categoriaSeleccionada, "Fácil");
 
-        // SEGURIDAD
-        if (maxVidas < 3) {
+        if (maxVidas < 1) {
             maxVidas = 3;
         }
 
@@ -251,6 +256,8 @@ public class FoxJump extends JFrame implements JuegoBase {
         // El jugador inicia con el máximo de vidas configurado
         vidas = maxVidas;
         
+        reconstruirCorazones();
+        
         // CONSULTA QUE CRUZA TRES TABLAS PARA ENCONTRAR EL NIVEL CORRECTO
         // SE FILTRA POR NOMBRE DEL MINIJUEGO, NOMBRE DE CATEGORIA Y DIFICULTAD
         String sqlNivel = """
@@ -319,7 +326,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             case INTERMEDIO ->
                 new Color(239, 218, 154);
             case DIFICIL ->
-                new Color(218, 77, 88);
+                new Color(227, 157, 139);
         };
         fondo.setBackground(colorFondo);
     }
@@ -1471,6 +1478,44 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         // INDICE 0 = PRIMER PLANO: LA MASCOTA SIEMPRE SE DIBUJA SOBRE LOS DEMAS
         fondo.setComponentZOrder(mascota, 0);
+    }
+
+    private void reconstruirCorazones() {
+        if (corazones != null) {
+            for (JLabel corazon : corazones) {
+                fondo.remove(corazon);
+            }
+        }
+
+        corazones = new JLabel[maxVidas];
+        int xInicialCorazon = 70;
+        int yInicialCorazon = 20;
+        int espaciadoX = 55;
+        int espaciadoY = 55;
+        int tamanoCorazon = 50;
+
+        for (int i = 0; i < maxVidas; i++) {
+            int fila = i / CORAZONES_POR_FILA;
+            int columna = i % CORAZONES_POR_FILA;
+
+            JLabel corazon;
+            if (iconoCorazonLleno != null) {
+                corazon = new JLabel(iconoCorazonLleno);
+            } else {
+                corazon = new JLabel("♥");
+                corazon.setFont(fuente1.deriveFont(40f));
+                corazon.setForeground(Color.RED);
+            }
+            corazon.setBounds(
+                    xInicialCorazon + (columna * espaciadoX),
+                    yInicialCorazon + (fila * espaciadoY),
+                    tamanoCorazon, tamanoCorazon);
+            corazones[i] = corazon;
+            fondo.add(corazon);
+        }
+
+        fondo.revalidate();
+        fondo.repaint();
     }
 
     // =========================================================================

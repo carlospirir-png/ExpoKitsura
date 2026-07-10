@@ -48,35 +48,35 @@ public class MenuMinijuegoC2 extends JFrame {
     private void crearComponentes() {
 
         //---------------- BOTÓN ¿CÓMO JUGAR? ----------------
-         btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
+        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
 
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
-btnComoJugar.addActionListener(e -> {
+        btnComoJugar.addActionListener(e -> {
 
-    if (tutorialAbierto) {
-        return;
-    }
+            if (tutorialAbierto) {
+                return;
+            }
 
-    tutorialAbierto = true;
-    btnComoJugar.setVisible(false); // Oculta el botón
+            tutorialAbierto = true;
+            btnComoJugar.setVisible(false); // Oculta el botón
 
-    tutorial = new TutorialFoxJump();
+            tutorial = new TutorialFoxJump();
 
-    tutorial.addWindowListener(new WindowAdapter() {
+            tutorial.addWindowListener(new WindowAdapter() {
 
-        @Override
-        public void windowClosed(WindowEvent e) {
-            tutorialAbierto = false;
-            tutorial = null;
-            btnComoJugar.setVisible(true); // Lo vuelve a mostrar
-        }
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    tutorialAbierto = false;
+                    tutorial = null;
+                    btnComoJugar.setVisible(true); // Lo vuelve a mostrar
+                }
 
-    });
-});
+            });
+        });
         fondo.add(btnComoJugar);
 
         //---------------- MASCOTA ----------------

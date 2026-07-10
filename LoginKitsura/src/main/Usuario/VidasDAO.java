@@ -1,5 +1,5 @@
 // Obtener las vidas actuales y actualizar las vidas
-package main.Administrador;
+package main.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,15 +16,11 @@ public class VidasDAO {
         conexion = new Conexion();
     }
 
-    // * Obtiene la cantidad de vidas configuradas para un nivel.
-    // * minijuego: Nombre del minijuego.
-    // * categoria: Nombre de la categoría.
-    // * nivel: Dificultad del nivel.
-    // * Cantidad de vidas.
+    // Obtiene la cantidad de vidas configuradas para un nivel.
     public int obtenerVidas(String minijuego, String categoria, String nivel) {
 
         int vidas = 3;
-
+        
         String sql = """
             SELECT cn.vidas
             FROM Configuracion_nivel cn
@@ -56,15 +52,8 @@ public class VidasDAO {
         return vidas;
     }
 
-    
     // Actualiza la cantidad de vidas de un nivel.
-     
-     // minijuego Nombre del minijuego.
-     // categoria: Categoría.
-     // nivel Dificultad.
-     // vidas Nueva: cantidad de vidas.
-     // return true si la actualización fue correcta.
-     
+    // return true si la actualización fue correcta.
     public boolean actualizarVidas(String minijuego,
             String categoria,
             String nivel,
@@ -76,7 +65,7 @@ public class VidasDAO {
                     ON cn.id_categoria = c.id_categoria
             INNER JOIN Minijuego m
                     ON c.id_minijuego = m.id_minijuego
-            SET cn.vidas = ?
+            SET cn.vidas  = ?
             WHERE m.nombre = ?
             AND c.nombre = ?
             AND cn.dificultad = ?
@@ -88,8 +77,10 @@ public class VidasDAO {
             ps.setString(2, minijuego);
             ps.setString(3, categoria);
             ps.setString(4, nivel);
-
-            return ps.executeUpdate() > 0;
+            int filas = ps.executeUpdate();
+            System.out.println("Filas actualizadas: " + filas);
+            return filas > 0;
+            // return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
