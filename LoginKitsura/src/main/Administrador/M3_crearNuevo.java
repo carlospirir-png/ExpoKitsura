@@ -445,6 +445,6 @@ public class M3_crearNuevo extends JFrame {
 
     public static void main(String[] args) {
         // Ejemplo: categoría 1, dificultad 3 (Difícil) -> id_nivel = 21, 6 respuestas incorrectas
-        new M3_crearNuevo(1, 3);
+        new M3_crearNuevo(1, 2);
     }
 }
