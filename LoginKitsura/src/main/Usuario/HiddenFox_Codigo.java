@@ -113,11 +113,37 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     public void SiguientePregunta() {
         System.out.println("Comparando: " + nivelActual + " < " + nivelFinal);
 
-        if (respuestas_Correctas < CORRECTAS || preguntaActual >= preguntasPartida.size()) {
-            MostrarPregunta();
-        } else {
+        // ¿Ya alcanzó los 5 aciertos?
+        if (respuestas_Correctas >= CORRECTAS) {
             terminarNivel();
+            return;
         }
+
+        // ¿Ya no quedan preguntas?
+        if (preguntaActual >= preguntasPartida.size()) {
+            finPreguntas();
+            return;
+        }
+
+        //Las preguntas Restantes son la cantidad de preguntas almacenadas en la base de datos menos la cantidad de preguntas que se lleva
+        int preguntasRestantes = preguntasPartida.size() - preguntaActual;
+
+        //Los aciertos posibles son las oportunidades que tiene el jugador de aún responder correctamente y pasar a la siguiente dificultad
+        //Los aciertos posibles es la cantidad de respuestas correctas que lleva más los posibles aciertos (preguntas restantes)
+        int aciertosPosibles = respuestas_Correctas + preguntasRestantes;
+
+        //Si la cantidad de aciertos es imposible de alcanzar con las correctas que se requiere
+        if (aciertosPosibles < CORRECTAS) {
+            //fin de la partida
+            finPreguntas();
+
+            /*(ej. El jugador debe acertar al menos 5, pero ya va por la pregunta 13, y solo lleva acertada 1, como solo hay 15 problemas cargados
+            y va por la pregunta 13, solo le quedan 2 preguntas, pero si lleva solo un acierto, ni aunque acierte las siguientes preguntas logrará
+            pasar, oporque el programa requiere 5. Así que por eso, en cuanto se hace imposible pasar, se acaba la partida.
+             */
+        }
+
+        MostrarPregunta();
     }
 
     //--------------- TERMINAR NIVEL ---------------
@@ -163,6 +189,36 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             }
         }
 
+    }
+
+    /*-------------------- FIN PREGUNTAS --------------
+    Esto sucede cuando la base de datos ya no tiene problemas para cargar, pero el jugador aún no ha cumplido los 
+    requisitos para pasar de nivel.
+     */
+    private void finPreguntas() {
+        
+        //Se establece que la partida fue terminada por este evento
+        partidaTerminada = true;
+        
+        //La partida fue abandonada por el evento de derrota
+        guardarFinDePartida("abandonada");
+        
+        //Muestra el mensaje de por qué se perdió
+        JOptionPane.showMessageDialog(
+                this,
+                "Ya no quedan más preguntas.\nNo alcanzaste los "
+                + CORRECTAS + " aciertos necesarios."
+        );
+        
+        //Muestra el mensaje de que se perdió.
+        JOptionPane.showMessageDialog(this, "Has perdido.");
+        
+        //Transiciona a la pantalla de derrota por vidas
+        fadeTo(() -> {
+            new SeAcaboVidas(this, e -> {
+            }).setVisible(true);
+            dispose();
+        }, 400);
     }
 
     //----------- PARTIDA -------------------
