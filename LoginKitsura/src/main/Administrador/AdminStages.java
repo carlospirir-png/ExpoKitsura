@@ -9,7 +9,8 @@ import javax.swing.*;
 import main.Menu.*;
 import main.conexion.Conexion;
 
-public class AdminStages extends JFrame{
+public class AdminStages extends JFrame {
+
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
@@ -27,38 +28,38 @@ public class AdminStages extends JFrame{
 
     public AdminStages(DatosConfiguracion datos) {
         this.datos = datos;
-        try{
+        try {
             // LettersForLearners
             fuente1 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
             // KGPerfectPenmanship
             fuente2 = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));           
-        } catch (Exception e){
-            e.printStackTrace();            
-        fuente1 = new Font("Arial", Font.PLAIN,20);
-        fuente2 = new Font("Arial", Font.PLAIN,20);
+                    Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fuente1 = new Font("Arial", Font.PLAIN, 20);
+            fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png"); 
-        setContentPane(fondo);       
+        fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
+        setContentPane(fondo);
         setTitle("Administrar Stages");
-        setSize(1980, 1080); 
+        setSize(1980, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        fondo.setLayout(null);       
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        fondo.setLayout(null);
         crearComponentes();
         setVisible(true);
     }
-    
+
     private void crearComponentes() {
-        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 120)); 
-        panelTitulo.setBounds(75, 130, 1800, 95); 
+        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 120));
+        panelTitulo.setBounds(75, 130, 1800, 95);
         panelTitulo.setLayout(null);
         fondo.add(panelTitulo);
-        
+
         String sufijo = (datos != null)
                 ? " - " + datos.getMinijuego() + " / " + datos.getCategoria() + " / " + datos.getNivel()
                 : "";
@@ -72,12 +73,11 @@ public class AdminStages extends JFrame{
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO_APAGADO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        
+
         btnCrearUno.setFont(fuente2.deriveFont(20f));
         btnCrearUno.setBounds(325, 500, 360, 70);
         btnCrearUno.addActionListener(e -> crearPreguntaEnContextoActual());
         fondo.add(btnCrearUno);
-        
 
         btnEditarExistente = new DecoracionBotones("EDITAR UNO EXISTENTE",
                 //ColorBase             ColorBorde              ColorLetra
@@ -85,7 +85,7 @@ public class AdminStages extends JFrame{
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnEditarExistente.setFont(fuente2.deriveFont(20f));
         btnEditarExistente.setBounds(1245, 500, 360, 70);
-        btnEditarExistente.addActionListener(e ->{
+        btnEditarExistente.addActionListener(e -> {
             if (datos == null) {
                 JOptionPane.showMessageDialog(this,
                         "Primero debes seleccionar Minijuego, Categoría y Nivel en 'Pedir M, C, N'.",
@@ -95,27 +95,27 @@ public class AdminStages extends JFrame{
             new EditarStages(datos);
             dispose();
         });
-        
+
         fondo.add(btnEditarExistente);
-        
+
         JLabel staticMascotaControl = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png")); 
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         staticMascotaControl.setIcon(new ImageIcon(imgEscalada));
         staticMascotaControl.setBounds(655, 290, 600, 600);
         fondo.add(staticMascotaControl);
 
         btnSalir = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
+                //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
         btnSalir.setFont(fuente2.deriveFont(20F));
         btnSalir.setBounds(1680, 950, 210, 45);
         btnSalir.addActionListener(e -> {
-            new MenuAdmin();
             dispose();
-                });
+            new PedirMCN("Administrar Stages");
+        });
         fondo.add(btnSalir);
     }
 
@@ -139,12 +139,16 @@ public class AdminStages extends JFrame{
             int dificultadNumero = contexto[2];
 
             switch (idMinijuego) {
-                case 1 -> new M1_crearNuevo();
-                case 2 -> new M2_crearNuevo(datos);
-                case 3 -> new M3_crearNuevo(idCategoriaLocal, dificultadNumero);
-                default -> JOptionPane.showMessageDialog(this,
-                        "Minijuego no reconocido (id_minijuego = " + idMinijuego + ").",
-                        "Error", JOptionPane.WARNING_MESSAGE);
+                case 1 ->
+                    new M1_crearNuevo();
+                case 2 ->
+                    new M2_crearNuevo(datos);
+                case 3 ->
+                    new M3_crearNuevo(idCategoriaLocal, dificultadNumero);
+                default ->
+                    JOptionPane.showMessageDialog(this,
+                            "Minijuego no reconocido (id_minijuego = " + idMinijuego + ").",
+                            "Error", JOptionPane.WARNING_MESSAGE);
             }
             dispose();
         } catch (SQLException ex) {
@@ -166,8 +170,7 @@ public class AdminStages extends JFrame{
                 + "JOIN Minijuego m ON c.id_minijuego = m.id_minijuego "
                 + "WHERE m.nombre = ? AND c.nombre = ? AND cn.dificultad = ?";
 
-        try (Connection con = new Conexion().getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new Conexion().getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             if (con == null) {
                 throw new SQLException("No se pudo establecer conexión con la base de datos.");
@@ -186,16 +189,20 @@ public class AdminStages extends JFrame{
                 int idCategoriaGlobal = rs.getInt("id_categoria");
                 int idCategoriaLocal = ((idCategoriaGlobal - 1) % 3) + 1;
                 int dificultadNumero = switch (rs.getString("dificultad")) {
-                    case "Fácil" -> 1;
-                    case "Intermedio" -> 2;
-                    case "Difícil" -> 3;
-                    default -> throw new SQLException("Dificultad desconocida: '" + rs.getString("dificultad") + "'.");
+                    case "Fácil" ->
+                        1;
+                    case "Intermedio" ->
+                        2;
+                    case "Difícil" ->
+                        3;
+                    default ->
+                        throw new SQLException("Dificultad desconocida: '" + rs.getString("dificultad") + "'.");
                 };
                 return new int[]{idMinijuego, idCategoriaLocal, dificultadNumero};
             }
         }
     }
-    
+
     public static void main(String[] args) {
         new AdminStages();
     }
