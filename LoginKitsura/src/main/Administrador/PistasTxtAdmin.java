@@ -211,7 +211,7 @@ public class PistasTxtAdmin extends JFrame {
                 //getSelectedRow(): te dice la fila que fue clickeada
                 int fila = tablaPistas.getSelectedRow();
 
-                if (fila != -1) {
+                if (fila >= 0 && fila < modelo.getRowCount()) {
                     //getValueAt(fila, columna) saca los datos de la tabla
                     //se parsean de una vez a String y se colocan de una vez en los txt
                     txtIdPista.setText(modelo.getValueAt(fila, 0).toString());
