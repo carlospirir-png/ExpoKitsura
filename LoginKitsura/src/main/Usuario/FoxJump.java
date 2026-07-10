@@ -1,4 +1,4 @@
-// ============== FOX JUMP ==============
+// ==================== FOX JUMP ==================== 
 package main.Usuario;
 
 import java.awt.*;
@@ -6,7 +6,6 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.sql.*;
 import javax.swing.*;
-import main.Administrador.VidasDAO;
 import main.conexion.Conexion;
 
 // CLASE PRINCIPAL DEL MINIJUEGO FOX JUMP!
@@ -23,19 +22,10 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     // ── SISTEMA DE VIDAS DINAMICO ────────────────────────────────────────────
     // CAMBIA ESTE VALOR PARA QUE EL JUEGO TENGA MAS O MENOS VIDAS/CORAZONES.
-    // ESTE ES EL TOPE ABSOLUTO: "vidas" NUNCA PUEDE SUPERAR ESTE NUMERO,
-    // SIN IMPORTAR DESDE DONDE SE INTENTE SUMAR VIDAS (VER agregarVidas()).
     private int maxVidas;
 
     // ES LA VARIABLE QUE CONTIENE LA INFORMACIÓN DE LA BASE DE DATOS
-    // BUG CORREGIDO: antes se declaraba sin inicializar y provocaba un
-    // NullPointerException apenas se abría el minijuego (vidasDAO.obtenerVidas
-    // se llamaba sobre un objeto null en el constructor).
     private VidasDAO vidasDAO = new VidasDAO();
-
-    // CANTIDAD DE CORAZONES POR FILA. SI MAX_VIDAS NO ES MULTIPLO EXACTO,
-    // LA ULTIMA FILA SIMPLEMENTE QUEDA INCOMPLETA (SE ACOMODAN LOS QUE SOBREN).
-    private static final int CORAZONES_POR_FILA = 5;
 
     // ARREGLO DE LABELS DE CORAZONES, GENERADO DINAMICAMENTE SEGUN MAX_VIDAS
     private JLabel[] corazones;
@@ -144,9 +134,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         this.categoriaSeleccionada = categoria;
 
         // EL JUEFO COMIENZA EN FÁCIL, CUANDO SE QUIERE PASAR A OTRO NIVEL, SE VA ACTUALIZAR EL VALOR
-        // BUG CORREGIDO: el nombre debe coincidir EXACTAMENTE con el de la tabla Minijuego
-        // ("Fox Jump!", con espacio). Antes decía "FoxJump!" y nunca encontraba coincidencia,
-        // por lo que siempre caía en el valor por defecto sin avisar del error.
         maxVidas = vidasDAO.obtenerVidas("Fox Jump!", categoriaSeleccionada, "Fácil");
 
         if (maxVidas < 1) {
@@ -254,11 +241,11 @@ public class FoxJump extends JFrame implements JuegoBase {
         if (maxVidas < 1) {
             maxVidas = 3;
         }
-        // El jugador inicia con el máximo de vidas configurado
-        vidas = maxVidas;
-        
+
+        vidas = Math.min(vidas, maxVidas);
+
         reconstruirCorazones();
-        
+
         // CONSULTA QUE CRUZA TRES TABLAS PARA ENCONTRAR EL NIVEL CORRECTO
         // SE FILTRA POR NOMBRE DEL MINIJUEGO, NOMBRE DE CATEGORIA Y DIFICULTAD
         String sqlNivel = """
@@ -327,7 +314,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             case INTERMEDIO ->
                 new Color(239, 218, 154);
             case DIFICIL ->
-                new Color(218, 77, 88);
+                new Color(227, 157, 139);
         };
         fondo.setBackground(colorFondo);
     }
@@ -1029,22 +1016,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         return subio;
     }
 
-    // =========================================================================
-    // SISTEMA DE VIDAS
-    // =========================================================================
-    /**
-     * DESCUENTA UNA VIDA Y ACTUALIZA EL CORAZON CORRESPONDIENTE.
-     *
-     * EL ORDEN DE LOS CORAZONES ROTOS ES DE DERECHA A IZQUIERDA. COMO
-     * corazones[] SE LLENA DE IZQUIERDA A DERECHA (INDICE 0 = PRIMER CORAZON),
-     * Y vidas VA BAJANDO DESDE MAX_VIDAS HASTA 0, EL INDICE DEL CORAZON QUE SE
-     * ROMPE EN CADA PASO ES SIEMPRE EL NUEVO VALOR DE vidas (DESPUES DE RESTAR
-     * 1). ESTO FUNCIONA SIN IMPORTAR CUANTAS VIDAS TENGA EL JUEGO (MAX_VIDAS).
-     *
-     * CUANDO vidas LLEGA A 0, SE MUESTRA LA PANTALLA DE DERROTA CON UNA ESPERA
-     * DE 400ms PARA QUE EL JUGADOR VEA EL ULTIMO CORAZON ROMPERSE ANTES DE
-     * SALIR.
-     */
     private void perderVida() {
 
         vidas--;
@@ -1227,21 +1198,18 @@ public class FoxJump extends JFrame implements JuegoBase {
             iconoCorazonRoto = null;
         }
 
-        // ── VIDAS (CORAZONES) DINAMICAS SEGUN MAX_VIDAS, ACOMODADAS EN FILAS ────
-        // SI CAMBIAS MAX_VIDAS O CORAZONES_POR_FILA, AQUI SE RECALCULA SOLO
-        // LA CANTIDAD Y POSICION DE CADA CORAZON, SIN TOCAR NADA MAS DEL CODIGO.
+        // ── VIDAS (CORAZONES) DINAMICAS SEGUN MAX_VIDAS, EN UNA SOLA FILA ───────
+        // SI CAMBIA MAX_VIDAS, AQUI SE RECALCULA SOLO LA CANTIDAD DE CORAZONES,
+        // SIEMPRE EN LA MISMA LINEA (DE 1 A 10), SIN TOCAR NADA MAS DEL CODIGO.
         // EL TOPE REAL DE VIDAS LO IMPONE MAX_VIDAS EN TODA LA CLASE
         // (perderVida() NUNCA BAJA DE 0, Y agregarVidas() NUNCA SUBE DE MAX_VIDAS).
         corazones = new JLabel[maxVidas];
         int xInicialCorazon = 70;
         int yInicialCorazon = 20;
         int espaciadoX = 55;
-        int espaciadoY = 55;
         int tamanoCorazon = 50;
 
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon;
             if (iconoCorazonLleno != null) {
@@ -1252,15 +1220,14 @@ public class FoxJump extends JFrame implements JuegoBase {
                 corazon.setForeground(Color.RED);
             }
             corazon.setBounds(
-                    xInicialCorazon + (columna * espaciadoX),
-                    yInicialCorazon + (fila * espaciadoY),
+                    xInicialCorazon + (i * espaciadoX),
+                    yInicialCorazon,
                     tamanoCorazon, tamanoCorazon);
             corazones[i] = corazon;
             fondo.add(corazon);
         }
 
         // ── BOTON DE AYUDA ────────────────────────────────────────────────────
-        // SE BAJA UN POCO PARA NO CHOCAR CON LAS DOS FILAS DE CORAZONES
         btnAyuda = new JButton("¿Necesitas ayuda?");
         btnAyuda.setBounds(60, 140, 280, 55);
         btnAyuda.setFocusPainted(false);
@@ -1492,24 +1459,24 @@ public class FoxJump extends JFrame implements JuegoBase {
         int xInicialCorazon = 70;
         int yInicialCorazon = 20;
         int espaciadoX = 55;
-        int espaciadoY = 55;
         int tamanoCorazon = 50;
 
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
+
+            boolean lleno = i < vidas;
+            ImageIcon iconoAUsar = lleno ? iconoCorazonLleno : iconoCorazonRoto;
 
             JLabel corazon;
-            if (iconoCorazonLleno != null) {
-                corazon = new JLabel(iconoCorazonLleno);
+            if (iconoAUsar != null) {
+                corazon = new JLabel(iconoAUsar);
             } else {
                 corazon = new JLabel("♥");
                 corazon.setFont(fuente1.deriveFont(40f));
-                corazon.setForeground(Color.RED);
+                corazon.setForeground(lleno ? Color.RED : Color.GRAY);
             }
             corazon.setBounds(
-                    xInicialCorazon + (columna * espaciadoX),
-                    yInicialCorazon + (fila * espaciadoY),
+                    xInicialCorazon + (i * espaciadoX),
+                    yInicialCorazon,
                     tamanoCorazon, tamanoCorazon);
             corazones[i] = corazon;
             fondo.add(corazon);

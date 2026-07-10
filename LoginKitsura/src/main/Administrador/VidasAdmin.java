@@ -1,10 +1,10 @@
+// ==================== VIDAS ADMIN ====================
 package main.Administrador;
 
 import java.awt.*;
 import javax.swing.*;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
+import main.Menu.*;
+import main.Usuario.VidasDAO;
 
 public class VidasAdmin extends JFrame {
 
@@ -82,7 +82,7 @@ public class VidasAdmin extends JFrame {
         panelVidas.setBounds(100, 170, 950, 650);
         fondo.add(panelVidas);
 
-        JLabel lblVidasActuales = new JLabel("Cantidad de vidas actual por este nivel:");
+        JLabel lblVidasActuales = new JLabel("Cantidad de vidas actual por esta categoría:");
         lblVidasActuales.setFont(fuente2.deriveFont(26f));
         lblVidasActuales.setForeground(Color.WHITE);
         lblVidasActuales.setBounds(60, 50, 820, 35);
@@ -94,7 +94,7 @@ public class VidasAdmin extends JFrame {
         lblValorActual.setBounds(60, 95, 200, 40);
         panelVidas.add(lblValorActual);
 
-        JLabel lblInstruccion = new JLabel("Ingrese la cantidad de corazones para este nivel:");
+        JLabel lblInstruccion = new JLabel("Ingrese la cantidad de corazones para esta categoría:");
         lblInstruccion.setFont(fuente2.deriveFont(26f));
         lblInstruccion.setForeground(Color.WHITE);
         lblInstruccion.setBounds(60, 180, 820, 35);
@@ -193,13 +193,12 @@ public class VidasAdmin extends JFrame {
         lblCategoria.setText(
                 "Categoría: " + datos.getCategoria());
 
-        lblNivel.setText(
-                "Nivel: " + datos.getNivel());
+        // La modificación de vidas ahora aplica a TODA la categoría (las 3 dificultades a la vez)
+        lblNivel.setText("Aplica a: Fácil, Intermedio y Difícil");
 
-        int vidas = vidasDAO.obtenerVidas(
+        int vidas = vidasDAO.obtenerVidasCategoria(
                 datos.getMinijuego(),
-                datos.getCategoria(),
-                datos.getNivel());
+                datos.getCategoria());
 
         lblValorActual.setText(String.valueOf(vidas));
         // Llenar el JTextField
@@ -237,13 +236,11 @@ public class VidasAdmin extends JFrame {
             // Temporales
             System.out.println("Minijuego: " + datos.getMinijuego());
             System.out.println("Categoría: " + datos.getCategoria());
-            System.out.println("Nivel: " + datos.getNivel());
-            System.out.println("Nuevas vidas: " + nuevasVidas);
-            // Actualiza la base de datos
-            boolean actualizado = vidasDAO.actualizarVidas(
+            System.out.println("Nuevas vidas (aplica a Fácil, Intermedio y Difícil): " + nuevasVidas);
+            // Actualiza la base de datos para las 3 dificultades de la categoría
+            boolean actualizado = vidasDAO.actualizarVidasCategoria(
                     datos.getMinijuego(),
                     datos.getCategoria(),
-                    datos.getNivel(),
                     nuevasVidas);
 
             if (actualizado) {
@@ -274,7 +271,3 @@ public class VidasAdmin extends JFrame {
         }
     }
 }
-
-//    public static void main(String[] args) {
-//new VidasAdmin(datos);
-// }

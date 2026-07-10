@@ -1,8 +1,4 @@
-// ============== HIDDEN FOX CODIGO (VERSIÓN FINAL) ==============
-// IMPORTANTE: esta es la ÚNICA versión de esta clase que debe existir en el
-// proyecto. Reemplaza por completo a la versión anterior, que usaba métodos
-// static (resolverVidasIniciales, mapearIdCategoria, mapearDificultad) antes
-// de super(vidas). Esa versión anterior debe eliminarse del archivo/proyecto.
+// ==================== HIDDEN FOX CODIGO ==================== 
 package main.Usuario;
 
 import java.awt.*;
@@ -10,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.Random;
 import java.util.ArrayList;
-import main.Administrador.VidasDAO;
+import main.Administrador.*;
 
 public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
@@ -32,6 +28,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int preguntaActual = 0;
     // Las vidas por defecto son 3 para el jugador
     private int vidas;
+    // Indica si ya se fijaron las vidas iniciales de esta partida. Solo la
+    // primera vez que se llama a establecerVidasPorNivel() al iniciar la partida
+    private boolean vidasYaInicializadas = false;
     // Nivel actual y final de la categoria
     private int nivelActual;
     private int nivelFinal;
@@ -60,9 +59,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     //Este atributo indica si la partida ya terminó. Se utiliza para deshabilitar otros comportamientos cuando la partida finalice.
     private boolean partidaTerminada = false;
 
-    /*=====================================================================
-      ATRIBUTOS DE PERSISTENCIA
-    =====================================================================*/
     // Id del minijuego "Hidden Fox" según la tabla Minijuego (INSERT inicial: 1 = Hidden Fox)
     private static final int ID_MINIJUEGO = 1;
 
@@ -74,6 +70,18 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     // Snapshot de las vidas con las que arrancó la partida (para la columna vidas_iniciales_snapshot)
     private int vidasInicialesSnapshot;
+    
+    //se 
+    private PuntuacionesDAO puntuacionesDAO = new PuntuacionesDAO();
+    
+    //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
+   private int puntosDB;
+
+    private String categoriaResuelta = null;
+    private String dificultadResuelta = null;
+    
+    //El tiempo en el que se repsondió la pregunta
+     private int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
 
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
@@ -95,6 +103,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         } else {
             nivelFinal = 9;
         }
+        
+        //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
+        puntosDB = puntuacionesDAO.obtenerPuntuacion("Hidden Fox", categoriaResuelta, dificultadResuelta);
 
         //DEBUG
         System.out.println("Nivel actual: " + nivelActual);
@@ -102,7 +113,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         //DEBUG
         Partida(nivelActual);
     }
-
 
     public HiddenFox_Codigo(int nivel) {
         this(nivel, 3, 0, false, 0);
@@ -287,13 +297,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     private int calcularPuntosPorTiempo() {
 
-        int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
-
-        if (tiempoUsado > 2) {
+        if (tiempoRespuesta > 2) {
             double porcentajeRapidez
-                    = 1.0 - ((double) tiempoUsado / tiempoMaximoPregunta);
+                    = 1.0 - ((double) tiempoRespuesta / tiempoMaximoPregunta);
 
-            int puntos = (int) (100 * porcentajeRapidez);
+            //los puntos que estén en l abase de datos se multiplican por la rapiz en la que se respondió
+            int puntos = (int) (puntosDB * porcentajeRapidez);
 
             if (puntos < 10) {
                 puntos = 10;
@@ -302,7 +311,8 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             return puntos;
 
         } else {
-            return 100;
+            //devuelve el punteo completo
+            return puntosDB;
         }
 
     }
@@ -327,8 +337,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         boolean correcta
                 = (Boolean) boton.getClientProperty("correcta");
-
-        int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
 
         if (correcta) {
             int puntosGanados = calcularPuntosPorTiempo();
@@ -612,9 +620,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         // Se van guardando aquí la categoría y dificultad que el switch ya
         // resuelve para este nivel, para poder consultar VidasDAO al final
         // sin tener que volver a calcularlas en otro método aparte.
-        String categoriaResuelta = null;
-        String dificultadResuelta = null;
-
         switch (nivel) {
             case 1:
                 modificarColorFondo(facil);
@@ -697,11 +702,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         establecerVidasPorNivel(categoriaResuelta, dificultadResuelta);
     }
 
-    /*------------------ ESTABLECER VIDAS POR NIVEL ------------------
-      Consulta VidasDAO con la categoría y dificultad que ConfiguracionNivel
-      ya resolvió, y reconstruye los corazones según lo configurado en
-      VidasAdmin PARA ESE NIVEL/DIFICULTAD.
-    ------------------------------------------------------------------------*/
     private void establecerVidasPorNivel(String categoria, String dificultad) {
         if (categoria == null || dificultad == null) {
             return;
@@ -714,8 +714,19 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             vidasConfiguradas = 3;
         }
 
+        // El tope de corazones (estructura visual) se actualiza siempre, por
+        // si el administrador cambió el máximo configurado para la categoría.
         inicializarVidas(vidasConfiguradas);
-        this.vidas = vidasConfiguradas;
+
+        if (!vidasYaInicializadas) {
+            //Al empezar la partida, las vidas arrancan en el máximo.
+            this.vidas = vidasConfiguradas;
+            vidasYaInicializadas = true;
+        } else {
+            // En los siguientes niveles de la misma partida se conservan las
+            // vidas que el jugador ya tiene (o ya perdió). 
+            this.vidas = Math.min(this.vidas, vidasConfiguradas);
+        }
     }
 
     public void DerrotaVidas() {

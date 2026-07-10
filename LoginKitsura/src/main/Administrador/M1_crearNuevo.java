@@ -56,6 +56,9 @@ public class M1_crearNuevo extends JFrame {
     private static final String[] NOMBRES_DIFICULTAD = {"Fácil", "Intermedio", "Difícil"};
 
     // --- Rutas de las imágenes ya copiadas a la carpeta del proyecto ---
+    // IMPORTANTE: ahora estas rutas son ABSOLUTAS EN DISCO (no de classpath),
+    // porque las imágenes que sube el admin en tiempo de ejecución nunca
+    // pasan por un "build" que las incluya en el classpath del programa.
     private String rutaImagenColor;
     private String rutaImagenSombra;
 
@@ -64,9 +67,14 @@ public class M1_crearNuevo extends JFrame {
 
     private static final int ID_MINIJUEGO = 1; // Hidden Fox
 
-    // Carpeta base donde se copian los recursos multimedia del proyecto
-    // TODO: ajusta esta ruta a la ubicación real de tu carpeta de recursos
-    private static final String CARPETA_BASE_MULTIMEDIA = "resources/Multimedia/Minijuegos/Minijuego_1";
+    // Carpeta base FIJA en disco donde se guardan los recursos multimedia
+    // subidos por el admin. Se ubica junto al directorio de ejecución del
+    // programa, FUERA del classpath/Source Packages, para no depender de
+    // ningún Clean & Build. Ajusta esta ruta si prefieres otra ubicación
+    // (por ejemplo, una carpeta fija tipo "C:/KitsuraAssets").
+    private static final Path CARPETA_BASE_MULTIMEDIA = Paths.get(
+            System.getProperty("user.dir"),
+            "assets_admin", "Multimedia", "Minijuegos", "Minijuego_1");
 
     public M1_crearNuevo() {
         this(null);
@@ -292,8 +300,9 @@ public class M1_crearNuevo extends JFrame {
     // ------------------------------------------------------------------
     /**
      * Abre un JFileChooser, muestra la vista previa en el panel correspondiente
-     * y copia el archivo a la carpeta del proyecto siguiendo la convención de
-     * nombres usada en el script SQL (N{nivel}_C1_M1_S_/_C_ + nombre original).
+     * y copia el archivo a la carpeta FIJA en disco (fuera del classpath),
+     * siguiendo la misma convención de nombres usada en el script SQL
+     * (N{nivel}_C1_M1_S_/_C_ + nombre original).
      */
     private void cargarImagen(boolean esColor) {
         JFileChooser chooser = new JFileChooser();
@@ -308,16 +317,16 @@ public class M1_crearNuevo extends JFrame {
         File archivoOriginal = chooser.getSelectedFile();
 
         try {
-            String rutaRelativa = copiarImagenAlProyecto(archivoOriginal, esColor);
+            String rutaAbsoluta = copiarImagenAlProyecto(archivoOriginal, esColor);
             ImageIcon icono = new ImageIcon(archivoOriginal.getAbsolutePath());
             Image escalada = icono.getImage().getScaledInstance(420, 240, Image.SCALE_SMOOTH);
 
             if (esColor) {
                 previewColor.setIcon(new ImageIcon(escalada));
-                rutaImagenColor = rutaRelativa;
+                rutaImagenColor = rutaAbsoluta;
             } else {
                 previewSombra.setIcon(new ImageIcon(escalada));
-                rutaImagenSombra = rutaRelativa;
+                rutaImagenSombra = rutaAbsoluta;
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -328,11 +337,13 @@ public class M1_crearNuevo extends JFrame {
     }
 
     /**
-     * Copia la imagen seleccionada a:
+     * Copia la imagen seleccionada a una carpeta FIJA EN DISCO:
      * CARPETA_BASE_MULTIMEDIA/Categoria_{cat}_M1/Nivel_{niv}_C{cat}_M1/Imagen_N{niv}_C{cat}_M1/(Sombra|Color)_N{niv}_C{cat}_M1/
      * usando la categoría y dificultad elegidas en los combos, y devuelve la
-     * ruta relativa que se guardará en la BD (columna imagen_sombra /
-     * imagen_color).
+     * RUTA ABSOLUTA que se guardará en la BD (columna imagen_sombra /
+     * imagen_color). Esta ruta se lee luego con new File(ruta) / new
+     * ImageIcon(ruta), NO con getClass().getResource(), porque el archivo
+     * nunca pasa a formar parte del classpath compilado del proyecto.
      *
      * IMPORTANTE: selecciona la Categoría y Dificultad ANTES de cargar las
      * imágenes, ya que la ruta de guardado depende de esa selección.
@@ -345,20 +356,18 @@ public class M1_crearNuevo extends JFrame {
         String tipoCarpeta = esColor ? "Color_N" + nivelLocal + "_" + sufijo : "Sombra_N" + nivelLocal + "_" + sufijo;
         String prefijo = esColor ? "N" + nivelLocal + "_" + sufijo + "_C_" : "N" + nivelLocal + "_" + sufijo + "_S_";
 
-        Path carpetaDestino = Paths.get(
-                CARPETA_BASE_MULTIMEDIA,
-                "Categoria_" + idCategoria + "_M1",
-                "Nivel_" + nivelLocal + "_" + sufijo,
-                "Imagen_N" + nivelLocal + "_" + sufijo,
-                tipoCarpeta);
+        Path carpetaDestino = CARPETA_BASE_MULTIMEDIA
+                .resolve("Categoria_" + idCategoria + "_M1")
+                .resolve("Nivel_" + nivelLocal + "_" + sufijo)
+                .resolve("Imagen_N" + nivelLocal + "_" + sufijo)
+                .resolve(tipoCarpeta);
         Files.createDirectories(carpetaDestino);
 
         String nombreArchivo = prefijo + archivoOriginal.getName();
         Path destino = carpetaDestino.resolve(nombreArchivo);
         Files.copy(archivoOriginal.toPath(), destino, StandardCopyOption.REPLACE_EXISTING);
 
-        return "/Multimedia/Minijuegos/Minijuego_1/Categoria_" + idCategoria + "_M1/Nivel_" + nivelLocal + "_"
-                + sufijo + "/Imagen_N" + nivelLocal + "_" + sufijo + "/" + tipoCarpeta + "/" + nombreArchivo;
+        return destino.toAbsolutePath().toString();
     }
 
     private int getIdCategoriaSeleccionada() {
@@ -456,24 +465,39 @@ public class M1_crearNuevo extends JFrame {
     }
 
     /**
-     * Carga la imagen ya guardada como recurso del proyecto (Source Packages,
-     * ej. Multimedia.Minijuegos.Minijuego_1.Categoria_1_M1...) a partir de la
-     * ruta almacenada en la BD (columna imagen_color / imagen_sombra), para
-     * mostrarla como vista previa. Si el recurso no se encuentra, deja el
-     * espacio vacío en vez de fallar.
+     * Carga la imagen ya guardada a partir de la RUTA ABSOLUTA EN DISCO
+     * almacenada en la BD (columna imagen_color / imagen_sombra), para
+     * mostrarla como vista previa. Si el archivo no se encuentra en disco,
+     * deja el espacio vacío en vez de fallar.
+     *
+     * NOTA: si tienes preguntas antiguas guardadas con rutas de classpath
+     * (formato "/Multimedia/..."), este método también intenta resolverlas
+     * como recurso del proyecto para no romper la vista previa de esos
+     * registros previos.
      */
     private ImageIcon cargarPreviewDesdeRutaGuardada(String rutaAlmacenada) {
         if (rutaAlmacenada == null || rutaAlmacenada.isBlank()) {
             return null;
         }
-        java.net.URL recurso = getClass().getResource(rutaAlmacenada);
-        if (recurso == null) {
-            System.err.println("No se encontró la imagen como recurso del proyecto: " + rutaAlmacenada);
-            return null;
+
+        // Caso 1: ruta absoluta en disco (formato nuevo, imágenes subidas por el admin)
+        File archivo = new File(rutaAlmacenada);
+        if (archivo.exists()) {
+            ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+            Image escalada = icono.getImage().getScaledInstance(420, 240, Image.SCALE_SMOOTH);
+            return new ImageIcon(escalada);
         }
-        ImageIcon icono = new ImageIcon(recurso);
-        Image escalada = icono.getImage().getScaledInstance(420, 240, Image.SCALE_SMOOTH);
-        return new ImageIcon(escalada);
+
+        // Caso 2: ruta de classpath antigua (imágenes precompiladas en Source Packages)
+        java.net.URL recurso = getClass().getResource(rutaAlmacenada);
+        if (recurso != null) {
+            ImageIcon icono = new ImageIcon(recurso);
+            Image escalada = icono.getImage().getScaledInstance(420, 240, Image.SCALE_SMOOTH);
+            return new ImageIcon(escalada);
+        }
+
+        System.err.println("No se encontró la imagen ni en disco ni como recurso del proyecto: " + rutaAlmacenada);
+        return null;
     }
 
     // ------------------------------------------------------------------

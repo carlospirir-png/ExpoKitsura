@@ -24,11 +24,9 @@ public class MaulwurfRennt extends JFrame {
     private JButton btnAyuda;
 
     // ---------------- SISTEMA DE VIDAS DINÁMICO ----------------
-    // Cantidad máxima de vidas configurada por el administrador (VidasAdmin).
-    // Reemplaza los antiguos vida1, vida2, vida3 fijos, que limitaban el juego a 3.
+    // Cantidad máxima de vidas configurada por el administrador (VidasAdmin)
     private int maxVidas;
     private JLabel[] corazones;
-    private static final int CORAZONES_POR_FILA = 5;
 
     // Constante que define el número máximo de topos que soporta el tablero.
     private static final int MAX_TOPOS = 7;
@@ -41,8 +39,6 @@ public class MaulwurfRennt extends JFrame {
     private Point[] posicionOriginal = new Point[7];
 
     // Constructor de la clase: Inicializa fuentes, configura el Frame y prepara el escenario gráfico.
-    // "maxVidas" es la cantidad de corazones a dibujar, obtenida desde la base de
-    // datos (VidasDAO) por JuegoMaulwurfRennt antes de crear esta ventana.
     public MaulwurfRennt(int maxVidas) {
         this.maxVidas = (maxVidas < 1) ? 1 : maxVidas;
 
@@ -71,7 +67,6 @@ public class MaulwurfRennt extends JFrame {
         setContentPane(fondo);
 
         // Propiedades de la ventana de la aplicación.
-        // BUG CORREGIDO: tenía el título de otro minijuego (copy-paste de Hidden Fox).
         setTitle("Maulwurf Rennt");
         setSize(1880, 1080);
         setLocationRelativeTo(null); // Centra la ventana en pantalla.
@@ -96,8 +91,8 @@ public class MaulwurfRennt extends JFrame {
                             "/Multimedia/utiles/ElementosGraficos/imagenes/corazon.png"));
 
             Image corazonEscalado = corazonIcon.getImage().getScaledInstance(
-                    60,
-                    60,
+                    50,
+                    50,
                     Image.SCALE_SMOOTH);
 
             corazonNormal = new ImageIcon(corazonEscalado);
@@ -108,8 +103,8 @@ public class MaulwurfRennt extends JFrame {
                             "/Multimedia/utiles/ElementosGraficos/imagenes/corazon-roto.png"));
 
             Image corazonRotoEscalado = corazonRotoIcon.getImage().getScaledInstance(
-                    60,
-                    60,
+                    50,
+                    50,
                     Image.SCALE_SMOOTH);
 
             corazonRoto = new ImageIcon(corazonRotoEscalado);
@@ -120,18 +115,16 @@ public class MaulwurfRennt extends JFrame {
             corazonRoto = null;
         }
 
-        // Se generan dinámicamente tantos corazones como "maxVidas" indique,
-        // en vez de los 3 JLabels fijos (vida1, vida2, vida3) que había antes.
+        // Se generan dinámicamente tantos corazones como "maxVidas" indique
         corazones = new JLabel[maxVidas];
 
         int xInicial = 70;
         int yInicial = 25;
-        int espaciado = 65;
-        int tamano = 60;
+        int espaciado = 55;
+        int tamano = 50;
 
+        // Todos los corazones (de 1 a 10) en UNA sola línea, tamaño fijo
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon;
             if (corazonNormal != null) {
@@ -143,8 +136,8 @@ public class MaulwurfRennt extends JFrame {
             }
 
             corazon.setBounds(
-                    xInicial + (columna * espaciado),
-                    yInicial + (fila * espaciado),
+                    xInicial + (i * espaciado),
+                    yInicial,
                     tamano, tamano);
 
             corazones[i] = corazon;
@@ -179,7 +172,7 @@ public class MaulwurfRennt extends JFrame {
         tiempo.setBounds(1440, 120, 320, 60);
         fondo.add(tiempo);
 
-        // Tablero central del juego donde emergen los topos y carteles.
+        // Tablero central del juego donde emergen los topos y carteles
         tablero = new JLabel();
         try {
             ImageIcon tableroIcon = new ImageIcon(
@@ -191,14 +184,14 @@ public class MaulwurfRennt extends JFrame {
 
         } catch (Exception e) {
             tablero.setOpaque(true);
-            tablero.setBackground(new Color(180, 120, 60)); // Respaldo color café si falta la imagen.
+            tablero.setBackground(new Color(180, 120, 60)); // Respaldo color café si falta la imagen
         }
 
         tablero.setLayout(null);
         tablero.setBounds(420, 230, 1050, 500);
         fondo.add(tablero);
 
-        // Inicialización de los topos dentro del tablero.
+        // Inicialización de los topos dentro del tablero
         crearTopos();
 
         //---------------- PROGRESO ----------------
@@ -219,7 +212,7 @@ public class MaulwurfRennt extends JFrame {
 
         fondo.add(lblPuntos);
 
-        // Etiquetas informativas (Nivel, Dificultad, Categoría).
+        // Etiquetas informativas (Nivel, Dificultad, Categoría)
         nivel = new JLabel("Nivel: ***");
         nivel.setFont(fuente2.deriveFont(25f));
         nivel.setForeground(Color.BLACK);
@@ -227,7 +220,7 @@ public class MaulwurfRennt extends JFrame {
         fondo.add(nivel);
 
         dificultad = new JLabel("Dificultad: ***");
-        dificultad.setFont(fuente2.deriveFont(25f));
+        dificultad.setFont(fuente2.deriveFont(23f));
         dificultad.setForeground(Color.BLACK);
         dificultad.setBounds(80, 900, 250, 40);
         fondo.add(dificultad);
@@ -238,7 +231,7 @@ public class MaulwurfRennt extends JFrame {
         categoria.setBounds(80, 950, 500, 40);
         fondo.add(categoria);
 
-        // Ilustración de la mascota guía.
+        // Ilustración de la mascota guía
         mascota = new JLabel();
         try {
             mascotaIcon = new ImageIcon(
@@ -266,7 +259,7 @@ public class MaulwurfRennt extends JFrame {
 
     }
 
-    // Modifica el puntero del mouse para renderizar la imagen de un mazo o martillo.
+    // Modifica el puntero del mouse para renderizar la imagen de un mazo o martillo
     private void cambiarCursorMazo() {
         try {
             Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -277,7 +270,7 @@ public class MaulwurfRennt extends JFrame {
 
             mazo = mazo.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
-            // Define la imagen, el punto crítico de colisión (5,5) y el nombre del cursor.
+            // Define la imagen, el punto crítico de colisión (5,5) y el nombre del cursor
             Cursor cursor = toolkit.createCustomCursor(
                     mazo,
                     new Point(5, 5),
@@ -298,10 +291,10 @@ public class MaulwurfRennt extends JFrame {
             {210, 17},
             {440, 22},
             {675, 22},
-            {100, 195},
+            {100, 200},
             {330, 200},
-            {550, 200},
-            {790, 200}
+            {570, 195},
+            {810, 200}
         };
 
         // Rutas de los recursos de imagen para estados normales y heridos.
@@ -371,14 +364,14 @@ public class MaulwurfRennt extends JFrame {
             // Cartel de respuestas
             carteles[i] = new JLabel("", SwingConstants.CENTER);
             carteles[i].setOpaque(true);
-            carteles[i].setBackground(new Color(150, 150, 150));
-            carteles[i].setFont(fuente2.deriveFont(24f));
+            carteles[i].setBackground(new Color(118, 169, 170));
+            carteles[i].setFont(fuente2.deriveFont(22f));
 
             carteles[i].setBounds(
-                    posiciones[i][0] + 15,
+                    posiciones[i][0] + 5,
                     posiciones[i][1] + 160,
-                    220,
-                    90);
+                    210,
+                    80);
 
             tablero.add(carteles[i]);
             tablero.add(topos[i]);
@@ -479,32 +472,32 @@ public class MaulwurfRennt extends JFrame {
 
     // Reubica aleatoriamente las coordenadas de los topos activos para desordenar el tablero.
     public void mezclarTopos(int cantidad) {
-        Point[] posiciones = {
-            new Point(180, 0),
-            new Point(430, 0),
-            new Point(680, 0),
-            new Point(60, 180),
-            new Point(310, 180),
-            new Point(560, 180),
-            new Point(800, 180)
-        };
-
-        java.util.ArrayList<Point> lista = new java.util.ArrayList<>();
-        for (Point p : posiciones) {
-            lista.add(p);
-        }
-
-        // Desordena aleatoriamente la lista de puntos.
-        Collections.shuffle(lista);
-
-        // Aplica las nuevas posiciones a los componentes visibles.
-        for (int i = 0; i < cantidad; i++) {
-            Point p = lista.get(i);
-            topos[i].setLocation(p);
-            carteles[i].setLocation(
-                    p.x + 15,
-                    p.y + 160);
-        }
+//        Point[] posiciones = {
+//            new Point(180, 0),
+//            new Point(430, 0),
+//            new Point(680, 0),
+//            new Point(60, 180),
+//            new Point(310, 180),
+//            new Point(560, 180),
+//            new Point(800, 180)
+//        };
+//
+//        java.util.ArrayList<Point> lista = new java.util.ArrayList<>();
+//        for (Point p : posicionOriginal) {
+//            lista.add(p);
+//        }
+//
+//        // Desordena aleatoriamente la lista de puntos.
+//        Collections.shuffle(lista);
+//
+//        // Aplica las nuevas posiciones a los componentes visibles.
+//        for (int i = 0; i < cantidad; i++) {
+//            Point p = lista.get(i);
+//            topos[i].setLocation(p);
+//            carteles[i].setLocation(
+//                    p.x + 15,
+//                    p.y + 160);
+//        }
     }
 
     public void actualizarProgreso(int realizadas, int total) {
@@ -593,11 +586,6 @@ public class MaulwurfRennt extends JFrame {
         return maxVidas;
     }
 
-    // FIX: método nuevo. maxVidas antes solo se fijaba UNA vez, en el
-    // constructor, siempre con la dificultad "Fácil". Al avanzar de nivel
-    // (Intermedio, Difícil), nunca se volvía a consultar VidasDAO, así que
-    // los corazones nunca reflejaban lo configurado para esas dificultades.
-    // Este método reconstruye el arreglo de corazones con el nuevo tope real.
     public void reconstruirVidas(int nuevoMaxVidas) {
         if (nuevoMaxVidas < 1) {
             nuevoMaxVidas = 1;
@@ -615,12 +603,11 @@ public class MaulwurfRennt extends JFrame {
 
         int xInicial = 70;
         int yInicial = 25;
-        int espaciado = 65;
-        int tamano = 60;
+        int espaciado = 55;
+        int tamano = 50;
 
+        // Todos los corazones (de 1 a 10) en UNA sola línea, tamaño fijo.
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon;
             if (corazonNormal != null) {
@@ -632,8 +619,8 @@ public class MaulwurfRennt extends JFrame {
             }
 
             corazon.setBounds(
-                    xInicial + (columna * espaciado),
-                    yInicial + (fila * espaciado),
+                    xInicial + (i * espaciado),
+                    yInicial,
                     tamano, tamano);
 
             corazones[i] = corazon;
@@ -681,4 +668,5 @@ public class MaulwurfRennt extends JFrame {
     public void continuarDespuesDeDificultad() {
         setVisible(true);
     }
+
 }

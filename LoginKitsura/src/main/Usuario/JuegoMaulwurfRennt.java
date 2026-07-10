@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
-import main.Administrador.VidasDAO;
 
 // Clase controladora que gestiona la lógica del minijuego "MaulwurfRennt       ".
 // Conecta la interfaz gráfica, el estado de la sesión y las consultas a la base de datos.
