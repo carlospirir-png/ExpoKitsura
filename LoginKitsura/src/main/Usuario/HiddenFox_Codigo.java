@@ -47,14 +47,17 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int tiempoMaximoPregunta;
     private PantallaDificultad pantallaDificultad;
 
+    //se crea un objeto de puntuaciones DAO
+    private PuntuacionesDAO puntuacionesDAO = new PuntuacionesDAO();
+
+    //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
+    private int puntosDB;
+
     //Esta variable defina la cantidad de respuestas correctas que se necesitan para pasar a la siguiente dificultad.
     private static final int CORRECTAS = 5;
 
     //Esta variable almacena las respuestas correctas totales que lleva el jugador.
     private int respuestas_Correctas = 0;
-
-    //Puntaje máximo posible de la categoria -> X aciertos por nivel, 3 niveles, da como resultado: (x*3) cuyo puntaje máximo es de 100 (3x*100
-    private final int puntajeMaximo = CORRECTAS * 3 * 100;
 
     //Este atributo indica si la partida ya terminó. Se utiliza para deshabilitar otros comportamientos cuando la partida finalice.
     private boolean partidaTerminada = false;
@@ -70,18 +73,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     // Snapshot de las vidas con las que arrancó la partida (para la columna vidas_iniciales_snapshot)
     private int vidasInicialesSnapshot;
-    
-    //se 
-    private PuntuacionesDAO puntuacionesDAO = new PuntuacionesDAO();
-    
-    //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
-   private int puntosDB;
 
     private String categoriaResuelta = null;
     private String dificultadResuelta = null;
-    
-    //El tiempo en el que se repsondió la pregunta
-     private int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
 
     //---------------- CONSTRUCTOR ----------------
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
@@ -103,9 +97,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         } else {
             nivelFinal = 9;
         }
-        
-        //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
-        puntosDB = puntuacionesDAO.obtenerPuntuacion("Hidden Fox", categoriaResuelta, dificultadResuelta);
 
         //DEBUG
         System.out.println("Nivel actual: " + nivelActual);
@@ -153,7 +144,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
                 guardarFinDePartida("completada");
 
-                if (vidas == getMaxVidas() && puntos == puntajeMaximo && !usoPista) {
+                if (vidas == getMaxVidas() && puntos == getPuntajeMaximo() && !usoPista) {
 
                     VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
                     }, this);
@@ -179,6 +170,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         preguntaActual = 0;
         preguntasPartida = dao.generarPartida(id_nivel);
         ConfiguracionNivel(id_nivel);
+
+        //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
+        puntosDB = puntuacionesDAO.obtenerPuntuacion("Hidden Fox", categoriaResuelta, dificultadResuelta);
 
         if (idPartida == -1) {
             vidasInicialesSnapshot = vidas;
@@ -284,6 +278,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 dao.registrarDetalle(idPartida, id_pregunta, 0, tiempoMaximoPregunta, false);
             }
 
+            System.out.println("Tiempo total: " + tiempoTotalJugado);
             guardarFinDePartida("abandonada");
 
             dispose();
@@ -296,6 +291,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     }
 
     private int calcularPuntosPorTiempo() {
+
+        //El tiempo en el que se repsondió la pregunta
+        int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
 
         if (tiempoRespuesta > 2) {
             double porcentajeRapidez
@@ -334,6 +332,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         }
 
         System.out.println("Botón presionado");
+
+        //El tiempo en el que se repsondió la pregunta
+        int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
 
         boolean correcta
                 = (Boolean) boton.getClientProperty("correcta");
@@ -470,6 +471,14 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
       derrota por tiempo o por vidas) para no repetir la lógica tres veces.*/
     private void guardarFinDePartida(String estado) {
 
+        //DEBUG
+        System.out.println(
+                "Guardando -> puntos: " + puntos
+                + " tiempo: " + tiempoTotalJugado
+                + " estado: " + estado
+        );
+        //DEBUG
+
         if (idPartida == -1) {
             System.out.println("ADVERTENCIA: no hay idPartida válido, no se guardó el resultado final.");
             return;
@@ -518,6 +527,11 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     public void mostrarResultadoConFade() {
         ResultadoFinal resultado = new ResultadoFinal(this, puntos, tiempoTotalJugado);
         resultado.mostrar();
+    }
+
+    //Puntaje máximo posible de la categoria -> X aciertos por nivel, 3 niveles, da como resultado: (x*3) cuyo puntaje máximo es de y (según lo obtenido de la base de datos) (3x*y)
+    private int getPuntajeMaximo() {
+        return CORRECTAS * 3 * puntosDB;
     }
 
     //---------------- TRANSICIÓN ----------
@@ -739,6 +753,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 }
                 partidaTerminada = true;
 
+                System.out.println("Tiempo total: " + tiempoTotalJugado);
                 guardarFinDePartida("abandonada");
 
                 JOptionPane.showMessageDialog(this, "Has perdido.");
