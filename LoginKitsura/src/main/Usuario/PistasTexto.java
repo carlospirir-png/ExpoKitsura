@@ -57,7 +57,7 @@ public class PistasTexto extends JFrame {
         lblPista.setFont(fuente1.deriveFont(18f)); 
         lblPista.setForeground(Color.BLACK); 
         
-        lblPista.setBounds(12, 20, 280, 140);
+        lblPista.setBounds(12, 20, 315, 140);
         recuadroTexto.add(lblPista);
 
         //---------------- BOTÓN SALIR ----------------
