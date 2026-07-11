@@ -2,7 +2,6 @@
 package main.Usuario;
 
 import java.awt.*;
-import java.util.*;
 import javax.swing.Timer;
 import javax.swing.*;
 

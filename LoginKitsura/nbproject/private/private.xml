@@ -3,28 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Administrador/M2_crearNuevo.java</file>
-            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Administrador/AdminStages.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
             <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
-            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Administrador/PedirMCN.java</file>
             <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Main.java</file>
-            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Administrador/M3_crearNuevo.java</file>
-            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Menu/FondoPanelSemi.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
             <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
-=======
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaEstadisticas.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/EstadisticaDAO.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Main.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuPrincipal.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/Partida_DAO.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFoxDAO.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/VidasDAO.java</file>
->>>>>>> 92aefd9a84cc238a11af86d5e01d9615c9cf0271
         </group>
     </open-files>
 </project-private>

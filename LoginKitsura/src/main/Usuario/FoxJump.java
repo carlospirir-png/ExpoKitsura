@@ -78,6 +78,16 @@ public class FoxJump extends JFrame implements JuegoBase {
     // CONSULTAS SQL DEL JUEGO
     private Connection con;
 
+    // ── PERSISTENCIA DE LA PARTIDA (NUEVO) ────────────────────────────────
+    // Id del minijuego "Fox Jump!" según la tabla Minijuego (INSERT inicial: 2 = Fox Jump!)
+    private static final int ID_MINIJUEGO = 2;
+
+    // Usuario logueado, obtenido de la sesión guardada por IniciarSesion
+    private int idUsuario;
+
+    // Id de la partida en curso (fila de la tabla Partida). -1 mientras no se ha creado.
+    private int idPartida = -1;
+
     // ── SISTEMA DE DIFICULTAD
     // REGISTROS DISTINTOS EN Configuracion_nivel
     private enum Dificultad {
@@ -206,6 +216,17 @@ public class FoxJump extends JFrame implements JuegoBase {
         con = new Conexion().getConnection();
 
         if (con != null) {
+
+            // NUEVO: se obtiene el usuario logueado (guardado por IniciarSesion
+            // en la clase Sesion) y se crea el registro de la partida en la
+            // base de datos, una sola vez al inicio de la partida.
+            idUsuario = Sesion.getIdUsuarioActual();
+            idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
+
+            if (idPartida == -1) {
+                System.out.println("ADVERTENCIA: no se pudo crear el registro de la partida de Fox Jump! en la base de datos.");
+            }
+
             resolverIdNivel();
             cargarPregunta();
         } else {
@@ -516,6 +537,10 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
         finJuegoActivo = true;
 
+        // NUEVO: se cierra la partida como "completada" en la base de datos
+        // y se actualiza la estadística acumulada del usuario.
+        guardarFinDePartida("completada");
+
         detenerCountdown();
         bloquearNenufares();
 
@@ -621,6 +646,13 @@ public class FoxJump extends JFrame implements JuegoBase {
         pistaMostradaEnPreguntaActual = false;
         btnAyuda.setEnabled(true);
         btnAyuda.setText("¿Necesitas ayuda?");
+
+        // NUEVO: al jugar de nuevo es una partida distinta de la anterior,
+        // así que se crea un nuevo registro en la tabla Partida.
+        idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
+        if (idPartida == -1) {
+            System.out.println("ADVERTENCIA: no se pudo crear el registro de la nueva partida de Fox Jump! en la base de datos.");
+        }
 
         // RESOLVER EL NIVEL INICIAL Y CARGAR LA PRIMERA PREGUNTA
         resolverIdNivel();
@@ -952,7 +984,13 @@ public class FoxJump extends JFrame implements JuegoBase {
             tiempoUsado = tiempoMaximoPregunta;
         }
 
-        puntajeTotal += calcularPuntosPorTiempo(tiempoUsado, tiempoMaximoPregunta);
+        int puntosGanados = calcularPuntosPorTiempo(tiempoUsado, tiempoMaximoPregunta);
+        puntajeTotal += puntosGanados;
+
+        // NUEVO: se guarda el detalle de esta pregunta como acierto
+        if (idPartida != -1) {
+            registrarDetalle(idPartida, idPreguntaActual, puntosGanados, tiempoUsado, true);
+        }
 
         // INTENTAR SUBIR DE DIFICULTAD (SI LLEGO A 5 CORRECTAS)
         // SI SUBIO, LA SIGUIENTE PREGUNTA SE CARGA DESDE continuarDespuesDeDificultad()
@@ -973,6 +1011,17 @@ public class FoxJump extends JFrame implements JuegoBase {
      * DE ERROR Y LLAMA A perderVida().
      */
     private void procesarRespuestaIncorrecta() {
+
+        // NUEVO: se guarda el detalle de esta pregunta como error, con el
+        // tiempo que llevaba transcurrido cuando el jugador respondió.
+        int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
+        if (tiempoUsado < 0) {
+            tiempoUsado = tiempoMaximoPregunta;
+        }
+        if (idPartida != -1) {
+            registrarDetalle(idPartida, idPreguntaActual, 0, tiempoUsado, false);
+        }
+
         JOptionPane.showMessageDialog(this, "¡Incorrecto!");
         perderVida();
     }
@@ -1164,6 +1213,133 @@ public class FoxJump extends JFrame implements JuegoBase {
             fuente1 = new Font("Arial", Font.BOLD, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
+    }
+
+    // =========================================================================
+    // PERSISTENCIA DE LA PARTIDA (NUEVO)
+    // =========================================================================
+    /*Estos métodos guardan el progreso del jugador en las tablas Partida,
+      Detalle_partida y Estadistica. Se mantienen dentro de FoxJump (en vez
+      de un DAO aparte) porque esta clase ya maneja todas sus consultas SQL
+      directamente con el campo "con", sin separación de capas. Si en algún
+      momento se extraen a una clase compartida (por ejemplo para reutilizar
+      con Maulwurf Rennt), la firma de estos métodos puede copiarse tal cual
+      a un DAO independiente.*/
+
+    //------------------------ C R E A R   P A R T I D A
+    private int crearPartida(int idUsuario, int idMinijuego, int vidasInicialesSnapshot) {
+
+        String sql
+                = "INSERT INTO Partida (id_usuario, id_minijuego, vidas_iniciales_snapshot) "
+                + "VALUES (?, ?, ?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, idUsuario);
+            ps.setInt(2, idMinijuego);
+            ps.setInt(3, vidasInicialesSnapshot);
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+
+        return -1;
+    }
+
+    //------------------------ R E G I S T R A R   D E T A L L E
+    private void registrarDetalle(int idPartida, int idPregunta, int puntosObtenidos,
+            int tiempoRespuesta, boolean respondioCorrectamente) {
+
+        String sql
+                = "INSERT INTO Detalle_partida "
+                + "(id_partida, id_pregunta, puntos_obtenidos, tiempo_respuesta, respondio_correctamente) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idPartida);
+            ps.setInt(2, idPregunta);
+            ps.setInt(3, puntosObtenidos);
+            ps.setInt(4, tiempoRespuesta);
+            ps.setBoolean(5, respondioCorrectamente);
+
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+    }
+
+    //------------------------ F I N A L I Z A R   P A R T I D A
+    // estado esperado: "completada" | "abandonada"
+    private void finalizarPartida(int idPartida, int puntuacion, int tiempoJugado, String estado) {
+
+        String sql
+                = "UPDATE Partida "
+                + "SET puntuacion = ?, tiempo_jugado = ?, estado = ? "
+                + "WHERE id_partida = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, puntuacion);
+            ps.setInt(2, tiempoJugado);
+            ps.setString(3, estado);
+            ps.setInt(4, idPartida);
+
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+    }
+
+    //------------------------ A C T U A L I Z A R   E S T A D Í S T I C A
+    private void actualizarEstadistica(int idUsuario, int idMinijuego, int puntuacion, int tiempoJugado) {
+
+        String sql
+                = "INSERT INTO Estadistica "
+                + "(id_usuario, id_minijuego, mejor_puntuacion, puntuacion_total, partidas_jugadas, tiempo_total) "
+                + "VALUES (?, ?, ?, ?, 1, ?) "
+                + "ON DUPLICATE KEY UPDATE "
+                + "mejor_puntuacion = GREATEST(mejor_puntuacion, VALUES(mejor_puntuacion)), "
+                + "puntuacion_total = puntuacion_total + VALUES(puntuacion_total), "
+                + "partidas_jugadas = partidas_jugadas + 1, "
+                + "tiempo_total = tiempo_total + VALUES(tiempo_total)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idUsuario);
+            ps.setInt(2, idMinijuego);
+            ps.setInt(3, puntuacion);
+            ps.setInt(4, puntuacion);
+            ps.setInt(5, tiempoJugado);
+
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+    }
+
+    //------------------------ G U A R D A R   F I N   D E   P A R T I D A
+    // Centraliza el cierre de la partida (victoria, derrota por vidas o por
+    // tiempo) para no repetir la lógica en cada punto de salida del juego.
+    private void guardarFinDePartida(String estado) {
+
+        if (idPartida == -1) {
+            System.out.println("ADVERTENCIA: no hay idPartida válido, no se guardó el resultado final de Fox Jump!.");
+            return;
+        }
+
+        finalizarPartida(idPartida, puntajeTotal, tiempoTotalJugado, estado);
+        actualizarEstadistica(idUsuario, ID_MINIJUEGO, puntajeTotal, tiempoTotalJugado);
     }
 
     // =========================================================================
@@ -1578,6 +1754,11 @@ public class FoxJump extends JFrame implements JuegoBase {
      * ROMPERSE.
      */
     private void mostrarHaPerdido() {
+
+        // NUEVO: se cierra la partida como "abandonada" en la base de datos
+        // y se actualiza la estadística acumulada del usuario.
+        guardarFinDePartida("abandonada");
+
         fadeTo(() -> {
             new SeAcaboVidas(this, e -> {
             }).setVisible(true);
@@ -1591,6 +1772,14 @@ public class FoxJump extends JFrame implements JuegoBase {
      */
     private void mostrarTiempoAgotado() {
         bloquearNenufares();
+
+        // NUEVO: se registra la pregunta actual como no respondida (tiempo
+        // agotado, sin puntos) y se cierra la partida como "abandonada".
+        if (idPartida != -1 && idPreguntaActual != 0) {
+            registrarDetalle(idPartida, idPreguntaActual, 0, tiempoMaximoPregunta, false);
+        }
+        guardarFinDePartida("abandonada");
+
         fadeTo(() -> {
             new SeAcaboTiempo(this, e -> {
             }).setVisible(true);
