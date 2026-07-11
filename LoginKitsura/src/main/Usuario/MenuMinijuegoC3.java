@@ -1,8 +1,15 @@
 package main.Usuario;
 
+//import javax.swing.*;
+//import java.awt.*;
+//import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+//import main.Menu.FondoPanel;
+//import main.Menu.FondoPanelSemi;
+//import main.Menu.DecoracionBotones;
 import javax.swing.*;
 import java.awt.*;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
@@ -12,6 +19,9 @@ public class MenuMinijuegoC3 extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
+    private TutorialMaulwurfRennt tutorial;
+    private boolean tutorialAbierto = false;
+    private JButton btnComoJugar;
 
     public MenuMinijuegoC3() {
 
@@ -44,24 +54,33 @@ public class MenuMinijuegoC3 extends JFrame {
     private void crearComponentes() {
 
         //---------------- BOTÓN ¿CÓMO JUGAR? ----------------
-        JButton btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
+        btnComoJugar = new DecoracionBotones("¿CÓMO JUGAR?",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnComoJugar.setFont(fuente2.deriveFont(25f));
         btnComoJugar.setBounds(100, 100, 280, 65);
         btnComoJugar.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this,
-                    """
-                    MaulwurfRennt
+  
+                   if (tutorialAbierto) {
+                return;
+            }
 
-                    • Selecciona la categoría que deseas jugar.
-                    • Lee la pregunta.
-                    • Haz Click al topo.
-                    • Responde correctamente para avanzar.
-                    • Despué0s de 5 respuestas correctas subirás de dificultad.
-                    • Si pierdes las 3 vidas termina la partida.
-                    """);
+            tutorialAbierto = true;
+            btnComoJugar.setVisible(false); // Oculta el botón
+
+            tutorial = new TutorialMaulwurfRennt();
+
+            tutorial.addWindowListener(new WindowAdapter() {
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    tutorialAbierto = false;
+                    tutorial = null;
+                    btnComoJugar.setVisible(true); // Lo vuelve a mostrar
+                }
+
+            });
         });
         fondo.add(btnComoJugar);
 

@@ -92,7 +92,7 @@ public class RecuperarContrasena extends JFrame {
         JOptionPane.showMessageDialog(
                 this,
                 "Su código de recuperación es:\n\n" + codigoRecuperacion);
-        new VerificarCodigo();
+        new VerificarCodigo(correo);// <-- se le pasa el correo
         dispose();
         });
 

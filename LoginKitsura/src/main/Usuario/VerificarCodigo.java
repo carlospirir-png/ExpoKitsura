@@ -10,7 +10,13 @@ public class VerificarCodigo extends JFrame {
     private Font fuente1;
     private Font fuente2;
     
-    public VerificarCodigo (){
+    //-------------- STRING
+    private String correo; // correo recibido desde RecuperarContrasena
+    
+    public VerificarCodigo (String correo){
+        
+        this.correo = correo;
+        
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -120,7 +126,7 @@ public class VerificarCodigo extends JFrame {
                 // Aquí abrirá la ventana para cambiar contraseña
                 // new NuevaContrasena();
 
-                new NuevaContrasena();
+                new NuevaContrasena(correo);
                 dispose();
 
             }else{
@@ -143,6 +149,6 @@ public class VerificarCodigo extends JFrame {
     }
     
     public static void main(String[] args) {
-        new VerificarCodigo();
+        new VerificarCodigo("123@gmail.com");
     }
 }
