@@ -33,6 +33,7 @@ public class M1_crearNuevo extends JFrame {
     private DecoracionBotones btnCargarSombra;
     private DecoracionBotones btnSalir;
     private DecoracionBotones btnSiguiente;
+    private DecoracionBotones btnEliminar;
 
     // Paneles donde se muestra la vista previa de la imagen cargada
     private JPanel areaColor;
@@ -67,6 +68,13 @@ public class M1_crearNuevo extends JFrame {
 
     private static final int ID_MINIJUEGO = 1; // Hidden Fox
 
+    // Selección hecha previamente en PedirMCN (minijuego, categoría, nivel).
+    // Se guarda ÚNICAMENTE para poder propagarla de vuelta si el admin
+    // presiona "VOLVER" (así AdminStages no pierde el contexto). Puede ser
+    // null si esta ventana se abrió sin pasar por Pedir M,C,N (por ejemplo,
+    // usando el constructor de compatibilidad M1_crearNuevo()).
+    private final DatosConfiguracion datos;
+
     // Carpeta base FIJA en disco donde se guardan los recursos multimedia
     // subidos por el admin. Se ubica junto al directorio de ejecución del
     // programa, FUERA del classpath/Source Packages, para no depender de
@@ -76,16 +84,38 @@ public class M1_crearNuevo extends JFrame {
             System.getProperty("user.dir"),
             "assets_admin", "Multimedia", "Minijuegos", "Minijuego_1");
 
+    /**
+     * Constructor de compatibilidad (sin contexto de Pedir M,C,N). Si algo
+     * más en el proyecto todavía llama a "new M1_crearNuevo()" a secas, esto
+     * evita que deje de compilar, pero el botón VOLVER en ese caso reabrirá
+     * AdminStages sin selección previa. Se recomienda usar siempre el
+     * constructor con (DatosConfiguracion, Integer).
+     */
     public M1_crearNuevo() {
-        this(null);
+        this(null, null);
     }
 
     /**
-     * Abre la pantalla en modo EDICIÓN, cargando desde la BD la categoría,
-     * dificultad, imágenes y respuestas de la pregunta indicada. Pasa null (o
-     * usa el constructor vacío) para el modo "crear nuevo".
+     * Constructor de compatibilidad para abrir directamente en modo edición
+     * sin contexto de Pedir M,C,N.
      */
     public M1_crearNuevo(Integer idPreguntaExistente) {
+        this(null, idPreguntaExistente);
+    }
+
+    /**
+     * Abre la pantalla, opcionalmente en modo EDICIÓN, cargando desde la BD
+     * la categoría, dificultad, imágenes y respuestas de la pregunta
+     * indicada. Pasa null en idPreguntaExistente para el modo "crear nuevo".
+     *
+     * @param datos selección hecha en Pedir M,C,N (puede ser null si no
+     * aplica). Se guarda solo para poder propagarla de vuelta a AdminStages
+     * cuando el admin presione "VOLVER", sin perder el contexto ya elegido.
+     * @param idPreguntaExistente id de la pregunta a editar, o null para
+     * crear una pregunta nueva.
+     */
+    public M1_crearNuevo(DatosConfiguracion datos, Integer idPreguntaExistente) {
+        this.datos = datos;
         try {
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -132,6 +162,7 @@ public class M1_crearNuevo extends JFrame {
         try {
             cargarPreguntaExistente(idPregunta);
             setTitle("M1-Editar pregunta #" + idPregunta);
+            actualizarEstadoBotonEliminar();
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this,
@@ -168,6 +199,20 @@ public class M1_crearNuevo extends JFrame {
         btnSiguiente.setBounds(150, 810, 240, 40);
         btnSiguiente.addActionListener(e -> guardarNivelYAvanzar());
         fondo.add(btnSiguiente);
+
+        // -- BOTON ELIMINAR --
+        // Solo tiene efecto real cuando hay una pregunta cargada en modo
+        // edición (idPreguntaEnEdicion != null). Se deja siempre visible,
+        // pero si se presiona sin una pregunta cargada, se avisa y no hace
+        // nada (ver actualizarEstadoBotonEliminar/eliminarPreguntaActual).
+        btnEliminar = new DecoracionBotones("ELIMINAR",
+                DecoracionBotones.ROJO, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.ROJO); //MOUSE DENTRO
+        btnEliminar.setFont(fuente2.deriveFont(15f));
+        btnEliminar.setBounds(410, 810, 240, 40);
+        btnEliminar.addActionListener(e -> eliminarPreguntaActual());
+        fondo.add(btnEliminar);
+        actualizarEstadoBotonEliminar();
 
         // --- EL PANEL SEMI-TRANSPARENTE ---
         FondoPanelSemi panelFormulario = new FondoPanelSemi(new Color(0, 0, 0, 120));
@@ -285,14 +330,31 @@ public class M1_crearNuevo extends JFrame {
         panelFormulario.add(txtIncorrecta3);
 
         // --- BOTÓN VOLVER---
+        // IMPORTANTE: se propaga "datos" para que AdminStages no pierda la
+        // selección de Minijuego/Categoría/Nivel hecha en Pedir M,C,N.
         btnSalir = new DecoracionBotones("VOLVER",
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO
 
         btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(1695, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e -> {
+            new AdminStages(datos);
+            dispose();
+        });
         fondo.add(btnSalir);
+    }
+
+    /**
+     * Habilita/deshabilita visualmente el botón ELIMINAR según si hay o no
+     * una pregunta cargada en modo edición. En modo "crear nuevo" (sin
+     * idPreguntaEnEdicion) no tiene sentido eliminar nada todavía.
+     */
+    private void actualizarEstadoBotonEliminar() {
+        if (btnEliminar == null) {
+            return;
+        }
+        btnEliminar.setEnabled(idPreguntaEnEdicion != null);
     }
 
     // ------------------------------------------------------------------
@@ -632,6 +694,77 @@ public class M1_crearNuevo extends JFrame {
         ps.setString(2, texto);
         ps.setBoolean(3, esCorrecta);
         ps.executeUpdate();
+    }
+
+    // ------------------------------------------------------------------
+    //  ELIMINAR PREGUNTA
+    // ------------------------------------------------------------------
+    /**
+     * Elimina la pregunta actualmente cargada en modo edición (junto con sus
+     * opciones de respuesta y ayudas asociadas, gracias al ON DELETE CASCADE
+     * definido en el esquema: Opcion_respuesta y Ayuda referencian a
+     * Pregunta). Pide confirmación antes de borrar, ya que es una acción
+     * irreversible.
+     *
+     * Si no hay ninguna pregunta cargada (idPreguntaEnEdicion == null, es
+     * decir estamos en modo "crear nuevo"), se avisa y no se hace nada.
+     */
+    private void eliminarPreguntaActual() {
+        if (idPreguntaEnEdicion == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No hay ninguna pregunta cargada para eliminar. "
+                    + "Selecciona una pregunta existente desde 'Editar Stages'.",
+                    "Nada que eliminar", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Seguro que deseas eliminar la pregunta #" + idPreguntaEnEdicion + "?\n"
+                + "Esta acción no se puede deshacer.",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try (Connection con = new Conexion().getConnection()) {
+            if (con == null) {
+                throw new SQLException("No se pudo establecer conexión con la base de datos.");
+            }
+
+            try (PreparedStatement psDelete = con.prepareStatement(
+                    "DELETE FROM Pregunta WHERE id_pregunta = ?")) {
+                psDelete.setInt(1, idPreguntaEnEdicion);
+                int filasAfectadas = psDelete.executeUpdate();
+
+                if (filasAfectadas == 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "No se encontró la pregunta #" + idPreguntaEnEdicion + " en la base de datos "
+                            + "(puede que ya haya sido eliminada).",
+                            "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Pregunta #" + idPreguntaEnEdicion + " eliminada correctamente.",
+                            "Eliminado", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error al eliminar la pregunta: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Tras eliminar, la ventana ya no tiene una pregunta válida cargada:
+        // se limpia el formulario y se cierra, ya que no tiene sentido seguir
+        // "editando" algo que ya no existe en la BD.
+        limpiarFormularioParaSiguientePregunta();
+        idPreguntaEnEdicion = null;
+        actualizarEstadoBotonEliminar();
+        dispose();
     }
 
     private void limpiarFormularioParaSiguientePregunta() {

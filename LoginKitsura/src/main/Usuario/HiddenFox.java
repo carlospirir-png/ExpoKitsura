@@ -1,4 +1,5 @@
 // ============== HIDDEN FOX ==============
+// ==================== HIDDEN FOX ==================== 
 package main.Usuario;
 
 //------------------------ IMPORTACIONES ----------------------------
@@ -28,9 +29,6 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     // Arreglo de corazones generado dinámicamente según "maxVidas"
     private JLabel[] corazones;
-
-    // Cantidad de corazones que se muestran por fila antes de saltar a la siguiente.
-    private static final int CORAZONES_POR_FILA = 5;
 
     // Ruta donde se almacenará la imagen de fondo del minijuego
     JLabel fondoPapel;
@@ -142,9 +140,9 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
             // Esta conversión es importante para redimensionar la imagen y que no pierda la calidad
             Image corazonEscalado = corazonIcon.getImage().getScaledInstance(
                     // Ancho * alto    Cambio de tamaño con buena calidad
-                    60, 60, Image.SCALE_SMOOTH);
+                    50, 50, Image.SCALE_SMOOTH);
             Image corazonRotoEscalado = rotoIcon.getImage().getScaledInstance(
-                    60, 60, Image.SCALE_SMOOTH);
+                    50, 50, Image.SCALE_SMOOTH);
 
             // Se vuelve a ImageIcon luego de los cambios
             corazonFinal = new ImageIcon(corazonEscalado);
@@ -161,17 +159,16 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         int xInicial = 70;
         int yInicial = 25;
-        int espaciado = 65;
-        int tamano = 60;
+        int espaciado = 55;
+        int tamano = 50;
 
+        // Todos los corazones (de 1 a 10) se dibujan en UNA sola línea
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon = new JLabel(corazonFinal);
             corazon.setBounds(
-                    xInicial + (columna * espaciado),
-                    yInicial + (fila * espaciado),
+                    xInicial + (i * espaciado),
+                    yInicial,
                     tamano, tamano);
 
             corazones[i] = corazon;
@@ -554,8 +551,8 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         return maxVidas;
     }
 
-    //------------------- INICIALIZAR VIDAS (reconstrucción) -----------------
-    // Este método reconstruye el arreglo de corazones con el valor real,
+    //------------------- INICIALIZAR VIDAS  -----------------
+    // Este método reconstruye el arreglo de corazones con el valor real
     public void inicializarVidas(int nuevoMaxVidas) {
         if (nuevoMaxVidas < 1) {
             nuevoMaxVidas = 1;
@@ -575,17 +572,16 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         int xInicial = 70;
         int yInicial = 25;
-        int espaciado = 65;
-        int tamano = 60;
+        int espaciado = 55;
+        int tamano = 50;
 
+        // Todos los corazones (de 1 a 10) en UNA sola línea, tamaño fijo
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon = new JLabel(corazonFinal);
             corazon.setBounds(
-                    xInicial + (columna * espaciado),
-                    yInicial + (fila * espaciado),
+                    xInicial + (i * espaciado),
+                    yInicial,
                     tamano, tamano);
 
             corazones[i] = corazon;

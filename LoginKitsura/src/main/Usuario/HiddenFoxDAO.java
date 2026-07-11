@@ -51,7 +51,9 @@ public class HiddenFoxDAO {
                 = "SELECT contenido "
                 + "FROM Ayuda "
                 + "WHERE id_pregunta = ? "
-                + "AND tipo = 'texto'";
+                + "AND tipo = 'texto' "
+                + "ORDER BY RAND() "
+                + "LIMIT 1";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -75,7 +77,9 @@ public class HiddenFoxDAO {
         String sql = "SELECT audio "
                 + "FROM Ayuda "
                 + "WHERE id_pregunta = ? "
-                + "AND tipo = 'audio'";
+                + "AND tipo = 'audio' "
+                + "ORDER BY RAND() "
+                + "LIMIT 1";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 

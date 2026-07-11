@@ -98,8 +98,9 @@ public class EditarStages extends JFrame {
     /**
      * Traduce (minijuego, categoría, dificultad) elegidos en PedirMCN hacia
      * id_minijuego, id_categoria (local 1-3 dentro del minijuego), id_nivel y
-     * dificultad numérica, uniendo Minijuego -> Categoria -> Configuracion_nivel.
-     * Este es el único contexto que la ventana va a mostrar/permitir editar.
+     * dificultad numérica, uniendo Minijuego -> Categoria ->
+     * Configuracion_nivel. Este es el único contexto que la ventana va a
+     * mostrar/permitir editar.
      */
     private void resolverContextoDesdeDatos() throws SQLException {
         String sql = "SELECT m.id_minijuego, c.id_categoria, cn.id_nivel, cn.dificultad "
@@ -108,8 +109,7 @@ public class EditarStages extends JFrame {
                 + "JOIN Minijuego m ON c.id_minijuego = m.id_minijuego "
                 + "WHERE m.nombre = ? AND c.nombre = ? AND cn.dificultad = ?";
 
-        try (Connection con = new Conexion().getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new Conexion().getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             if (con == null) {
                 throw new SQLException("No se pudo establecer conexión con la base de datos.");
@@ -140,10 +140,14 @@ public class EditarStages extends JFrame {
             throw new SQLException("La dificultad llegó vacía desde la base de datos.");
         }
         return switch (dificultad) {
-            case "Fácil" -> 1;
-            case "Intermedio" -> 2;
-            case "Difícil" -> 3;
-            default -> throw new SQLException("Dificultad desconocida: '" + dificultad + "'.");
+            case "Fácil" ->
+                1;
+            case "Intermedio" ->
+                2;
+            case "Difícil" ->
+                3;
+            default ->
+                throw new SQLException("Dificultad desconocida: '" + dificultad + "'.");
         };
     }
 
@@ -213,17 +217,20 @@ public class EditarStages extends JFrame {
 
         btnSalir.setFont(fuente2.deriveFont(20F));
         btnSalir.setBounds(1680, 950, 210, 45);
-        btnSalir.addActionListener(e -> 
-                new PedirMCN("Datos"));
+        btnSalir.addActionListener(e
+                -> {
+            new AdminStages(datos);
+            dispose();
+        });
         fondo.add(btnSalir);
     }
 
-   /**
+    /**
      * Carga en la tabla ÚNICAMENTE las preguntas que pertenecen al id_nivel
-     * resuelto desde la selección hecha en Pedir M,C,N, junto con su
-     * respuesta correcta (la que tiene es_correcta = TRUE en Opcion_respuesta).
-     * Cualquier pregunta de otro minijuego, categoría o dificultad queda
-     * fuera y nunca se muestra.
+     * resuelto desde la selección hecha en Pedir M,C,N, junto con su respuesta
+     * correcta (la que tiene es_correcta = TRUE en Opcion_respuesta). Cualquier
+     * pregunta de otro minijuego, categoría o dificultad queda fuera y nunca se
+     * muestra.
      */
     private void cargarPreguntas() {
         String sql = "SELECT p.id_pregunta, p.pregunta, o.texto_opcion AS respuesta_correcta "
@@ -240,8 +247,7 @@ public class EditarStages extends JFrame {
             }
         };
 
-        try (Connection con = new Conexion().getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new Conexion().getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             if (con == null) {
                 throw new SQLException("No se pudo establecer conexión con la base de datos.");
@@ -278,8 +284,7 @@ public class EditarStages extends JFrame {
                     "Sin preguntas", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    
-    
+
     private void abrirEdicionDePreguntaSeleccionada() {
         int fila = tablaPreguntas.getSelectedRow();
         if (fila == -1) {
@@ -294,8 +299,8 @@ public class EditarStages extends JFrame {
 
     /**
      * Abre la interfaz de edición del minijuego ya resuelto (a partir de la
-     * selección hecha en Pedir M,C,N). Nunca se ofrece la posibilidad de
-     * editar preguntas de otro minijuego/categoría/nivel.
+     * selección hecha en Pedir M,C,N). Nunca se ofrece la posibilidad de editar
+     * preguntas de otro minijuego/categoría/nivel.
      */
     private void abrirInterfazSegunMinijuego(int idPregunta) {
         switch (idMinijuego) {
