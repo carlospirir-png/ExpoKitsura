@@ -1,4 +1,4 @@
-//-------------------------- HIDDEN FOX CÓDIGO ----------------------
+// ==================== HIDDEN FOX CODIGO ==================== 
 package main.Usuario;
 
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.Random;
 import java.util.ArrayList;
-import main.Administrador.VidasDAO;
+import main.Administrador.*;
 
 public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
@@ -20,7 +20,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     /*Segundos que quedan en el turno actual.*/
     int segundosRestantes;
 
-    private HiddenFoxDAO dao = new HiddenFoxDAO();  
+    private HiddenFoxDAO dao = new HiddenFoxDAO();
 
     //Son 5 preguntas las que se muestran
     private ArrayList<Integer> preguntasPartida = new ArrayList<>();
@@ -28,6 +28,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int preguntaActual = 0;
     // Las vidas por defecto son 3 para el jugador
     private int vidas;
+    // Indica si ya se fijaron las vidas iniciales de esta partida. Solo la
+    // primera vez que se llama a establecerVidasPorNivel() al iniciar la partida
+    private boolean vidasYaInicializadas = false;
     // Nivel actual y final de la categoria
     private int nivelActual;
     private int nivelFinal;
@@ -44,22 +47,37 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int tiempoMaximoPregunta;
     private PantallaDificultad pantallaDificultad;
 
+    //se crea un objeto de puntuaciones DAO
+    private PuntuacionesDAO puntuacionesDAO = new PuntuacionesDAO();
+
+    //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
+    private int puntosDB;
+
     //Esta variable defina la cantidad de respuestas correctas que se necesitan para pasar a la siguiente dificultad.
     private static final int CORRECTAS = 5;
 
     //Esta variable almacena las respuestas correctas totales que lleva el jugador.
     private int respuestas_Correctas = 0;
 
-    //Puntaje máximo posible de la categoria -> X aciertos por nivel, 3 niveles, da como resultado: (x*3) cuyo puntaje máximo es de 100 (3x*100
-    private final int puntajeMaximo = CORRECTAS * 3 * 100;
-
     //Este atributo indica si la partida ya terminó. Se utiliza para deshabilitar otros comportamientos cuando la partida finalice.
     private boolean partidaTerminada = false;
 
+    // Id del minijuego "Hidden Fox" según la tabla Minijuego (INSERT inicial: 1 = Hidden Fox)
+    private static final int ID_MINIJUEGO = 1;
+
+    // Usuario actualmente logueado, obtenido de la sesión guardada en IniciarSesion
+    private int idUsuario;
+
+    // Id de la partida en curso (fila de la tabla Partida). -1 mientras no se ha creado.
+    private int idPartida = -1;
+
+    // Snapshot de las vidas con las que arrancó la partida (para la columna vidas_iniciales_snapshot)
+    private int vidasInicialesSnapshot;
+
+    private String categoriaResuelta = null;
+    private String dificultadResuelta = null;
+
     //---------------- CONSTRUCTOR ----------------
-    // "vidas" ahora representa también el tope máximo de corazones a dibujar,
-    // por eso se le pasa a HiddenFox mediante super(vidas): así la interfaz
-    // ya no está limitada a 3 corazones fijos.
     public HiddenFox_Codigo(int nivel, int vidas, int puntos, boolean usoPista, int tiempoTotalJugado) {
         super(vidas);
 
@@ -68,6 +86,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         this.puntos = puntos;
         this.usoPista = usoPista;
         this.tiempoTotalJugado = tiempoTotalJugado;
+
+        // Se obtiene el usuario que inició sesión (guardado por IniciarSesion)
+        this.idUsuario = Sesion.getIdUsuarioActual();
 
         if (nivelActual >= 1 && nivelActual <= 3) {
             nivelFinal = 3;
@@ -84,96 +105,57 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         Partida(nivelActual);
     }
 
-    // Segundo contructor que indica cuando el jugador inicia una categoria desde el menu.
-    // Antes las vidas venían fijas en 3; ahora se consultan en la base de datos
-    // (tabla Configuracion_nivel) según el minijuego, categoría y dificultad
-    // que le correspondan a "nivel", usando el mismo VidasDAO que usa VidasAdmin.
     public HiddenFox_Codigo(int nivel) {
-        this(nivel, resolverVidasIniciales(nivel), 0, false, 0);
-    }
-
-    /*------------------ RESOLVER VIDAS INICIALES ------------------
-      Traduce el número de "nivel" (1-9, interno del minijuego) a la
-      categoría y dificultad reales de la base de datos, y con eso
-      consulta cuántas vidas configuró el administrador en VidasAdmin.
-      Es estático porque se necesita ANTES de poder llamar a super(vidas).
-    ------------------------------------------------------------------*/
-    private static int resolverVidasIniciales(int nivel) {
-        HiddenFoxDAO daoTemporal = new HiddenFoxDAO();
-        VidasDAO vidasDAO = new VidasDAO();
-
-        String categoria = daoTemporal.obtenerCategoria(mapearIdCategoria(nivel));
-        String dificultad = mapearDificultad(nivel);
-
-        int vidas = vidasDAO.obtenerVidas("Hidden Fox", categoria, dificultad);
-
-        // Resguardo: si por algún motivo no se encontró coincidencia en la BD
-        // (por ejemplo, un nombre mal escrito), se usa 3 como valor por defecto.
-        if (vidas < 1) {
-            vidas = 3;
-        }
-
-        return vidas;
-    }
-
-    // Nivel 1-3 -> Categoría 1 (Animales) | 4-6 -> Categoría 2 (Territorios) | 7-9 -> Categoría 3 (Caricaturas)
-    private static int mapearIdCategoria(int nivel) {
-        if (nivel >= 1 && nivel <= 3) {
-            return 1;
-        } else if (nivel >= 4 && nivel <= 6) {
-            return 2;
-        } else {
-            return 3;
-        }
-    }
-
-    // Dentro de cada categoría, la posición 1 es Fácil, la 2 Intermedio y la 3 Difícil.
-    private static String mapearDificultad(int nivel) {
-        int posicion = ((nivel - 1) % 3) + 1;
-
-        switch (posicion) {
-            case 1:
-                return "Fácil";
-            case 2:
-                return "Intermedio";
-            default:
-                return "Difícil";
-        }
+        this(nivel, 3, 0, false, 0);
     }
 
     //------------- SIGUIENTE PREGUNTA ------------
     public void SiguientePregunta() {
         System.out.println("Comparando: " + nivelActual + " < " + nivelFinal);
 
-        //PRIMERA CONDICIÓN:
-        //Si las respuestas correctas son menores a las necesarias para pasar de nivel
-        //"¿El jugador ya respondió correctamente las necesarias?"
-        //SEGUNDA CONDICIÓN:
-        //Si la pregunta actual supera las preguntas por partida del ArrayList
-        //ES DECIR:
-        //Que a sea que el jugador conteste todaslas necesarias para pasar, o directamente
-        //ya no haya más preguntas por mostrar que finalice ese nivel y pase al siguiente.
-        if (respuestas_Correctas < CORRECTAS || preguntaActual >= preguntasPartida.size()) {
-            MostrarPregunta(); //Muestra la pregunta
-        } else {
-            terminarNivel(); //Termina ese nivel y se muestra pantalla de cambio de dificultad
+        // ¿Ya alcanzó los 5 aciertos?
+        if (respuestas_Correctas >= CORRECTAS) {
+            terminarNivel();
+            return;
         }
+
+        // ¿Ya no quedan preguntas?
+        if (preguntaActual >= preguntasPartida.size()) {
+            finPreguntas();
+            return;
+        }
+
+        //Las preguntas Restantes son la cantidad de preguntas almacenadas en la base de datos menos la cantidad de preguntas que se lleva
+        int preguntasRestantes = preguntasPartida.size() - preguntaActual;
+
+        //Los aciertos posibles son las oportunidades que tiene el jugador de aún responder correctamente y pasar a la siguiente dificultad
+        //Los aciertos posibles es la cantidad de respuestas correctas que lleva más los posibles aciertos (preguntas restantes)
+        int aciertosPosibles = respuestas_Correctas + preguntasRestantes;
+
+        //Si la cantidad de aciertos es imposible de alcanzar con las correctas que se requiere
+        if (aciertosPosibles < CORRECTAS) {
+            //fin de la partida
+            finPreguntas();
+
+            /*(ej. El jugador debe acertar al menos 5, pero ya va por la pregunta 13, y solo lleva acertada 1, como solo hay 15 problemas cargados
+            y va por la pregunta 13, solo le quedan 2 preguntas, pero si lleva solo un acierto, ni aunque acierte las siguientes preguntas logrará
+            pasar, oporque el programa requiere 5. Así que por eso, en cuanto se hace imposible pasar, se acaba la partida.
+             */
+        }
+
+        MostrarPregunta();
     }
 
     //--------------- TERMINAR NIVEL ---------------
     public void terminarNivel() {
 
-        //Si la variable partidaTerminada es true (efectivamente la partida terminó)
         if (partidaTerminada) {
-            return; //Devuelve
+            return;
 
-            //Si la partida aún no ha sido terminado por otra acción (como derrota por tiempo o vidas)
         } else {
 
-            //Si aún hay más preguntas y niveles por pasar, cambia de dificultad
             if (nivelActual < nivelFinal) {
-                
-                //Si el nivel actual es menor al nivel en el que acaba la categoría
+
                 respuestas_Correctas = 0;
 
                 pantallaDificultad = new PantallaDificultad(this,
@@ -181,14 +163,14 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 fadeTo(() -> {
                     setContentPane(pantallaDificultad.getFondo());
                 }, 400);
-                
-            //Si ya no hay más categorías por recorrer, se muestra la pantalla del final
+
             } else {
-                
-                //Entonces se establece la partidaTerminada por Victoria
+
                 partidaTerminada = true;
-                
-                if (vidas == getMaxVidas() && puntos == puntajeMaximo && !usoPista) {
+
+                guardarFinDePartida("completada");
+
+                if (vidas == getMaxVidas() && puntos == getPuntajeMaximo() && !usoPista) {
 
                     VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
                     }, this);
@@ -209,22 +191,59 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     }
 
+    /*-------------------- FIN PREGUNTAS --------------
+    Esto sucede cuando la base de datos ya no tiene problemas para cargar, pero el jugador aún no ha cumplido los 
+    requisitos para pasar de nivel.
+     */
+    private void finPreguntas() {
+        
+        //Se establece que la partida fue terminada por este evento
+        partidaTerminada = true;
+        
+        //La partida fue abandonada por el evento de derrota
+        guardarFinDePartida("abandonada");
+        
+        //Muestra el mensaje de por qué se perdió
+        JOptionPane.showMessageDialog(
+                this,
+                "Ya no quedan más preguntas.\nNo alcanzaste los "
+                + CORRECTAS + " aciertos necesarios."
+        );
+        
+        //Muestra el mensaje de que se perdió.
+        JOptionPane.showMessageDialog(this, "Has perdido.");
+        
+        //Transiciona a la pantalla de derrota por vidas
+        fadeTo(() -> {
+            new SeAcaboVidas(this, e -> {
+            }).setVisible(true);
+            dispose();
+        }, 400);
+    }
+
     //----------- PARTIDA -------------------
     public void Partida(int id_nivel) {
         preguntaActual = 0;
         preguntasPartida = dao.generarPartida(id_nivel);
         ConfiguracionNivel(id_nivel);
-        // Metodo que realiza el aumento o disminución de puntos
+
+        //se obtienen los puntos del minijuego HiddenFox, de la categoría y nivel que se encuentre
+        puntosDB = puntuacionesDAO.obtenerPuntuacion("Hidden Fox", categoriaResuelta, dificultadResuelta);
+
+        if (idPartida == -1) {
+            vidasInicialesSnapshot = vidas;
+            idPartida = dao.crearPartida(idUsuario, ID_MINIJUEGO, vidasInicialesSnapshot);
+
+            if (idPartida == -1) {
+                System.out.println("ADVERTENCIA: no se pudo crear el registro de la partida en la base de datos.");
+            }
+        }
+
         actualizarPuntos(puntos);
         modificarCorazones(vidas);
         SiguientePregunta();
     }
 
-    /*------------------------- OBTENER PREGUNTA ACTUAL -----------------------
-      Este método se encarga de devolver el id de la pregunta actual siempre y
-      cuando el índice sea válido (no se pase de las preguntas en la base de datos).
-      Si no existe una pregunta en esa posición, devuelve null.
-    --------------------------------------------------------------------------*/
     private Integer obtenerIdPreguntaActual() {
         if (preguntaActual < 0 && preguntaActual >= preguntasPartida.size()) {
             return null;
@@ -237,24 +256,16 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         habilitarBotones(true);
 
-        //Es integer porque sí puede devolver null
-        //Se llama al método para que obtenga el id de la pregunta actual
         Integer id_pregunta = obtenerIdPreguntaActual();
 
-        //Por si la pregunta se encuentra vacía por el ArrayList al intentar sobrepasar las preguntas que están en la base de datos
         if (id_pregunta == null) {
-            return; //devuelve
+            return;
         }
 
-        //DEBUG
         System.out.println(
                 "Mostrando pregunta ID: "
                 + id_pregunta);
-        //DEBUG
 
-        //ModificarPregunta es un método de HiddenFox,
-        //En el que está llamando al método de HiddenFox_Codigo
-        //para obtener la pregunta.
         modificarPregunta(dao.obtenerPregunta(id_pregunta));
 
         respuestas(id_pregunta);
@@ -266,15 +277,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         iniciarTiempo(dao.obtenerTiempoLimite(id_pregunta));
     }
 
-    // -------------- MODIFICAR ------------
-    //------------------- TIEMPO ----------------
     public void Esperar() {
         Timer timer = new Timer(1000, e -> {
-
             preguntaActual++;
-
             SiguientePregunta();
-
         });
 
         timer.setRepeats(false);
@@ -309,15 +315,12 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     }
 
     private void FinTiempo() {
-        //Si la variable partidaTerminada es true (efectivamente la partida terminó)
         if (partidaTerminada) {
-            return; //Devuelve
+            return;
 
-            //Si la partida aún no ha sido terminado por otra acción (como una victoria u otro tipo de derrota)
-        } else { //Pero el tiempo ya se acabó
+        } else {
 
-            //Es el tiempo quien acaba la partida entonces
-            partidaTerminada = true; //Se cambia el valor de la variable a True
+            partidaTerminada = true;
 
             if (countdown != null) {
                 countdown.stop();
@@ -325,6 +328,14 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             }
 
             habilitarBotones(false);
+
+            Integer id_pregunta = obtenerIdPreguntaActual();
+            if (id_pregunta != null && idPartida != -1) {
+                dao.registrarDetalle(idPartida, id_pregunta, 0, tiempoMaximoPregunta, false);
+            }
+
+            System.out.println("Tiempo total: " + tiempoTotalJugado);
+            guardarFinDePartida("abandonada");
 
             dispose();
 
@@ -337,14 +348,15 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
     private int calcularPuntosPorTiempo() {
 
-        int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
+        //El tiempo en el que se repsondió la pregunta
+        int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
 
-        //Si el tiempo usado son más de dos segundos, se dará una penalización (como normalmente sería)
-        if (tiempoUsado > 2) {
+        if (tiempoRespuesta > 2) {
             double porcentajeRapidez
-                    = 1.0 - ((double) tiempoUsado / tiempoMaximoPregunta);
+                    = 1.0 - ((double) tiempoRespuesta / tiempoMaximoPregunta);
 
-            int puntos = (int) (100 * porcentajeRapidez);
+            //los puntos que estén en l abase de datos se multiplican por la rapiz en la que se respondió
+            int puntos = (int) (puntosDB * porcentajeRapidez);
 
             if (puntos < 10) {
                 puntos = 10;
@@ -353,24 +365,20 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             return puntos;
 
         } else {
-            //Si el tiempo usado está dentro de dos segundos de reacción, se dará el punteo completo
-            return 100;
+            //devuelve el punteo completo
+            return puntosDB;
         }
 
     }
 
     //-------------- BOTONES -------------
-    //---------------- ACTION LISTENER -----------------
     @Override
     public void respuestaSeleccionada(JButton boton) {
 
-        //Es integer porque sí puede devolver null
-        //Se llama al método para que obtenga el id de la pregunta actual
         Integer id_pregunta = obtenerIdPreguntaActual();
 
-        //Por si la pregunta se encuentra vacía por el ArrayList al intentar sobrepasar las preguntas que están en la base de datos
         if (id_pregunta == null) {
-            return; //devuelve
+            return;
         }
 
         habilitarBotones(false);
@@ -381,11 +389,13 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
         System.out.println("Botón presionado");
 
+        //El tiempo en el que se repsondió la pregunta
+        int tiempoRespuesta = tiempoMaximoPregunta - segundosRestantes;
+
         boolean correcta
                 = (Boolean) boton.getClientProperty("correcta");
 
         if (correcta) {
-            //suma puntos por responder correctamente
             int puntosGanados = calcularPuntosPorTiempo();
 
             respuestas_Correctas = respuestas_Correctas + 1;
@@ -393,6 +403,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             puntos += puntosGanados;
 
             actualizarPuntos(puntos);
+
+            if (idPartida != -1) {
+                dao.registrarDetalle(idPartida, id_pregunta, puntosGanados, tiempoRespuesta, true);
+            }
 
             JOptionPane.showMessageDialog(
                     this,
@@ -402,7 +416,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                     + respuestas_Correctas + "/" + CORRECTAS
             );
 
-            // Revela la imagen
             cambiarImagen(
                     dao.obtenerRutaImagen(
                             id_pregunta,
@@ -410,14 +423,16 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             Esperar();
         } else {
 
-            // Pierde una vida
             vidas--;
 
-            // Resta los puntos (evitando números negativos)
             if (puntos >= 5) {
                 puntos -= 5;
             } else {
                 puntos = 0;
+            }
+
+            if (idPartida != -1) {
+                dao.registrarDetalle(idPartida, id_pregunta, 0, tiempoRespuesta, false);
             }
 
             JOptionPane.showMessageDialog(
@@ -429,7 +444,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
             actualizarPuntos(puntos);
             modificarCorazones(vidas);
 
-            // Si ya no quedan vidas, termina la partida
             if (vidas <= 0) {
                 DerrotaVidas();
                 return;
@@ -439,22 +453,17 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     }
 
     //-------------- AYUDA Y PISTAS-------------------
-    // --------------- ABRIR VENTANA ---------------
     @Override
     public void ayuda() {
-        //Es integer porque sí puede devolver null
-        //Se llama al método para que obtenga el id de la pregunta actual
         Integer id_pregunta = obtenerIdPreguntaActual();
 
-        //Por si la pregunta se encuentra vacía por el ArrayList al intentar sobrepasar las preguntas que están en la base de datos
         if (id_pregunta == null) {
-            return; //devuelve
+            return;
         }
 
         Random random = new Random();
         boolean esTexto = random.nextBoolean();
 
-        //esTexto | true = texto  | false = audio.
         penalizacion = dao.obtenerPenalizacionPista(
                 id_pregunta, esTexto);
 
@@ -465,12 +474,10 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
 
-        // Si el usuario presionó "No" o cerró la ventana
         if (opcion != JOptionPane.YES_OPTION) {
             return;
         }
         pausarPartida();
-        // Aunque el usuario utilice una pista durante toda la partida, afectará su victoria perfecta
         usoPista = true;
 
         RestarPuntos(penalizacion);
@@ -515,6 +522,28 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         actualizarPuntos(puntos);
     }
 
+    //---------------  GUARDAR FIN DE PARTIDA
+    /* Centraliza el cierre de la partida (usado tanto en victoria como en
+      derrota por tiempo o por vidas) para no repetir la lógica tres veces.*/
+    private void guardarFinDePartida(String estado) {
+
+        //DEBUG
+        System.out.println(
+                "Guardando -> puntos: " + puntos
+                + " tiempo: " + tiempoTotalJugado
+                + " estado: " + estado
+        );
+        //DEBUG
+
+        if (idPartida == -1) {
+            System.out.println("ADVERTENCIA: no hay idPartida válido, no se guardó el resultado final.");
+            return;
+        }
+
+        dao.finalizarPartida(idPartida, puntos, tiempoTotalJugado, estado);
+        dao.actualizarEstadistica(idUsuario, ID_MINIJUEGO, puntos, tiempoTotalJugado);
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // JuegoBase
     // ─────────────────────────────────────────────────────────────────────────
@@ -554,6 +583,11 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     public void mostrarResultadoConFade() {
         ResultadoFinal resultado = new ResultadoFinal(this, puntos, tiempoTotalJugado);
         resultado.mostrar();
+    }
+
+    //Puntaje máximo posible de la categoria -> X aciertos por nivel, 3 niveles, da como resultado: (x*3) cuyo puntaje máximo es de y (según lo obtenido de la base de datos) (3x*y)
+    private int getPuntajeMaximo() {
+        return CORRECTAS * 3 * puntosDB;
     }
 
     //---------------- TRANSICIÓN ----------
@@ -639,14 +673,9 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         }).start();
     }
 
-    /*------------------  M O D I F I C A R ------------------
-      Este es el apartado donde se modifican cosas de la Interfaz Gráfica
-      a través de HiddenFox y la base de datos con HiddenFoxDAO, 
-      pero la parte lógica de dichas modificaciones permanecen en este bloque.
-    ----------------------------------------------------------*/
     public void respuestas(int id_pregunta) {
         String[] respuestas = new String[4];
-        boolean[] correctas = new boolean[4]; //Determina si son correctas
+        boolean[] correctas = new boolean[4];
         dao.obtenerRespuestas(id_pregunta, respuestas, correctas);
 
         mostrarRespuestas(respuestas, correctas);
@@ -657,101 +686,131 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
       del minijuego.
     ------------------------------------------------------------------*/
     public void ConfiguracionNivel(int nivel) {
-        /*NIVELES: 
-        1. Animales - Fácil
-        2. Animales - Intermedio
-        3. Animales - Difícil
-        4. Territorios - Fácil
-        5. Territorios - Intermedio
-        6. Territorios - Difícil
-        7. Caricaturas - Fácil
-        8. Caricaturas - Intermedio
-        9. Caricaturas - Difícil*/
+
+        // Se van guardando aquí la categoría y dificultad que el switch ya
+        // resuelve para este nivel, para poder consultar VidasDAO al final
+        // sin tener que volver a calcularlas en otro método aparte.
         switch (nivel) {
             case 1:
                 modificarColorFondo(facil);
-                modificarDificultad("Fácil");
+                dificultadResuelta = "Fácil";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N1_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(1));
-
+                categoriaResuelta = dao.obtenerCategoria(1);
+                modificarCategoria(categoriaResuelta);
                 break;
             case 2:
                 modificarColorFondo(intermedio);
-                modificarDificultad("Intermedio");
+                dificultadResuelta = "Intermedio";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N2_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(1));
-
+                categoriaResuelta = dao.obtenerCategoria(1);
+                modificarCategoria(categoriaResuelta);
                 break;
             case 3:
                 modificarColorFondo(dificil);
-                modificarDificultad("Difícil");
+                dificultadResuelta = "Difícil";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C1_N3_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(1));
-
+                categoriaResuelta = dao.obtenerCategoria(1);
+                modificarCategoria(categoriaResuelta);
                 break;
             case 4:
                 modificarColorFondo(facil);
-                modificarDificultad("Fácil");
+                dificultadResuelta = "Fácil";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N1_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(2));
-
+                categoriaResuelta = dao.obtenerCategoria(2);
+                modificarCategoria(categoriaResuelta);
                 break;
             case 5:
                 modificarColorFondo(intermedio);
-                modificarDificultad("Intermedio");
+                dificultadResuelta = "Intermedio";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N2_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(2));
-
+                categoriaResuelta = dao.obtenerCategoria(2);
+                modificarCategoria(categoriaResuelta);
                 break;
             case 6:
                 modificarColorFondo(dificil);
-                modificarDificultad("Difícil");
+                dificultadResuelta = "Difícil";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C2_N3_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(2));
-
+                categoriaResuelta = dao.obtenerCategoria(2);
+                modificarCategoria(categoriaResuelta);
                 break;
             case 7:
                 modificarColorFondo(facil);
-                modificarDificultad("Fácil");
+                dificultadResuelta = "Fácil";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N1_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(3));
-
+                categoriaResuelta = dao.obtenerCategoria(3);
+                modificarCategoria(categoriaResuelta);
                 break;
             case 8:
                 modificarColorFondo(intermedio);
-                modificarDificultad("Intermedio");
+                dificultadResuelta = "Intermedio";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N2_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(3));
-
+                categoriaResuelta = dao.obtenerCategoria(3);
+                modificarCategoria(categoriaResuelta);
                 break;
             case 9:
                 modificarColorFondo(dificil);
-                modificarDificultad("Difícil");
+                dificultadResuelta = "Difícil";
+                modificarDificultad(dificultadResuelta);
                 cambiarFondoPapel("/Multimedia/Minijuegos/Minijuego_1/Elementos_graficos/M1_C3_N3_FONDO.png");
-                modificarCategoria(dao.obtenerCategoria(3));
-
+                categoriaResuelta = dao.obtenerCategoria(3);
+                modificarCategoria(categoriaResuelta);
                 break;
             default:
                 JOptionPane.showMessageDialog(null, "ERROR: No se pudo cambiar la dificultad.", "ERROR.", JOptionPane.ERROR_MESSAGE);
         }
+
+        // Se reconsulta VidasDAO y se reconstruyen los corazones en CADA
+        // cambio de nivel (ver comentario del método más abajo).
+        establecerVidasPorNivel(categoriaResuelta, dificultadResuelta);
     }
 
-    /*-------------------------- P A R T I D A ------------------------
-        Este apartado es donde se encuentra la configuración y generación
-        de las partidas.
-    -------------------------------------------------------------------*/
-    //-------------------------- GENERAR PARTIDA
-    /*--------------------------  D E R R O T A -----------------------
-      Este es el apartado donde se coloca la lógica de las derrotas.
-      Actualmente, solo puedes perder por dos motivos: Falta de tiempo
-      y falta de vidas (por equivocaciones, pierdes una).
-    ------------------------------------------------------------------*/
-    //--------------------- T I E M P O
-    //--------------------- V I D A S
+    private void establecerVidasPorNivel(String categoria, String dificultad) {
+        if (categoria == null || dificultad == null) {
+            return;
+        }
+
+        VidasDAO vidasDAO = new VidasDAO();
+        int vidasConfiguradas = vidasDAO.obtenerVidas("Hidden Fox", categoria, dificultad);
+
+        if (vidasConfiguradas < 1) {
+            vidasConfiguradas = 3;
+        }
+
+        // El tope de corazones (estructura visual) se actualiza siempre, por
+        // si el administrador cambió el máximo configurado para la categoría.
+        inicializarVidas(vidasConfiguradas);
+
+        if (!vidasYaInicializadas) {
+            //Al empezar la partida, las vidas arrancan en el máximo.
+            this.vidas = vidasConfiguradas;
+            vidasYaInicializadas = true;
+        } else {
+            // En los siguientes niveles de la misma partida se conservan las
+            // vidas que el jugador ya tiene (o ya perdió). 
+            this.vidas = Math.min(this.vidas, vidasConfiguradas);
+        }
+    }
+
     public void DerrotaVidas() {
         if (vidas <= 0) {
 
             if (vidas == 0) {
+
+                if (partidaTerminada) {
+                    return;
+                }
+                partidaTerminada = true;
+
+                System.out.println("Tiempo total: " + tiempoTotalJugado);
+                guardarFinDePartida("abandonada");
 
                 JOptionPane.showMessageDialog(this, "Has perdido.");
 
@@ -764,11 +823,6 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
         }
     }
 
-    /*-------------------------- T I E M P O -----------------------
-      Este es el apartado donde se encuentra toda la lógica de los
-      tiempos.
-    ------------------------------------------------------------------*/
-    //--------------------- F O R M A T O
     public String formatearTiempo(int segundos) {
 
         int minutos = segundos / 60;

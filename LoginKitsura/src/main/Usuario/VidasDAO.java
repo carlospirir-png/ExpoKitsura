@@ -1,5 +1,6 @@
+// ==================== VIDAS DAO ====================
 // Obtener las vidas actuales y actualizar las vidas
-package main.Administrador;
+package main.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,15 +17,11 @@ public class VidasDAO {
         conexion = new Conexion();
     }
 
-    // * Obtiene la cantidad de vidas configuradas para un nivel.
-    // * minijuego: Nombre del minijuego.
-    // * categoria: Nombre de la categoría.
-    // * nivel: Dificultad del nivel.
-    // * Cantidad de vidas.
+    // Obtiene la cantidad de vidas configuradas para un nivel.
     public int obtenerVidas(String minijuego, String categoria, String nivel) {
 
         int vidas = 3;
-
+        
         String sql = """
             SELECT cn.vidas
             FROM Configuracion_nivel cn
@@ -57,10 +54,6 @@ public class VidasDAO {
     }
 
     // Actualiza la cantidad de vidas de un nivel.
-    // minijuego Nombre del minijuego.
-    // categoria: Categoría.
-    // nivel Dificultad.
-    // vidas Nueva: cantidad de vidas.
     // return true si la actualización fue correcta.
     public boolean actualizarVidas(String minijuego,
             String categoria,
@@ -73,7 +66,7 @@ public class VidasDAO {
                     ON cn.id_categoria = c.id_categoria
             INNER JOIN Minijuego m
                     ON c.id_minijuego = m.id_minijuego
-            SET cn.vidas = ?
+            SET cn.vidas  = ?
             WHERE m.nombre = ?
             AND c.nombre = ?
             AND cn.dificultad = ?
@@ -89,6 +82,46 @@ public class VidasDAO {
             System.out.println("Filas actualizadas: " + filas);
             return filas > 0;
             // return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // Obtiene la cantidad de vidas configurada para TODA la categoría
+    // (Fácil, Intermedio, Difícil) de una misma categoría comparten el mismo
+    // valor de vidas, así que basta con consultar una de ellas como referencia
+    public int obtenerVidasCategoria(String minijuego, String categoria) {
+        return obtenerVidas(minijuego, categoria, "Fácil");
+    }
+
+    // Actualiza la cantidad de vidas para TODAS las dificultades de la categoría
+    // return true si la actualización fue correcta.
+    public boolean actualizarVidasCategoria(String minijuego,
+            String categoria,
+            int vidas) {
+
+        String sql = """
+            UPDATE Configuracion_nivel cn
+            INNER JOIN Categoria c
+                    ON cn.id_categoria = c.id_categoria
+            INNER JOIN Minijuego m
+                    ON c.id_minijuego = m.id_minijuego
+            SET cn.vidas  = ?
+            WHERE m.nombre = ?
+            AND c.nombre = ?
+            """;
+
+        try (Connection con = conexion.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, vidas);
+            ps.setString(2, minijuego);
+            ps.setString(3, categoria);
+            int filas = ps.executeUpdate();
+            System.out.println("Filas actualizadas (categoría completa): " + filas);
+            return filas > 0;
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -169,7 +169,7 @@ public class NuevoAdmin extends JFrame {
         btnSalir.addActionListener(e -> {
             new UsuarioMenu();
             dispose();
-                });
+        });
         fondo.add(btnSalir);
     }
 
@@ -196,6 +196,9 @@ public class NuevoAdmin extends JFrame {
                     "Ingrese un correo válido. (ej. @kitsura.com)",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
+
+            //Se limpia el campo del correo
+            txtCorreo.setText("");
             return;
         }
 
@@ -206,16 +209,23 @@ public class NuevoAdmin extends JFrame {
                     "La contraseña debe tener mínimo 6 caracteres.",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
+            
+            //Se limpia el campo de la contraseña
+            txtContra.setText("");
             return;
         }
 
         //------- SI EL CORREO EXISTE -----------
-        if (verificarCorreo(correo)){
+        if (verificarCorreo(correo)) {
             JOptionPane.showMessageDialog(
-                        this,
-                        "Ya existe una cuenta con ese correo.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                    this,
+                    "Ya existe una cuenta con ese correo.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            
+            //Se limpia el campo del correo
+            txtCorreo.setText("");
+            return;
         }
 
         //Consulta
@@ -235,10 +245,7 @@ public class NuevoAdmin extends JFrame {
                     this,
                     "Administrador agregado correctamente.");
 
-            //se limpian los text
-            txtNombre.setText("");
-            txtCorreo.setText("");
-            txtContra.setText("");
+            Limpiar();
 
             //Captura la excepción SQl
         } catch (SQLException e) {
@@ -249,6 +256,13 @@ public class NuevoAdmin extends JFrame {
             //Imprime el StackTrace
             e.printStackTrace();
         }
+    }
+
+    public void Limpiar() {
+        //se limpian los text
+        txtNombre.setText("");
+        txtCorreo.setText("");
+        txtContra.setText("");
     }
 
     public boolean verificarCorreo(String correo) {
@@ -263,21 +277,21 @@ public class NuevoAdmin extends JFrame {
             if (rs.next()) {
                 return true;
             }
-            
+
             return false;
-        //Captura la excepción SQL
+            //Captura la excepción SQL
         } catch (SQLException e) {
             //Si hay excepción: mensaje de error
             JOptionPane.showMessageDialog(
                     this,
                     "Ocurrió un error en el correo:\n" + e.getMessage());
+            
+            Limpiar();
+            
             //Imprime el StackTrace
             e.printStackTrace();
             return false;
         }
     }
 
-    public static void main(String[] args) {
-        new NuevoAdmin();
-    }
 }

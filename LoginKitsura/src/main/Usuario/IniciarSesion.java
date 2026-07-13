@@ -4,7 +4,7 @@ package main.Usuario;
 import java.awt.*;
 import javax.swing.*;
 import java.sql.*;
-import main.Administrador.PedirMCN;
+import main.Administrador.*;
 import main.Menu.*;
 import main.conexion.Conexion;
 
@@ -146,7 +146,7 @@ public class IniciarSesion extends JFrame {
 
         //---------------- LABEL RECUPERAR CONTRASEÑA
         JLabel lblRC = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>", SwingConstants.CENTER);
-        lblRC.setFont(fuente2.deriveFont(30f));
+        lblRC.setFont(fuente2.deriveFont(18f));
         lblRC.setForeground(Color.WHITE);
         lblRC.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblRC.setBounds(0, 0, 400, 50); // Se acopla completamente al tamaño del panel contenedor
@@ -187,7 +187,7 @@ public class IniciarSesion extends JFrame {
             if (rol != null) {
 
                 if (rol.equalsIgnoreCase("administrador")) {
-                    new PedirMCN();
+                    new MenuAdmin();
                 } else {
                     new MenuPrincipal();
                 }
@@ -262,7 +262,14 @@ public class IniciarSesion extends JFrame {
 
                 // Obtener el rol
                 String rol = rs.getString("rol");
+                
+                // Guardar nombre y foto del usuario que inició sesión
+                String nombreUsuario = rs.getString("nombre_usuario"); 
+                Sesion.setNombreUsuario(nombreUsuario);
 
+                String rutaFoto = rs.getString("imagen_perfil");
+                Sesion.setRutaFotoPerfil(rutaFoto); // si es null (nunca cambió su foto), el setter lo ignora y queda la de defecto
+    
                 rs.close();
                 ps.close();
                 con.close();

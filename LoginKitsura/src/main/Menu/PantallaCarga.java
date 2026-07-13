@@ -7,7 +7,7 @@ public class PantallaCarga extends JFrame {
 
     private Font fuente1;
     private Font fuente2;
-    private FondoPanelSemi fondo;
+    private final FondoPanelSemi fondo;
     private FondoPanelSemi panelOscuro;
     private FondoPanelSemi panelOscuro2;
     private JLabel lblFrase;
