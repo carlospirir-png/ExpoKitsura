@@ -1,8 +1,12 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.print.*;
+import javax.imageio.ImageIO;
 import javax.print.*;
+import java.io.File;
+import java.net.URL;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,8 +24,7 @@ public class TicketImpresora {
     private static final float PT_POR_MM = 72f / 25.4f;
     private static final float ANCHO_TICKET_MM = 58f;
 
-    // Imagen que reemplaza el logo pequeño + el texto "KITSURA" en el encabezado.
-    // Ya incluye el zorro y la palabra "Kitsura" integrados en la imagen.
+    // imagen
     private static final String LOGO_PATH = "/Multimedia/utiles/mascotaKitsura/imagen/KitsuraImagenNegro.png";
 
     public static void imprimir(Component parent, int puntaje, int tiempoSegundos, int vidasPerdidas) {
@@ -56,13 +59,12 @@ public class TicketImpresora {
             }
         }
 
-        // Ya no confiamos en pf.getImageableWidth() dentro del Printable: algunos drivers
-        // reportan un ancho distinto al real del rollo, y eso hacía que el texto alineado
-        // a la derecha (o centrado) cayera fuera del área visible.
-        // En su lugar usamos un ancho FIJO basado en el tamaño real del rollo (58mm) y
-        // dibujamos todo anclado a la izquierda, en una sola línea "Etiqueta: valor".
         final int MARGEN = 5;
         final int ANCHO_LOGICO = Math.round(anchoPt) - (MARGEN * 2);
+
+        // ---- Cargamos las imágenes ANTES del callback de impresión, de forma síncrona ----
+        BufferedImage logoImg = cargarImagen(LOGO_PATH);
+        BufferedImage fotoImg = cargarImagen(datos.rutaFoto);
 
         job.setPrintable((Graphics g, PageFormat pf, int pageIndex) -> {
 
@@ -71,15 +73,16 @@ public class TicketImpresora {
             Graphics2D g2 = (Graphics2D) g;
             g2.translate(pf.getImageableX() + MARGEN, pf.getImageableY());
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
             int ancho = ANCHO_LOGICO;
             int y = 0;
 
             // ---- Logo (zorro + "Kitsura"), anclado a la izquierda ----
-            Image logo = cargarImagen(LOGO_PATH, ancho, 90);
-            if (logo != null) {
-                g2.drawImage(logo, 0, y, null);
-                y += logo.getHeight(null) + 8;
+            if (logoImg != null) {
+                int[] dim = calcularDimensiones(logoImg, ancho, 90);
+                g2.drawImage(logoImg, 0, y, dim[0], dim[1], null);
+                y += dim[1] + 8;
             } else {
                 // Si la imagen no carga, dejamos el texto como respaldo para no perder el encabezado
                 g2.setFont(new Font("Arial", Font.BOLD, 13));
@@ -91,10 +94,10 @@ public class TicketImpresora {
             y += 12;
 
             // ---- Foto de perfil, anclada a la izquierda ----
-            Image foto = cargarImagen(datos.rutaFoto, 70, 70);
-            if (foto != null) {
-                g2.drawImage(foto, 0, y, null);
-                y += foto.getHeight(null) + 12;
+            if (fotoImg != null) {
+                int[] dim = calcularDimensiones(fotoImg, 70, 70);
+                g2.drawImage(fotoImg, 0, y, dim[0], dim[1], null);
+                y += dim[1] + 12;
             }
 
             // ---- Datos (fuente pequeña porque el rollo es angosto) ----
@@ -179,27 +182,54 @@ public class TicketImpresora {
         return y + fm.getHeight() + 4;
     }
 
-    private static Image cargarImagen(String ruta, int maxAncho, int maxAlto) {
+    /**
+     * Calcula el ancho/alto final manteniendo proporción, dado un máximo de ancho y alto.
+     * Retorna un arreglo {anchoFinal, altoFinal}.
+     */
+    private static int[] calcularDimensiones(BufferedImage img, int maxAncho, int maxAlto) {
+        int w = img.getWidth();
+        int h = img.getHeight();
+        float escala = Math.min((float) maxAncho / w, (float) maxAlto / h);
+        int nuevoAncho = Math.round(w * escala);
+        int nuevoAlto = Math.round(h * escala);
+        return new int[]{nuevoAncho, nuevoAlto};
+    }
+
+    /**
+     * Carga una imagen de forma SÍNCRONA usando ImageIO, para evitar el problema
+     * de getScaledInstance()/Toolkit (que cargan en un hilo aparte y en impresión
+     * pueden no estar listas a tiempo, resultando en que no se imprima nada).
+     */
+    private static BufferedImage cargarImagen(String ruta) {
         if (ruta == null || ruta.isEmpty()) return null;
 
         try {
-            ImageIcon icon;
+            BufferedImage img;
+
             if (ruta.startsWith("/Multimedia")) {
-                icon = new ImageIcon(TicketImpresora.class.getResource(ruta));
+                URL url = TicketImpresora.class.getResource(ruta);
+                if (url == null) {
+                    System.out.println("cargarImagen(): recurso no encontrado en el classpath -> " + ruta);
+                    return null;
+                }
+                img = ImageIO.read(url);
             } else {
-                icon = new ImageIcon(ruta); // ruta absoluta en disco (por si en el futuro cambia el almacenamiento)
+                // ruta absoluta en disco (por si en el futuro cambia el almacenamiento)
+                File f = new File(ruta);
+                if (!f.exists()) {
+                    System.out.println("cargarImagen(): archivo no existe en disco -> " + ruta);
+                    return null;
+                }
+                img = ImageIO.read(f);
             }
 
-            Image img = icon.getImage();
-            int w = img.getWidth(null);
-            int h = img.getHeight(null);
-            if (w <= 0 || h <= 0) return null;
+            if (img == null) {
+                System.out.println("cargarImagen(): ImageIO no pudo decodificar -> " + ruta);
+                return null;
+            }
 
-            float escala = Math.min((float) maxAncho / w, (float) maxAlto / h);
-            int nuevoAncho = Math.round(w * escala);
-            int nuevoAlto = Math.round(h * escala);
+            return img;
 
-            return img.getScaledInstance(nuevoAncho, nuevoAlto, Image.SCALE_SMOOTH);
         } catch (Exception e) {
             // DEBUG TEMPORAL: para saber por qué no carga la imagen (ruta incorrecta, recurso null, etc.)
             System.out.println("cargarImagen() FALLÓ para ruta: " + ruta);
