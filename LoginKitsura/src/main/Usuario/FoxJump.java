@@ -302,7 +302,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         finJuegoActivo = false;
 
         // ACTUALIZAR LAS ETIQUETAS DE INFORMACION EN PANTALLA
-        nivelLabel.setText("Nivel: Fox Jump!");
         dificultadLabel.setText("Dificultad: " + difStr);
         categoriaLabel.setText("Categoría: " + categoriaSeleccionada);
 
@@ -1320,7 +1319,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             nenufarVerdadero.setBackground(Color.GREEN);
         }
         JLabel lblIzq = new JLabel("Verdadero", SwingConstants.CENTER);
-        lblIzq.setFont(fuente1.deriveFont(Font.BOLD, 22f));
+        lblIzq.setFont(fuente1.deriveFont(Font.BOLD, 45f));
         lblIzq.setBounds(0, 60, 240, 90);
         nenufarVerdadero.add(lblIzq);
         nenufarVerdadero.setBounds(180, 140, 240, 180);
@@ -1367,7 +1366,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             nenufarFalso.setBackground(Color.GREEN);
         }
         JLabel lblDer = new JLabel("Falso", SwingConstants.CENTER);
-        lblDer.setFont(fuente1.deriveFont(Font.BOLD, 22f));
+        lblDer.setFont(fuente1.deriveFont(Font.BOLD, 45f));
         lblDer.setBounds(0, 60, 240, 90);
         nenufarFalso.add(lblDer);
         nenufarFalso.setBounds(650, 140, 240, 180);
@@ -1398,11 +1397,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         panelLago.add(nenufarFalso);
 
         // ── TEXTO  INFORMATIVO (ESQUINA INFERIOR IZQUIERDA) ───────────────
-        nivelLabel = new JLabel("Nivel: Fox Jump!");
-        nivelLabel.setBounds(80, 740, 300, 40);
-        nivelLabel.setFont(fuente2.deriveFont(25f));
-        nivelLabel.setForeground(Color.BLACK);
-        fondo.add(nivelLabel);
 
         dificultadLabel = new JLabel("Dificultad: Fácil");
         dificultadLabel.setBounds(80, 790, 300, 40);
