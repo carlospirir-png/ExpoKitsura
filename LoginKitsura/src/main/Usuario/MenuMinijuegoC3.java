@@ -1,18 +1,9 @@
 package main.Usuario;
 
-//import javax.swing.*;
-//import java.awt.*;
-//import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-//import main.Menu.FondoPanel;
-//import main.Menu.FondoPanelSemi;
-//import main.Menu.DecoracionBotones;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
-import main.Menu.DecoracionBotones;
+import java.awt.event.*;
+import main.Menu.*;
 
 public class MenuMinijuegoC3 extends JFrame {
 
@@ -40,7 +31,7 @@ public class MenuMinijuegoC3 extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
-        setTitle("Fox Jump!");
+        setTitle("MaulwurfRennt");
         setSize(1880, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -103,14 +94,14 @@ public class MenuMinijuegoC3 extends JFrame {
         panelTitulo.setBounds(950, 100, 650, 70);
         fondo.add(panelTitulo);
 
-        JLabel lblTitulo = new JLabel("MaulwurfRennt", SwingConstants.CENTER);
+        JLabel lblTitulo = new JLabel("Maulwurf Rennt", SwingConstants.CENTER);
         lblTitulo.setFont(fuente2.deriveFont(40f));
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setBounds(0, 0, 650, 70);
         panelTitulo.add(lblTitulo);
 
         //---------------- CATEGORÍA 1 ----------------
-        JButton btnCategoria1 = new DecoracionBotones("Operaciones Basicas",
+        JButton btnCategoria1 = new DecoracionBotones("OPERACIONES BASICAS",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO 
@@ -123,7 +114,7 @@ public class MenuMinijuegoC3 extends JFrame {
         fondo.add(btnCategoria1);
 
         //---------------- CATEGORÍA 2 ----------------
-        JButton btnCategoria2 = new DecoracionBotones("Operaciones Avanzadas",
+        JButton btnCategoria2 = new DecoracionBotones("OPERACIONES AVANZADAS",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.AMARILLO_SUAVE, DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO_MOSTAZA); //MOUSE DENTRO
@@ -136,7 +127,7 @@ public class MenuMinijuegoC3 extends JFrame {
         fondo.add(btnCategoria2);
 
         //---------------- CATEGORÍA 3 ----------------
-        JButton btnCategoria3 = new DecoracionBotones("Cientificos Matematicos",
+        JButton btnCategoria3 = new DecoracionBotones("CIENTIFICOS MATEMATICOS",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO

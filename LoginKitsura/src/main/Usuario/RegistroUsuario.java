@@ -161,7 +161,7 @@ public class RegistroUsuario extends JFrame {
         fondo.add(btnJugar);
 
         //---------------- BOTON SALIR ----------------
-        JButton btnSalir = new DecoracionBotones("SALIR",
+        btnSalir = new DecoracionBotones("SALIR",
                                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   

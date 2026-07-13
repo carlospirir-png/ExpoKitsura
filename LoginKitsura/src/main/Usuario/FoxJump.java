@@ -67,7 +67,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     // ── CONEXION A BASE DE DATOS 
     // CONSULTAS SQL DEL JUEGO
-    private Connection con;
+    private final Connection con;
 
     // ── SISTEMA DE DIFICULTAD
     // REGISTROS DISTINTOS EN Configuracion_nivel
@@ -122,12 +122,21 @@ public class FoxJump extends JFrame implements JuegoBase {
     // SE RESETEA A false EN cargarPregunta() PARA CADA NUEVA PREGUNTA
     private boolean pistaMostradaEnPreguntaActual = false;
 
+    private final EstadisticaDAO estadisticaDAO = new EstadisticaDAO();
+    private final int idUsuario = Sesion.getIdUsuarioActual();
+
+    // EVITA GUARDAR LA MISMA PARTIDA DOS VECES (p.ej. si dos rutas de fin
+    // de juego se disparan casi al mismo tiempo)
+    private boolean estadisticasGuardadas = false;
+
     // CONSTRUCTOR***********
     /**
-     * INICIALIZA EL JUEGO CON LA CATEGORIA RECIBIDA DESDE EL MENU. 1. CREAR
+     * INICIALIZA EL JUEGO CON LA CATEGORIA RECIBIDA DESDE EL MENU.1. CREAR
      * TODOS LOS COMPONENTES GRAFICOS 2. REGISTRAR LISTENERS DE VENTANA (PARA
      * PAUSAR AL MINIMIZAR) 3. HACER VISIBLE EL FRAME 4. CONECTAR A LA BD Y
      * CARGAR LA PRIMERA PREGUNTA 5. CARGA TODAS LAS FUENTES
+     *
+     * @param categoria
      */
     public FoxJump(String categoria) {
 
@@ -502,7 +511,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             return;
         }
         finJuegoActivo = true;
-
+        guardarEstadisticasPartida(true); // victoria = completada
         detenerCountdown();
         bloquearNenufares();
 
@@ -597,6 +606,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         idPreguntaActual = 0;
         finJuegoActivo = false;
         procesandoRespuesta = false;
+        estadisticasGuardadas = false; // <-- NUEVO
         puntajeTotal = 0;
         tiempoTotalJugado = 0;
         preguntasVistas.clear();
@@ -1024,7 +1034,8 @@ public class FoxJump extends JFrame implements JuegoBase {
             corazones[vidas].setIcon(iconoCorazonRoto);
         }
 
-        if (vidas <= 0) {
+       if (vidas <= 0) {
+            guardarEstadisticasPartida(false); // abandonada
             bloquearNenufares();
             new javax.swing.Timer(400, e -> {
                 ((javax.swing.Timer) e.getSource()).stop();
@@ -1116,6 +1127,24 @@ public class FoxJump extends JFrame implements JuegoBase {
         JOptionPane.showMessageDialog(this,
                 "Error BD:\n" + ex.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * GUARDA EL RESULTADO DE LA PARTIDA ACTUAL EN Partida Y ACTUALIZA
+     * Estadistica. SE LLAMA DESDE LAS 3 RUTAS DE FIN DE JUEGO: VICTORIA, VIDAS
+     * AGOTADAS Y TIEMPO AGOTADO. EL FLAG estadisticasGuardadas GARANTIZA QUE
+     * SOLO SE GUARDE UNA VEZ POR PARTIDA.
+     *
+     * @param victoria TRUE SI LA PARTIDA TERMINO EN "completada", FALSE SI
+     * TERMINO EN "abandonada" (VIDAS O TIEMPO AGOTADO)
+     */
+    private void guardarEstadisticasPartida(boolean victoria) {
+        if (estadisticasGuardadas) {
+            return;
+        }
+        estadisticasGuardadas = true;
+        estadisticaDAO.guardarPartida(
+                idUsuario, "Fox Jump!", puntajeTotal, tiempoTotalJugado, maxVidas, victoria);
     }
 
     /**
@@ -1552,6 +1581,7 @@ public class FoxJump extends JFrame implements JuegoBase {
      * COUNTDOWN LLEGA A CERO.
      */
     private void mostrarTiempoAgotado() {
+        guardarEstadisticasPartida(false); // abandonada
         bloquearNenufares();
         fadeTo(() -> {
             new SeAcaboTiempo(this, e -> {

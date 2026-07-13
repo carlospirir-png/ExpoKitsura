@@ -93,7 +93,7 @@ public class TutorialMaulwurfRennt extends PantallaTutorial {
 
         // ---------------------- Imagen 1 ---------------------------------
         try {
-            ImageIcon referencia1icon = new ImageIcon(getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Elementos_graficos/Referencia1.png"));
+            ImageIcon referencia1icon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ImgTutorial1-MaulwurfRennt.png"));
             Image referencia1Escalada = referencia1icon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
             lblImagen1.setIcon(new ImageIcon(referencia1Escalada));
         } catch (Exception e) {
@@ -135,7 +135,7 @@ public class TutorialMaulwurfRennt extends PantallaTutorial {
 
         // ---------------------- Imagen 2 ---------------------------------
         try {
-            ImageIcon referencia2icon = new ImageIcon(getClass().getResource("/Multimedia/Minijuegos/Minijuego_3/Elementos_graficos/Referencia2.png"));
+            ImageIcon referencia2icon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ImgTutorial2-MaulwurfRennt.png"));
             Image referencia2Escalada = referencia2icon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
             lblImagen2.setIcon(new ImageIcon(referencia2Escalada));
         } catch (Exception e) {

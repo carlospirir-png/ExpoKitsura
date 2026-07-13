@@ -5,7 +5,6 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.util.List;
 import main.Menu.*;
-import main.Usuario.EstadisticaDAO;
 
 public class PantallaEstadisticas extends JFrame {
 
@@ -19,7 +18,10 @@ public class PantallaEstadisticas extends JFrame {
 
     private JLabel lblUltimaPartida;
     private JTextField txtUltimaPartida;
-
+    
+    private JLabel lblUltimoJuego;
+    private JTextField txtUltimoJuego;
+    
     private JLabel lblGanadas;
     private JTextField txtGanadas;
 
@@ -38,22 +40,19 @@ public class PantallaEstadisticas extends JFrame {
 
     /*=====================================================================
       NUEVO: DATOS NECESARIOS PARA CONSULTAR LA BASE DE DATOS
+      Ya no se recibe idMinijuego: esta pantalla es una tabla GLOBAL que
+      agrega los datos de Hidden Fox, Fox Jump! y Maulwurf Rennt.
     =====================================================================*/
     private final EstadisticaDAO dao = new EstadisticaDAO();
-    private final int idMinijuego;
-    private final String nombreMinijuego;
     private final int idUsuario;
 
     // Cuántos jugadores como máximo se muestran en la tabla global
     private static final int LIMITE_RANKING = 20;
 
-    /*NUEVO: el constructor ahora requiere saber de qué minijuego se
-      quieren ver las estadísticas (Hidden Fox = 1, Fox Jump! = 2,
-      Maulwurf Rennt = 3, según tu tabla Minijuego).*/
-    public PantallaEstadisticas(int idMinijuego, String nombreMinijuego) {
+    /*NUEVO: el constructor ya no pide el minijuego, porque el ranking y las
+      4 tarjetas inferiores ahora agregan los 3 minijuegos juntos.*/
+    public PantallaEstadisticas() {
 
-        this.idMinijuego = idMinijuego;
-        this.nombreMinijuego = nombreMinijuego;
         this.idUsuario = Sesion.getIdUsuarioActual();
 
         try {
@@ -75,7 +74,7 @@ public class PantallaEstadisticas extends JFrame {
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
 
-        setTitle("Tabla Global - " + nombreMinijuego);
+        setTitle("Tabla Global");
         setSize(1920, 1080);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
@@ -101,9 +100,9 @@ public class PantallaEstadisticas extends JFrame {
 
         modelo.addColumn("JUGADOR");
         modelo.addColumn("TIEMPO");
-        modelo.addColumn("PUNTUACIÓN TOTAL");
+        modelo.addColumn("MAYOR PUNTUACIÓN");
 
-        // NUEVO: se reemplaza la fila de ejemplo por los datos reales del ranking
+        // NUEVO: se reemplaza la fila de ejemplo por el ranking global real
         cargarRanking(modelo);
 
         tabla = new JTable(modelo) {
@@ -124,6 +123,20 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo.add(scrollTabla);
 
+        lblUltimaPuntuacion = new JLabel("Última puntuación");
+        lblUltimaPuntuacion.setFont(fuente2.deriveFont(36f));
+        lblUltimaPuntuacion.setBounds(850, 740, 400, 50);
+        lblUltimaPuntuacion.setForeground(new Color(196, 221, 227));
+
+        fondo.add(lblUltimaPuntuacion);
+
+        txtUltimaPuntuacion = new JTextField("0 pts");
+        txtUltimaPuntuacion.setFont(fuente1.deriveFont(36f));
+        txtUltimaPuntuacion.setEditable(false);
+        txtUltimaPuntuacion.setBounds(850, 790, 340, 50);
+
+        fondo.add(txtUltimaPuntuacion);
+
         lblUltimaPartida = new JLabel("Última partida");
         lblUltimaPartida.setFont(fuente2.deriveFont(38f));
         lblUltimaPartida.setBounds(120, 740, 250, 50);
@@ -137,6 +150,20 @@ public class PantallaEstadisticas extends JFrame {
         txtUltimaPartida.setBounds(120, 790, 340, 50);
 
         fondo.add(txtUltimaPartida);
+
+        lblUltimoJuego = new JLabel("Ultima Partida");
+        lblUltimoJuego.setFont(fuente2.deriveFont(36f));
+        lblUltimoJuego.setBounds(540, 790, 340, 50);
+        lblUltimoJuego.setForeground(new Color(196, 221, 227));
+
+        fondo.add(lblUltimoJuego);
+
+        txtUltimoJuego = new JTextField("Sin Partida");
+        txtUltimoJuego.setFont(fuente1.deriveFont(36f));
+        txtUltimoJuego.setEditable(false);
+        txtUltimoJuego.setBounds(540, 840, 240, 50);
+        
+        fondo.add(txtUltimoJuego);
 
         lblGanadas = new JLabel("Partidas Ganadas");
         lblGanadas.setFont(fuente2.deriveFont(38f));
@@ -152,21 +179,7 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo.add(txtGanadas);
 
-        lblUltimaPuntuacion = new JLabel("Última puntuación");
-        lblUltimaPuntuacion.setFont(fuente2.deriveFont(36f));
-        lblUltimaPuntuacion.setBounds(850, 740, 400, 50);
-        lblUltimaPuntuacion.setForeground(new Color(196, 221, 227));
-
-        fondo.add(lblUltimaPuntuacion);
-
-        txtUltimaPuntuacion = new JTextField("0 pts");
-        txtUltimaPuntuacion.setFont(fuente1.deriveFont(36f));
-        txtUltimaPuntuacion.setEditable(false);
-        txtUltimaPuntuacion.setBounds(850, 790, 340, 50);
-
-        fondo.add(txtUltimaPuntuacion);
-
-        lblPuntuacionTotal = new JLabel("Puntuación máxima");
+        lblPuntuacionTotal = new JLabel("Puntuación total");
         lblPuntuacionTotal.setFont(fuente2.deriveFont(36f));
         lblPuntuacionTotal.setBounds(850, 850, 340, 50);
         lblPuntuacionTotal.setForeground(new Color(196, 221, 227));
@@ -180,7 +193,7 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo.add(txtPuntuacionTotal);
 
-        // NUEVO: se llenan los 4 campos con los datos reales del usuario en sesión
+        // NUEVO: se llenan los 4 campos con los datos globales del usuario en sesión
         cargarDatosUsuario();
 
         btnVolver = new DecoracionBotones("VOLVER", //ColorBase             ColorBorde              ColorLetra
@@ -219,10 +232,12 @@ public class PantallaEstadisticas extends JFrame {
         fondo.add(panelFondo);
     }
 
-    // CARGAR RANKING GLOBAL EN LA TABLA
+    /*=====================================================================
+      NUEVO: CARGAR RANKING GLOBAL EN LA TABLA (agregado de los 3 minijuegos)
+    =====================================================================*/
     private void cargarRanking(DefaultTableModel modelo) {
 
-        List<EstadisticaDAO.FilaRanking> ranking = dao.obtenerRankingGlobal(idMinijuego, LIMITE_RANKING);
+        List<EstadisticaDAO.FilaRanking> ranking = dao.obtenerRankingGlobal(LIMITE_RANKING);
 
         if (ranking.isEmpty()) {
             modelo.addRow(new Object[]{"Aún no hay partidas registradas", "-", "-"});
@@ -239,29 +254,30 @@ public class PantallaEstadisticas extends JFrame {
     }
 
     /*=====================================================================
-      NUEVO: CARGAR LOS 4 CAMPOS CON LOS DATOS DEL USUARIO EN SESIÓN
+      NUEVO: CARGAR LOS 4 CAMPOS CON LOS DATOS GLOBALES DEL USUARIO EN SESIÓN
+      (agregados entre Hidden Fox, Fox Jump! y Maulwurf Rennt)
     =====================================================================*/
-    // 4. EN EL MÉTODO cargarDatosUsuario(): Asignar 'mejorPuntuacion' al cuadro de texto
     private void cargarDatosUsuario() {
 
-        int ganadas = dao.contarPartidasGanadas(idUsuario, idMinijuego);
+        // ---- Partidas ganadas (completadas), en cualquier minijuego ----
+        int ganadas = dao.contarPartidasGanadas(idUsuario);
         txtGanadas.setText(String.valueOf(ganadas));
 
-        EstadisticaDAO.ResumenUsuario resumen = dao.obtenerResumenUsuario(idUsuario, idMinijuego);
+        // ---- Puntuación total acumulada (suma de los 3 minijuegos) ----
+        EstadisticaDAO.ResumenUsuario resumen = dao.obtenerResumenUsuario(idUsuario);
+        txtPuntuacionTotal.setText(resumen.puntuacionTotal + " pts");
 
-        if (resumen != null) {
-            // Al cuadro de texto (que no le cambiamos el nombre de variable para no romper el resto del código)
-            // ahora le asignamos la propiedad 'mejorPuntuacion' del resumen.
-            txtPuntuacionTotal.setText(resumen.mejorPuntuacion + " pts"); 
-        } else {
-            txtPuntuacionTotal.setText("0 pts");
-        }
-
-        EstadisticaDAO.UltimaPartida ultima = dao.obtenerUltimaPartida(idUsuario, idMinijuego);
+        // ---- Última partida jugada, sin importar el minijuego ----
+        EstadisticaDAO.UltimaPartida ultima = dao.obtenerUltimaPartida(idUsuario);
 
         if (ultima != null) {
             txtUltimaPartida.setText(formatearTiempo(ultima.tiempoJugado));
+            // NUEVO: como ahora puede ser cualquiera de los 3 minijuegos, se
+            // agrega el nombre como tooltip para dar contexto sin rediseñar la UI.
+            txtUltimaPartida.setToolTipText("Minijuego: " + ultima.nombreMinijuego);
+
             txtUltimaPuntuacion.setText(ultima.puntuacion + " pts");
+            txtUltimaPuntuacion.setToolTipText("Minijuego: " + ultima.nombreMinijuego);
         } else {
             txtUltimaPartida.setText("Sin partidas");
             txtUltimaPuntuacion.setText("0 pts");
@@ -281,8 +297,7 @@ public class PantallaEstadisticas extends JFrame {
     }
 
     public static void main(String[] args) {
-        // NUEVO: ejemplo de uso directo (Hidden Fox = id_minijuego 1)
-        new PantallaEstadisticas(1, "Hidden Fox");
+        new PantallaEstadisticas();
     }
 
 }

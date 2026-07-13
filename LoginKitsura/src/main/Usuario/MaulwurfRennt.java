@@ -2,7 +2,6 @@
 package main.Usuario;
 
 import java.awt.*;
-import java.util.*;
 import javax.swing.Timer;
 import javax.swing.*;
 
@@ -143,6 +142,7 @@ public class MaulwurfRennt extends JFrame {
             corazones[i] = corazon;
             fondo.add(corazon);
         }
+
 
         // Botón de ayuda.
         btnAyuda = new JButton("¿Necesitas ayuda?");

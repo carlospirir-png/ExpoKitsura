@@ -160,7 +160,7 @@ public class MenuPrincipal extends JFrame {
                 btnEstadisticas.setIcon(new ImageIcon(imgAbaco));
             } catch (Exception e) {}
             btnEstadisticas.addActionListener(e -> {
-                new PantallaEstadisticas(1,"Hidden Fox");
+                new PantallaEstadisticas();
                 dispose();
             });
             fondo.add(btnEstadisticas);
