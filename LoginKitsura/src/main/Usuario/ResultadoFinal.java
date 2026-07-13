@@ -41,7 +41,8 @@ public class ResultadoFinal extends JDialog {
     public void mostrar() {
         setVisible(true);
     }
-
+    
+    
     // Setter para indicar cuántas vidas se perdieron durante la partida
     public void setVidasPerdidas(int vidasPerdidas) {
         this.vidasPerdidas = vidasPerdidas;

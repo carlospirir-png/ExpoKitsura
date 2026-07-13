@@ -96,17 +96,17 @@ public class VictoriaPerfecta extends JFrame {
         //---------------- DATOS DE USUARIO ----------------
         JLabel lblUsuario = new JLabel(Sesion.getNombreUsuario());
         lblUsuario.setFont(fuente2.deriveFont(25f));
-        lblUsuario.setForeground(Color.decode("#FC767D"));
-        lblUsuario.setBounds(1250, 150, 400, 40);
+        lblUsuario.setForeground(Color.WHITE);
+        lblUsuario.setBounds(250, 110, 400, 40);
         panelDerecho.add(lblUsuario);
-        
+
         // BOTON VOLVER
         btnVolver = new DecoracionBotones("VOLVER",
                                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnVolver.setFont(fuente1.deriveFont(20f));
+        btnVolver.setFont(fuente2.deriveFont(16f));
         btnVolver.setBounds(1450, 910, 200, 50);
         fondo.add(btnVolver);
         
@@ -123,7 +123,8 @@ public class VictoriaPerfecta extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnResultados.setBounds(1410, 910, 200, 50);
+        btnResultados.setBounds(1210, 910, 200, 50);
+        btnResultados.setFont(fuente2.deriveFont(15f));
         btnResultados.addActionListener(e -> {
             juego.mostrarResultadoConFade();
         });
@@ -145,6 +146,7 @@ public class VictoriaPerfecta extends JFrame {
         g2.dispose();
         return master;
     }
+    
     
 }
 

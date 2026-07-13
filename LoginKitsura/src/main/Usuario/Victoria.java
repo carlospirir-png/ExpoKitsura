@@ -93,7 +93,7 @@ public class Victoria extends JFrame {
         JLabel lblUsuario = new JLabel(Sesion.getNombreUsuario());
         lblUsuario.setFont(fuente2.deriveFont(25f));
         lblUsuario.setForeground(Color.decode("#FC767D"));
-        lblUsuario.setBounds(1250, 150, 400, 40);
+        lblUsuario.setBounds(250, 110, 400, 40);
         panelDerecho.add(lblUsuario);
 
         //---------------- MASCOTA ----------------
@@ -117,7 +117,7 @@ public class Victoria extends JFrame {
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnVolver.setFont(fuente2.deriveFont(15f));
+        btnVolver.setFont(fuente2.deriveFont(16f));
         btnVolver.setBounds(1450, 910, 200, 50);
         fondo.add(btnVolver);
 
@@ -127,7 +127,7 @@ public class Victoria extends JFrame {
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnResultados.setFont(fuente2.deriveFont(15f));
-        btnResultados.setBounds(1410, 910, 200, 50);
+        btnResultados.setBounds(1210, 910, 200, 50);
         btnResultados.addActionListener(e -> {
             juego.mostrarResultadoConFade();
         });
