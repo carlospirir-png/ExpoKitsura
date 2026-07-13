@@ -20,7 +20,9 @@ public class TicketImpresora {
     private static final float PT_POR_MM = 72f / 25.4f;
     private static final float ANCHO_TICKET_MM = 58f;
 
-    private static final String LOGO_PATH = "/Multimedia/utiles/logotipo/logofK.png";
+    // Imagen que reemplaza el logo pequeño + el texto "KITSURA" en el encabezado.
+    // Ya incluye el zorro y la palabra "Kitsura" integrados en la imagen.
+    private static final String LOGO_PATH = "/Multimedia/utiles/mascotaKitsura/imagen/KitsuraImagenNegro.png";
 
     public static void imprimir(Component parent, int puntaje, int tiempoSegundos, int vidasPerdidas) {
 
@@ -29,10 +31,6 @@ public class TicketImpresora {
         int min = tiempoSegundos / 60;
         int seg = tiempoSegundos % 60;
         String tiempoTexto = String.format("%02d:%02d", min, seg);
-
-        String vidasTexto = (vidasPerdidas <= 0)
-                ? "Ninguna"
-                : vidasPerdidas + " vida(s) perdida(s)";
 
         String fechaTexto = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date());
 
@@ -58,59 +56,61 @@ public class TicketImpresora {
             }
         }
 
+        // Ya no confiamos en pf.getImageableWidth() dentro del Printable: algunos drivers
+        // reportan un ancho distinto al real del rollo, y eso hacía que el texto alineado
+        // a la derecha (o centrado) cayera fuera del área visible.
+        // En su lugar usamos un ancho FIJO basado en el tamaño real del rollo (58mm) y
+        // dibujamos todo anclado a la izquierda, en una sola línea "Etiqueta: valor".
+        final int MARGEN = 5;
+        final int ANCHO_LOGICO = Math.round(anchoPt) - (MARGEN * 2);
+
         job.setPrintable((Graphics g, PageFormat pf, int pageIndex) -> {
 
             if (pageIndex > 0) return Printable.NO_SUCH_PAGE;
 
             Graphics2D g2 = (Graphics2D) g;
-            g2.translate(pf.getImageableX(), pf.getImageableY());
+            g2.translate(pf.getImageableX() + MARGEN, pf.getImageableY());
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            int ancho = (int) pf.getImageableWidth();
+            int ancho = ANCHO_LOGICO;
             int y = 0;
 
-            // ---- Logo ----
-            Image logo = cargarImagen(LOGO_PATH, ancho - 20, 60);
+            // ---- Logo (zorro + "Kitsura"), anclado a la izquierda ----
+            Image logo = cargarImagen(LOGO_PATH, ancho, 90);
             if (logo != null) {
-                int x = (ancho - logo.getWidth(null)) / 2;
-                g2.drawImage(logo, x, y, null);
+                g2.drawImage(logo, 0, y, null);
                 y += logo.getHeight(null) + 8;
+            } else {
+                // Si la imagen no carga, dejamos el texto como respaldo para no perder el encabezado
+                g2.setFont(new Font("Arial", Font.BOLD, 13));
+                g2.drawString("KITSURA", 0, y + 15);
+                y += 25;
             }
-
-            // ---- Título ----
-            g2.setFont(new Font("Arial", Font.BOLD, 13));
-            String titulo = "KITSURA";
-            FontMetrics fmT = g2.getFontMetrics();
-            g2.drawString(titulo, (ancho - fmT.stringWidth(titulo)) / 2, y + fmT.getAscent());
-            y += fmT.getHeight() + 6;
 
             g2.drawLine(0, y, ancho, y);
             y += 12;
 
-            // ---- Foto de perfil ----
+            // ---- Foto de perfil, anclada a la izquierda ----
             Image foto = cargarImagen(datos.rutaFoto, 70, 70);
             if (foto != null) {
-                int x = (ancho - foto.getWidth(null)) / 2;
-                g2.drawImage(foto, x, y, null);
+                g2.drawImage(foto, 0, y, null);
                 y += foto.getHeight(null) + 12;
             }
 
             // ---- Datos (fuente pequeña porque el rollo es angosto) ----
-            g2.setFont(new Font("Arial", Font.PLAIN, 10));
-            y = dibujarLinea(g2, "Usuario:", datos.nombre, ancho, y);
-            y = dibujarLinea(g2, "Puntaje:", String.valueOf(puntaje), ancho, y);
-            y = dibujarLinea(g2, "Tiempo:", tiempoTexto, ancho, y);
-            y = dibujarLinea(g2, "Vidas:", vidasTexto, ancho, y);
-            y = dibujarLinea(g2, "Fecha:", fechaTexto, ancho, y);
+            // Cada dato en una sola línea "Etiqueta: valor", anclada a la izquierda.
+            g2.setFont(new Font("Arial", Font.PLAIN, 11));
+            y = dibujarLinea(g2, "Usuario: " + datos.nombre, y);
+            y = dibujarLinea(g2, "Puntaje: " + puntaje, y);
+            y = dibujarLinea(g2, "Tiempo: " + tiempoTexto, y);
+            y = dibujarLinea(g2, "Fecha: " + fechaTexto, y);
 
             y += 8;
             g2.drawLine(0, y, ancho, y);
             y += 16;
 
             g2.setFont(new Font("Arial", Font.ITALIC, 9));
-            String gracias = "¡Gracias por jugar!";
-            FontMetrics fmG = g2.getFontMetrics();
-            g2.drawString(gracias, (ancho - fmG.stringWidth(gracias)) / 2, y);
+            g2.drawString("¡Gracias por jugar!", 0, y);
 
             return Printable.PAGE_EXISTS;
 
@@ -173,10 +173,9 @@ public class TicketImpresora {
 
     // ---------------- Utilidades de impresión ----------------
 
-    private static int dibujarLinea(Graphics2D g2, String etiqueta, String valor, int ancho, int y) {
+    private static int dibujarLinea(Graphics2D g2, String texto, int y) {
         FontMetrics fm = g2.getFontMetrics();
-        g2.drawString(etiqueta, 0, y + fm.getAscent());
-        g2.drawString(valor, ancho - fm.stringWidth(valor), y + fm.getAscent());
+        g2.drawString(texto, 0, y + fm.getAscent());
         return y + fm.getHeight() + 4;
     }
 
@@ -202,6 +201,9 @@ public class TicketImpresora {
 
             return img.getScaledInstance(nuevoAncho, nuevoAlto, Image.SCALE_SMOOTH);
         } catch (Exception e) {
+            // DEBUG TEMPORAL: para saber por qué no carga la imagen (ruta incorrecta, recurso null, etc.)
+            System.out.println("cargarImagen() FALLÓ para ruta: " + ruta);
+            e.printStackTrace();
             return null;
         }
     }
