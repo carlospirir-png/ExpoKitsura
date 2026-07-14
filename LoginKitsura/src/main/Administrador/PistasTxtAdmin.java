@@ -2,6 +2,7 @@
 package main.Administrador;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import main.Menu.FondoPanel;
@@ -45,6 +46,16 @@ public class PistasTxtAdmin extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Pistas: TXT");
         setSize(1980, 1080);
         setLocationRelativeTo(null);

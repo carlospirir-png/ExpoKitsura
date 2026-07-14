@@ -2,6 +2,7 @@ package main.Administrador;
 
 import java.awt.*;
 import java.awt.Image;
+import java.net.URL;
 import java.sql.*;
 import javax.swing.*;
 import main.Menu.*;
@@ -61,6 +62,15 @@ public class M3_crearNuevo extends JFrame {
         }
         fondo = new FondoPanelSemi("/Multimedia/Minijuegos/Minijuego_3/Fondo.jpg");
         setContentPane(fondo);
+//------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Crear Nuevo - Minijuego 3");
         setSize(1920, 1080);

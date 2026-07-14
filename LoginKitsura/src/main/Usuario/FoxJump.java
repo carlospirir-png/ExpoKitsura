@@ -4,6 +4,7 @@ package main.Usuario;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import javax.swing.*;
 import main.conexion.Conexion;
@@ -165,6 +166,15 @@ public class FoxJump extends JFrame implements JuegoBase {
         fondo = new JPanel(null);
         fondo.setBackground(new Color(178, 197, 178));
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Fox Jump!");
         setSize(1880, 1080);

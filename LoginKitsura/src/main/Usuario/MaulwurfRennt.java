@@ -2,6 +2,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.Timer;
 import javax.swing.*;
 
@@ -64,6 +65,15 @@ public class MaulwurfRennt extends JFrame {
         fondo.setBackground(new Color(178, 197, 178));
 
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         // Propiedades de la ventana de la aplicación.
         setTitle("Maulwurf Rennt");
