@@ -1,29 +1,22 @@
 package main.Administrador;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
+import main.Menu.*;
+import main.Usuario.IniciarSesion;
 
 public class MenuAdmin extends JFrame {
 
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-    // Recibe los datos temporales: minijuego, categoría y nivel
-    private DatosConfiguracion datos;
     
     // Constructor sobrecargado: 
     public MenuAdmin(){
        inicializar();
     }
     
-    public MenuAdmin(DatosConfiguracion datos){
-        this.datos = datos;
-        inicializar();
-    }
-
    private void inicializar() {
         
         try {
@@ -37,6 +30,16 @@ public class MenuAdmin extends JFrame {
         }
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Menú Administrador");
         setSize(1980, 1080);
         setLocationRelativeTo(null);
@@ -80,8 +83,8 @@ public class MenuAdmin extends JFrame {
         
         //ActionListener
         btnPuntuaciones.addActionListener(e -> {
-            //Se abre una nueva ventana de puntuacionesAdmin
-            new PuntuacionesAdmin(datos); //se envían los datos
+            //Se abre una nueva ventana de MCN
+            new PedirMCN("Puntuaciones"); //se envían los datos
             dispose();//se cierra esta ventana
         });
         
@@ -100,7 +103,7 @@ public class MenuAdmin extends JFrame {
         btnVidas.setBounds(180, 430, 430, 65);
         // Dirige a la clase de VidasAdmin y cierra el menú
         btnVidas.addActionListener(e -> {
-            new VidasAdmin(datos);
+            new PedirMCN("Vidas"); 
             dispose();
         });
         // Se agrega el botón al panel principal
@@ -113,7 +116,7 @@ public class MenuAdmin extends JFrame {
         btnTiempo.setFont(fuente2.deriveFont(26f));
         btnTiempo.setBounds(180, 525, 430, 65);
         btnTiempo.addActionListener(e -> {
-            new TiempoAdmin();
+            new PedirMCN("Tiempo"); 
             dispose();
         });
         fondo.add(btnTiempo);
@@ -125,8 +128,8 @@ public class MenuAdmin extends JFrame {
         btnPistas.setFont(fuente2.deriveFont(26f));
         btnPistas.setBounds(180, 620, 430, 65);
         btnPistas.addActionListener(e -> {
-            new PistasMenu();
-            dispose();
+          new PedirMCN("Pistas"); 
+          dispose();
         });
         fondo.add(btnPistas);
         // ---------------- ADMINISTRAR STAGES ----------------
@@ -152,31 +155,20 @@ public class MenuAdmin extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO);
-
-        String[] txt={"USUARIO","PUNTUACIONES","VIDAS","TIEMPO","PISTAS","ADMINISTRAR STAGES"};
-        int y=240;
-        for(int i=0;i<txt.length;i++){
-            JButton b =new DecoracionBotones(txt[i],
-                                    //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
-
-            b.setFont(fuente2.deriveFont(i==5?24f:26f));
-            b.setBounds(180,y,430,65);
-            fondo.add(b);
-            y+=95;
-        }
+        
         volver.setFont(fuente2.deriveFont(28f));
         volver.setBounds(1500, 870, 300, 65);
-        volver.addActionListener(e -> dispose());
+        volver.addActionListener(e -> {
+            new IniciarSesion();
+            dispose();
+                });
         fondo.add(volver);
         setVisible(true);
     }
     
 
     public static void main(String[] args) {
-        DatosConfiguracion datos = new DatosConfiguracion("HiddenFox","Animales","Fácil");
-        new MenuAdmin(datos);
+        new MenuAdmin();
     }
 
 }

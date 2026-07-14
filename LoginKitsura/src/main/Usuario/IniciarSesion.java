@@ -2,11 +2,11 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import java.sql.*;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
-import main.Menu.DecoracionBotones;
+import main.Administrador.*;
+import main.Menu.*;
 import main.conexion.Conexion;
 
 public class IniciarSesion extends JFrame {
@@ -48,6 +48,16 @@ public class IniciarSesion extends JFrame {
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
 
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Inicio de sesión");
         setSize(1880, 1080);
         setLocationRelativeTo(null);
@@ -89,12 +99,12 @@ public class IniciarSesion extends JFrame {
         mascota.setBounds(1210, 540, 400, 400);
 
         fondo.add(mascota);
-        
+
         FondoPanelSemi panelEslogan = new FondoPanelSemi(new Color(0, 0, 0, 140));
         panelEslogan.setBounds(815, 210, 320, 35);
         panelEslogan.setLayout(null);
         fondo.add(panelEslogan);
-        
+
         //---------------- ESLOGAN ----------------
         titulo = new JLabel("No es magia, es mente");
         titulo.setFont(fuente1.deriveFont(34f));
@@ -144,11 +154,10 @@ public class IniciarSesion extends JFrame {
         pnlcontrasena.setOpaque(false);
         pnlcontrasena.setLayout(null);
         pnlcontrasena.setBounds(760, 580, 400, 50); // Un poco más grande que el texto para el margen
-        
-        
+
         //---------------- LABEL RECUPERAR CONTRASEÑA
         JLabel lblRC = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>", SwingConstants.CENTER);
-        lblRC.setFont(fuente2.deriveFont(30f));
+        lblRC.setFont(fuente2.deriveFont(18f));
         lblRC.setForeground(Color.WHITE);
         lblRC.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblRC.setBounds(0, 0, 400, 50); // Se acopla completamente al tamaño del panel contenedor
@@ -169,7 +178,7 @@ public class IniciarSesion extends JFrame {
                 lblRC.setForeground(Color.WHITE);
             }
         });
-        
+
         pnlcontrasena.add(lblRC);
         fondo.add(pnlcontrasena);
 
@@ -178,22 +187,23 @@ public class IniciarSesion extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        
+
         btnLogIn.setFont(fuente2.deriveFont(15f));
         btnLogIn.setBounds(820, 650, 285, 60);
 
         btnLogIn.addActionListener(e -> {
 
-            if (iniciarSesion()) {
+            String rol = iniciarSesion();
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Inicio de sesión exitoso.",
-                        "Bienvenido",
-                        JOptionPane.INFORMATION_MESSAGE);
+            if (rol != null) {
+
+                if (rol.equalsIgnoreCase("administrador")) {
+                    new MenuAdmin();
+                } else {
+                    new MenuPrincipal();
+                }
 
                 dispose();
-                new MenuPrincipal();
             }
         });
 
@@ -206,7 +216,7 @@ public class IniciarSesion extends JFrame {
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO 
         btnVolver.setFont(fuente2.deriveFont(13f));
         btnVolver.setBounds(40, 945, 150, 40);
-        
+
         btnVolver.addActionListener(e -> {
 
             new RegistroUsuario();
@@ -217,7 +227,7 @@ public class IniciarSesion extends JFrame {
         fondo.add(btnVolver);
     }
 
-    private boolean iniciarSesion() {
+    private String iniciarSesion() {
 
         try {
 
@@ -248,8 +258,7 @@ public class IniciarSesion extends JFrame {
                     + "AND contrasena = ? "
                     + "AND estado = 'activo'";
 
-            PreparedStatement ps
-                    = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, usuario);
             ps.setString(2, password);
@@ -258,16 +267,25 @@ public class IniciarSesion extends JFrame {
 
             if (rs.next()) {
 
-                // Se guarda el id del usuario que inició sesión, para que
-                // MenuPrincipal / PantallaPerfil sepan de quién es la partida
+                // Guardar el id del usuario
                 int idUsuario = rs.getInt("id_usuario");
                 Sesion.setIdUsuarioActual(idUsuario);
 
+                // Obtener el rol
+                String rol = rs.getString("rol");
+                
+                // Guardar nombre y foto del usuario que inició sesión
+                String nombreUsuario = rs.getString("nombre_usuario"); 
+                Sesion.setNombreUsuario(nombreUsuario);
+
+                String rutaFoto = rs.getString("imagen_perfil");
+                Sesion.setRutaFotoPerfil(rutaFoto); // si es null (nunca cambió su foto), el setter lo ignora y queda la de defecto
+    
                 rs.close();
                 ps.close();
                 con.close();
 
-                return true;
+                return rol;
             }
 
             rs.close();
@@ -285,7 +303,7 @@ public class IniciarSesion extends JFrame {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
 
-            return false;
+            return null;
 
         } catch (Exception e) {
 
@@ -294,11 +312,13 @@ public class IniciarSesion extends JFrame {
                     "Error: " + e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
+
             e.printStackTrace();
-            return false;
+
+            return null;
         }
     }
-    
+
     public static void main(String[] args) {
         new IniciarSesion();
     }

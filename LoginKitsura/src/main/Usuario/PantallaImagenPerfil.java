@@ -3,6 +3,7 @@ package main.Usuario;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
@@ -60,6 +61,15 @@ public class PantallaImagenPerfil extends JFrame {
         }
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Imagen de Perfil");
         setSize(650, 450);

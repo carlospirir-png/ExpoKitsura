@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import main.Menu.*;
 
@@ -15,8 +16,16 @@ public class ResultadoFinal extends JDialog {
 
     private int puntajeFinal;
     private int tiempoFinal;
+    private int vidasPerdidas = -1; // -1 = sin dato aún
 
     private SeAcaboVidas seAcaboVidas;
+    
+    //---------- VICTORIA -----------
+    //Victoria imperfecta
+    private Victoria victoriaImperfecta;
+    //Victoria perfecta
+    private VictoriaPerfecta victoriaPerfecta;
+    
     private JuegoBase juego;
 
     public ResultadoFinal(JuegoBase juego, int puntaje, int tiempoSegundos) {
@@ -28,9 +37,18 @@ public class ResultadoFinal extends JDialog {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setUndecorated(true);
-        setSize(700, 450);
+        setSize(700, 500);
         setLocationRelativeTo(juego.getFrame());
         fondo.setLayout(null);
 
@@ -39,6 +57,12 @@ public class ResultadoFinal extends JDialog {
 
     public void mostrar() {
         setVisible(true);
+    }
+    
+    
+    // Setter para indicar cuántas vidas se perdieron durante la partida
+    public void setVidasPerdidas(int vidasPerdidas) {
+        this.vidasPerdidas = vidasPerdidas;
     }
 
     private void crearComponentes() {
@@ -77,7 +101,7 @@ public class ResultadoFinal extends JDialog {
 
         //---------------- BOTÓN JUGAR DE NUEVO ----------------
         JButton btnJugarDeNuevo = new DecoracionBotones(
-                "Jugar de nuevo",
+                "JUGAR DE NUEVO",
                 DecoracionBotones.AZUL,
                 DecoracionBotones.GRIS,
                 DecoracionBotones.AMARILLO,
@@ -85,7 +109,7 @@ public class ResultadoFinal extends JDialog {
                 DecoracionBotones.AZUL,
                 DecoracionBotones.AZUL);
 
-        btnJugarDeNuevo.setFont(fuente2.deriveFont(12f));
+        btnJugarDeNuevo.setFont(fuente2.deriveFont(15f));
         btnJugarDeNuevo.setBounds(75, 300, 180, 45);
 
         btnJugarDeNuevo.addActionListener(e -> {
@@ -102,7 +126,7 @@ public class ResultadoFinal extends JDialog {
         fondo.add(btnJugarDeNuevo);
 
         //---------------- BOTÓN MENÚ ----------------
-        JButton btnMenu = new DecoracionBotones("Menú",
+        JButton btnMenu = new DecoracionBotones("MENÚ",
                                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
@@ -115,13 +139,43 @@ public class ResultadoFinal extends JDialog {
             if (seAcaboVidas != null) {
                 seAcaboVidas.dispose();
             }
+            
+            //si hay una ventana de victoria imperfecta
+            if(victoriaImperfecta != null){
+                //La cerramos
+               victoriaImperfecta.dispose();
+            }
+            
+            //si hay una ventana de victoria perfecta
+            if(victoriaPerfecta != null){
+                //La cerramos
+                victoriaPerfecta.dispose();
+            }
 
             dispose();
-
+            
             new MenuPrincipal();
         });
 
         fondo.add(btnMenu);
+
+        //---------------- BOTÓN IMPRIMIR TICKET ----------------
+        JButton btnImprimir = new DecoracionBotones(
+                "IMPRIMIR TICKET",
+                DecoracionBotones.CELESTE,
+                DecoracionBotones.AZUL,
+                DecoracionBotones.AMARILLO,
+                DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE,
+                DecoracionBotones.AZUL);
+
+        btnImprimir.setFont(fuente2.deriveFont(15f));
+        btnImprimir.setBounds(75, 355, 360, 40);
+
+        btnImprimir.addActionListener(e ->
+                TicketImpresora.imprimir(this, puntajeFinal, tiempoFinal, vidasPerdidas));
+
+        fondo.add(btnImprimir);
 
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();

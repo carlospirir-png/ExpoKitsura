@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
@@ -10,7 +11,13 @@ public class VerificarCodigo extends JFrame {
     private Font fuente1;
     private Font fuente2;
     
-    public VerificarCodigo (){
+    //-------------- STRING
+    private String correo; // correo recibido desde RecuperarContrasena
+    
+    public VerificarCodigo (String correo){
+        
+        this.correo = correo;
+        
         try{
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -30,7 +37,16 @@ public class VerificarCodigo extends JFrame {
         
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
-        
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Recuperar Contraseña - Verificar");
         setSize(700, 450);
         setLocationRelativeTo(null); 
@@ -120,7 +136,7 @@ public class VerificarCodigo extends JFrame {
                 // Aquí abrirá la ventana para cambiar contraseña
                 // new NuevaContrasena();
 
-                new NuevaContrasena();
+                new NuevaContrasena(correo);
                 dispose();
 
             }else{
@@ -135,14 +151,11 @@ public class VerificarCodigo extends JFrame {
         
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png")); 
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/Zorro_banderrilla.png")); 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(420, 70, 300, 300);
         fondo.add(mascota);
     }
     
-    public static void main(String[] args) {
-        new VerificarCodigo();
-    }
 }

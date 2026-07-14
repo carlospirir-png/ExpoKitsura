@@ -1,6 +1,7 @@
 package main.Menu;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import main.Usuario.MenuPrincipal;
 
@@ -25,6 +26,16 @@ public class VolverMenu extends JFrame {
         fondo = new JPanel();
         fondo.setBackground(new Color(145, 191, 75));
         fondo.setLayout(null);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setContentPane(fondo);
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -79,7 +90,4 @@ public class VolverMenu extends JFrame {
         fondo.add(btnCancelar);
     }
 
-    public static void main(String[] args) {
-        new VolverMenu();
-    }
 }

@@ -1,3 +1,5 @@
+// ============== HIDDEN FOX ==============
+// ==================== HIDDEN FOX ==================== 
 package main.Usuario;
 
 //------------------------ IMPORTACIONES ----------------------------
@@ -8,6 +10,8 @@ import main.Menu.DecoracionBotones;
 
 public abstract class HiddenFox extends JFrame implements JuegoBase {
 
+    //------------------------------ A T R I B U T O S  -------------------------
+    
     //Atributos
     private final JPanel fondo;
 
@@ -20,18 +24,13 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     // Variables utilizadas para inficar acierto, tiempo, cantidad de puntos, aumento de dificultad, etc.
     // Son textos o etiquetas que pueden almacenar rutas de imagen para convertirlas o redimensionar
     private JLabel titulo, tiempoTexto, tiempo, acierto, puntos, dificultad, categoria, mascota, imagenSombra;
-
-    // ---------------- SISTEMA DE VIDAS DINÁMICO ----------------
+    
     // Cantidad máxima de vidas configurada por el administrador (VidasAdmin) para
-    // el minijuego/categoría/dificultad correspondiente. Ya no está fija en 3.
+    // el minijuego/categoría/dificultad correspondiente. 
     private int maxVidas;
 
-    // Arreglo de corazones generado dinámicamente según "maxVidas" (en vez de
-    // los antiguos vida1, vida2, vida3 fijos, que limitaban el juego a 3 vidas).
+    // Arreglo de corazones generado dinámicamente según "maxVidas"
     private JLabel[] corazones;
-
-    // Cantidad de corazones que se muestran por fila antes de saltar a la siguiente.
-    private static final int CORAZONES_POR_FILA = 5;
 
     // Ruta donde se almacenará la imagen de fondo del minijuego
     JLabel fondoPapel;
@@ -42,12 +41,15 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     // Componentes que provienen de la clase "DecoracionBotones", los cuales son para
     // diferentes acciones dentro del minijuego
     private DecoracionBotones btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
-
+    
+    //-----------------------------  C O N S T R U C T O R --------------------------------------
+   
     // Constructor donde se encuentran las fuentes del programa
     // "maxVidas" es la cantidad de corazones que debe dibujar la interfaz,
     // obtenida previamente desde la base de datos (tabla Configuracion_nivel)
-    // por medio de VidasDAO, en vez de venir fija en 3.
+    // por medio de VidasDAO
     public HiddenFox(int maxVidas) {
+        
         // Resguardo por si llega un valor inválido (0 o negativo)
         this.maxVidas = (maxVidas < 1) ? 1 : maxVidas;
 
@@ -94,7 +96,19 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         fondo.setLayout(null);
         // Se le asigna un color de fondo: Blanco
         fondo.setBackground(Color.WHITE);
+        
+        //----------------- JFRAME -----------------
+        
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
 
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+        
         // Asigna el panel principal de la ventana (JFrame).
         setContentPane(fondo);
 
@@ -115,6 +129,11 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     // Método donde se inicializan y crean los diferentes componentes con sus ajustes personalizados
     private void crearComponentes() {
+        //------------------ ICONO -------------
+        // Cargamos el icono
+        
+        
+        
         //------------------- SOMBRA ---------
         imagenSombra = new JLabel(); //Se crea el label de la imagen sombra
         imagenSombra.setBounds(350, 60, 350, 320); //Se posiciona y configura el tamaño de la sombra
@@ -143,9 +162,9 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
             // Esta conversión es importante para redimensionar la imagen y que no pierda la calidad
             Image corazonEscalado = corazonIcon.getImage().getScaledInstance(
                     // Ancho * alto    Cambio de tamaño con buena calidad
-                    60, 60, Image.SCALE_SMOOTH);
+                    50, 50, Image.SCALE_SMOOTH);
             Image corazonRotoEscalado = rotoIcon.getImage().getScaledInstance(
-                    60, 60, Image.SCALE_SMOOTH);
+                    50, 50, Image.SCALE_SMOOTH);
 
             // Se vuelve a ImageIcon luego de los cambios
             corazonFinal = new ImageIcon(corazonEscalado);
@@ -157,23 +176,21 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         }
 
         // Se generan dinámicamente tantos corazones como "maxVidas" indique
-        // (valor obtenido desde la base de datos por medio de VidasAdmin/VidasDAO).
-        // Antes esto estaba fijo a 3 JLabels (vida1, vida2, vida3).
+        // Es el valor obtenido desde la base de datos por medio de VidasAdmin y VidasDAO
         corazones = new JLabel[maxVidas];
 
         int xInicial = 70;
         int yInicial = 25;
-        int espaciado = 65;
-        int tamano = 60;
+        int espaciado = 55;
+        int tamano = 50;
 
+        // Todos los corazones (de 1 a 10) se dibujan en UNA sola línea
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon = new JLabel(corazonFinal);
             corazon.setBounds(
-                    xInicial + (columna * espaciado),
-                    yInicial + (fila * espaciado),
+                    xInicial + (i * espaciado),
+                    yInicial,
                     tamano, tamano);
 
             corazones[i] = corazon;
@@ -551,10 +568,50 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     }
 
     //------------------------- MAX VIDAS -----------------
-    // Permite que HiddenFox_Codigo sepa cuál es el tope de vidas configurado
-    // (por ejemplo, para decidir si la partida fue "perfecta").
+    // Permite saber cuál es el tope de vidas configurado
     public int getMaxVidas() {
         return maxVidas;
+    }
+
+    //------------------- INICIALIZAR VIDAS  -----------------
+    // Este método reconstruye el arreglo de corazones con el valor real
+    public void inicializarVidas(int nuevoMaxVidas) {
+        if (nuevoMaxVidas < 1) {
+            nuevoMaxVidas = 1;
+        }
+        // Si el valor real coincide con el placeholder, no hay nada que rehacer
+        if (nuevoMaxVidas == this.maxVidas) {
+            return;
+        }
+
+        // Quita del panel los corazones dibujados con el valor placeholder
+        for (JLabel corazon : corazones) {
+            fondo.remove(corazon);
+        }
+
+        this.maxVidas = nuevoMaxVidas;
+        corazones = new JLabel[maxVidas];
+
+        int xInicial = 70;
+        int yInicial = 25;
+        int espaciado = 55;
+        int tamano = 50;
+
+        // Todos los corazones (de 1 a 10) en UNA sola línea, tamaño fijo
+        for (int i = 0; i < maxVidas; i++) {
+
+            JLabel corazon = new JLabel(corazonFinal);
+            corazon.setBounds(
+                    xInicial + (i * espaciado),
+                    yInicial,
+                    tamano, tamano);
+
+            corazones[i] = corazon;
+            fondo.add(corazon);
+        }
+
+        fondo.revalidate();
+        fondo.repaint();
     }
 
     //--------------------- B O T O N E S

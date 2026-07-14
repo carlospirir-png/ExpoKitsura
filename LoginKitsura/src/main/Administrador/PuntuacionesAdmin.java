@@ -1,10 +1,9 @@
 package main.Administrador;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanel;
-import main.Menu.FondoPanelSemi;
+import main.Menu.*;
 
 public class PuntuacionesAdmin extends JFrame {
 
@@ -42,6 +41,15 @@ public class PuntuacionesAdmin extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
+//------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Puntuaciones");
         setSize(1980, 1080);
@@ -59,7 +67,7 @@ public class PuntuacionesAdmin extends JFrame {
     private void crearComponentes() {
 
         //---------------- PANEL TÍTULO ----------------
-        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
+        FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(130, 211, 224, 200));
         panelTitulo.setLayout(null);
         panelTitulo.setBounds(90, 65, 1800, 75);
         fondo.add(panelTitulo);
@@ -71,7 +79,7 @@ public class PuntuacionesAdmin extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- PANEL PRINCIPAL ----------------
-        FondoPanelSemi panelPuntuacion = new FondoPanelSemi(new Color(0, 0, 0, 130));
+        FondoPanelSemi panelPuntuacion = new FondoPanelSemi(new Color(68, 122, 156, 200));
         panelPuntuacion.setLayout(null);
         panelPuntuacion.setBounds(100, 170, 950, 650);
         fondo.add(panelPuntuacion);
@@ -127,7 +135,7 @@ public class PuntuacionesAdmin extends JFrame {
         //---------------- I N F O R M A C I Ó N ----------------
         //Se inicializan los Labels
         //---------------- MODIFICANDO -----------------
-        JLabel lblModificando = new JLabel("Está modificando:");
+        JLabel lblModificando = new JLabel("Estás modificando:");
         //Fuente y tamaño de fuente
         lblModificando.setFont(fuente2.deriveFont(28f));
         //Color de fuente
@@ -191,7 +199,7 @@ public class PuntuacionesAdmin extends JFrame {
         try {
 
             ImageIcon iconMascota = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/Zorro_samurai.png"));
 
             Image img = iconMascota.getImage().getScaledInstance(
                     550,
@@ -219,7 +227,7 @@ public class PuntuacionesAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e -> {
-            new MenuAdmin(datos);
+            new MenuAdmin();
             dispose();
         });
 
@@ -279,7 +287,7 @@ public class PuntuacionesAdmin extends JFrame {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Ingrese únicamente números enteros.",
+                    "Ingrese únicamente números enteros.\n" + ex.getMessage(),
                     "Dato inválido",
                     JOptionPane.ERROR_MESSAGE);
         }

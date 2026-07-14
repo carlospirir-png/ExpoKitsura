@@ -1,15 +1,11 @@
 package main.Administrador;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import main.Menu.DecoracionBotones;
 import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
-// Inserts SQL
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class TiempoAdmin extends JFrame {
 
@@ -18,28 +14,18 @@ public class TiempoAdmin extends JFrame {
     private Font fuente2;
     /* Se declaran como atributos para poder utilizarlos
     desde cualquier método de la clase.    */ 
+    private TiempoDAO tiempoDAO;
     private JTextField txtNuevoTiempo;
     private JLabel lblValorActual;
     private JLabel lblMinijuego;
     private JLabel lblCategoria;
     private JLabel lblNivel;
-    // CONEXION MYSQL
-    /* Verificar datos segun en que maquina estan trabajando 
-    */
- private static String URL =
-    "jdbc:mysql://localhost:3306/KITSURA_DB"
-    + "?useSSL=false"
-    + "&allowPublicKeyRetrieval=true"
-    + "&serverTimezone=America/Guatemala";
-    private final String USER = "root";
-    private final String PASSWORD = "admin";
-    // Temporalmente se mantiene fijo
-    private int idNivel = 1;
     
     private DatosConfiguracion datos;
     
-    public TiempoAdmin() {
-
+    public TiempoAdmin(DatosConfiguracion datos) {
+        this.datos = datos;
+        tiempoDAO = new TiempoDAO();
         try {
 
             // LettersForLearners
@@ -62,6 +48,15 @@ public class TiempoAdmin extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
+//------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Tiempo");
         setSize(1980, 1080);
@@ -193,7 +188,7 @@ public class TiempoAdmin extends JFrame {
         btnVolver.setBounds(1470, 870, 300, 65);
 
         btnVolver.addActionListener(e ->{
-            new MenuAdmin(datos);
+            new MenuAdmin();
             dispose();
                 });
 
@@ -201,71 +196,23 @@ public class TiempoAdmin extends JFrame {
     }
     
     private void cargarInformacionNivel() {
-
-            try {
-
-                Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
-
-                String sql =
-                "SELECT " +
-                "cn.tiempo_limite, " +
-                "cn.dificultad, " +
-                "c.nombre AS categoria, " +
-                "m.nombre AS minijuego " +
-                "FROM Configuracion_nivel cn " +
-                "INNER JOIN Categoria c ON cn.id_categoria = c.id_categoria " +
-                "INNER JOIN Minijuego m ON c.id_minijuego = m.id_minijuego " +
-                "WHERE cn.id_nivel = ?";
-
-                PreparedStatement ps = con.prepareStatement(sql);
-
-                ps.setInt(1, idNivel);
-
-                ResultSet rs = ps.executeQuery();
-
-                if (rs.next()) {
-
-                    lblValorActual.setText(rs.getInt("tiempo_limite") + " segundos");
-
-                    lblNivel.setText("Nivel: " + rs.getString("dificultad"));
-
-                    lblCategoria.setText(
-                            "Categoría: "
-                            + rs.getString("categoria"));
-
-                    lblMinijuego.setText(
-                            "Minijuego: "
-                            + rs.getString("minijuego"));
-
-                }
-
-                rs.close();
-                ps.close();
-                con.close();
-
-            } catch (Exception e) {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Error al cargar la información\n"
-                        + e.getMessage());
-
-            }
-
-        }
+        datos = tiempoDAO.obtenerConfiguracion(datos);
+        lblValorActual.setText(datos.getTiempoLimite() + " segundos");
+        lblNivel.setText("Nivel: " + datos.getNivel());
+        lblCategoria.setText("Categoría: " + datos.getCategoria());
+        lblMinijuego.setText("Minijuego: " + datos.getMinijuego());
+    }
 
     private void editarTiempo() {
-                String tiempoTexto = txtNuevoTiempo.getText().trim();
-
-                // VALIDAR QUE EL CAMPO NO ESTÉ VACÍO
-                if (tiempoTexto.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Ingrese un nuevo tiempo.");
+        String tiempoTexto = txtNuevoTiempo.getText().trim();
+        // VALIDAR QUE EL CAMPO NO ESTÉ VACÍO
+        if (tiempoTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                this,
+                    "Ingrese un nuevo tiempo.");
                     return;
                 }
                 int nuevoTiempo;
-
                 // VALIDAR QUE SOLO CONTENGA NÚMEROS
                 try {
                     nuevoTiempo = Integer.parseInt(tiempoTexto);
@@ -274,58 +221,26 @@ public class TiempoAdmin extends JFrame {
                             this,
                             "El tiempo debe contener únicamente números.");
                     return;
-
                 }
-
-                // VALIDAR QUE SEA MAYOR A CERO
-                if (nuevoTiempo <= 0) {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Ingrese un tiempo mayor que cero.");
-                    return;
+        // VALIDAR QUE SEA MAYOR A CERO
+        if (nuevoTiempo <= 0) {
+            JOptionPane.showMessageDialog(
+                this,
+                    "Ingrese un tiempo mayor que cero.");
+                    return;     
                 }
-                // ACTUALIZAR EN MYSQL
-                try {
-                    Connection con = DriverManager.getConnection(
-                            URL,
-                            USER,
-                            PASSWORD);
-                    String sql =
-                            "UPDATE Configuracion_nivel "
-                          + "SET tiempo_limite = ? "
-                          + "WHERE id_nivel = ?";
-
-                    PreparedStatement ps = con.prepareStatement(sql);
-                    ps.setInt(1, nuevoTiempo);
-                    ps.setInt(2, idNivel);
-                    int filas = ps.executeUpdate();
-
-                    if (filas > 0) {
-                        JOptionPane.showMessageDialog(
-                                this,
-                                "Tiempo actualizado correctamente.");
-
-                        lblValorActual.setText(nuevoTiempo + " segundos");
-
-                        txtNuevoTiempo.setText("");
-
-                    } else {
-
-                        JOptionPane.showMessageDialog(
-                                this,
-                                "No se encontró el nivel seleccionado.");
-                    }
-                    ps.close();
-                    con.close();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Error al actualizar el tiempo.\n\n"
-                            + e.getMessage());
-                }
-
+        boolean actualizado =
+            tiempoDAO.actualizarTiempo(datos, nuevoTiempo);
+        if (actualizado) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Tiempo actualizado correctamente.");
+            lblValorActual.setText(nuevoTiempo + " segundos");
+            txtNuevoTiempo.setText("");
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se encontró el nivel seleccionado.");
             }
-    public static void main(String[] args) {
-        new TiempoAdmin();
     }
 }

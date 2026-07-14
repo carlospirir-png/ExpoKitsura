@@ -2,9 +2,9 @@
 package main.Administrador;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
-import main.Menu.FondoPanelSemi;
-import main.Menu.DecoracionBotones;
+import main.Menu.*;
 import java.sql.*; //Importamos sql
 import main.conexion.Conexion; //Importamos la conexión
 
@@ -50,6 +50,15 @@ public class NuevoAdmin extends JFrame {
         }
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+//------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Añadir Administrador");
         setSize(1920, 1080);
@@ -146,7 +155,7 @@ public class NuevoAdmin extends JFrame {
 
         ImageIcon mascotaIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/PAPEL_INSTRUCCIONES.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
@@ -167,7 +176,10 @@ public class NuevoAdmin extends JFrame {
         btnSalir.setFont(fuente2.deriveFont(30f));
         btnSalir.setForeground(Color.WHITE);
         btnSalir.setBounds(1695, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e -> {
+            new UsuarioMenu();
+            dispose();
+        });
         fondo.add(btnSalir);
     }
 
@@ -194,6 +206,9 @@ public class NuevoAdmin extends JFrame {
                     "Ingrese un correo válido. (ej. @kitsura.com)",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
+
+            //Se limpia el campo del correo
+            txtCorreo.setText("");
             return;
         }
 
@@ -204,16 +219,23 @@ public class NuevoAdmin extends JFrame {
                     "La contraseña debe tener mínimo 6 caracteres.",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
+            
+            //Se limpia el campo de la contraseña
+            txtContra.setText("");
             return;
         }
 
         //------- SI EL CORREO EXISTE -----------
-        if (verificarCorreo(correo)){
+        if (verificarCorreo(correo)) {
             JOptionPane.showMessageDialog(
-                        this,
-                        "Ya existe una cuenta con ese correo.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                    this,
+                    "Ya existe una cuenta con ese correo.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            
+            //Se limpia el campo del correo
+            txtCorreo.setText("");
+            return;
         }
 
         //Consulta
@@ -233,10 +255,7 @@ public class NuevoAdmin extends JFrame {
                     this,
                     "Administrador agregado correctamente.");
 
-            //se limpian los text
-            txtNombre.setText("");
-            txtCorreo.setText("");
-            txtContra.setText("");
+            Limpiar();
 
             //Captura la excepción SQl
         } catch (SQLException e) {
@@ -247,6 +266,13 @@ public class NuevoAdmin extends JFrame {
             //Imprime el StackTrace
             e.printStackTrace();
         }
+    }
+
+    public void Limpiar() {
+        //se limpian los text
+        txtNombre.setText("");
+        txtCorreo.setText("");
+        txtContra.setText("");
     }
 
     public boolean verificarCorreo(String correo) {
@@ -261,21 +287,21 @@ public class NuevoAdmin extends JFrame {
             if (rs.next()) {
                 return true;
             }
-            
+
             return false;
-        //Captura la excepción SQL
+            //Captura la excepción SQL
         } catch (SQLException e) {
             //Si hay excepción: mensaje de error
             JOptionPane.showMessageDialog(
                     this,
                     "Ocurrió un error en el correo:\n" + e.getMessage());
+            
+            Limpiar();
+            
             //Imprime el StackTrace
             e.printStackTrace();
             return false;
         }
     }
 
-    public static void main(String[] args) {
-        new NuevoAdmin();
-    }
 }

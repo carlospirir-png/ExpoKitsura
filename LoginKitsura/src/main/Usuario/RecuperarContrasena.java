@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
@@ -13,7 +14,7 @@ public class RecuperarContrasena extends JFrame {
     private static String codigoRecuperacion;
 
     /* Variable global que nos ayudara a generar el
-                                                codigo para el recuperar contraseña*/
+     codigo para el recuperar contraseña*/
 
     public RecuperarContrasena() {
         try {
@@ -36,6 +37,15 @@ public class RecuperarContrasena extends JFrame {
         fondo = new JPanel();
         fondo.setBackground(new Color(130, 211, 224));
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Recuperar Contraseña");
         setSize(700, 450);
@@ -54,17 +64,17 @@ public class RecuperarContrasena extends JFrame {
         fondo.add(panelContenedor);
 
         //---------------- T I T U L O ----------------
-        JLabel lblIndicacion = new JLabel("Ingrese su nombre de usuario: ");
+        JLabel lblIndicacion = new JLabel("Ingrese su correo electronico: ");
         lblIndicacion.setFont(fuente2.deriveFont(25F));
         lblIndicacion.setForeground(Color.WHITE);
         lblIndicacion.setBounds(20, 20, 365, 45);
         panelContenedor.add(lblIndicacion);
 
         //---------------- CAMPO DE TEXTO ----------------
-        JTextField txtUsuario = new JTextField();
-        txtUsuario.setBounds(20, 95, 350, 40);
-        txtUsuario.setFont(fuente1.deriveFont(20f));
-        panelContenedor.add(txtUsuario);
+        JTextField txtCorreo = new JTextField();
+        txtCorreo.setBounds(20, 95, 350, 40);
+        txtCorreo.setFont(fuente1.deriveFont(20f));
+        panelContenedor.add(txtCorreo);
 
         //---------------- BOTON ACEPTAR ----------------
         JButton btnAceptar = new DecoracionBotones("ENVIAR CÓDIGO",
@@ -75,29 +85,30 @@ public class RecuperarContrasena extends JFrame {
         btnAceptar.setBounds(95, 230, 200, 45);
         panelContenedor.add(btnAceptar);
         btnAceptar.addActionListener(e -> {
-            // Programamos el boton que nos ayudara a:
-            String usuario = txtUsuario.getText().trim();
-            // Verificar si el usuario ha dejado vacio el campo
-            if (usuario.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Ingrese un nombre de usuario.");
-                return; // mostrara la frase "Ingrese un nombre de usuario."
-            }
-
-            codigoRecuperacion = generarCodigo(); // es igual al metodo creado
-
+            String correo = txtCorreo.getText().trim();
+        if (correo.isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Su código de recuperación es:\n\n" + codigoRecuperacion);
-            // Abre la nueva interfaz donde el usuario ingresara el codigo generado
-            new VerificarCodigo();
-            dispose();
+                    "Ingrese su correo electrónico");
+            return;
+        }
+        if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese un correo electrónico válido.");
+            return;
+        }
+        codigoRecuperacion = generarCodigo();
+        JOptionPane.showMessageDialog(
+                this,
+                "Su código de recuperación es:\n\n" + codigoRecuperacion);
+        new VerificarCodigo(correo);// <-- se le pasa el correo
+        dispose();
         });
 
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/Zorro_kimono_azul.png"));
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(420, 70, 300, 300);

@@ -7,8 +7,9 @@ import main.Menu.FondoPanel;
 
 // Importaciones para MySQL
 import java.io.File;
+import java.net.URL;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import main.conexion.Conexion;
 import java.sql.PreparedStatement;
 import java.util.regex.Pattern;
 
@@ -26,11 +27,7 @@ public class editarUsuario extends JFrame {
     private JTextField txtID, txtNombre, txtCorreo;
     private JPasswordField txtContra;
     private JButton btnCargar, btnEditar;
-    
-    // Conexion MySQL
-    private final String URL = "jdbc:mysql://localhost:3306/KITSURA_DB";
-    private final String USER = "root";
-    private final String PASSWORD = "";
+    private Conexion conexion = new Conexion();
     
     // ruta de la imagen 
     private String rutaImagen = "";
@@ -47,6 +44,16 @@ public class editarUsuario extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Editar Usuario");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
@@ -247,10 +254,7 @@ public class editarUsuario extends JFrame {
 
             // CONECTAR A MYSQL
             try {
-                Connection con = DriverManager.getConnection(
-                        URL,
-                        USER,
-                        PASSWORD);
+                Connection con = conexion.getConnection();
 
                 // VERIFICAR SI EL USUARIO EXISTE
                 String consulta =

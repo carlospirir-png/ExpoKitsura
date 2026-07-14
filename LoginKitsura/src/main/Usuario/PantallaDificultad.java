@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import main.Menu.FondoPanelSemi;
 import java.awt.event.*;
+import java.net.URL;
 
 public class PantallaDificultad extends JFrame {
 
@@ -57,6 +58,16 @@ public class PantallaDificultad extends JFrame {
 
         if (!(ventanaAnterior instanceof FoxJump) && !(ventanaAnterior instanceof HiddenFox_Codigo)) {
             setContentPane(fondo);
+            //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
             setTitle("Pantalla de Dificultad");
             setSize(1880, 1080);
             setLocationRelativeTo(null);
