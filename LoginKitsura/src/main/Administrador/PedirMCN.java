@@ -197,7 +197,7 @@ public class PedirMCN extends JFrame {
 
         // MASCOTA
         JLabel mascotaControl = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/PAPEL_INSTRUCCIONES.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH);
         mascotaControl.setIcon(new ImageIcon(imgEscalada));
         mascotaControl.setBounds(200, 180, 650, 650);

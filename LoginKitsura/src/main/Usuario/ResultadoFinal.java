@@ -19,6 +19,13 @@ public class ResultadoFinal extends JDialog {
     private int vidasPerdidas = -1; // -1 = sin dato aún
 
     private SeAcaboVidas seAcaboVidas;
+    
+    //---------- VICTORIA -----------
+    //Victoria imperfecta
+    private Victoria victoriaImperfecta;
+    //Victoria perfecta
+    private VictoriaPerfecta victoriaPerfecta;
+    
     private JuegoBase juego;
 
     public ResultadoFinal(JuegoBase juego, int puntaje, int tiempoSegundos) {
@@ -94,7 +101,7 @@ public class ResultadoFinal extends JDialog {
 
         //---------------- BOTÓN JUGAR DE NUEVO ----------------
         JButton btnJugarDeNuevo = new DecoracionBotones(
-                "Jugar de nuevo",
+                "JUGAR DE NUEVO",
                 DecoracionBotones.AZUL,
                 DecoracionBotones.GRIS,
                 DecoracionBotones.AMARILLO,
@@ -102,7 +109,7 @@ public class ResultadoFinal extends JDialog {
                 DecoracionBotones.AZUL,
                 DecoracionBotones.AZUL);
 
-        btnJugarDeNuevo.setFont(fuente2.deriveFont(12f));
+        btnJugarDeNuevo.setFont(fuente2.deriveFont(15f));
         btnJugarDeNuevo.setBounds(75, 300, 180, 45);
 
         btnJugarDeNuevo.addActionListener(e -> {
@@ -119,7 +126,7 @@ public class ResultadoFinal extends JDialog {
         fondo.add(btnJugarDeNuevo);
 
         //---------------- BOTÓN MENÚ ----------------
-        JButton btnMenu = new DecoracionBotones("Menú",
+        JButton btnMenu = new DecoracionBotones("MENÚ",
                                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
@@ -132,9 +139,21 @@ public class ResultadoFinal extends JDialog {
             if (seAcaboVidas != null) {
                 seAcaboVidas.dispose();
             }
+            
+            //si hay una ventana de victoria imperfecta
+            if(victoriaImperfecta != null){
+                //La cerramos
+               victoriaImperfecta.dispose();
+            }
+            
+            //si hay una ventana de victoria perfecta
+            if(victoriaPerfecta != null){
+                //La cerramos
+                victoriaPerfecta.dispose();
+            }
 
             dispose();
-
+            
             new MenuPrincipal();
         });
 
@@ -142,15 +161,15 @@ public class ResultadoFinal extends JDialog {
 
         //---------------- BOTÓN IMPRIMIR TICKET ----------------
         JButton btnImprimir = new DecoracionBotones(
-                "Imprimir ticket",
+                "IMPRIMIR TICKET",
                 DecoracionBotones.CELESTE,
-                DecoracionBotones.AZUL,
                 DecoracionBotones.AZUL,
                 DecoracionBotones.AMARILLO,
+                DecoracionBotones.AMARILLO,
                 DecoracionBotones.CELESTE,
-                DecoracionBotones.CELESTE);
+                DecoracionBotones.AZUL);
 
-        btnImprimir.setFont(fuente2.deriveFont(12f));
+        btnImprimir.setFont(fuente2.deriveFont(15f));
         btnImprimir.setBounds(75, 355, 360, 40);
 
         btnImprimir.addActionListener(e ->

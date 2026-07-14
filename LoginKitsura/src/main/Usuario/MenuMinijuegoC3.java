@@ -90,7 +90,7 @@ public class MenuMinijuegoC3 extends JFrame {
         JLabel mascota = new JLabel();
         try {
             ImageIcon mascotaIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroMartillo.png"));
             Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
             mascota.setIcon(new ImageIcon(mascotaEscalada));
         } catch (Exception e) {
@@ -112,7 +112,7 @@ public class MenuMinijuegoC3 extends JFrame {
         panelTitulo.add(lblTitulo);
 
         //---------------- CATEGORÍA 1 ----------------
-        JButton btnCategoria1 = new DecoracionBotones("OPERACIONES BASICAS",
+        JButton btnCategoria1 = new DecoracionBotones("OPERACIONES BÁSICAS",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO 
@@ -138,7 +138,7 @@ public class MenuMinijuegoC3 extends JFrame {
         fondo.add(btnCategoria2);
 
         //---------------- CATEGORÍA 3 ----------------
-        JButton btnCategoria3 = new DecoracionBotones("CIENTIFICOS MATEMATICOS",
+        JButton btnCategoria3 = new DecoracionBotones("CIENTÍFICOS MATEMÁTICOS",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO
@@ -164,7 +164,4 @@ public class MenuMinijuegoC3 extends JFrame {
         fondo.add(btnVolver);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(MenuMinijuegoC3::new);
-    }
 }

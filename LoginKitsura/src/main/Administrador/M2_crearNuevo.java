@@ -256,7 +256,7 @@ public class M2_crearNuevo extends JFrame {
 
         ImageIcon mascotaIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGLAS-PISTA_TEXTUAL.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/KitsuraFlotador.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(

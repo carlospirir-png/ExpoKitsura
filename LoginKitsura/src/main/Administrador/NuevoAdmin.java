@@ -155,7 +155,7 @@ public class NuevoAdmin extends JFrame {
 
         ImageIcon mascotaIcon
                 = new ImageIcon(
-                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
+                        getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/PAPEL_INSTRUCCIONES.png"));
 
         Image mascotaEscalada
                 = mascotaIcon.getImage().getScaledInstance(
