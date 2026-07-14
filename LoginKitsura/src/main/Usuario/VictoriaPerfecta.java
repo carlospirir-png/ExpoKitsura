@@ -1,7 +1,6 @@
 package main.Usuario;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import javax.swing.*;
@@ -15,9 +14,9 @@ public class VictoriaPerfecta extends JFrame {
     private Font fuente2;
     private JuegoBase juego;
 
-    private DecoracionBotones btnVolver, btnResultados;
+    private DecoracionBotones btnResultados;
     
-    public VictoriaPerfecta(ActionListener accion, JuegoBase juego) {
+    public VictoriaPerfecta(JuegoBase juego) {
         this.juego = juego;
         try{
             // LettersForLearners
@@ -50,13 +49,7 @@ public class VictoriaPerfecta extends JFrame {
 
         crearComponentes();
 
-        
-        //--------------- VOLVER --------------
-        btnVolver.addActionListener(e -> {
-            dispose();          
-            accion.actionPerformed(e); 
-        });
-        setVisible(true);
+       
 
     }
 
@@ -109,16 +102,6 @@ public class VictoriaPerfecta extends JFrame {
         lblUsuario.setForeground(Color.WHITE);
         lblUsuario.setBounds(250, 110, 400, 40);
         panelDerecho.add(lblUsuario);
-
-        // BOTON VOLVER
-        btnVolver = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
-
-        btnVolver.setFont(fuente2.deriveFont(16f));
-        btnVolver.setBounds(1450, 910, 200, 50);
-        fondo.add(btnVolver);
         
         // MASCOTA
         JLabel mascotaCongrats = new JLabel();
@@ -133,8 +116,8 @@ public class VictoriaPerfecta extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnResultados.setBounds(1210, 910, 200, 50);
-        btnResultados.setFont(fuente2.deriveFont(15f));
+        btnResultados.setBounds(1210, 910, 400, 50);
+        btnResultados.setFont(fuente2.deriveFont(25f));
         btnResultados.addActionListener(e -> {
             juego.mostrarResultadoConFade();
         });

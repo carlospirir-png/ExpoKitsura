@@ -117,6 +117,18 @@ public class ResultadoFinal extends JDialog {
             if (seAcaboVidas != null) {
                 seAcaboVidas.dispose();
             }
+            
+             //si hay una ventana de victoria imperfecta
+            if(victoriaImperfecta != null){
+                //La cerramos
+               victoriaImperfecta.dispose();
+            }
+            
+            //si hay una ventana de victoria perfecta
+            if(victoriaPerfecta != null){
+                //La cerramos
+                victoriaPerfecta.dispose();
+            }
 
             dispose();
 
@@ -164,10 +176,10 @@ public class ResultadoFinal extends JDialog {
                 "IMPRIMIR TICKET",
                 DecoracionBotones.CELESTE,
                 DecoracionBotones.AZUL,
-                DecoracionBotones.AMARILLO,
+                DecoracionBotones.AZUL,
                 DecoracionBotones.AMARILLO,
                 DecoracionBotones.CELESTE,
-                DecoracionBotones.AZUL);
+                DecoracionBotones.AMARILLO_MOSTAZA);
 
         btnImprimir.setFont(fuente2.deriveFont(15f));
         btnImprimir.setBounds(75, 355, 360, 40);

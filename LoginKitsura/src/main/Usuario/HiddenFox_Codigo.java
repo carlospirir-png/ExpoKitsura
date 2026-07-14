@@ -54,7 +54,7 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
     private int puntosDB;
 
     //Esta variable defina la cantidad de respuestas correctas que se necesitan para pasar a la siguiente dificultad.
-    private static final int CORRECTAS = 5;
+    private static final int CORRECTAS = 1;
 
     //Esta variable almacena las respuestas correctas totales que lleva el jugador.
     private int respuestas_Correctas = 0;
@@ -172,19 +172,23 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
 
                 if (vidas == getMaxVidas() && puntos == getPuntajeMaximo() && !usoPista) {
 
-                    VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
-                    }, this);
+                    VictoriaPerfecta vp = new VictoriaPerfecta(this);
 
                     fadeTo(() -> {
                         setContentPane(vp.getFondo());
                     }, 400);
+                    
+                    vp.dispose();
+                    
                 } else {
-                    Victoria v = new Victoria(e -> {
-                    }, this);
+                    Victoria v = new Victoria(this);
 
                     fadeTo(() -> {
                         setContentPane(v.getFondo());
                     }, 400);
+                    
+                    v.dispose();
+                    
                 }
             }
         }

@@ -576,12 +576,10 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             // SI CONSERVO TODAS LAS VIDAS = VICTORIA PERFECTA, SINO = VICTORIA NORMAL
             if (vidas == maxVidas) {
-                VictoriaPerfecta vp = new VictoriaPerfecta(e2 -> {
-                }, this);
+                VictoriaPerfecta vp = new VictoriaPerfecta(this);
                 fadeTo(() -> setContentPane(vp.getFondo()), 400);
             } else {
-                Victoria v = new Victoria(e2 -> {
-                }, this);
+                Victoria v = new Victoria(this);
                 fadeTo(() -> setContentPane(v.getFondo()), 400);
             }
         }).start();

@@ -503,8 +503,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
                 System.out.println("Entró a Victoria Perfecta");
 
-                VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
-                }, this);
+                VictoriaPerfecta vp = new VictoriaPerfecta(this);
 
                 vista.setContentPane(vp.getFondo());
                 vista.revalidate();
@@ -514,8 +513,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
                 System.out.println("Entró a Victoria");
 
-                Victoria v = new Victoria(e -> {
-                }, this);
+                Victoria v = new Victoria(this);
 
                 vista.setContentPane(v.getFondo());
                 vista.revalidate();
