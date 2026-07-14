@@ -8,7 +8,7 @@ import main.Menu.*;
 
 public class PantallaEstadisticas extends JFrame {
 
-    private FondoPanelSemi fondo;
+    private final FondoPanelSemi fondo;
     private FondoPanelSemi panelFondo;
 
     private JLabel lblTitulo;
@@ -18,10 +18,10 @@ public class PantallaEstadisticas extends JFrame {
 
     private JLabel lblUltimaPartida;
     private JTextField txtUltimaPartida;
-    
+
     private JLabel lblUltimoJuego;
     private JTextField txtUltimoJuego;
-    
+
     private JLabel lblGanadas;
     private JTextField txtGanadas;
 
@@ -33,7 +33,6 @@ public class PantallaEstadisticas extends JFrame {
 
     private JButton btnVolver;
 
-    private JLabel lblLogo;
     private JLabel lblMascota;
     private Font fuente1;
     private Font fuente2;
@@ -162,7 +161,7 @@ public class PantallaEstadisticas extends JFrame {
         txtUltimoJuego.setFont(fuente1.deriveFont(36f));
         txtUltimoJuego.setEditable(false);
         txtUltimoJuego.setBounds(540, 840, 240, 50);
-        
+
         fondo.add(txtUltimoJuego);
 
         lblGanadas = new JLabel("Partidas Ganadas");
@@ -272,8 +271,6 @@ public class PantallaEstadisticas extends JFrame {
 
         if (ultima != null) {
             txtUltimaPartida.setText(formatearTiempo(ultima.tiempoJugado));
-            // NUEVO: como ahora puede ser cualquiera de los 3 minijuegos, se
-            // agrega el nombre como tooltip para dar contexto sin rediseñar la UI.
             txtUltimaPartida.setToolTipText("Minijuego: " + ultima.nombreMinijuego);
 
             txtUltimaPuntuacion.setText(ultima.puntuacion + " pts");
@@ -282,6 +279,12 @@ public class PantallaEstadisticas extends JFrame {
             txtUltimaPartida.setText("Sin partidas");
             txtUltimaPuntuacion.setText("0 pts");
         }
+
+        // NUEVO: se llena el campo "Último juego" usando el método dedicado
+        // de EstadisticaDAO. Es independiente de "ultima" de arriba, aunque
+        // en la práctica ambos apuntan a la misma partida más reciente.
+        String ultimoMinijuego = dao.obtenerUltimoMinijuegoJugado(idUsuario);
+        txtUltimoJuego.setText(ultimoMinijuego != null ? ultimoMinijuego : "Sin Partida");
     }
 
     //--------------------- F O R M A T O   D E   T I E M P O ---------------------

@@ -73,8 +73,6 @@ public class FoxJump extends JFrame implements JuegoBase {
     // Id del minijuego "Fox Jump!" según la tabla Minijuego (INSERT inicial: 2 = Fox Jump!)
     private static final int ID_MINIJUEGO = 2;
 
-    // Usuario logueado, obtenido de la sesión guardada por IniciarSesion
-    private int idUsuario;
 
     // Id de la partida en curso (fila de la tabla Partida). -1 mientras no se ha creado.
     private int idPartida = -1;
@@ -133,7 +131,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     private boolean pistaMostradaEnPreguntaActual = false;
 
     private final EstadisticaDAO estadisticaDAO = new EstadisticaDAO();
-    private final int idUsuario = Sesion.getIdUsuarioActual();
+    private  int idUsuario = Sesion.getIdUsuarioActual();
 
     // EVITA GUARDAR LA MISMA PARTIDA DOS VECES (p.ej. si dos rutas de fin
     // de juego se disparan casi al mismo tiempo)
@@ -532,15 +530,10 @@ public class FoxJump extends JFrame implements JuegoBase {
             return;
         }
         finJuegoActivo = true;
-<<<<<<< HEAD
-
         // NUEVO: se cierra la partida como "completada" en la base de datos
         // y se actualiza la estadística acumulada del usuario.
         guardarFinDePartida("completada");
-
-=======
         guardarEstadisticasPartida(true); // victoria = completada
->>>>>>> 7b4bf89ef623be3040710e2d8bf4353081f8d284
         detenerCountdown();
         bloquearNenufares();
 

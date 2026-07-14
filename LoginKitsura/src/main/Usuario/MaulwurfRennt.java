@@ -143,7 +143,6 @@ public class MaulwurfRennt extends JFrame {
             fondo.add(corazon);
         }
 
-
         // Botón de ayuda.
         btnAyuda = new JButton("¿Necesitas ayuda?");
         btnAyuda.setFont(fuente2.deriveFont(18f));
@@ -365,7 +364,7 @@ public class MaulwurfRennt extends JFrame {
             carteles[i] = new JLabel("", SwingConstants.CENTER);
             carteles[i].setOpaque(true);
             carteles[i].setBackground(new Color(118, 169, 170));
-            carteles[i].setFont(fuente2.deriveFont(22f));
+            carteles[i].setFont(fuente2.deriveFont(15f));
 
             carteles[i].setBounds(
                     posiciones[i][0] + 5,
@@ -470,7 +469,7 @@ public class MaulwurfRennt extends JFrame {
         }
     }
 
-    // Reubica aleatoriamente las coordenadas de los topos activos para desordenar el tablero.
+    // Reubica aleatoriamente las coordenadas de los topos activos para desordenar el tablero. 
     public void mezclarTopos(int cantidad) {
 //        Point[] posiciones = {
 //            new Point(180, 0),
@@ -655,8 +654,16 @@ public class MaulwurfRennt extends JFrame {
     }
 
     // Retorna la instancia del botón de ayuda para poder asignarle listeners externos.
+// Retorna la instancia del botón de ayuda para poder asignarle listeners externos.
     public JButton getBtnAyuda() {
         return btnAyuda;
+    }
+
+// Muestra u oculta el botón de ayuda según si la categoría actual admite pistas.
+// Las categorías de operaciones matemáticas (Básicas/Avanzadas) no la necesitan;
+// solo tiene sentido en "Científicos Matemáticos", que sí tiene preguntas teóricas.
+    public void mostrarBotonAyuda(boolean mostrar) {
+        btnAyuda.setVisible(mostrar);
     }
 
     // Despliega un cuadro de diálogo emergente (JOptionPane) con un mensaje.

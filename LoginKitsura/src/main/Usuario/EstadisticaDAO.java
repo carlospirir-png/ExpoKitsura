@@ -201,6 +201,38 @@ public class EstadisticaDAO {
         return null; // el usuario todavía no ha jugado ningún minijuego
     }
 
+    //------------------------ Ú L T I M O   M I N I J U E G O   J U G A D O (NUEVO) ------------------------
+    /*Devuelve solo el NOMBRE del minijuego de la partida más reciente del
+      usuario (sin importar cuál de los 3 fue). Se usa para llenar el campo
+      "Último juego" de PantallaEstadisticas. Devuelve null si el usuario
+      todavía no ha jugado ninguna partida.*/
+    public String obtenerUltimoMinijuegoJugado(int idUsuario) {
+
+        String sql
+                = "SELECT m.nombre AS nombre_minijuego "
+                + "FROM Partida p "
+                + "INNER JOIN Minijuego m ON m.id_minijuego = p.id_minijuego "
+                + "WHERE p.id_usuario = ? "
+                + "ORDER BY p.id_partida DESC "
+                + "LIMIT 1";
+
+        try (Connection con = new Conexion().getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idUsuario);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("nombre_minijuego");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al obtener el último minijuego jugado: " + e.getMessage());
+        }
+
+        return null;
+    }
+
     //------------------------ G U A R D A R   P A R T I D A ------------------------
     /*Registra el resultado de una partida (para CUALQUIER minijuego) y
       actualiza/crea la fila correspondiente en Estadistica para ese
@@ -231,6 +263,37 @@ public class EstadisticaDAO {
 
         } catch (SQLException e) {
             System.out.println("Error al guardar la partida: " + e.getMessage());
+        }
+    }
+
+    //------------------------ S U M A R   E S T A D Í S T I C A (NUEVO) ------------------------
+    /*Wrapper público para minijuegos que YA manejan su propio ciclo de vida
+      de la fila Partida (crearPartida al inicio + finalizarPartida al
+      final, como Hidden Fox, Fox Jump! y Maulwurf Rennt) y solo necesitan
+      actualizar el acumulado de Estadistica al terminar la partida, SIN
+      crear una fila nueva en Partida (eso ya lo hizo su propio DAO).
+
+      Reutiliza la misma lógica de suma (nunca sobrescribe, siempre suma)
+      que usa guardarPartida internamente, para que el dato que se guarda
+      sea idéntico al que luego lee PantallaEstadisticas.*/
+    public void sumarEstadistica(int idUsuario, int idMinijuego, int puntuacion, int tiempoJugado) {
+
+        // Nunca se envían puntos negativos a la BD, pero tampoco se fuerza a
+        // 0 si el jugador legítimamente ganó puntos antes de perder.
+        int puntuacionSegura = Math.max(0, puntuacion);
+        int tiempoSeguro = Math.max(0, tiempoJugado);
+
+        try (Connection con = new Conexion().getConnection()) {
+
+            if (con == null) {
+                System.out.println("No se pudo conectar a la BD para actualizar la estadística.");
+                return;
+            }
+
+            actualizarEstadistica(con, idUsuario, idMinijuego, puntuacionSegura, tiempoSeguro);
+
+        } catch (SQLException e) {
+            System.out.println("Error al sumar la estadística: " + e.getMessage());
         }
     }
 
@@ -266,7 +329,13 @@ public class EstadisticaDAO {
 
     /*Upsert manual: primero intenta SUMAR sobre la fila existente
       (id_usuario + id_minijuego). Si no existe ninguna fila (0 filas
-      afectadas), la crea desde cero.*/
+      afectadas), la crea desde cero.
+
+      IMPORTANTE: esta es la ÚNICA lógica de acumulación de Estadistica en
+      todo el proyecto. Tanto guardarPartida() como sumarEstadistica()
+      pasan por aquí, así que no hay dos copias del mismo SQL que puedan
+      desincronizarse (esa duplicación era la causa de que los puntos
+      parecieran "perderse" al terminar una partida en derrota).*/
     private void actualizarEstadistica(Connection con, int idUsuario, int idMinijuego,
             int puntuacion, int tiempoJugado) throws SQLException {
 

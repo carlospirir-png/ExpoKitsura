@@ -7,7 +7,7 @@ import main.Menu.*;
 
 public class MenuMinijuegoC3 extends JFrame {
 
-    private FondoPanel fondo;
+    private final FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
     private TutorialMaulwurfRennt tutorial;
@@ -131,7 +131,7 @@ public class MenuMinijuegoC3 extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.VERDE, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.VERDE_SUAVE, DecoracionBotones.VERDE, DecoracionBotones.VERDE); //MOUSE DENTRO
-        btnCategoria3.setFont(fuente2.deriveFont(25f));
+        btnCategoria3.setFont(fuente2.deriveFont(24f));
         btnCategoria3.setBounds(1100, 560, 400, 65);
         btnCategoria3.addActionListener(e -> {
            new JuegoMaulwurfRennt(1,9);
