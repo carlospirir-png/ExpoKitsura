@@ -119,7 +119,7 @@ public class MenuMinijuegoC3 extends JFrame {
         btnCategoria1.setFont(fuente2.deriveFont(25f));
         btnCategoria1.setBounds(1100, 300, 400, 65);
         btnCategoria1.addActionListener(e -> {
-            new JuegoMaulwurfRennt(1,7);
+            new JuegoMaulwurfRennt(Sesion.getIdUsuarioActual(),7);
             dispose();
         });
         fondo.add(btnCategoria1);
@@ -132,7 +132,7 @@ public class MenuMinijuegoC3 extends JFrame {
         btnCategoria2.setFont(fuente2.deriveFont(25f));
         btnCategoria2.setBounds(1100, 430, 400, 65);
         btnCategoria2.addActionListener(e -> {
-            new JuegoMaulwurfRennt(1,8);
+            new JuegoMaulwurfRennt(Sesion.getIdUsuarioActual(),8);
             dispose();
         });
         fondo.add(btnCategoria2);
@@ -145,7 +145,7 @@ public class MenuMinijuegoC3 extends JFrame {
         btnCategoria3.setFont(fuente2.deriveFont(24f));
         btnCategoria3.setBounds(1100, 560, 400, 65);
         btnCategoria3.addActionListener(e -> {
-           new JuegoMaulwurfRennt(1,9);
+           new JuegoMaulwurfRennt(Sesion.getIdUsuarioActual(),9);
             dispose();
         });
         fondo.add(btnCategoria3);

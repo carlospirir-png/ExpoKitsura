@@ -666,6 +666,7 @@ public class MaulwurfRennt extends JFrame {
     // Retorna la instancia del botón de ayuda para poder asignarle listeners externos.
 // Retorna la instancia del botón de ayuda para poder asignarle listeners externos.
     public JButton getBtnAyuda() {
+        
         return btnAyuda;
     }
 

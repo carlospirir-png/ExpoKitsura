@@ -43,6 +43,7 @@ public class PartidaDAO_MaulwurfRennt {
             ps.setInt(5, 0); // Tiempo inicial por defecto.
             ps.setString(6, "en_curso");
 
+            System.out.println("DEBUG: Intentando crear partida con id_usuario = " + idUsuario);
             ps.executeUpdate();
 
             // NUEVO: try-with-resources también para el ResultSet de las llaves generadas.
