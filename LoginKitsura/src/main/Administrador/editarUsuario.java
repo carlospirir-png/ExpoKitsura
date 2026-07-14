@@ -7,6 +7,7 @@ import main.Menu.FondoPanel;
 
 // Importaciones para MySQL
 import java.io.File;
+import java.net.URL;
 import java.sql.Connection;
 import main.conexion.Conexion;
 import java.sql.PreparedStatement;
@@ -43,6 +44,16 @@ public class editarUsuario extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Editar Usuario");
         setSize(1920, 1080);
         setLocationRelativeTo(null);

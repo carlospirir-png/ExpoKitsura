@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import main.Menu.FondoPanel;
 import main.Menu.FondoPanelSemi;
 import main.Menu.DecoracionBotones;
@@ -34,6 +35,16 @@ public class MenuMinijuegoC2 extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Fox Jump!");
         setSize(1880, 1080);
         setLocationRelativeTo(null);
