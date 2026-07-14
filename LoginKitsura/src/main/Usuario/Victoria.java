@@ -82,30 +82,19 @@ public class Victoria extends JFrame {
 
         //---------------- FOTO PERFIL ----------------
         JLabel fotoPerfil = new JLabel();
-        ImageIcon paisajeIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ImagenesPerfil/Seccion1/PE_S1_N9.png"));
-
-        // MODIFICACIÓN: Se llama al nuevo método auxiliar para volverla circular de 150x150 píxeles
-        Image paisajeRedondo = crearImagenRedonda(paisajeIcon.getImage(), 150);
-
-        fotoPerfil.setIcon(new ImageIcon(paisajeRedondo));
+        String rutaFoto = Sesion.getRutaFotoPerfil();
+        ImageIcon perfilIcon = new ImageIcon(getClass().getResource(rutaFoto));
+        Image perfilRedondo = crearImagenRedonda(perfilIcon.getImage(), 150);
+        fotoPerfil.setIcon(new ImageIcon(perfilRedondo));
         fotoPerfil.setBounds(80, 60, 150, 150);
         panelDerecho.add(fotoPerfil);
-
+        
         //---------------- DATOS DE USUARIO ----------------
-        JLabel lblUsuario = new JLabel("Nombre de usuario");
+        JLabel lblUsuario = new JLabel(Sesion.getNombreUsuario());
         lblUsuario.setFont(fuente2.deriveFont(25f));
         lblUsuario.setForeground(Color.decode("#FC767D"));
-        lblUsuario.setBounds(260, 115, 550, 40);
+        lblUsuario.setBounds(250, 110, 400, 40);
         panelDerecho.add(lblUsuario);
-
-        //---------------- BOTON VOLVER  ----------------
-        btnVolver = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
-
-        btnVolver.setFont(fuente2.deriveFont(20f));
-        btnVolver.setBounds(340, 680, 200, 50);
 
         //---------------- MASCOTA ----------------
         JLabel mascotaCongrats = new JLabel();
@@ -122,19 +111,14 @@ public class Victoria extends JFrame {
         lblFraseAbajo.setBounds(100, 880, 700, 35);
         fondo.add(lblFraseAbajo);
 
-        lblUsuario.setForeground(Color.BLACK);
-        lblUsuario.setBounds(1250, 150, 400, 40);
-        fondo.add(lblUsuario);
-
         //---------------- BOTON VOLVER  ----------------
         btnVolver = new DecoracionBotones("Volver",
                                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
 
-        btnVolver.setFont(fuente2.deriveFont(15f));
-        btnVolver.setBounds(1320, 710, 200, 50);
-        btnVolver.addActionListener(e -> dispose());
+        btnVolver.setFont(fuente2.deriveFont(16f));
+        btnVolver.setBounds(1450, 910, 200, 50);
         fondo.add(btnVolver);
 
         //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
@@ -143,7 +127,7 @@ public class Victoria extends JFrame {
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
         btnResultados.setFont(fuente2.deriveFont(15f));
-        btnResultados.setBounds(1410, 910, 200, 50);
+        btnResultados.setBounds(1210, 910, 200, 50);
         btnResultados.addActionListener(e -> {
             juego.mostrarResultadoConFade();
         });

@@ -143,6 +143,7 @@ public class MaulwurfRennt extends JFrame {
             fondo.add(corazon);
         }
 
+
         // Botón de ayuda.
         btnAyuda = new JButton("¿Necesitas ayuda?");
         btnAyuda.setFont(fuente2.deriveFont(18f));

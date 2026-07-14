@@ -18,8 +18,6 @@ public class AdminStages extends JFrame {
     private DecoracionBotones btnCrearUno;
     private DecoracionBotones btnEditarExistente;
 
-    // Selección hecha en PedirMCN (minijuego, categoría, nivel). Si es null,
-    // significa que se entró a esta pantalla sin pasar por Pedir M,C,N.
     private final DatosConfiguracion datos;
 
     public AdminStages() {
@@ -29,11 +27,9 @@ public class AdminStages extends JFrame {
     public AdminStages(DatosConfiguracion datos) {
         this.datos = datos;
         try {
-            // LettersForLearners
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
-            // KGPerfectPenmanship
             fuente2 = Font.createFont(
                     Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
@@ -70,32 +66,31 @@ public class AdminStages extends JFrame {
         panelTitulo.add(lblTituloSeccion);
 
         btnCrearUno = new DecoracionBotones("CREAR UNO",
-                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO_APAGADO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO_APAGADO,
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA);
 
         btnCrearUno.setFont(fuente2.deriveFont(20f));
         btnCrearUno.setBounds(325, 500, 360, 70);
-        btnCrearUno.addActionListener(e -> crearPreguntaEnContextoActual());
+        btnCrearUno.addActionListener(e -> {
+            // Distinto de "Administrar Stages": este flujo, al terminar en
+            // Pedir M,C,N, abre DIRECTO la pantalla de creación (M1/M2/M3)
+            // según el minijuego elegido, sin pasar por EditarStages.
+            new PedirMCN("Crear Stage");
+            dispose();
+        });
         fondo.add(btnCrearUno);
 
         btnEditarExistente = new DecoracionBotones("EDITAR UNO EXISTENTE",
-                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO_APAGADO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO_APAGADO,
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA);
         btnEditarExistente.setFont(fuente2.deriveFont(20f));
         btnEditarExistente.setBounds(1245, 500, 360, 70);
         btnEditarExistente.addActionListener(e -> {
-            if (datos == null) {
-                JOptionPane.showMessageDialog(this,
-                        "Primero debes seleccionar Minijuego, Categoría y Nivel en 'Pedir M, C, N'.",
-                        "Falta selección", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            new EditarStages(datos);
+            // Este flujo abre EditarStages, que muestra la tabla de preguntas
+            // ya guardadas para elegir cuál editar.
+            new PedirMCN("Administrar Stages");
             dispose();
         });
-
         fondo.add(btnEditarExistente);
 
         JLabel staticMascotaControl = new JLabel();
@@ -106,24 +101,22 @@ public class AdminStages extends JFrame {
         fondo.add(staticMascotaControl);
 
         btnSalir = new DecoracionBotones("VOLVER",
-                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
 
         btnSalir.setFont(fuente2.deriveFont(20F));
         btnSalir.setBounds(1680, 950, 210, 45);
         btnSalir.addActionListener(e -> {
             dispose();
-            new PedirMCN("Administrar Stages");
+            new MenuAdmin();
         });
         fondo.add(btnSalir);
     }
 
-    /**
-     * Abre la pantalla de creación (M1/M2/M3) correspondiente al minijuego ya
-     * elegido en Pedir M,C,N. No se ofrece ninguna otra opción: el contexto
-     * queda fijo según lo que el admin seleccionó antes de llegar aquí.
-     */
+    // (Los métodos crearPreguntaEnContextoActual() y resolverContextoDesdeDatos()
+    //  ya no se usan aquí: esa lógica ahora vive en PedirMCN.abrirCreacionSegunMinijuego().
+    //  Puedes dejarlos o borrarlos; no afectan si se quedan sin llamar.)
+
     private void crearPreguntaEnContextoActual() {
         if (datos == null) {
             JOptionPane.showMessageDialog(this,
@@ -159,10 +152,6 @@ public class AdminStages extends JFrame {
         }
     }
 
-    /**
-     * Devuelve {id_minijuego, id_categoria_local (1-3), dificultad (1-3)}
-     * resuelto desde datos.getMinijuego()/getCategoria()/getNivel().
-     */
     private int[] resolverContextoDesdeDatos() throws SQLException {
         String sql = "SELECT m.id_minijuego, c.id_categoria, cn.dificultad "
                 + "FROM Configuracion_nivel cn "
@@ -206,5 +195,4 @@ public class AdminStages extends JFrame {
     public static void main(String[] args) {
         new AdminStages();
     }
-
 }

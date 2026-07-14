@@ -9,7 +9,6 @@ public class Main {
     
 
     public static void main(String[] args) {
-
         try {
             Conexion conectar = new Conexion();
 
@@ -26,6 +25,5 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE
             );
         }
-
     }
 }

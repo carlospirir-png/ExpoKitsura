@@ -67,7 +67,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     // ── CONEXION A BASE DE DATOS 
     // CONSULTAS SQL DEL JUEGO
-    private Connection con;
+    private final Connection con;
 
     // ── PERSISTENCIA DE LA PARTIDA (NUEVO) ────────────────────────────────
     // Id del minijuego "Fox Jump!" según la tabla Minijuego (INSERT inicial: 2 = Fox Jump!)
@@ -132,12 +132,21 @@ public class FoxJump extends JFrame implements JuegoBase {
     // SE RESETEA A false EN cargarPregunta() PARA CADA NUEVA PREGUNTA
     private boolean pistaMostradaEnPreguntaActual = false;
 
+    private final EstadisticaDAO estadisticaDAO = new EstadisticaDAO();
+    private final int idUsuario = Sesion.getIdUsuarioActual();
+
+    // EVITA GUARDAR LA MISMA PARTIDA DOS VECES (p.ej. si dos rutas de fin
+    // de juego se disparan casi al mismo tiempo)
+    private boolean estadisticasGuardadas = false;
+
     // CONSTRUCTOR***********
     /**
-     * INICIALIZA EL JUEGO CON LA CATEGORIA RECIBIDA DESDE EL MENU. 1. CREAR
+     * INICIALIZA EL JUEGO CON LA CATEGORIA RECIBIDA DESDE EL MENU.1. CREAR
      * TODOS LOS COMPONENTES GRAFICOS 2. REGISTRAR LISTENERS DE VENTANA (PARA
      * PAUSAR AL MINIMIZAR) 3. HACER VISIBLE EL FRAME 4. CONECTAR A LA BD Y
      * CARGAR LA PRIMERA PREGUNTA 5. CARGA TODAS LAS FUENTES
+     *
+     * @param categoria
      */
     public FoxJump(String categoria) {
 
@@ -323,7 +332,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         finJuegoActivo = false;
 
         // ACTUALIZAR LAS ETIQUETAS DE INFORMACION EN PANTALLA
-        nivelLabel.setText("Nivel: Fox Jump!");
         dificultadLabel.setText("Dificultad: " + difStr);
         categoriaLabel.setText("Categoría: " + categoriaSeleccionada);
 
@@ -524,11 +532,15 @@ public class FoxJump extends JFrame implements JuegoBase {
             return;
         }
         finJuegoActivo = true;
+<<<<<<< HEAD
 
         // NUEVO: se cierra la partida como "completada" en la base de datos
         // y se actualiza la estadística acumulada del usuario.
         guardarFinDePartida("completada");
 
+=======
+        guardarEstadisticasPartida(true); // victoria = completada
+>>>>>>> 7b4bf89ef623be3040710e2d8bf4353081f8d284
         detenerCountdown();
         bloquearNenufares();
 
@@ -623,6 +635,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         idPreguntaActual = 0;
         finJuegoActivo = false;
         procesandoRespuesta = false;
+        estadisticasGuardadas = false; // <-- NUEVO
         puntajeTotal = 0;
         tiempoTotalJugado = 0;
         preguntasVistas.clear();
@@ -1074,7 +1087,8 @@ public class FoxJump extends JFrame implements JuegoBase {
             corazones[vidas].setIcon(iconoCorazonRoto);
         }
 
-        if (vidas <= 0) {
+       if (vidas <= 0) {
+            guardarEstadisticasPartida(false); // abandonada
             bloquearNenufares();
             new javax.swing.Timer(400, e -> {
                 ((javax.swing.Timer) e.getSource()).stop();
@@ -1166,6 +1180,24 @@ public class FoxJump extends JFrame implements JuegoBase {
         JOptionPane.showMessageDialog(this,
                 "Error BD:\n" + ex.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * GUARDA EL RESULTADO DE LA PARTIDA ACTUAL EN Partida Y ACTUALIZA
+     * Estadistica. SE LLAMA DESDE LAS 3 RUTAS DE FIN DE JUEGO: VICTORIA, VIDAS
+     * AGOTADAS Y TIEMPO AGOTADO. EL FLAG estadisticasGuardadas GARANTIZA QUE
+     * SOLO SE GUARDE UNA VEZ POR PARTIDA.
+     *
+     * @param victoria TRUE SI LA PARTIDA TERMINO EN "completada", FALSE SI
+     * TERMINO EN "abandonada" (VIDAS O TIEMPO AGOTADO)
+     */
+    private void guardarEstadisticasPartida(boolean victoria) {
+        if (estadisticasGuardadas) {
+            return;
+        }
+        estadisticasGuardadas = true;
+        estadisticaDAO.guardarPartida(
+                idUsuario, "Fox Jump!", puntajeTotal, tiempoTotalJugado, maxVidas, victoria);
     }
 
     /**
@@ -1496,7 +1528,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             nenufarVerdadero.setBackground(Color.GREEN);
         }
         JLabel lblIzq = new JLabel("Verdadero", SwingConstants.CENTER);
-        lblIzq.setFont(fuente1.deriveFont(Font.BOLD, 22f));
+        lblIzq.setFont(fuente1.deriveFont(Font.BOLD, 45f));
         lblIzq.setBounds(0, 60, 240, 90);
         nenufarVerdadero.add(lblIzq);
         nenufarVerdadero.setBounds(180, 140, 240, 180);
@@ -1543,7 +1575,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             nenufarFalso.setBackground(Color.GREEN);
         }
         JLabel lblDer = new JLabel("Falso", SwingConstants.CENTER);
-        lblDer.setFont(fuente1.deriveFont(Font.BOLD, 22f));
+        lblDer.setFont(fuente1.deriveFont(Font.BOLD, 45f));
         lblDer.setBounds(0, 60, 240, 90);
         nenufarFalso.add(lblDer);
         nenufarFalso.setBounds(650, 140, 240, 180);
@@ -1574,11 +1606,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         panelLago.add(nenufarFalso);
 
         // ── TEXTO  INFORMATIVO (ESQUINA INFERIOR IZQUIERDA) ───────────────
-        nivelLabel = new JLabel("Nivel: Fox Jump!");
-        nivelLabel.setBounds(80, 740, 300, 40);
-        nivelLabel.setFont(fuente2.deriveFont(25f));
-        nivelLabel.setForeground(Color.BLACK);
-        fondo.add(nivelLabel);
 
         dificultadLabel = new JLabel("Dificultad: Fácil");
         dificultadLabel.setBounds(80, 790, 300, 40);
@@ -1739,6 +1766,7 @@ public class FoxJump extends JFrame implements JuegoBase {
      * COUNTDOWN LLEGA A CERO.
      */
     private void mostrarTiempoAgotado() {
+        guardarEstadisticasPartida(false); // abandonada
         bloquearNenufares();
 
         // NUEVO: se registra la pregunta actual como no respondida (tiempo

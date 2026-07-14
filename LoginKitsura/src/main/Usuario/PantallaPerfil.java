@@ -52,8 +52,6 @@ public class PantallaPerfil extends JFrame {
 
     // Ruta de la imagen de perfil actualmente seleccionada (relativa a resources)
     private String rutaImagenPerfilActual;
-    private static final String IMAGEN_PERFIL_DEFECTO =
-            "/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Imperfecta.png";
 
     private final Conexion conexion = new Conexion();
 
@@ -237,7 +235,7 @@ public class PantallaPerfil extends JFrame {
 
         //---------------- FOTO PERFIL ----------------
         lblFotoPerfil = new JLabel();
-        cargarImagenEnLabel(IMAGEN_PERFIL_DEFECTO);
+        cargarImagenEnLabel(Sesion.FOTO_PERFIL_DEFECTO);
         lblFotoPerfil.setBounds(190, 90, 250, 250);
         lblFotoPerfil.setBorder(BorderFactory.createLineBorder(Color.GRAY, 4));
         panelPerfil.add(lblFotoPerfil);
@@ -353,7 +351,7 @@ public class PantallaPerfil extends JFrame {
                     if (imagenPerfil != null && !imagenPerfil.isBlank()) {
                         cargarImagenEnLabel(imagenPerfil);
                     } else {
-                        cargarImagenEnLabel(IMAGEN_PERFIL_DEFECTO);
+                        cargarImagenEnLabel(Sesion.FOTO_PERFIL_DEFECTO);
                     }
 
                 } else {
@@ -387,6 +385,11 @@ public class PantallaPerfil extends JFrame {
             ps.setInt(2, idUsuario);
 
             int filasActualizadas = ps.executeUpdate();
+            
+            if (filasActualizadas > 0) {
+            Sesion.setNombreUsuario(nuevoNombre); // Mantiene Sesion actualizada
+            }
+            
             return filasActualizadas > 0;
 
         } catch (SQLIntegrityConstraintViolationException e) {
@@ -414,6 +417,7 @@ public class PantallaPerfil extends JFrame {
             return; // Si falló el guardado en BD, no se actualiza la vista
         }
         cargarImagenEnLabel(rutaImagen);
+        Sesion.setRutaFotoPerfil(rutaImagen); // Mantiene Sesion actualizada
         JOptionPane.showMessageDialog(this,
                 "Foto de perfil actualizada correctamente.",
                 "Éxito",
@@ -455,8 +459,8 @@ public class PantallaPerfil extends JFrame {
 
         if (recurso == null) {
             System.err.println("No se encontró la imagen de perfil: " + ruta);
-            if (!ruta.equals(IMAGEN_PERFIL_DEFECTO)) {
-                cargarImagenEnLabel(IMAGEN_PERFIL_DEFECTO);
+            if (!ruta.equals(Sesion.FOTO_PERFIL_DEFECTO)) {
+                cargarImagenEnLabel(Sesion.FOTO_PERFIL_DEFECTO);
             }
             return;
         }

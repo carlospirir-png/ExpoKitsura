@@ -129,7 +129,7 @@ public class MenuAdmin extends JFrame {
         btnStages.setFont(fuente2.deriveFont(24f));
         btnStages.setBounds(180, 715, 430, 65);
         btnStages.addActionListener(e -> {
-            new PedirMCN("Administrar Stages"); 
+            new AdminStages();
             dispose();
         });
         fondo.add(btnStages);

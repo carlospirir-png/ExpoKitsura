@@ -15,6 +15,7 @@ public class ResultadoFinal extends JDialog {
 
     private int puntajeFinal;
     private int tiempoFinal;
+    private int vidasPerdidas = -1; // -1 = sin dato aún
 
     private SeAcaboVidas seAcaboVidas;
     private JuegoBase juego;
@@ -30,7 +31,7 @@ public class ResultadoFinal extends JDialog {
         setContentPane(fondo);
 
         setUndecorated(true);
-        setSize(700, 450);
+        setSize(700, 500);
         setLocationRelativeTo(juego.getFrame());
         fondo.setLayout(null);
 
@@ -39,6 +40,12 @@ public class ResultadoFinal extends JDialog {
 
     public void mostrar() {
         setVisible(true);
+    }
+    
+    
+    // Setter para indicar cuántas vidas se perdieron durante la partida
+    public void setVidasPerdidas(int vidasPerdidas) {
+        this.vidasPerdidas = vidasPerdidas;
     }
 
     private void crearComponentes() {
@@ -122,6 +129,24 @@ public class ResultadoFinal extends JDialog {
         });
 
         fondo.add(btnMenu);
+
+        //---------------- BOTÓN IMPRIMIR TICKET ----------------
+        JButton btnImprimir = new DecoracionBotones(
+                "Imprimir ticket",
+                DecoracionBotones.CELESTE,
+                DecoracionBotones.AZUL,
+                DecoracionBotones.AZUL,
+                DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE,
+                DecoracionBotones.CELESTE);
+
+        btnImprimir.setFont(fuente2.deriveFont(12f));
+        btnImprimir.setBounds(75, 355, 360, 40);
+
+        btnImprimir.addActionListener(e ->
+                TicketImpresora.imprimir(this, puntajeFinal, tiempoFinal, vidasPerdidas));
+
+        fondo.add(btnImprimir);
 
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();

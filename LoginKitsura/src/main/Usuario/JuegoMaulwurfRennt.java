@@ -111,6 +111,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.actualizarDificultad("Fácil");
                 vista.mostrarTopos(5);
                 vista.actualizarCategoria(obtenerNombreCategoria());
+
                 break;
 
             case 2:

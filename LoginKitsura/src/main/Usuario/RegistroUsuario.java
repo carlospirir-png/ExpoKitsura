@@ -161,7 +161,7 @@ public class RegistroUsuario extends JFrame {
         fondo.add(btnJugar);
 
         //---------------- BOTON SALIR ----------------
-        JButton btnSalir = new DecoracionBotones("SALIR",
+        btnSalir = new DecoracionBotones("SALIR",
                                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
@@ -361,7 +361,8 @@ public class RegistroUsuario extends JFrame {
                 // Se guarda el id del usuario recién creado como sesión activa,
                 // para que MenuPrincipal / PantallaPerfil sepan de quién es la partida
                 Sesion.setIdUsuarioActual(idUsuario);
-
+                Sesion.setNombreUsuario(nombre);
+                
                 JOptionPane.showMessageDialog(
                         this,
                         "Usuario registrado correctamente.",
