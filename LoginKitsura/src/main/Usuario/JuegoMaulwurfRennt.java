@@ -74,10 +74,6 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         partidaDAO = new PartidaDAO_MaulwurfRennt();
         ayudaDAO = new AyudaDAO_MaulwurfRennt();
 
-        // El botón de ayuda solo tiene sentido en la categoría "Científicos Matemáticos"
-        // (id 9), ya que las otras dos son operaciones matemáticas donde no aplica.
-        vista.mostrarBotonAyuda(idCategoria == 9);
-
         // Registra el inicio de la partida en la base de datos y obtiene su ID asignado.
         idPartida = partidaDAO.crearPartida(
                 idUsuario,
@@ -126,6 +122,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.actualizarDificultad("Fácil");
                 vista.mostrarTopos(5);
                 vista.actualizarCategoria(obtenerNombreCategoria());
+                vista.mostrarBotonAyuda(false);
 
                 break;
 
@@ -135,6 +132,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.mostrarTopos(6);
                 vista.cambiarColorFondo(new Color(239, 218, 154));
                 vista.actualizarCategoria(obtenerNombreCategoria());
+                vista.mostrarBotonAyuda(false);
                 break;
 
             case 3:
@@ -143,6 +141,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.mostrarTopos(7);
                 vista.cambiarColorFondo(new Color(255, 180, 80));
                 vista.actualizarCategoria(obtenerNombreCategoria());
+                vista.mostrarBotonAyuda(true);
                 break;
         }
 
@@ -502,6 +501,8 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
             if (vidas == maxVidas) {
 
+                System.out.println("Entró a Victoria Perfecta");
+
                 VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
                 }, this);
 
@@ -510,6 +511,8 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.repaint();
 
             } else {
+
+                System.out.println("Entró a Victoria");
 
                 Victoria v = new Victoria(e -> {
                 }, this);
@@ -533,6 +536,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
             }
         }
+        //vista.dispose();
 
     }
     // Calcula de forma inversa los segundos transcurridos en la partida restando el tiempo restante del límite de cada nivel.
@@ -633,4 +637,4 @@ public class JuegoMaulwurfRennt implements JuegoBase {
     public int getTiempoTotalJugado() {
         return calcularTiempoJugado();
     }
-}
+}   

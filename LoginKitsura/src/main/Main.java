@@ -1,7 +1,6 @@
 package main;
 
 import javax.swing.JOptionPane;
-import main.Usuario.*;
 import main.Menu.*;
 import main.conexion.Conexion;
 
