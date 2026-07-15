@@ -1,6 +1,7 @@
 package main.Menu;
 
 import java.awt.*;
+import java.net.*;
 import javax.swing.*;
 import main.Usuario.RegistroUsuario;
 
@@ -34,6 +35,20 @@ public class PantallaInicio extends JFrame {
 
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/fondoPrincipal/FondoPrincipal2.png");
         setContentPane(fondo);
+        
+        //----------------- J       F R A M E 
+
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
+
         setTitle("Kitsura");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
@@ -63,7 +78,7 @@ public class PantallaInicio extends JFrame {
         Image logoEscalado = logoIcon.getImage().getScaledInstance(570, 600, Image.SCALE_SMOOTH);
 
         lblLogo.setIcon(new ImageIcon(logoEscalado));
-        lblLogo.setBounds(650, 100, 570,600);
+        lblLogo.setBounds(650, 100, 570, 600);
 
         fondo.add(lblLogo);
 
@@ -81,7 +96,7 @@ public class PantallaInicio extends JFrame {
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO      
-        btnJugar.setFont(fuente2.deriveFont(30f)); 
+        btnJugar.setFont(fuente2.deriveFont(30f));
         btnJugar.setBounds(810, 880, 250, 70);
         btnJugar.addActionListener(e -> {
             new RegistroUsuario();
@@ -90,8 +105,9 @@ public class PantallaInicio extends JFrame {
         fondo.add(btnJugar);
         fondo.setComponentZOrder(btnJugar, 0);
         fondo.setComponentZOrder(lblFrase, 0);
-        
+
     }
+
     public static void main(String[] args) {
         new PantallaInicio();
     }

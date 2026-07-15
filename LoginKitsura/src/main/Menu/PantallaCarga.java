@@ -1,6 +1,7 @@
 package main.Menu;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 
 public class PantallaCarga extends JFrame {
@@ -28,6 +29,16 @@ public class PantallaCarga extends JFrame {
         }
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/fondoPrincipal/FondoPrincipal.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Pantalla de Carga");
         setSize(1920, 1080);
         setExtendedState(JFrame.MAXIMIZED_BOTH);

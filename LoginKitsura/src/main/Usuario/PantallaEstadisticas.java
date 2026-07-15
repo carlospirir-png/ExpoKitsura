@@ -1,15 +1,15 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.util.List;
 import main.Menu.*;
-import main.Usuario.EstadisticaDAO;
 
 public class PantallaEstadisticas extends JFrame {
 
-    private FondoPanelSemi fondo;
+    private final FondoPanelSemi fondo;
     private FondoPanelSemi panelFondo;
 
     private JLabel lblTitulo;
@@ -20,40 +20,38 @@ public class PantallaEstadisticas extends JFrame {
     private JLabel lblUltimaPartida;
     private JTextField txtUltimaPartida;
 
+    private JLabel lblUltimoJuego;
+    private JTextField txtUltimoJuego;
+
     private JLabel lblGanadas;
     private JTextField txtGanadas;
 
     private JLabel lblUltimaPuntuacion;
     private JTextField txtUltimaPuntuacion;
 
-    private JLabel lblPuntuacionTotal;
-    private JTextField txtPuntuacionTotal;
+    // MODIFICADO: De puntuación total a puntuación máxima
+    private JLabel lblPuntuacionMaxima;
+    private JTextField txtPuntuacionMaxima;
 
     private JButton btnVolver;
 
-    private JLabel lblLogo;
     private JLabel lblMascota;
     private Font fuente1;
     private Font fuente2;
 
     /*=====================================================================
-      NUEVO: DATOS NECESARIOS PARA CONSULTAR LA BASE DE DATOS
-    =====================================================================*/
+      DATOS NECESARIOS PARA CONSULTAR LA BASE DE DATOS
+      Ya no se recibe idMinijuego: esta pantalla es una tabla GLOBAL que
+      agrega los datos de Hidden Fox, Fox Jump! y Maulwurf Rennt.
+     =====================================================================*/
     private final EstadisticaDAO dao = new EstadisticaDAO();
-    private final int idMinijuego;
-    private final String nombreMinijuego;
     private final int idUsuario;
 
     // Cuántos jugadores como máximo se muestran en la tabla global
     private static final int LIMITE_RANKING = 20;
 
-    /*NUEVO: el constructor ahora requiere saber de qué minijuego se
-      quieren ver las estadísticas (Hidden Fox = 1, Fox Jump! = 2,
-      Maulwurf Rennt = 3, según tu tabla Minijuego).*/
-    public PantallaEstadisticas(int idMinijuego, String nombreMinijuego) {
+    public PantallaEstadisticas() {
 
-        this.idMinijuego = idMinijuego;
-        this.nombreMinijuego = nombreMinijuego;
         this.idUsuario = Sesion.getIdUsuarioActual();
 
         try {
@@ -74,8 +72,18 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
 
-        setTitle("Tabla Global - " + nombreMinijuego);
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
+        setTitle("Tabla Global");
         setSize(1920, 1080);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
@@ -101,9 +109,10 @@ public class PantallaEstadisticas extends JFrame {
 
         modelo.addColumn("JUGADOR");
         modelo.addColumn("TIEMPO");
+        // MODIFICADO: Ahora la tercera columna es Puntuación Total
         modelo.addColumn("PUNTUACIÓN TOTAL");
 
-        // NUEVO: se reemplaza la fila de ejemplo por los datos reales del ranking
+        // Carga el ranking global real en la tabla
         cargarRanking(modelo);
 
         tabla = new JTable(modelo) {
@@ -124,6 +133,20 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo.add(scrollTabla);
 
+        lblUltimaPuntuacion = new JLabel("Última puntuación");
+        lblUltimaPuntuacion.setFont(fuente2.deriveFont(36f));
+        lblUltimaPuntuacion.setBounds(850, 740, 400, 50);
+        lblUltimaPuntuacion.setForeground(new Color(196, 221, 227));
+
+        fondo.add(lblUltimaPuntuacion);
+
+        txtUltimaPuntuacion = new JTextField("0 pts");
+        txtUltimaPuntuacion.setFont(fuente1.deriveFont(36f));
+        txtUltimaPuntuacion.setEditable(false);
+        txtUltimaPuntuacion.setBounds(850, 790, 340, 50);
+
+        fondo.add(txtUltimaPuntuacion);
+
         lblUltimaPartida = new JLabel("Última partida");
         lblUltimaPartida.setFont(fuente2.deriveFont(38f));
         lblUltimaPartida.setBounds(120, 740, 250, 50);
@@ -137,6 +160,20 @@ public class PantallaEstadisticas extends JFrame {
         txtUltimaPartida.setBounds(120, 790, 340, 50);
 
         fondo.add(txtUltimaPartida);
+
+        lblUltimoJuego = new JLabel("Ultima Partida");
+        lblUltimoJuego.setFont(fuente2.deriveFont(36f));
+        lblUltimoJuego.setBounds(540, 790, 340, 50);
+        lblUltimoJuego.setForeground(new Color(196, 221, 227));
+
+        fondo.add(lblUltimoJuego);
+
+        txtUltimoJuego = new JTextField("Sin Partida");
+        txtUltimoJuego.setFont(fuente1.deriveFont(36f));
+        txtUltimoJuego.setEditable(false);
+        txtUltimoJuego.setBounds(540, 840, 240, 50);
+
+        fondo.add(txtUltimoJuego);
 
         lblGanadas = new JLabel("Partidas Ganadas");
         lblGanadas.setFont(fuente2.deriveFont(38f));
@@ -152,40 +189,27 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo.add(txtGanadas);
 
-        lblUltimaPuntuacion = new JLabel("Última puntuación");
-        lblUltimaPuntuacion.setFont(fuente2.deriveFont(36f));
-        lblUltimaPuntuacion.setBounds(850, 740, 400, 50);
-        lblUltimaPuntuacion.setForeground(new Color(196, 221, 227));
+        // MODIFICADO: De Puntuación Total a Puntuación Máxima en la interfaz inferior
+        lblPuntuacionMaxima = new JLabel("Puntuación máxima");
+        lblPuntuacionMaxima.setFont(fuente2.deriveFont(36f));
+        lblPuntuacionMaxima.setBounds(850, 850, 340, 50);
+        lblPuntuacionMaxima.setForeground(new Color(196, 221, 227));
 
-        fondo.add(lblUltimaPuntuacion);
+        fondo.add(lblPuntuacionMaxima);
 
-        txtUltimaPuntuacion = new JTextField("0 pts");
-        txtUltimaPuntuacion.setFont(fuente1.deriveFont(36f));
-        txtUltimaPuntuacion.setEditable(false);
-        txtUltimaPuntuacion.setBounds(850, 790, 340, 50);
+        txtPuntuacionMaxima = new JTextField("0 pts");
+        txtPuntuacionMaxima.setFont(fuente1.deriveFont(36f));
+        txtPuntuacionMaxima.setEditable(false);
+        txtPuntuacionMaxima.setBounds(850, 900, 340, 50);
 
-        fondo.add(txtUltimaPuntuacion);
+        fondo.add(txtPuntuacionMaxima);
 
-        lblPuntuacionTotal = new JLabel("Puntuación máxima");
-        lblPuntuacionTotal.setFont(fuente2.deriveFont(36f));
-        lblPuntuacionTotal.setBounds(850, 850, 340, 50);
-        lblPuntuacionTotal.setForeground(new Color(196, 221, 227));
-
-        fondo.add(lblPuntuacionTotal);
-
-        txtPuntuacionTotal = new JTextField("0 pts");
-        txtPuntuacionTotal.setFont(fuente1.deriveFont(36f));
-        txtPuntuacionTotal.setEditable(false);
-        txtPuntuacionTotal.setBounds(850, 900, 340, 50);
-
-        fondo.add(txtPuntuacionTotal);
-
-        // NUEVO: se llenan los 4 campos con los datos reales del usuario en sesión
+        // Llena los campos con los datos del usuario en sesión
         cargarDatosUsuario();
 
-        btnVolver = new DecoracionBotones("VOLVER", //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+        btnVolver = new DecoracionBotones("VOLVER",
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
 
         btnVolver.setFont(fuente1.deriveFont(40f));
         btnVolver.setBounds(1540, 900, 240, 70);
@@ -219,10 +243,12 @@ public class PantallaEstadisticas extends JFrame {
         fondo.add(panelFondo);
     }
 
-    // CARGAR RANKING GLOBAL EN LA TABLA
+    /*=====================================================================
+      CARGAR RANKING GLOBAL EN LA TABLA
+     =====================================================================*/
     private void cargarRanking(DefaultTableModel modelo) {
 
-        List<EstadisticaDAO.FilaRanking> ranking = dao.obtenerRankingGlobal(idMinijuego, LIMITE_RANKING);
+        List<EstadisticaDAO.FilaRanking> ranking = dao.obtenerRankingGlobal(LIMITE_RANKING);
 
         if (ranking.isEmpty()) {
             modelo.addRow(new Object[]{"Aún no hay partidas registradas", "-", "-"});
@@ -233,56 +259,58 @@ public class PantallaEstadisticas extends JFrame {
             modelo.addRow(new Object[]{
                 fila.nombreUsuario,
                 formatearTiempo(fila.tiempoTotal),
-                fila.puntuacionTotal
+                fila.puntuacionTotal // Se mantiene puntuación total aquí para la tabla
             });
         }
     }
 
     /*=====================================================================
-      NUEVO: CARGAR LOS 4 CAMPOS CON LOS DATOS DEL USUARIO EN SESIÓN
-    =====================================================================*/
-    // 4. EN EL MÉTODO cargarDatosUsuario(): Asignar 'mejorPuntuacion' al cuadro de texto
+      CARGAR LOS CAMPOS CON LOS DATOS GLOBALES DEL USUARIO EN SESIÓN
+     =====================================================================*/
     private void cargarDatosUsuario() {
 
-        int ganadas = dao.contarPartidasGanadas(idUsuario, idMinijuego);
+        // ---- Partidas ganadas ----
+        int ganadas = dao.contarPartidasGanadas(idUsuario);
         txtGanadas.setText(String.valueOf(ganadas));
 
-        EstadisticaDAO.ResumenUsuario resumen = dao.obtenerResumenUsuario(idUsuario, idMinijuego);
+        // ---- MODIFICADO: Ahora asigna la puntuación máxima al txt inferior ----
+        EstadisticaDAO.ResumenUsuario resumen = dao.obtenerResumenUsuario(idUsuario);
+        // Nota: Asegúrate de que tu objeto 'resumen' cuente con el atributo 'puntuacionMaxima' 
+        // o el equivalente que retorne tu EstadisticaDAO (ej: mayorPuntuacion).
+        txtPuntuacionMaxima.setText(resumen.mejorPuntuacion + " pts");
 
-        if (resumen != null) {
-            // Al cuadro de texto (que no le cambiamos el nombre de variable para no romper el resto del código)
-            // ahora le asignamos la propiedad 'mejorPuntuacion' del resumen.
-            txtPuntuacionTotal.setText(resumen.mejorPuntuacion + " pts"); 
-        } else {
-            txtPuntuacionTotal.setText("0 pts");
-        }
-
-        EstadisticaDAO.UltimaPartida ultima = dao.obtenerUltimaPartida(idUsuario, idMinijuego);
+        // ---- Última partida jugada ----
+        EstadisticaDAO.UltimaPartida ultima = dao.obtenerUltimaPartida(idUsuario);
 
         if (ultima != null) {
             txtUltimaPartida.setText(formatearTiempo(ultima.tiempoJugado));
+            txtUltimaPartida.setToolTipText("Minijuego: " + ultima.nombreMinijuego);
+
             txtUltimaPuntuacion.setText(ultima.puntuacion + " pts");
+            txtUltimaPuntuacion.setToolTipText("Minijuego: " + ultima.nombreMinijuego);
         } else {
             txtUltimaPartida.setText("Sin partidas");
             txtUltimaPuntuacion.setText("0 pts");
         }
+
+        // Último juego
+        String ultimoMinijuego = dao.obtenerUltimoMinijuegoJugado(idUsuario);
+        txtUltimoJuego.setText(ultimoMinijuego != null ? ultimoMinijuego : "Sin Partida");
     }
 
     //--------------------- F O R M A T O   D E   T I E M P O ---------------------
     private String formatearTiempo(int segundosTotales) {
-        int horas = segundosTotales / 3600;
+        int hours = segundosTotales / 3600;
         int minutos = (segundosTotales % 3600) / 60;
         int segundos = segundosTotales % 60;
 
-        if (horas > 0) {
-            return String.format("%02d:%02d:%02d", horas, minutos, segundos);
+        if (hours > 0) {
+            return String.format("%02d:%02d:%02d", hours, minutos, segundos);
         }
         return String.format("%02d:%02d", minutos, segundos);
     }
 
     public static void main(String[] args) {
-        // NUEVO: ejemplo de uso directo (Hidden Fox = id_minijuego 1)
-        new PantallaEstadisticas(1, "Hidden Fox");
+        new PantallaEstadisticas();
     }
-
 }

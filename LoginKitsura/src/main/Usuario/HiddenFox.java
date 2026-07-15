@@ -10,6 +10,8 @@ import main.Menu.DecoracionBotones;
 
 public abstract class HiddenFox extends JFrame implements JuegoBase {
 
+    //------------------------------ A T R I B U T O S  -------------------------
+    
     //Atributos
     private final JPanel fondo;
 
@@ -39,12 +41,15 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     // Componentes que provienen de la clase "DecoracionBotones", los cuales son para
     // diferentes acciones dentro del minijuego
     private DecoracionBotones btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
-
+    
+    //-----------------------------  C O N S T R U C T O R --------------------------------------
+   
     // Constructor donde se encuentran las fuentes del programa
     // "maxVidas" es la cantidad de corazones que debe dibujar la interfaz,
     // obtenida previamente desde la base de datos (tabla Configuracion_nivel)
     // por medio de VidasDAO
     public HiddenFox(int maxVidas) {
+        
         // Resguardo por si llega un valor inválido (0 o negativo)
         this.maxVidas = (maxVidas < 1) ? 1 : maxVidas;
 
@@ -91,7 +96,19 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         fondo.setLayout(null);
         // Se le asigna un color de fondo: Blanco
         fondo.setBackground(Color.WHITE);
+        
+        //----------------- JFRAME -----------------
+        
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
 
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+        
         // Asigna el panel principal de la ventana (JFrame).
         setContentPane(fondo);
 
@@ -112,6 +129,11 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     // Método donde se inicializan y crean los diferentes componentes con sus ajustes personalizados
     private void crearComponentes() {
+        //------------------ ICONO -------------
+        // Cargamos el icono
+        
+        
+        
         //------------------- SOMBRA ---------
         imagenSombra = new JLabel(); //Se crea el label de la imagen sombra
         imagenSombra.setBounds(350, 60, 350, 320); //Se posiciona y configura el tamaño de la sombra

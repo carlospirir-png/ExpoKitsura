@@ -1,9 +1,12 @@
 package main.Usuario;
 
+import java.awt.*;
+import javax.swing.*;
+
 public class MenuHiddenFox extends MenuMinijuegosC {
 
     public MenuHiddenFox() {
-        super("HIDDEN FOX", "ANIMALES", "TERRITORIOS", "CARICATURAS");
+        super("HIDDEN FOX", "ANIMALES", "TERRITORIOS", "CARICATURAS", "/Multimedia/utiles/mascotaKitsura/imagen/zorroLupa.png");
 
         btnCategoria1.addActionListener(e -> {
             new HiddenFox_Codigo(1);
@@ -20,7 +23,8 @@ public class MenuHiddenFox extends MenuMinijuegosC {
             dispose();
         });
         
-        setTitle("Hidden Fox");
+        setTitle("Hidden Fox");       
+        
     }
     
     @Override

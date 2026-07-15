@@ -1,7 +1,6 @@
 package main;
 
 import javax.swing.JOptionPane;
-import main.Usuario.*;
 import main.Menu.*;
 import main.conexion.Conexion;
 
@@ -9,7 +8,6 @@ public class Main {
     
 
     public static void main(String[] args) {
-
         try {
             Conexion conectar = new Conexion();
 
@@ -26,6 +24,5 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE
             );
         }
-
     }
 }

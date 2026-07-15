@@ -2,7 +2,7 @@
 package main.Usuario;
 
 import java.awt.*;
-import java.util.*;
+import java.net.URL;
 import javax.swing.Timer;
 import javax.swing.*;
 
@@ -65,6 +65,15 @@ public class MaulwurfRennt extends JFrame {
         fondo.setBackground(new Color(178, 197, 178));
 
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         // Propiedades de la ventana de la aplicación.
         setTitle("Maulwurf Rennt");
@@ -365,7 +374,7 @@ public class MaulwurfRennt extends JFrame {
             carteles[i] = new JLabel("", SwingConstants.CENTER);
             carteles[i].setOpaque(true);
             carteles[i].setBackground(new Color(118, 169, 170));
-            carteles[i].setFont(fuente2.deriveFont(22f));
+            carteles[i].setFont(fuente2.deriveFont(15f));
 
             carteles[i].setBounds(
                     posiciones[i][0] + 5,
@@ -470,7 +479,7 @@ public class MaulwurfRennt extends JFrame {
         }
     }
 
-    // Reubica aleatoriamente las coordenadas de los topos activos para desordenar el tablero.
+    // Reubica aleatoriamente las coordenadas de los topos activos para desordenar el tablero. 
     public void mezclarTopos(int cantidad) {
 //        Point[] posiciones = {
 //            new Point(180, 0),
@@ -655,8 +664,17 @@ public class MaulwurfRennt extends JFrame {
     }
 
     // Retorna la instancia del botón de ayuda para poder asignarle listeners externos.
+// Retorna la instancia del botón de ayuda para poder asignarle listeners externos.
     public JButton getBtnAyuda() {
+        
         return btnAyuda;
+    }
+
+// Muestra u oculta el botón de ayuda según si la categoría actual admite pistas.
+// Las categorías de operaciones matemáticas (Básicas/Avanzadas) no la necesitan;
+// solo tiene sentido en "Científicos Matemáticos", que sí tiene preguntas teóricas.
+    public void mostrarBotonAyuda(boolean mostrar) {
+        btnAyuda.setVisible(mostrar);
     }
 
     // Despliega un cuadro de diálogo emergente (JOptionPane) con un mensaje.

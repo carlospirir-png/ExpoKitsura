@@ -2,6 +2,7 @@ package main.Usuario;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
@@ -37,6 +38,15 @@ public class SeAcaboTiempo extends JFrame {
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCuatroK.png");
         setContentPane(fondo);
         setTitle("Se acabo el tiempo");
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setSize(1980, 1060);
         setLocationRelativeTo(null);
