@@ -2,20 +2,20 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
-        <group/>
-=======
         <group>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/MenuAdmin.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/AdminStages.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaEstadisticas.java</file>
             <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/NuevoAdmin.java</file>
             <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/EstadisticaDAO.java</file>
             <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroUsuario.java</file>
-            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
             <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
-            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/M3_crearNuevo.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/PedirMCN.java</file>
             <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegoC3.java</file>
-            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
-            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaEstadisticas.java</file>
         </group>
->>>>>>> 76b3188686dd693dffe66d5536d9a1d77703c740
     </open-files>
 </project-private>

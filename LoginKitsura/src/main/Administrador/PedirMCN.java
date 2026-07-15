@@ -2,16 +2,10 @@ package main.Administrador;
 
 import java.awt.*;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanelSemi;
-import main.Usuario.IniciarSesion;
+import main.Menu.*;
 import main.conexion.Conexion;
 
 public class PedirMCN extends JFrame {

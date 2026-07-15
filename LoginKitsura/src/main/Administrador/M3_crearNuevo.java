@@ -262,7 +262,10 @@ public class M3_crearNuevo extends JFrame {
         btnSalir.setFont(fuente2.deriveFont(30f));
         btnSalir.setForeground(Color.WHITE);
         btnSalir.setBounds(1695, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e -> {
+            new AdminStages();
+            dispose();
+        });
         fondo.add(btnSalir);
     }
 
