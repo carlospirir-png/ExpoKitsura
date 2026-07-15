@@ -440,53 +440,53 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     //--------------------- I M Á G E N E S   Y  F O N D O S
     //---------------- IMAGEN SOMBRA Y A COLOR ----------------     
     public void cambiarImagen(String rutaImagen) {
-        /*El método recibe un String llamado rutaImagen a través del parámetro.
-        Se usa getResorce para obtener la URL del recurso.*/
-        
-        URL ruta = getClass().getResource(rutaImagen);
 
-        try {
-       
-            //Si getResource() no encontró el recurso
+    try {
+
+        ImageIcon icono;
+
+        // Si es una ruta absoluta del disco
+        java.io.File archivo = new java.io.File(rutaImagen);
+
+        if (archivo.exists()) {
+
+            icono = new ImageIcon(archivo.getAbsolutePath());
+
+        } else {
+
+            // Si no existe en el disco, intenta buscarla dentro del proyecto
+            URL ruta = getClass().getResource(rutaImagen);
+
             if (ruta == null) {
-                //Se lanza una excepción no comprobada
-                throw new RuntimeException("No se encontró la imagen.");
+                throw new RuntimeException("No se encontró la imagen: " + rutaImagen);
             }
-            
-            //Se crea un nuevo ImageIcon con la imagen de la ruta
-            ImageIcon icono = new ImageIcon(ruta);
-            
-            //Obtenemos la imagen del ImageIcon para poder escalarla
-            Image imagen = icono.getImage();
-            
-            //Se escala la imagen a 350px X 320px con el algoritmo smooth
-            Image iconoEscalado = imagen.getScaledInstance(350, 320, Image.SCALE_SMOOTH);
-            
-            //Se crea una nueva ImageIcon con la imagen escalada
-            ImageIcon imagenEscalada = new ImageIcon(iconoEscalado);
-            
-            //Se le coloca al label la nueva ImageIcon.
-            imagenSombra.setIcon(imagenEscalada);
-            
-            //Revalida
-            imagenSombra.revalidate();
-            
-            //Re-dibuja
-            imagenSombra.repaint();
-            
-        //Captura la excepción
-        } catch (RuntimeException e) {
-            //Imprime el StackTrace
-            e.printStackTrace();
-            
-            //Se le coloca el texto de error
-            imagenSombra.setText("ERROR AL CARGAR IMAGEN");
-            //Centramos
-            imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
-            //Letra roja
-            imagenSombra.setForeground(Color.RED);
+
+            icono = new ImageIcon(ruta);
         }
+
+        Image imagen = icono.getImage();
+
+        Image imagenEscalada = imagen.getScaledInstance(
+                350,
+                320,
+                Image.SCALE_SMOOTH);
+
+        imagenSombra.setIcon(new ImageIcon(imagenEscalada));
+        imagenSombra.setText("");
+
+        imagenSombra.revalidate();
+        imagenSombra.repaint();
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        imagenSombra.setIcon(null);
+        imagenSombra.setText("ERROR AL CARGAR IMAGEN");
+        imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
+        imagenSombra.setForeground(Color.RED);
     }
+}
 
     //------------------ FONDO DE LA SOMBRA --------------------
     public void cambiarFondoPapel(String rutaImagen) {
