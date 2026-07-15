@@ -33,7 +33,7 @@ public class VictoriaPerfecta extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN,20);
             fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-
+        setResizable(false);
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
         // NO hace setContentPane ni setVisible
         fondo.setLayout(null);

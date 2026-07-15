@@ -42,6 +42,7 @@ public class PistasTexto extends JFrame {
 
         setTitle("Pistas de Texto");
         setSize(700, 450);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         fondo.setLayout(null);

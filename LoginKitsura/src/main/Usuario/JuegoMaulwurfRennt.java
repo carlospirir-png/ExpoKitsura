@@ -133,6 +133,10 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         preguntasNivel = 0;
 
+        // La ayuda solo tiene sentido en la categoría "Científicos Matemáticos"
+        // (idCategoria == 9), sin importar el nivel de dificultad.
+        boolean necesitaAyuda = (idCategoria == 9);
+
         switch (nivel) {
 
             case 1:
@@ -140,8 +144,6 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.actualizarDificultad("Fácil");
                 vista.mostrarTopos(5);
                 vista.actualizarCategoria(obtenerNombreCategoria());
-                vista.mostrarBotonAyuda(false);
-
                 break;
 
             case 2:
@@ -150,7 +152,6 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.mostrarTopos(6);
                 vista.cambiarColorFondo(new Color(239, 218, 154));
                 vista.actualizarCategoria(obtenerNombreCategoria());
-                vista.mostrarBotonAyuda(false);
                 break;
 
             case 3:
@@ -159,9 +160,10 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.mostrarTopos(7);
                 vista.cambiarColorFondo(new Color(255, 180, 80));
                 vista.actualizarCategoria(obtenerNombreCategoria());
-                vista.mostrarBotonAyuda(true);
                 break;
         }
+
+        vista.mostrarBotonAyuda(necesitaAyuda);
 
         cargarPregunta();
     }
@@ -230,6 +232,10 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         }
 
         iniciarTemporizador();
+
+        // NUEVO: cada nueva pregunta reactiva el botón de ayuda (con su
+        // texto original), para que la pista vuelva a estar disponible.
+        vista.restaurarBotonAyuda();
 
         preguntaActual = preguntaDAO.obtenerPreguntaAleatoria(
                 idCategoria,
@@ -446,6 +452,12 @@ public class JuegoMaulwurfRennt implements JuegoBase {
             // aciertos ya ganados del acumulado que se guarda en BD.
             puntos = Math.max(0, puntos - 10);
             vista.actualizarPuntos(puntos);
+
+            // NUEVO: al confirmar el uso de la pista, se deshabilita el
+            // botón de ayuda y se cambia su texto para que el jugador sepa
+            // que ya la usó en esta pregunta (no puede volver a usarla
+            // hasta que se cargue la siguiente).
+            vista.desactivarBotonAyuda();
 
             String pista = ayudaDAO.obtenerPistaTexto(preguntaActual.getIdPregunta());
             PistasTexto ventana = new PistasTexto(pista);

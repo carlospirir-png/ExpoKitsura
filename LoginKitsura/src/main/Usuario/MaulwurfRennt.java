@@ -78,6 +78,7 @@ public class MaulwurfRennt extends JFrame {
         // Propiedades de la ventana de la aplicación.
         setTitle("Maulwurf Rennt");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null); // Centra la ventana en pantalla.
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia maximizado a pantalla completa.
@@ -675,6 +676,21 @@ public class MaulwurfRennt extends JFrame {
 // solo tiene sentido en "Científicos Matemáticos", que sí tiene preguntas teóricas.
     public void mostrarBotonAyuda(boolean mostrar) {
         btnAyuda.setVisible(mostrar);
+    }
+
+    // NUEVO: deshabilita el botón de ayuda y cambia su texto para indicar
+    // que la pista de la pregunta actual ya fue utilizada.
+    public void desactivarBotonAyuda() {
+        btnAyuda.setEnabled(false);
+        btnAyuda.setText("Pista ya utilizada");
+    }
+
+    // NUEVO: restaura el botón de ayuda a su estado y texto original.
+    // Se invoca cada vez que se carga una nueva pregunta, para que la
+    // pista vuelva a estar disponible en la siguiente ronda.
+    public void restaurarBotonAyuda() {
+        btnAyuda.setEnabled(true);
+        btnAyuda.setText("¿Necesitas ayuda?");
     }
 
     // Despliega un cuadro de diálogo emergente (JOptionPane) con un mensaje.

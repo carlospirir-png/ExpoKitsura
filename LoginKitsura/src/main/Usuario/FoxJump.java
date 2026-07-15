@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import javax.swing.*;
+import main.Menu.DecoracionBotones;
 import main.conexion.Conexion;
 
 // CLASE PRINCIPAL DEL MINIJUEGO FOX JUMP!
@@ -37,7 +38,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     private JLabel mascota, florMascota;
     private JLabel panelLago, nenufarFlor;
     private JLabel nenufarVerdadero, nenufarFalso;
-    private JButton btnAyuda;
+    private DecoracionBotones btnAyuda;
     private int puntajeTotal = 0;
     private int tiempoTotalJugado = 0;
     private int tiempoMaximoPregunta;
@@ -84,7 +85,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     // CANTIDAD DE RESPUESTAS CORRECTAS NECESARIAS PARA SUBIR DE DIFICULTAD
-    private static final int CORRECTAS_SUBIR = 5;
+    private static final int CORRECTAS_SUBIR = 1;
 
     // DIFICULTAD EN LA QUE EMPIEZA Y VA CAMBIANDO LA PARTIDA
     private Dificultad dificultadActual = Dificultad.FACIL;
@@ -158,7 +159,15 @@ public class FoxJump extends JFrame implements JuegoBase {
         if (maxVidas < 1) {
             maxVidas = 3;
         }
+                //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
 
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
         vidas = maxVidas;
 
         cargarFuentes();
@@ -169,6 +178,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         setTitle("Fox Jump!");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -369,6 +379,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         pistaMostradaEnPreguntaActual = false;
         btnAyuda.setEnabled(true);
         btnAyuda.setText("¿Necesitas ayuda?");
+        btnAyuda.setFont(fuente2.deriveFont(18f));
 
         // SI NO HAY PREGUNTAS VISTAS, SE USA "0" PARA QUE LA SINTAXIS SEA VALIDA
         String exclusion = preguntasVistas.isEmpty()
@@ -643,6 +654,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         pistaMostradaEnPreguntaActual = false;
         btnAyuda.setEnabled(true);
         btnAyuda.setText("¿Necesitas ayuda?");
+        btnAyuda.setFont(fuente2.deriveFont(18f));
 
         // NUEVO: al jugar de nuevo es una partida distinta de la anterior,
         // así que se crea un nuevo registro en la tabla Partida.
@@ -1431,7 +1443,10 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
 
         // ── BOTON DE AYUDA ────────────────────────────────────────────────────
-        btnAyuda = new JButton("¿Necesitas ayuda?");
+        btnAyuda = new DecoracionBotones("¿Necesitas ayuda?",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_APAGADO, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO); //MOUSE DENTRO   
         btnAyuda.setBounds(60, 140, 280, 55);
         btnAyuda.setFocusPainted(false);
         btnAyuda.setFont(fuente2.deriveFont(18f));
