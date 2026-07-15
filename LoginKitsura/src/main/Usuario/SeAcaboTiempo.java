@@ -12,8 +12,6 @@ public class SeAcaboTiempo extends JFrame {
     private FondoPanel fondo;
     private Font fuente1;
     private Font fuente2;
-
-    private DecoracionBotones btnVolver; // Usada correctamente ahora
     private JuegoBase juego;
 
     public SeAcaboTiempo(JuegoBase juego, ActionListener accion) {
@@ -49,6 +47,7 @@ public class SeAcaboTiempo extends JFrame {
         setIconImage(icono.getImage());
 
         setSize(1980, 1060);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -56,12 +55,6 @@ public class SeAcaboTiempo extends JFrame {
         fondo.setLayout(null);
 
         crearComponentes();
-        //--------------- VOLVER --------------
-        btnVolver.addActionListener(e -> {
-            dispose();
-            new MenuMinijuegos();
-        });
-
         setVisible(true);
     }
 
@@ -105,27 +98,31 @@ public class SeAcaboTiempo extends JFrame {
         lblCita2.setBounds(25, 235, 600, 25);
         panelContenedor.add(lblCita2);
 
-        //---------------- BOTÓN VOLVER ----------------
-        btnVolver = new DecoracionBotones("VOLVER",
-                DecoracionBotones.AZUL,
-                DecoracionBotones.GRIS,
-                DecoracionBotones.AMARILLO,
-                DecoracionBotones.CELESTE,
-                DecoracionBotones.AZUL,
-                DecoracionBotones.AZUL);
+        JButton btnContinuar = new DecoracionBotones("VER RESULTADO",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO
 
-        btnVolver.setFont(fuente2.deriveFont(20f));
-        btnVolver.setBounds(1295, 645, 200, 50);
-        fondo.add(btnVolver);
-        
-        //---------------- BOTÓN MENU ----------------
-        btnVolver = new DecoracionBotones("MENÚ",
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+        btnContinuar.setFont(fuente2.deriveFont(28f));
+        btnContinuar.setBounds(1120, 740, 280, 65);
 
-        btnVolver.setFont(fuente2.deriveFont(20f));
-        btnVolver.setBounds(1000, 645, 200, 50);
-        fondo.add(btnVolver);
+        btnContinuar.addActionListener(e -> {
+
+            ResultadoFinal resultado = new ResultadoFinal(
+                    juego,
+                    juego.getPuntajeTotal(),
+                    juego.getTiempoTotalJugado()
+            );
+
+            // Le pasamos la referencia de esta ventana
+            resultado.setSeAcaboTiempo(this);
+
+            // Mostramos el diálogo
+            resultado.mostrar();
+            dispose();
+        });
+
+        fondo.add(btnContinuar);
 
         //---------------- MASCOTA ----------------
         JLabel mascotaReloj = new JLabel();

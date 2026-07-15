@@ -73,6 +73,7 @@ public class PantallaImagenPerfil extends JFrame {
 
         setTitle("Imagen de Perfil");
         setSize(650, 450);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

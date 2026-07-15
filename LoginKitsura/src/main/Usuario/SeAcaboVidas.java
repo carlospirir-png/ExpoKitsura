@@ -43,6 +43,7 @@ public class SeAcaboVidas extends JFrame {
 
         setTitle("Se acabaron las vidas");
         setSize(1920, 1060);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -98,13 +99,13 @@ public class SeAcaboVidas extends JFrame {
         panelTextos.setBounds(800, 270, 900, 360);
         fondo.add(panelTextos);
 //---------------- BOTONES ----------------
-        JButton btnContinuar = new DecoracionBotones("CONTINUAR",
+        JButton btnContinuar = new DecoracionBotones("VER RESULTADO",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO
 
         btnContinuar.setFont(fuente2.deriveFont(28f));
-        btnContinuar.setBounds(980, 740, 280, 65);
+        btnContinuar.setBounds(1120, 740, 280, 65);
 
         btnContinuar.addActionListener(e -> {
 
@@ -123,18 +124,5 @@ public class SeAcaboVidas extends JFrame {
         });
 
         fondo.add(btnContinuar);
-
-        JButton btnMenu = new DecoracionBotones("MENÚ",
-                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
-
-        btnMenu.setFont(fuente2.deriveFont(28f));
-        btnMenu.setBounds(1300, 740, 280, 65);
-        btnMenu.addActionListener(e -> {
-            dispose();
-            juego.irAlMenu();
-        });
-        fondo.add(btnMenu);
     }
 }
