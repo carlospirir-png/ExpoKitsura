@@ -677,6 +677,21 @@ public class MaulwurfRennt extends JFrame {
         btnAyuda.setVisible(mostrar);
     }
 
+    // NUEVO: deshabilita el botón de ayuda y cambia su texto para indicar
+    // que la pista de la pregunta actual ya fue utilizada.
+    public void desactivarBotonAyuda() {
+        btnAyuda.setEnabled(false);
+        btnAyuda.setText("Pista ya utilizada");
+    }
+
+    // NUEVO: restaura el botón de ayuda a su estado y texto original.
+    // Se invoca cada vez que se carga una nueva pregunta, para que la
+    // pista vuelva a estar disponible en la siguiente ronda.
+    public void restaurarBotonAyuda() {
+        btnAyuda.setEnabled(true);
+        btnAyuda.setText("¿Necesitas ayuda?");
+    }
+
     // Despliega un cuadro de diálogo emergente (JOptionPane) con un mensaje.
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
