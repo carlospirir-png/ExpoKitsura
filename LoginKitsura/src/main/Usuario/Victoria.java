@@ -14,9 +14,9 @@ public class Victoria extends JFrame {
     private Font fuente1;
     private Font fuente2;
     private JuegoBase juego;
-    private DecoracionBotones btnVolver, btnResultados;
+    private DecoracionBotones btnResultados;
 
-    public Victoria(ActionListener accion, JuegoBase juego) {
+    public Victoria(JuegoBase juego) {
         this.juego = juego;
         try {
             // LettersForLearners
@@ -34,7 +34,7 @@ public class Victoria extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-
+    setResizable(false);
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
         // NO hace setContentPane ni setVisible
         fondo.setLayout(null);
@@ -49,12 +49,6 @@ public class Victoria extends JFrame {
         setIconImage(icono.getImage());
 
         crearComponentes();
-
-        //--------------- VOLVER --------------
-        btnVolver.addActionListener(e -> {
-            dispose();
-            accion.actionPerformed(e);
-        });
         setVisible(true);
     }
 
@@ -98,10 +92,10 @@ public class Victoria extends JFrame {
         fotoPerfil.setIcon(new ImageIcon(perfilRedondo));
         fotoPerfil.setBounds(80, 60, 150, 150);
         panelDerecho.add(fotoPerfil);
-        
+
         //---------------- DATOS DE USUARIO ----------------
         JLabel lblUsuario = new JLabel(Sesion.getNombreUsuario());
-        lblUsuario.setFont(fuente2.deriveFont(25f));
+        lblUsuario.setFont(fuente2.deriveFont(35f));
         lblUsuario.setForeground(Color.decode("#FC767D"));
         lblUsuario.setBounds(250, 110, 400, 40);
         panelDerecho.add(lblUsuario);
@@ -114,30 +108,27 @@ public class Victoria extends JFrame {
         mascotaCongrats.setBounds(150, 270, 600, 600);
         fondo.add(mascotaCongrats);
 
+        //---------------- PANEL SEMITRANSPARENTE FRASE INFERIOR ----------------
+        JPanel panelFraseAbajo = new JPanel();
+        panelFraseAbajo.setLayout(null);
+        panelFraseAbajo.setBackground(new Color(0, 0, 0, 115));
+        panelFraseAbajo.setBounds(100, 880, 700, 35);
+        fondo.add(panelFraseAbajo);
+
         //---------------- FRASE INFERIOR DE LA MASCOTA ----------------
         JLabel lblFraseAbajo = new JLabel("Aún con errores, pudiste lograrlo.", JLabel.CENTER);
-        lblFraseAbajo.setFont(fuente1.deriveFont(26f));
+        lblFraseAbajo.setFont(fuente1.deriveFont(40f));
         lblFraseAbajo.setForeground(Color.WHITE);
-        lblFraseAbajo.setBounds(100, 880, 700, 35);
-        fondo.add(lblFraseAbajo);
-
-        //---------------- BOTON VOLVER  ----------------
-        btnVolver = new DecoracionBotones("Volver",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
-
-        btnVolver.setFont(fuente2.deriveFont(16f));
-        btnVolver.setBounds(1450, 910, 200, 50);
-        fondo.add(btnVolver);
+        lblFraseAbajo.setBounds(0, 0, 700, 35); // Centrado de forma relativa dentro de su panel contenedor
+        panelFraseAbajo.add(lblFraseAbajo);
 
         //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
         btnResultados = new DecoracionBotones("VER RESULTADOS",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnResultados.setFont(fuente2.deriveFont(15f));
-        btnResultados.setBounds(1210, 910, 200, 50);
+        btnResultados.setBounds(1210, 910, 400, 50);
+        btnResultados.setFont(fuente2.deriveFont(25f));
         btnResultados.addActionListener(e -> {
             juego.mostrarResultadoConFade();
         });

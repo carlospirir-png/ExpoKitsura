@@ -85,6 +85,7 @@ public class PantallaCContra extends JFrame {
 
         setTitle("Editar Contraseña");
         setSize(600, 400);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

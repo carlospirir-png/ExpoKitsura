@@ -79,14 +79,14 @@ public class TutorialFoxJump extends PantallaTutorial {
         panelContenido.add(txtPaso1);
 
         // ---------------------- Imagen 1 ---------------------------------
-try {
-    ImageIcon referencia1icon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ImgTutorial1-Juego2.png"));
-    Image referencia1Escalada = referencia1icon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
-    lblImagen1.setIcon(new ImageIcon(referencia1Escalada));
-} catch (Exception e) {
-    lblImagen1.setText("Imagen no disponible");
-    System.out.println(e);
-}
+        try {
+            ImageIcon referencia1icon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ImgTutorial1-Juego2.png"));
+            Image referencia1Escalada = referencia1icon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
+            lblImagen1.setIcon(new ImageIcon(referencia1Escalada));
+        } catch (Exception e) {
+            lblImagen1.setText("Imagen no disponible");
+            System.out.println(e);
+        }
         lblImagen1.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         lblImagen1.setHorizontalAlignment(SwingConstants.CENTER);
         lblImagen1.setText("");
@@ -120,14 +120,14 @@ try {
         panelContenido.add(txtPaso2);
 
         // ---------------------- Imagen 2 ---------------------------------
-try {
-    ImageIcon referencia1icon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ImgTutorial2-Juego2.png"));
-    Image referencia1Escalada = referencia1icon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
-    lblImagen2.setIcon(new ImageIcon(referencia1Escalada));
-} catch (Exception e) {
-    lblImagen2.setText("Imagen no disponible");
-    System.out.println(e);
-}
+        try {
+            ImageIcon referencia1icon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ElementosGraficos/imagenes/ImgTutorial2-Juego2.png"));
+            Image referencia1Escalada = referencia1icon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
+            lblImagen2.setIcon(new ImageIcon(referencia1Escalada));
+        } catch (Exception e) {
+            lblImagen2.setText("Imagen no disponible");
+            System.out.println(e);
+        }
         lblImagen2.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         lblImagen2.setHorizontalAlignment(SwingConstants.CENTER);
         lblImagen2.setText("");

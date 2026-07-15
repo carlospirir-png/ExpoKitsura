@@ -19,6 +19,7 @@ public class ResultadoFinal extends JDialog {
     private int vidasPerdidas = -1; // -1 = sin dato aún
 
     private SeAcaboVidas seAcaboVidas;
+    private SeAcaboTiempo seAcaboTiempo;
     
     //---------- VICTORIA -----------
     //Victoria imperfecta
@@ -49,6 +50,7 @@ public class ResultadoFinal extends JDialog {
 
         setUndecorated(true);
         setSize(700, 500);
+        setResizable(false);
         setLocationRelativeTo(juego.getFrame());
         fondo.setLayout(null);
 
@@ -109,13 +111,25 @@ public class ResultadoFinal extends JDialog {
                 DecoracionBotones.AZUL,
                 DecoracionBotones.AZUL);
 
-        btnJugarDeNuevo.setFont(fuente2.deriveFont(15f));
+        btnJugarDeNuevo.setFont(fuente2.deriveFont(16f));
         btnJugarDeNuevo.setBounds(75, 300, 180, 45);
 
         btnJugarDeNuevo.addActionListener(e -> {
 
             if (seAcaboVidas != null) {
                 seAcaboVidas.dispose();
+            }
+            
+             //si hay una ventana de victoria imperfecta
+            if(victoriaImperfecta != null){
+                //La cerramos
+               victoriaImperfecta.dispose();
+            }
+            
+            //si hay una ventana de victoria perfecta
+            if(victoriaPerfecta != null){
+                //La cerramos
+                victoriaPerfecta.dispose();
             }
 
             dispose();
@@ -131,7 +145,7 @@ public class ResultadoFinal extends JDialog {
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO  
 
-        btnMenu.setFont(fuente2.deriveFont(15f));
+        btnMenu.setFont(fuente2.deriveFont(20f));
         btnMenu.setBounds(275, 300, 160, 45);
 
         btnMenu.addActionListener(e -> {
@@ -164,12 +178,12 @@ public class ResultadoFinal extends JDialog {
                 "IMPRIMIR TICKET",
                 DecoracionBotones.CELESTE,
                 DecoracionBotones.AZUL,
-                DecoracionBotones.AMARILLO,
+                DecoracionBotones.AZUL,
                 DecoracionBotones.AMARILLO,
                 DecoracionBotones.CELESTE,
-                DecoracionBotones.AZUL);
+                DecoracionBotones.AMARILLO_MOSTAZA);
 
-        btnImprimir.setFont(fuente2.deriveFont(15f));
+        btnImprimir.setFont(fuente2.deriveFont(20f));
         btnImprimir.setBounds(75, 355, 360, 40);
 
         btnImprimir.addActionListener(e ->
@@ -232,5 +246,10 @@ public class ResultadoFinal extends JDialog {
     // Setter para guardar la referencia de SeAcaboVidas
     public void setSeAcaboVidas(SeAcaboVidas seAcaboVidas) {
         this.seAcaboVidas = seAcaboVidas;
+    }
+    
+        // Setter para guardar la referencia de SeAcaboVidas
+    public void setSeAcaboTiempo(SeAcaboTiempo seAcaboTiempo) {
+        this.seAcaboTiempo = seAcaboTiempo;
     }
 }
