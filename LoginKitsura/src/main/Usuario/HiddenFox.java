@@ -439,7 +439,7 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     //--------------------- I M Á G E N E S   Y  F O N D O S
     //---------------- IMAGEN SOMBRA Y A COLOR ----------------     
-    public void cambiarImagen(String rutaImagen) {
+ public void cambiarImagen(String rutaImagen) {
 
     try {
 
