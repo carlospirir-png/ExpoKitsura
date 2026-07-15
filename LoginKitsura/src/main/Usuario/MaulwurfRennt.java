@@ -5,6 +5,7 @@ import java.awt.*;
 import java.net.URL;
 import javax.swing.Timer;
 import javax.swing.*;
+import main.Menu.DecoracionBotones;
 
 // Clase principal que gestiona la interfaz gráfica del minijuego "MaulwurfRennt".
 public class MaulwurfRennt extends JFrame {
@@ -155,7 +156,10 @@ public class MaulwurfRennt extends JFrame {
         }
 
         // Botón de ayuda.
-        btnAyuda = new JButton("¿Necesitas ayuda?");
+        btnAyuda = new DecoracionBotones("¿Necesitas ayuda?",
+        //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_APAGADO, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO); //MOUSE DENTRO 
         btnAyuda.setFont(fuente2.deriveFont(18f));
         btnAyuda.setBounds(60, 120, 280, 55);
         fondo.add(btnAyuda);
