@@ -2,6 +2,9 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
+        <group/>
+=======
         <group>
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/DatosConfiguracion.java</file>
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/SeleccionDAO_Vidas.java</file>
@@ -10,5 +13,6 @@
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/PuntuacionesDAO.java</file>
             <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/PistasAudioAdmin.java</file>
         </group>
+>>>>>>> 76b3188686dd693dffe66d5536d9a1d77703c740
     </open-files>
 </project-private>
