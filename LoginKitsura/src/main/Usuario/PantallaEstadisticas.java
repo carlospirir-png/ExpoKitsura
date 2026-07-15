@@ -85,6 +85,7 @@ public class PantallaEstadisticas extends JFrame {
 
         setTitle("Tabla Global");
         setSize(1920, 1080);
+        setResizable(false);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

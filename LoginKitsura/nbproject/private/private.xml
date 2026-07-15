@@ -6,12 +6,15 @@
         <group/>
 =======
         <group>
-            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/DatosConfiguracion.java</file>
-            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/SeleccionDAO_Vidas.java</file>
-            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PistasAudio.java</file>
-            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/TutorialFoxJump.java</file>
-            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/PuntuacionesDAO.java</file>
-            <file>file:/C:/Users/usuario/OneDrive/Documentos/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/PistasAudioAdmin.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Administrador/NuevoAdmin.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/EstadisticaDAO.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroUsuario.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegoC3.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
+            <file>file:/C:/Users/Computacion/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaEstadisticas.java</file>
         </group>
 >>>>>>> 76b3188686dd693dffe66d5536d9a1d77703c740
     </open-files>

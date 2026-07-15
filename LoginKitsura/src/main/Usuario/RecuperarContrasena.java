@@ -49,6 +49,7 @@ public class RecuperarContrasena extends JFrame {
 
         setTitle("Recuperar Contraseña");
         setSize(700, 450);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         fondo.setLayout(null);

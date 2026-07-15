@@ -34,7 +34,7 @@ public class Victoria extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
-
+    setResizable(false);
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
         // NO hace setContentPane ni setVisible
         fondo.setLayout(null);
@@ -95,7 +95,7 @@ public class Victoria extends JFrame {
 
         //---------------- DATOS DE USUARIO ----------------
         JLabel lblUsuario = new JLabel(Sesion.getNombreUsuario());
-        lblUsuario.setFont(fuente2.deriveFont(25f));
+        lblUsuario.setFont(fuente2.deriveFont(35f));
         lblUsuario.setForeground(Color.decode("#FC767D"));
         lblUsuario.setBounds(250, 110, 400, 40);
         panelDerecho.add(lblUsuario);
@@ -108,12 +108,19 @@ public class Victoria extends JFrame {
         mascotaCongrats.setBounds(150, 270, 600, 600);
         fondo.add(mascotaCongrats);
 
+        //---------------- PANEL SEMITRANSPARENTE FRASE INFERIOR ----------------
+        JPanel panelFraseAbajo = new JPanel();
+        panelFraseAbajo.setLayout(null);
+        panelFraseAbajo.setBackground(new Color(0, 0, 0, 115));
+        panelFraseAbajo.setBounds(100, 880, 700, 35);
+        fondo.add(panelFraseAbajo);
+
         //---------------- FRASE INFERIOR DE LA MASCOTA ----------------
         JLabel lblFraseAbajo = new JLabel("Aún con errores, pudiste lograrlo.", JLabel.CENTER);
-        lblFraseAbajo.setFont(fuente1.deriveFont(26f));
+        lblFraseAbajo.setFont(fuente1.deriveFont(40f));
         lblFraseAbajo.setForeground(Color.WHITE);
-        lblFraseAbajo.setBounds(100, 880, 700, 35);
-        fondo.add(lblFraseAbajo);
+        lblFraseAbajo.setBounds(0, 0, 700, 35); // Centrado de forma relativa dentro de su panel contenedor
+        panelFraseAbajo.add(lblFraseAbajo);
 
         //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
         btnResultados = new DecoracionBotones("VER RESULTADOS",

@@ -116,6 +116,8 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         setTitle("Hidden Fox");
         // Tamaño de la pantalla (ancho x alto)
         setSize(1880, 1080);
+        //No permiteque el tamaño de la ventana sea modificado
+        setResizable(false);
         // Se coloca la ventana al centro de la pantalla cuando se ejecute
         setLocationRelativeTo(null);
         // Al cerrar la ventana, finaliza la ejecución

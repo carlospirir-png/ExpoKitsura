@@ -47,6 +47,7 @@ public class MenuMinijuegoC2 extends JFrame {
 
         setTitle("Fox Jump!");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);

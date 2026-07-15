@@ -85,7 +85,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     // CANTIDAD DE RESPUESTAS CORRECTAS NECESARIAS PARA SUBIR DE DIFICULTAD
-    private static final int CORRECTAS_SUBIR = 5;
+    private static final int CORRECTAS_SUBIR = 1;
 
     // DIFICULTAD EN LA QUE EMPIEZA Y VA CAMBIANDO LA PARTIDA
     private Dificultad dificultadActual = Dificultad.FACIL;
@@ -159,7 +159,15 @@ public class FoxJump extends JFrame implements JuegoBase {
         if (maxVidas < 1) {
             maxVidas = 3;
         }
+                //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
 
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
         vidas = maxVidas;
 
         cargarFuentes();
@@ -170,6 +178,7 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         setTitle("Fox Jump!");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);

@@ -33,7 +33,7 @@ public class VictoriaPerfecta extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN,20);
             fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-
+        setResizable(false);
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
         // NO hace setContentPane ni setVisible
         fondo.setLayout(null);
@@ -49,7 +49,7 @@ public class VictoriaPerfecta extends JFrame {
 
         crearComponentes();
 
-       
+        
 
     }
 
@@ -72,7 +72,7 @@ public class VictoriaPerfecta extends JFrame {
         panelIzquierdo.add(lblGanado);
 
         //---------------- FRASE DE MOTIVACIÓN ----------------
-        JLabel lblFrase = new JLabel("-- ¿Eres un perfeccionista? --", JLabel.CENTER);
+        JLabel lblFrase = new JLabel("Tu potencial es infinito, atrévete a explorarlo.", JLabel.CENTER);
         lblFrase.setFont(fuente1.deriveFont(45f));
         lblFrase.setForeground(Color.WHITE);
         lblFrase.setBounds(0, 105, 700, 35);
@@ -110,7 +110,21 @@ public class VictoriaPerfecta extends JFrame {
         mascotaCongrats.setIcon(new ImageIcon(imgEscalada));
         mascotaCongrats.setBounds(150, 270, 600, 600);
         fondo.add(mascotaCongrats);
-
+        
+        //---------------- PANEL SEMITRANSPARENTE FRASE INFERIOR ----------------
+        JPanel panelFraseAbajo = new JPanel();
+        panelFraseAbajo.setLayout(null);
+        panelFraseAbajo.setBackground(new Color(0, 0, 0, 115));
+        panelFraseAbajo.setBounds(100, 880, 700, 35);
+        fondo.add(panelFraseAbajo);
+        
+        //---------------- FRASE INFERIOR DE LA MASCOTA ----------------
+        JLabel lblFraseAbajo = new JLabel("¿Eres un perfeccionista?", JLabel.CENTER);
+        lblFraseAbajo.setFont(fuente1.deriveFont(40f));
+        lblFraseAbajo.setForeground(Color.WHITE);
+        lblFraseAbajo.setBounds(0, 0, 700, 35); // Centrado dentro de su nuevo panel contenedor
+        panelFraseAbajo.add(lblFraseAbajo);
+        
         //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
         btnResultados = new DecoracionBotones("VER RESULTADOS",
                 //ColorBase             ColorBorde              ColorLetra
@@ -142,8 +156,3 @@ public class VictoriaPerfecta extends JFrame {
     
     
 }
-
-
-
-
-
