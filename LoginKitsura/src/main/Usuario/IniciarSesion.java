@@ -60,6 +60,7 @@ public class IniciarSesion extends JFrame {
 
         setTitle("Inicio de sesión");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);

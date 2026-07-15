@@ -94,6 +94,7 @@ public class PantallaPerfil extends JFrame {
 
         setTitle("Gestión de Cuenta");
         setSize(1920, 1060);
+        setResizable(false);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -70,6 +70,7 @@ public class PantallaDificultad extends JFrame {
 
             setTitle("Pantalla de Dificultad");
             setSize(1880, 1080);
+            setResizable(false);
             setLocationRelativeTo(null);
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             setExtendedState(JFrame.MAXIMIZED_BOTH);

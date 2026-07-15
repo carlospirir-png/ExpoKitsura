@@ -78,6 +78,7 @@ public class MaulwurfRennt extends JFrame {
         // Propiedades de la ventana de la aplicación.
         setTitle("Maulwurf Rennt");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null); // Centra la ventana en pantalla.
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia maximizado a pantalla completa.
