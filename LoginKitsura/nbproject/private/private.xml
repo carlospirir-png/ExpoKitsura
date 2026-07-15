@@ -3,15 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/AyudaDAO_MaulwurfRennt.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaEstadisticas.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/EstadisticaDAO.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/PartidaDAO_MaulwurfRennt.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MenuMinijuegoC3.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/EstadisticaDAO.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/Sesion.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/PartidaDAO_MaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/PantallaEstadisticas.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/JuegoMaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/conexion/Conexion.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/FoxJump.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/IniciarSesion.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Main.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroUsuario.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/HiddenFox_Codigo.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/MaulwurfRennt.java</file>
+            <file>file:/C:/Users/COMPUFIRE/Documents/EXPOTEC/ExpoKitsura/LoginKitsura/src/main/Usuario/RegistroInvitado.java</file>
         </group>
     </open-files>
 </project-private>

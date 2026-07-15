@@ -74,7 +74,6 @@ public class FoxJump extends JFrame implements JuegoBase {
     // Id del minijuego "Fox Jump!" según la tabla Minijuego (INSERT inicial: 2 = Fox Jump!)
     private static final int ID_MINIJUEGO = 2;
 
-
     // Id de la partida en curso (fila de la tabla Partida). -1 mientras no se ha creado.
     private int idPartida = -1;
 
@@ -132,11 +131,14 @@ public class FoxJump extends JFrame implements JuegoBase {
     private boolean pistaMostradaEnPreguntaActual = false;
 
     private final EstadisticaDAO estadisticaDAO = new EstadisticaDAO();
-    private  int idUsuario = Sesion.getIdUsuarioActual();
+    private int idUsuario = Sesion.getIdUsuarioActual();
 
     // EVITA GUARDAR LA MISMA PARTIDA DOS VECES (p.ej. si dos rutas de fin
     // de juego se disparan casi al mismo tiempo)
     private boolean estadisticasGuardadas = false;
+
+    // NUEVO: indica si la sesión actual es de un invitado.
+    private boolean esInvitado;
 
     // CONSTRUCTOR***********
     /**
@@ -148,17 +150,15 @@ public class FoxJump extends JFrame implements JuegoBase {
      * @param categoria
      */
     public FoxJump(String categoria) {
-
+        
         this.categoriaSeleccionada = categoria;
 
-        // EL JUEFO COMIENZA EN FÁCIL, CUANDO SE QUIERE PASAR A OTRO NIVEL, SE VA ACTUALIZAR EL VALOR
         maxVidas = vidasDAO.obtenerVidas("Fox Jump!", categoriaSeleccionada, "Fácil");
 
         if (maxVidas < 1) {
             maxVidas = 3;
         }
 
-        // OBTENER LAS VIDAS
         vidas = maxVidas;
 
         cargarFuentes();
@@ -166,15 +166,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         fondo = new JPanel(null);
         fondo.setBackground(new Color(178, 197, 178));
         setContentPane(fondo);
-        //------------- ÍCONO ------------------
-        //se obtiene la imagen del logo con getResource
-        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
-
-        //se instancia el ícono con la imagen
-        ImageIcon icono = new ImageIcon(iconUrl);
-
-        //Se coloca el ícono al JFrame
-        setIconImage(icono.getImage());
 
         setTitle("Fox Jump!");
         setSize(1880, 1080);
@@ -184,7 +175,6 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         crearComponentes();
 
-        // PAUSAR EL COUNTDOWN SI EL USUARIO MINIMIZA LA VENTANA
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowIconified(java.awt.event.WindowEvent e) {
@@ -199,8 +189,6 @@ public class FoxJump extends JFrame implements JuegoBase {
             }
         });
 
-        // TIENE LA MISMA ACCION  PARA CUANDO EL COMPONENTE SE OCULTA 
-        // (POR EJEMPLO AL NAVEGAR ENTRE PANELES SIN CERRAR EL FRAME)
         addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentHidden(java.awt.event.ComponentEvent e) {
@@ -217,19 +205,21 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         setVisible(true);
 
-        // LA CONEXION SE ESTABLECE DESPUES DE setVisible() PARA QUE EL FRAME
         con = new Conexion().getConnection();
 
         if (con != null) {
 
-            // NUEVO: se obtiene el usuario logueado (guardado por IniciarSesion
-            // en la clase Sesion) y se crea el registro de la partida en la
-            // base de datos, una sola vez al inicio de la partida.
+            // NUEVO: se consulta una sola vez si la sesión es invitado.
+            esInvitado = Sesion.isEsInvitado();
             idUsuario = Sesion.getIdUsuarioActual();
-            idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
 
-            if (idPartida == -1) {
-                System.out.println("ADVERTENCIA: no se pudo crear el registro de la partida de Fox Jump! en la base de datos.");
+            // NUEVO: si es invitado, NO se crea ninguna fila en Partida.
+            if (!esInvitado) {
+                idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
+
+                if (idPartida == -1) {
+                    System.out.println("ADVERTENCIA: no se pudo crear el registro de la partida de Fox Jump! en la base de datos.");
+                }
             }
 
             resolverIdNivel();
@@ -540,6 +530,11 @@ public class FoxJump extends JFrame implements JuegoBase {
             return;
         }
         finJuegoActivo = true;
+
+        // NUEVO: solo se cierra la partida en BD si NO es invitado.
+        if (!esInvitado) {
+            guardarFinDePartida("completada");
+        }
         // NUEVO: se cierra la partida como "completada" en la base de datos
         // y se actualiza la estadística acumulada del usuario.
         guardarFinDePartida("completada");
@@ -654,6 +649,14 @@ public class FoxJump extends JFrame implements JuegoBase {
         idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
         if (idPartida == -1) {
             System.out.println("ADVERTENCIA: no se pudo crear el registro de la nueva partida de Fox Jump! en la base de datos.");
+        }
+
+        // NUEVO: al jugar de nuevo, si es invitado, sigue sin crear partida.
+        if (!esInvitado) {
+            idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
+            if (idPartida == -1) {
+                System.out.println("ADVERTENCIA: no se pudo crear el registro de la nueva partida de Fox Jump! en la base de datos.");
+            }
         }
 
         // RESOLVER EL NIVEL INICIAL Y CARGAR LA PRIMERA PREGUNTA
@@ -980,7 +983,6 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         correctasTotales++;
 
-        // CALCULAR CUANTOS SEGUNDOS TARDO EL JUGADOR EN RESPONDER
         int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
         if (tiempoUsado < 0) {
             tiempoUsado = tiempoMaximoPregunta;
@@ -989,17 +991,14 @@ public class FoxJump extends JFrame implements JuegoBase {
         int puntosGanados = calcularPuntosPorTiempo(tiempoUsado, tiempoMaximoPregunta);
         puntajeTotal += puntosGanados;
 
-        // NUEVO: se guarda el detalle de esta pregunta como acierto
-        if (idPartida != -1) {
+        // NUEVO: solo se persiste si NO es invitado.
+        if (!esInvitado && idPartida != -1) {
             registrarDetalle(idPartida, idPreguntaActual, puntosGanados, tiempoUsado, true);
         }
 
-        // INTENTAR SUBIR DE DIFICULTAD (SI LLEGO A 5 CORRECTAS)
-        // SI SUBIO, LA SIGUIENTE PREGUNTA SE CARGA DESDE continuarDespuesDeDificultad()
         boolean subio = intentarSubirDificultad();
 
         if (!subio) {
-            // MOSTRAR PROGRESO HACIA EL SIGUIENTE NIVEL Y CONTINUAR
             String msg = "¡Correcto! ("
                     + correctasTotales + "/" + CORRECTAS_SUBIR
                     + " para subir)";
@@ -1008,19 +1007,15 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-    /**
-     * MANEJA LA LOGICA POSTERIOR A UNA RESPUESTA INCORRECTA: MUESTRA EL MENSAJE
-     * DE ERROR Y LLAMA A perderVida().
-     */
     private void procesarRespuestaIncorrecta() {
 
-        // NUEVO: se guarda el detalle de esta pregunta como error, con el
-        // tiempo que llevaba transcurrido cuando el jugador respondió.
         int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
         if (tiempoUsado < 0) {
             tiempoUsado = tiempoMaximoPregunta;
         }
-        if (idPartida != -1) {
+
+        // NUEVO: solo se persiste si NO es invitado.
+        if (!esInvitado && idPartida != -1) {
             registrarDetalle(idPartida, idPreguntaActual, 0, tiempoUsado, false);
         }
 
@@ -1088,7 +1083,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             corazones[vidas].setIcon(iconoCorazonRoto);
         }
 
-       if (vidas <= 0) {
+        if (vidas <= 0) {
             guardarEstadisticasPartida(false); // abandonada
             bloquearNenufares();
             new javax.swing.Timer(400, e -> {
@@ -1230,7 +1225,6 @@ public class FoxJump extends JFrame implements JuegoBase {
       momento se extraen a una clase compartida (por ejemplo para reutilizar
       con Maulwurf Rennt), la firma de estos métodos puede copiarse tal cual
       a un DAO independiente.*/
-
     //------------------------ C R E A R   P A R T I D A
     private int crearPartida(int idUsuario, int idMinijuego, int vidasInicialesSnapshot) {
 
@@ -1607,7 +1601,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         panelLago.add(nenufarFalso);
 
         // ── TEXTO  INFORMATIVO (ESQUINA INFERIOR IZQUIERDA) ───────────────
-
         dificultadLabel = new JLabel("Dificultad: Fácil");
         dificultadLabel.setBounds(80, 790, 300, 40);
         dificultadLabel.setFont(fuente2.deriveFont(25f));
@@ -1751,9 +1744,10 @@ public class FoxJump extends JFrame implements JuegoBase {
      */
     private void mostrarHaPerdido() {
 
-        // NUEVO: se cierra la partida como "abandonada" en la base de datos
-        // y se actualiza la estadística acumulada del usuario.
-        guardarFinDePartida("abandonada");
+        // NUEVO: solo se cierra la partida en BD si NO es invitado.
+        if (!esInvitado) {
+            guardarFinDePartida("abandonada");
+        }
 
         fadeTo(() -> {
             new SeAcaboVidas(this, e -> {
@@ -1767,15 +1761,15 @@ public class FoxJump extends JFrame implements JuegoBase {
      * COUNTDOWN LLEGA A CERO.
      */
     private void mostrarTiempoAgotado() {
-        guardarEstadisticasPartida(false); // abandonada
         bloquearNenufares();
 
-        // NUEVO: se registra la pregunta actual como no respondida (tiempo
-        // agotado, sin puntos) y se cierra la partida como "abandonada".
-        if (idPartida != -1 && idPreguntaActual != 0) {
-            registrarDetalle(idPartida, idPreguntaActual, 0, tiempoMaximoPregunta, false);
+        // NUEVO: solo se persiste y cierra si NO es invitado.
+        if (!esInvitado) {
+            if (idPartida != -1 && idPreguntaActual != 0) {
+                registrarDetalle(idPartida, idPreguntaActual, 0, tiempoMaximoPregunta, false);
+            }
+            guardarFinDePartida("abandonada");
         }
-        guardarFinDePartida("abandonada");
 
         fadeTo(() -> {
             new SeAcaboTiempo(this, e -> {
