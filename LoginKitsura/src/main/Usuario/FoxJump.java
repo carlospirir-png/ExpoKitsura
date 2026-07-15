@@ -584,9 +584,11 @@ public class FoxJump extends JFrame implements JuegoBase {
             if (vidas == maxVidas) {
                 VictoriaPerfecta vp = new VictoriaPerfecta(this);
                 fadeTo(() -> setContentPane(vp.getFondo()), 400);
+                vp.dispose();
             } else {
                 Victoria v = new Victoria(this);
                 fadeTo(() -> setContentPane(v.getFondo()), 400);
+                v.dispose();
             }
         }).start();
     }

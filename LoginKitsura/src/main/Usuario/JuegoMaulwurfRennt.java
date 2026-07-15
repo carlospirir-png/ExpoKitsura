@@ -541,6 +541,8 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.setContentPane(vp.getFondo());
                 vista.revalidate();
                 vista.repaint();
+                
+                vp.dispose();
 
             } else {
 
@@ -551,6 +553,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.setContentPane(v.getFondo());
                 vista.revalidate();
                 vista.repaint();
+                v.dispose();
             }
 
         } else {
