@@ -1,8 +1,8 @@
 package main.Usuario;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import javax.swing.*;
 import main.Menu.FondoPanel;
 import main.Menu.DecoracionBotones;
@@ -14,9 +14,9 @@ public class VictoriaPerfecta extends JFrame {
     private Font fuente2;
     private JuegoBase juego;
 
-    private DecoracionBotones btnVolver, btnResultados;
+    private DecoracionBotones btnResultados;
     
-    public VictoriaPerfecta(ActionListener accion, JuegoBase juego) {
+    public VictoriaPerfecta(JuegoBase juego) {
         this.juego = juego;
         try{
             // LettersForLearners
@@ -33,20 +33,23 @@ public class VictoriaPerfecta extends JFrame {
             fuente1 = new Font("Arial", Font.PLAIN,20);
             fuente2 = new Font("Arial", Font.PLAIN,20);
         }
-
+        setResizable(false);
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoCincoK.png");
         // NO hace setContentPane ni setVisible
         fondo.setLayout(null);
+//------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         crearComponentes();
 
         
-        //--------------- VOLVER --------------
-        btnVolver.addActionListener(e -> {
-            dispose();          
-            accion.actionPerformed(e); 
-        });
-        setVisible(true);
 
     }
 
@@ -69,7 +72,7 @@ public class VictoriaPerfecta extends JFrame {
         panelIzquierdo.add(lblGanado);
 
         //---------------- FRASE DE MOTIVACIÓN ----------------
-        JLabel lblFrase = new JLabel("-- ¿Eres un perfeccionista? --", JLabel.CENTER);
+        JLabel lblFrase = new JLabel("Tu potencial es infinito, atrévete a explorarlo.", JLabel.CENTER);
         lblFrase.setFont(fuente1.deriveFont(45f));
         lblFrase.setForeground(Color.WHITE);
         lblFrase.setBounds(0, 105, 700, 35);
@@ -81,33 +84,26 @@ public class VictoriaPerfecta extends JFrame {
         panelDerecho.setBackground(new Color(0, 0, 0, 115));
         panelDerecho.setBounds(950, 80, 880, 800);
         fondo.add(panelDerecho);
-
-        JLabel fotoPerfil = new JLabel();
-        ImageIcon paisajeIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/ImagenesPerfil/Seccion1/PE_S1_N4.png"));
         
-        Image paisajeRedondo = crearImagenRedonda(paisajeIcon.getImage(), 150);
-        fotoPerfil.setIcon(new ImageIcon(paisajeRedondo));
+        // IMAGEN DE PERFIL
+        JLabel fotoPerfil = new JLabel();
+        String rutaFoto = Sesion.getRutaFotoPerfil();
+        ImageIcon perfilIcon = new ImageIcon(getClass().getResource(rutaFoto));
+        Image perfilRedondo = crearImagenRedonda(perfilIcon.getImage(), 150);
+        fotoPerfil.setIcon(new ImageIcon(perfilRedondo));
         fotoPerfil.setBounds(80, 60, 150, 150);
-        panelDerecho.add(fotoPerfil); 
+        panelDerecho.add(fotoPerfil);
 
         
 
         //---------------- DATOS DE USUARIO ----------------
-        JLabel lblUsuario = new JLabel("Nombre de usuario");
+        JLabel lblUsuario = new JLabel(Sesion.getNombreUsuario());
         lblUsuario.setFont(fuente2.deriveFont(25f));
-        lblUsuario.setForeground(Color.decode("#FC767D")); 
-        lblUsuario.setBounds(260, 115, 550, 40);
-        panelDerecho.add(lblUsuario); 
+        lblUsuario.setForeground(Color.WHITE);
+        lblUsuario.setBounds(250, 110, 400, 40);
+        panelDerecho.add(lblUsuario);
         
-        btnVolver = new DecoracionBotones("VOLVER",
-                                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
-
-        btnVolver.setFont(fuente1.deriveFont(20f));
-        btnVolver.setBounds(340, 680, 200, 50);
-        panelDerecho.add(btnVolver);
-
+        // MASCOTA
         JLabel mascotaCongrats = new JLabel();
         ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/VICTORIA-Perfecta.png")); 
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
@@ -115,16 +111,27 @@ public class VictoriaPerfecta extends JFrame {
         mascotaCongrats.setBounds(150, 270, 600, 600);
         fondo.add(mascotaCongrats);
         
-        lblUsuario.setForeground(Color.BLACK);
-        lblUsuario.setBounds(1250, 150, 400, 40);
-        fondo.add(lblUsuario);
-
+        //---------------- PANEL SEMITRANSPARENTE FRASE INFERIOR ----------------
+        JPanel panelFraseAbajo = new JPanel();
+        panelFraseAbajo.setLayout(null);
+        panelFraseAbajo.setBackground(new Color(0, 0, 0, 115));
+        panelFraseAbajo.setBounds(100, 880, 700, 35);
+        fondo.add(panelFraseAbajo);
+        
+        //---------------- FRASE INFERIOR DE LA MASCOTA ----------------
+        JLabel lblFraseAbajo = new JLabel("¿Eres un perfeccionista?", JLabel.CENTER);
+        lblFraseAbajo.setFont(fuente1.deriveFont(40f));
+        lblFraseAbajo.setForeground(Color.WHITE);
+        lblFraseAbajo.setBounds(0, 0, 700, 35); // Centrado dentro de su nuevo panel contenedor
+        panelFraseAbajo.add(lblFraseAbajo);
+        
         //---------------- BOTÓN MOSTRAR RESULTADOS ----------------
         btnResultados = new DecoracionBotones("VER RESULTADOS",
                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
-        btnResultados.setBounds(1410, 910, 200, 50);
+        btnResultados.setBounds(1210, 910, 400, 50);
+        btnResultados.setFont(fuente2.deriveFont(25f));
         btnResultados.addActionListener(e -> {
             juego.mostrarResultadoConFade();
         });
@@ -147,9 +154,5 @@ public class VictoriaPerfecta extends JFrame {
         return master;
     }
     
+    
 }
-
-
-
-
-

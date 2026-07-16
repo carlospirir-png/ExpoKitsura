@@ -4,6 +4,7 @@ package main.Usuario;
 
 //Imports
 import java.awt.*; //Java AWT
+import java.net.URL;
 import java.sql.*; //SQL
 import javax.swing.*; //Java Swing
 import main.Menu.DecoracionBotones;
@@ -71,9 +72,20 @@ public class PantallaCContra extends JFrame {
         //----------------- JFRAME -----------------
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Editar Contraseña");
         setSize(600, 400);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

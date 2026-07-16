@@ -2,6 +2,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import java.sql.*;
 import main.Menu.*;
@@ -43,6 +44,15 @@ public class RegistroUsuario extends JFrame {
         }
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
+//------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setContentPane(fondo);
         setTitle("Registro");
@@ -161,7 +171,7 @@ public class RegistroUsuario extends JFrame {
         fondo.add(btnJugar);
 
         //---------------- BOTON SALIR ----------------
-        JButton btnSalir = new DecoracionBotones("SALIR",
+        btnSalir = new DecoracionBotones("SALIR",
                                 //ColorBase             ColorBorde              ColorLetra
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
@@ -361,7 +371,8 @@ public class RegistroUsuario extends JFrame {
                 // Se guarda el id del usuario recién creado como sesión activa,
                 // para que MenuPrincipal / PantallaPerfil sepan de quién es la partida
                 Sesion.setIdUsuarioActual(idUsuario);
-
+                Sesion.setNombreUsuario(nombre);
+                
                 JOptionPane.showMessageDialog(
                         this,
                         "Usuario registrado correctamente.",

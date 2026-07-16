@@ -1,6 +1,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import main.Menu.*;
 
@@ -36,8 +37,19 @@ public class MenuPrincipal extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Página Principal");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -181,6 +193,7 @@ public class MenuPrincipal extends JFrame {
             btnSalir.setIcon(new ImageIcon(imgSalir));
         } catch (Exception e) {}
         btnSalir.addActionListener(e -> {
+            dispose();
             new SalirDelJuego();
         });
         fondo.add(btnSalir);

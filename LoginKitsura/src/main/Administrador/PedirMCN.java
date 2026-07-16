@@ -1,12 +1,12 @@
 package main.Administrador;
 
 import java.awt.*;
+import java.net.URL;
+import java.sql.*;
 import java.util.List;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanelSemi;
-import main.Usuario.IniciarSesion;
+import main.Menu.*;
+import main.conexion.Conexion;
 
 public class PedirMCN extends JFrame {
 
@@ -14,35 +14,24 @@ public class PedirMCN extends JFrame {
     private Font fuente1;
     private Font fuente2;
 
-    // DAO encargado de traer los valores reales desde la base de datos
-    // para llenar los combos (en vez de que el admin los escriba a mano).
     private SeleccionDAO_Vidas seleccionDAO;
 
-    // Se reemplazan los antiguos JTextField por JComboBox: el administrador
-    // ahora ELIGE de una lista cargada desde la BD, en vez de escribir texto
-    // libre. Así se elimina el riesgo de nombres mal escritos (ej. "HiddenFox"
-    // en vez de "Hidden Fox") que hacían fallar la comparación en VidasDAO.
     private JComboBox<String> cbMinijuego;
     private JComboBox<String> cbCategoria;
     private JComboBox<String> cbNivel;
 
-    // Bandera para evitar que, mientras se están recargando los combos por
-    // código, sus propios listeners se disparen en cadena innecesariamente.
     private boolean cargandoCombos = false;
-    
-    //Indica la ventana que se va a abrir.
+
     private String ventanaAbrir;
 
     public PedirMCN(String ventanaAbrir) {
-        
+
         this.ventanaAbrir = ventanaAbrir;
-        
+
         try {
-            // LettersForLearners
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/LettersForLearners.ttf"));
-            // KGPerfectPenmanship
             fuente2 = Font.createFont(
                     Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/fuentes/KGPerfectPenmanship.ttf"));
@@ -57,6 +46,16 @@ public class PedirMCN extends JFrame {
 
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Pedir M, C, N");
         setSize(1980, 1080);
         setLocationRelativeTo(null);
@@ -116,35 +115,28 @@ public class PedirMCN extends JFrame {
         recuadroFormulario.add(cbNivel);
 
         // ---------------- LISTENERS EN CASCADA ----------------
-        // Al cambiar el minijuego seleccionado, se recargan sus categorías.
         cbMinijuego.addActionListener(e -> {
             if (!cargandoCombos) {
                 cargarCategorias();
             }
         });
 
-        // Al cambiar la categoría seleccionada, se recargan sus dificultades.
         cbCategoria.addActionListener(e -> {
             if (!cargandoCombos) {
                 cargarNiveles();
             }
         });
 
-        // Se cargan los minijuegos al abrir la ventana; esto dispara en cadena
-        // la carga de categorías y luego de niveles para dejar todo listo.
         cargarMinijuegos();
 
         // BOTÓN CONTINUAR
         JButton btnContinuar = new DecoracionBotones("CONTINUAR",
-                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA); //MOUSE DENTRO
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.AMARILLO,
+                DecoracionBotones.ROJO, DecoracionBotones.ROSA, DecoracionBotones.ROSA);
         btnContinuar.setFont(fuente2.deriveFont(20f));
         btnContinuar.setBounds(560, 560, 220, 55);
         recuadroFormulario.add(btnContinuar);
 
-        // Ahora se toman los valores SELECCIONADOS en los combos (garantizados
-        // por la BD), en vez de texto escrito a mano.
         btnContinuar.addActionListener(e -> {
 
             String minijuego = (String) cbMinijuego.getSelectedItem();
@@ -161,38 +153,45 @@ public class PedirMCN extends JFrame {
             }
 
             DatosConfiguracion datos = new DatosConfiguracion(minijuego, categoria, nivel);
-            
-            //Según cuál ventana se indicó
-            switch (ventanaAbrir){
+
+            switch (ventanaAbrir) {
                 case "Puntuaciones":
                     new PuntuacionesAdmin(datos);
                     dispose();
-                break;
+                    break;
                 case "Vidas":
                     new VidasAdmin(datos);
                     dispose();
-                break;
+                    break;
                 case "Tiempo":
                     new TiempoAdmin(datos);
                     dispose();
-                break;
+                    break;
                 case "Pistas":
                     new PistasMenu(datos);
                     dispose();
-                break;
-                case "Administrar Stages":
-                    new AdminStages(datos);
+                    break;
+                case "Crear Stage":
+                    // Viene del botón "CREAR UNO" de AdminStages: abre directo
+                    // la pantalla de creación (M1/M2/M3) según el minijuego elegido.
+                    abrirCreacionSegunMinijuego(datos);
                     dispose();
-                break;
+                    break;
+                case "Administrar Stages":
+                    // Viene del botón "EDITAR UNO EXISTENTE" de AdminStages:
+                    // muestra la tabla de preguntas ya guardadas para elegir cuál editar.
+                    new EditarStages(datos);
+                    dispose();
+                    break;
                 default:
                     JOptionPane.showMessageDialog(null, "Pedir MCN no sabe que ventana debe abrir.", "Error en abrir Interfaz", JOptionPane.ERROR_MESSAGE);
             }
-            
+
         });
 
         // MASCOTA
         JLabel mascotaControl = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/PAPEL_INSTRUCCIONES.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH);
         mascotaControl.setIcon(new ImageIcon(imgEscalada));
         mascotaControl.setBounds(200, 180, 650, 650);
@@ -200,24 +199,87 @@ public class PedirMCN extends JFrame {
 
         // BOTÓN REGRESAR
         JButton btnRegresar = new DecoracionBotones("REGRESAR",
-                //ColorBase             ColorBorde              ColorLetra
-                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
-                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO   
+                DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO,
+                DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
 
         btnRegresar.setFont(fuente2.deriveFont(20f));
         btnRegresar.setBounds(380, 800, 220, 55);
         btnRegresar.addActionListener(e -> {
-            new IniciarSesion();
+            new MenuAdmin();
             dispose();
-                });
+        });
         fondo.add(btnRegresar);
     }
 
-    /*------------------ CARGA EN CASCADA ------------------
-      cargarMinijuegos() -> dispara cargarCategorias() del primer minijuego
-      cargarCategorias() -> dispara cargarNiveles() de la primera categoría
-      cargarNiveles()    -> deja las dificultades listas para elegir
-    --------------------------------------------------------*/
+    /**
+     * Resuelve, a partir de (minijuego, categoría, nivel) elegidos en los
+     * combos, cuál es el id_minijuego real en la BD, y abre DIRECTO la
+     * pantalla de creación correspondiente:
+     *   id_minijuego 1 -> M1_crearNuevo (Hidden Fox)
+     *   id_minijuego 2 -> M2_crearNuevo (Verdadero/Falso)
+     *   id_minijuego 3 -> M3_crearNuevo (Opción múltiple)
+     * No se muestra ninguna tabla intermedia: se va directo a crear.
+     */
+    private void abrirCreacionSegunMinijuego(DatosConfiguracion datos) {
+        String sql = "SELECT m.id_minijuego, c.id_categoria, cn.dificultad "
+                + "FROM Configuracion_nivel cn "
+                + "JOIN Categoria c ON cn.id_categoria = c.id_categoria "
+                + "JOIN Minijuego m ON c.id_minijuego = m.id_minijuego "
+                + "WHERE m.nombre = ? AND c.nombre = ? AND cn.dificultad = ?";
+
+        try (Connection con = new Conexion().getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            if (con == null) {
+                throw new SQLException("No se pudo establecer conexión con la base de datos.");
+            }
+
+            ps.setString(1, datos.getMinijuego());
+            ps.setString(2, datos.getCategoria());
+            ps.setString(3, datos.getNivel());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    throw new SQLException("No existe un nivel para: "
+                            + datos.getMinijuego() + " / " + datos.getCategoria() + " / " + datos.getNivel());
+                }
+
+                int idMinijuego = rs.getInt("id_minijuego");
+                int idCategoriaGlobal = rs.getInt("id_categoria");
+                // Cada minijuego tiene 3 categorías consecutivas (1,2,3 / 4,5,6 / 7,8,9)
+                int idCategoriaLocal = ((idCategoriaGlobal - 1) % 3) + 1;
+                int dificultadNumero = switch (rs.getString("dificultad")) {
+                    case "Fácil" ->
+                        1;
+                    case "Intermedio" ->
+                        2;
+                    case "Difícil" ->
+                        3;
+                    default ->
+                        throw new SQLException("Dificultad desconocida: '" + rs.getString("dificultad") + "'.");
+                };
+
+                switch (idMinijuego) {
+                    case 1 ->
+                        new M1_crearNuevo(datos, null);
+                    case 2 ->
+                        new M2_crearNuevo(datos);
+                    case 3 ->
+                        new M3_crearNuevo(idCategoriaLocal, dificultadNumero);
+                    default ->
+                        JOptionPane.showMessageDialog(this,
+                                "Minijuego no reconocido (id_minijuego = " + idMinijuego + ").",
+                                "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo determinar el nivel para la selección actual:\n" + ex.getMessage(),
+                    "Error de configuración", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /*------------------ CARGA EN CASCADA ------------------*/
     private void cargarMinijuegos() {
         cargandoCombos = true;
 
@@ -230,8 +292,6 @@ public class PedirMCN extends JFrame {
 
         cargandoCombos = false;
 
-        // Con el primer minijuego ya seleccionado por defecto, se cargan
-        // inmediatamente sus categorías (y estas, a su vez, sus niveles).
         cargarCategorias();
     }
 

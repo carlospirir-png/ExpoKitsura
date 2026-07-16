@@ -2,6 +2,7 @@
 package main.Usuario;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 import java.sql.*;
 import main.Administrador.*;
@@ -47,8 +48,19 @@ public class IniciarSesion extends JFrame {
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoUnoK.png");
 
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Inicio de sesión");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -146,7 +158,7 @@ public class IniciarSesion extends JFrame {
 
         //---------------- LABEL RECUPERAR CONTRASEÑA
         JLabel lblRC = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>", SwingConstants.CENTER);
-        lblRC.setFont(fuente2.deriveFont(30f));
+        lblRC.setFont(fuente2.deriveFont(18f));
         lblRC.setForeground(Color.WHITE);
         lblRC.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblRC.setBounds(0, 0, 400, 50); // Se acopla completamente al tamaño del panel contenedor
@@ -262,7 +274,14 @@ public class IniciarSesion extends JFrame {
 
                 // Obtener el rol
                 String rol = rs.getString("rol");
+                
+                // Guardar nombre y foto del usuario que inició sesión
+                String nombreUsuario = rs.getString("nombre_usuario"); 
+                Sesion.setNombreUsuario(nombreUsuario);
 
+                String rutaFoto = rs.getString("imagen_perfil");
+                Sesion.setRutaFotoPerfil(rutaFoto); // si es null (nunca cambió su foto), el setter lo ignora y queda la de defecto
+    
                 rs.close();
                 ps.close();
                 con.close();

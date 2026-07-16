@@ -4,6 +4,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,6 +66,22 @@ public class PistasAudioAdmin extends JFrame {
 
     private DatosConfiguracion datos;
 
+    // ---------------- RUTAS DE DESTINO PARA COPIA FÍSICA DE AUDIOS ----------------
+    // En vez de una ruta absoluta fija (que solo funciona en una computadora),
+    // la carpeta base se arma de forma relativa a la raíz del proyecto NetBeans.
+    // "user.dir" corresponde al directorio desde el cual se ejecuta la aplicación,
+    // que en NetBeans es la raíz del proyecto (ej. .../LoginKitsura). Esto hace que
+    // el código funcione sin cambios sin importar en qué máquina o ruta esté el proyecto.
+    private static String construirRutaBaseM1C1() {
+        return Paths.get(
+                System.getProperty("user.dir"),
+                "src", "Multimedia", "Minijuegos",
+                "Minijuego_1", "Categoria_1_M1"
+        ).toString() + File.separator;
+    }
+
+    private static final String RUTA_BASE_M1_C1 = construirRutaBaseM1C1();
+
     public PistasAudioAdmin(DatosConfiguracion datos) {
 
         this.datos = datos;
@@ -96,6 +118,16 @@ public class PistasAudioAdmin extends JFrame {
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
 
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Pistas: Audio");
         setSize(1980, 1080);
         setLocationRelativeTo(null);
@@ -222,14 +254,21 @@ public class PistasAudioAdmin extends JFrame {
         btnEditar.setBounds(50, 105, 340, 55);
         panelOperaciones.add(btnEditar);
 
-        // Botón Eliminar
-        JButton btnEliminar = new DecoracionBotones(
+        // Botón Eliminar (panel de operaciones, funcionalidad legacy sin usar).
+        // IMPORTANTE: se renombra a "btnEliminarOperaciones" porque el nombre
+        // "btnEliminar" es el campo de la clase (this.btnEliminar), usado en
+        // cargarFilaParaEdicion()/limpiarFormulario(). Si se declara aquí una
+        // variable local con el mismo nombre, todas las asignaciones posteriores
+        // a "btnEliminar = ..." en este método terminan apuntando a esta variable
+        // local en lugar de al campo, dejando this.btnEliminar como null (causaba
+        // NullPointerException al hacer clic en una fila de la tabla).
+        JButton btnEliminarOperaciones = new DecoracionBotones(
                 "ELIMINAR",
                 DecoracionBotones.AZUL, DecoracionBotones.CELESTE, DecoracionBotones.AMARILLO,
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL);
-        btnEliminar.setFont(fuente2.deriveFont(24f));
-        btnEliminar.setBounds(50, 185, 340, 55);
-        panelOperaciones.add(btnEliminar);
+        btnEliminarOperaciones.setFont(fuente2.deriveFont(24f));
+        btnEliminarOperaciones.setBounds(50, 185, 340, 55);
+        panelOperaciones.add(btnEliminarOperaciones);
 
         //---------------- PANEL DERECHO ----------------
         FondoPanelSemi panelDerecho = new FondoPanelSemi(new Color(0, 0, 0, 130));
@@ -326,9 +365,6 @@ public class PistasAudioAdmin extends JFrame {
 
         fondo.add(btnGuardar);
 
-        //---------------- BOTÓN MOSTRAR (BAJO GUARDAR) ----------------
-//        JButton btnMostrar = new DecoracionBotones(
-//                "MOSTRAR",
         //---------------- BOTÓN ELIMINAR ----------------
         btnEliminar = new DecoracionBotones(
                 "ELIMINAR",
@@ -597,7 +633,7 @@ public class PistasAudioAdmin extends JFrame {
                     "Audio seleccionado:\n" + archivo.getName());
         }
     }
-    
+
     //--------------- MOSTRAR AUDIOS ----------------
     private void mostrarAudios() {
         modelo.setRowCount(0);
@@ -622,40 +658,6 @@ public class PistasAudioAdmin extends JFrame {
         }
     }
 
-//    //---------------- GUARDAR EN MYSQL ----------------
-//    private void guardarAudioBD() {
-//        String idTexto = txtIdPista.getText().trim();
-//        if (idTexto.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Ingrese el ID de la pregunta");
-//            return;
-//        }
-//        if (rutaAudioSeleccionado.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Seleccione un audio");
-//            return;
-//        }   
-//        try {
-//            int idPregunta = Integer.parseInt(idTexto);
-//            Connection con = conexion.getConnection();
-//
-//            String sql = "INSERT INTO Ayuda (id_pregunta, tipo, audio) VALUES (?, 'audio', ?)";
-//            PreparedStatement ps = con.prepareStatement(sql);
-//            ps.setInt(1, idPregunta);
-//            ps.setString(2, rutaAudioSeleccionado);
-//            ps.executeUpdate();
-//            
-//            String nombreArchivo = new File(rutaAudioSeleccionado).getName();
-//            modelo.addRow(new Object[]{
-//                idPregunta,
-//                nombreArchivo
-//            });
-//            
-//            JOptionPane.showMessageDialog(this, "Audio guardado correctamente");
-//            mostrarAudios();
-//            txtIdPista.setText("");
-//            rutaAudioSeleccionado = "";
-//            ps.close();
-//            con.close();
-
     //---------------- VALIDA QUE EL ID PERTENEZCA AL MCN (MINIJUEGO/CATEGORÍA/NIVEL) SELECCIONADO ----------------
     private boolean idPreguntaExisteEnMCN(int idPregunta, Connection con) throws Exception {
 
@@ -674,6 +676,85 @@ public class PistasAudioAdmin extends JFrame {
             }
         }
         return false;
+    }
+
+    //---------------- RESUELVE LA CARPETA DE DESTINO SEGÚN EL NIVEL (DIFICULTAD) SELECCIONADO EN MCN ----------------
+    // El valor de datos.getNivel() corresponde a la dificultad elegida en PedirMCN
+    // para este Minijuego/Categoría (Fácil / Intermedio / Difícil), y cada una
+    // mapea a su propia subcarpeta de pistas de audio dentro del proyecto NetBeans.
+    private String obtenerCarpetaDestino() {
+
+        String nivel = datos.getNivel();
+
+        if (nivel == null) {
+            return null;
+        }
+
+        switch (nivel) {
+            case "Fácil":
+                return RUTA_BASE_M1_C1 + "Nivel_1_C1_M1\\Pistas_N1_C1";
+            case "Intermedio":
+                return RUTA_BASE_M1_C1 + "Nivel_2_C1_M1\\Pistas_N2_C1_M1";
+            case "Difícil":
+                return RUTA_BASE_M1_C1 + "Nivel_3_C1_M1\\Pistas_N3_C1_M1";
+            default:
+                return null;
+        }
+    }
+
+    //---------------- RESUELVE LA CARPETA DE DESTINO (classpath) SEGÚN EL NIVEL ----------------
+    // IMPORTANTE: esta es la ruta que se guarda en la BD y que usa PistasAudio.java
+    // para reproducir el audio vía getClass().getResource(...), igual que se hace
+    // con las imágenes (getClass().getResource("/Multimedia/utiles/...")). getResource()
+    // NO entiende rutas absolutas de sistema de archivos (C:\Users\...): solo rutas de
+    // classpath con "/" a partir de la raíz de recursos. Por eso esta ruta es distinta
+    // de obtenerCarpetaDestino(), que da la ruta física usada solo para copiar el archivo.
+    private String obtenerCarpetaDestinoClasspath() {
+
+        String nivel = datos.getNivel();
+
+        if (nivel == null) {
+            return null;
+        }
+
+        switch (nivel) {
+            case "Fácil":
+                return "/Multimedia/Minijuegos/Minijuego_1/Categoria_1_M1/Nivel_1_C1_M1/Pistas_N1_C1";
+            case "Intermedio":
+                return "/Multimedia/Minijuegos/Minijuego_1/Categoria_1_M1/Nivel_2_C1_M1/Pistas_N2_C1_M1";
+            case "Difícil":
+                return "/Multimedia/Minijuegos/Minijuego_1/Categoria_1_M1/Nivel_3_C1_M1/Pistas_N3_C1_M1";
+            default:
+                return null;
+        }
+    }
+
+    //---------------- COPIA FÍSICA DEL AUDIO SELECCIONADO A LA CARPETA DEL NIVEL ----------------
+    // Copia (no mueve) el archivo de audio elegido por el usuario hacia la carpeta
+    // de Pistas correspondiente al nivel actual, creando la carpeta si no existe.
+    // Retorna la ruta final (dentro del proyecto) que debe guardarse en la BD.
+    private Path copiarAudioADestino(File archivoOrigen) throws IOException {
+
+        String carpetaDestino = obtenerCarpetaDestino();
+
+        if (carpetaDestino == null) {
+            throw new IOException(
+                    "No se pudo determinar la carpeta destino para el nivel: " + datos.getNivel());
+        }
+
+        Path dirDestino = Paths.get(carpetaDestino);
+
+        // Crea la carpeta (y las carpetas padre necesarias) si aún no existen
+        Files.createDirectories(dirDestino);
+
+        Path destinoFinal = dirDestino.resolve(archivoOrigen.getName());
+
+        Files.copy(
+                archivoOrigen.toPath(),
+                destinoFinal,
+                StandardCopyOption.REPLACE_EXISTING);
+
+        return destinoFinal;
     }
 
     //---------------- AÑADIR / EDITAR EN MYSQL ----------------
@@ -708,9 +789,42 @@ public class PistasAudioAdmin extends JFrame {
                 return;
             }
 
-            String rutaFinal = rutaAudioSeleccionado.isEmpty()
-                    ? audioActualEdicion
-                    : rutaAudioSeleccionado;
+            String rutaFinal;
+
+            if (!rutaAudioSeleccionado.isEmpty()) {
+
+                // Se seleccionó un audio nuevo: se copia físicamente a la
+                // carpeta de Pistas correspondiente al nivel actual (MCN).
+                File archivoOrigen = new File(rutaAudioSeleccionado);
+
+                try {
+                    copiarAudioADestino(archivoOrigen);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Error al copiar el audio al destino:\n" + ex.getMessage());
+                    return;
+                }
+
+                // La BD guarda la ruta de CLASSPATH (no la ruta física de disco),
+                // porque PistasAudio.java reproduce el audio con getClass().getResource(...),
+                // igual que se hace con las imágenes del proyecto.
+                String carpetaClasspath = obtenerCarpetaDestinoClasspath();
+
+                if (carpetaClasspath == null) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "No se pudo determinar la ruta de classpath para el nivel: " + datos.getNivel());
+                    return;
+                }
+
+                rutaFinal = carpetaClasspath + "/" + archivoOrigen.getName();
+
+            } else {
+                // Edición sin cambiar audio: se conserva la ruta ya guardada en BD
+                rutaFinal = audioActualEdicion;
+            }
 
             if (modoEdicion) {
 
@@ -755,102 +869,6 @@ public class PistasAudioAdmin extends JFrame {
             JOptionPane.showMessageDialog(this, "Error al guardar:\n" + e.getMessage());
         }
     }
-    
-    // ---------------- BUSCAR EN MYSQL ----------------
-//    private void buscarAudio(){
-//        if(txtIdPista.getText().trim().isEmpty()){
-//            JOptionPane.showMessageDialog(this,
-//                    "Ingrese el ID");
-//            return;
-//        }
-//        modelo.setRowCount(0);
-//        try{
-//            Connection con = conexion.getConnection();
-//            String sql="SELECT id_pregunta,audio FROM Ayuda WHERE id_pregunta=? AND tipo='audio'";
-//            PreparedStatement ps=con.prepareStatement(sql);
-//            ps.setInt(1,Integer.parseInt(txtIdPista.getText()));
-//            var rs=ps.executeQuery();
-//            if(rs.next()){
-//                modelo.addRow(new Object[]{
-//                        rs.getInt("id_pregunta"),
-//                        new File(rs.getString("audio")).getName()
-//                });
-//                txtIdPista.setText("");
-//            }else{
-//                JOptionPane.showMessageDialog(this,
-//                        "No existe un audio para ese ID");
-//            }
-//            rs.close();
-//            ps.close();
-//            con.close();
-//        }catch(Exception e){
-//            JOptionPane.showMessageDialog(this,
-//                    "Error al buscar");
-//        }
-//    }
-    // --------------- ELIMINAR EN MYSQL ----------------
-//    private void eliminarAudio(){
-//        if(txtIdPista.getText().trim().isEmpty()){
-//            JOptionPane.showMessageDialog(this,
-//                    "Ingrese el ID");
-//            return;
-//        }
-//        try{
-//            Connection con = conexion.getConnection();
-//            String sql="DELETE FROM Ayuda WHERE id_pregunta=? AND tipo='audio'";
-//            PreparedStatement ps=con.prepareStatement(sql);
-//            ps.setInt(1,Integer.parseInt(txtIdPista.getText()));
-//            int filas=ps.executeUpdate();
-//            if(filas>0){
-//                JOptionPane.showMessageDialog(this,
-//                        "Audio eliminado");
-//                        txtIdPista.setText("");
-//                mostrarAudios();
-//            }else{
-//                JOptionPane.showMessageDialog(this,
-//                        "No existe ese audio");
-//            }
-//            ps.close();
-//            con.close();
-//        }catch(Exception e){
-//            JOptionPane.showMessageDialog(this,
-//                    "Error al eliminar");
-//            }
-//        }
-    // --------------- EDITAR EN MYSQL ----------------
-//    private void editarAudio(){
-//        if(txtIdPista.getText().trim().isEmpty()){
-//            JOptionPane.showMessageDialog(this,
-//                    "Ingrese el ID");
-//            return;
-//        }
-//        seleccionarAudio();
-//        if(rutaAudioSeleccionado.isEmpty()){
-//            return;
-//        }
-//        try{
-//            Connection con = conexion.getConnection();
-//            String sql="UPDATE Ayuda SET audio=? WHERE id_pregunta=? AND tipo='audio'";
-//            PreparedStatement ps=con.prepareStatement(sql);
-//            ps.setString(1,rutaAudioSeleccionado);
-//            ps.setInt(2,Integer.parseInt(txtIdPista.getText()));
-//            int filas=ps.executeUpdate();
-//            if(filas>0){
-//                JOptionPane.showMessageDialog(this,
-//                        "Audio actualizado");
-//                mostrarAudios();
-//                txtIdPista.setText("");
-//            }else{
-//                JOptionPane.showMessageDialog(this,
-//                        "No existe ese ID");
-//            }
-//            ps.close();
-//            con.close();
-//        }catch(Exception e){
-//            JOptionPane.showMessageDialog(this,
-//                    "Error al editar");
-//        }
-//    }
 
     //---------------- ELIMINAR (soft delete: estado = 'inactivo') ----------------
     // La tabla Ayuda define una columna "estado", igual que Pregunta/Minijuego/Categoria,

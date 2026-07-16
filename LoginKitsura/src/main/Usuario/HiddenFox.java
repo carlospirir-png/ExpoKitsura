@@ -1,4 +1,5 @@
 // ============== HIDDEN FOX ==============
+// ==================== HIDDEN FOX ==================== 
 package main.Usuario;
 
 //------------------------ IMPORTACIONES ----------------------------
@@ -9,6 +10,8 @@ import main.Menu.DecoracionBotones;
 
 public abstract class HiddenFox extends JFrame implements JuegoBase {
 
+    //------------------------------ A T R I B U T O S  -------------------------
+    
     //Atributos
     private final JPanel fondo;
 
@@ -29,9 +32,6 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     // Arreglo de corazones generado dinámicamente según "maxVidas"
     private JLabel[] corazones;
 
-    // Cantidad de corazones que se muestran por fila antes de saltar a la siguiente.
-    private static final int CORAZONES_POR_FILA = 5;
-
     // Ruta donde se almacenará la imagen de fondo del minijuego
     JLabel fondoPapel;
 
@@ -41,12 +41,15 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
     // Componentes que provienen de la clase "DecoracionBotones", los cuales son para
     // diferentes acciones dentro del minijuego
     private DecoracionBotones btnAyuda, btnRespuesta1, btnRespuesta2, btnRespuesta3, btnRespuesta4;
-
+    
+    //-----------------------------  C O N S T R U C T O R --------------------------------------
+   
     // Constructor donde se encuentran las fuentes del programa
     // "maxVidas" es la cantidad de corazones que debe dibujar la interfaz,
     // obtenida previamente desde la base de datos (tabla Configuracion_nivel)
     // por medio de VidasDAO
     public HiddenFox(int maxVidas) {
+        
         // Resguardo por si llega un valor inválido (0 o negativo)
         this.maxVidas = (maxVidas < 1) ? 1 : maxVidas;
 
@@ -93,7 +96,19 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         fondo.setLayout(null);
         // Se le asigna un color de fondo: Blanco
         fondo.setBackground(Color.WHITE);
+        
+        //----------------- JFRAME -----------------
+        
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
 
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+        
         // Asigna el panel principal de la ventana (JFrame).
         setContentPane(fondo);
 
@@ -101,6 +116,8 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         setTitle("Hidden Fox");
         // Tamaño de la pantalla (ancho x alto)
         setSize(1880, 1080);
+        //No permiteque el tamaño de la ventana sea modificado
+        setResizable(false);
         // Se coloca la ventana al centro de la pantalla cuando se ejecute
         setLocationRelativeTo(null);
         // Al cerrar la ventana, finaliza la ejecución
@@ -114,6 +131,11 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     // Método donde se inicializan y crean los diferentes componentes con sus ajustes personalizados
     private void crearComponentes() {
+        //------------------ ICONO -------------
+        // Cargamos el icono
+        
+        
+        
         //------------------- SOMBRA ---------
         imagenSombra = new JLabel(); //Se crea el label de la imagen sombra
         imagenSombra.setBounds(350, 60, 350, 320); //Se posiciona y configura el tamaño de la sombra
@@ -142,9 +164,9 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
             // Esta conversión es importante para redimensionar la imagen y que no pierda la calidad
             Image corazonEscalado = corazonIcon.getImage().getScaledInstance(
                     // Ancho * alto    Cambio de tamaño con buena calidad
-                    60, 60, Image.SCALE_SMOOTH);
+                    50, 50, Image.SCALE_SMOOTH);
             Image corazonRotoEscalado = rotoIcon.getImage().getScaledInstance(
-                    60, 60, Image.SCALE_SMOOTH);
+                    50, 50, Image.SCALE_SMOOTH);
 
             // Se vuelve a ImageIcon luego de los cambios
             corazonFinal = new ImageIcon(corazonEscalado);
@@ -161,17 +183,16 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         int xInicial = 70;
         int yInicial = 25;
-        int espaciado = 65;
-        int tamano = 60;
+        int espaciado = 55;
+        int tamano = 50;
 
+        // Todos los corazones (de 1 a 10) se dibujan en UNA sola línea
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon = new JLabel(corazonFinal);
             corazon.setBounds(
-                    xInicial + (columna * espaciado),
-                    yInicial + (fila * espaciado),
+                    xInicial + (i * espaciado),
+                    yInicial,
                     tamano, tamano);
 
             corazones[i] = corazon;
@@ -420,54 +441,54 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
     //--------------------- I M Á G E N E S   Y  F O N D O S
     //---------------- IMAGEN SOMBRA Y A COLOR ----------------     
-    public void cambiarImagen(String rutaImagen) {
-        /*El método recibe un String llamado rutaImagen a través del parámetro.
-        Se usa getResorce para obtener la URL del recurso.*/
-        
-        URL ruta = getClass().getResource(rutaImagen);
+ public void cambiarImagen(String rutaImagen) {
 
-        try {
-       
-            //Si getResource() no encontró el recurso
+    try {
+
+        ImageIcon icono;
+
+        // Si es una ruta absoluta del disco
+        java.io.File archivo = new java.io.File(rutaImagen);
+
+        if (archivo.exists()) {
+
+            icono = new ImageIcon(archivo.getAbsolutePath());
+
+        } else {
+
+            // Si no existe en el disco, intenta buscarla dentro del proyecto
+            URL ruta = getClass().getResource(rutaImagen);
+
             if (ruta == null) {
-                //Se lanza una excepción no comprobada
-                throw new RuntimeException("No se encontró la imagen.");
+                throw new RuntimeException("No se encontró la imagen: " + rutaImagen);
             }
-            
-            //Se crea un nuevo ImageIcon con la imagen de la ruta
-            ImageIcon icono = new ImageIcon(ruta);
-            
-            //Obtenemos la imagen del ImageIcon para poder escalarla
-            Image imagen = icono.getImage();
-            
-            //Se escala la imagen a 350px X 320px con el algoritmo smooth
-            Image iconoEscalado = imagen.getScaledInstance(350, 320, Image.SCALE_SMOOTH);
-            
-            //Se crea una nueva ImageIcon con la imagen escalada
-            ImageIcon imagenEscalada = new ImageIcon(iconoEscalado);
-            
-            //Se le coloca al label la nueva ImageIcon.
-            imagenSombra.setIcon(imagenEscalada);
-            
-            //Revalida
-            imagenSombra.revalidate();
-            
-            //Re-dibuja
-            imagenSombra.repaint();
-            
-        //Captura la excepción
-        } catch (RuntimeException e) {
-            //Imprime el StackTrace
-            e.printStackTrace();
-            
-            //Se le coloca el texto de error
-            imagenSombra.setText("ERROR AL CARGAR IMAGEN");
-            //Centramos
-            imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
-            //Letra roja
-            imagenSombra.setForeground(Color.RED);
+
+            icono = new ImageIcon(ruta);
         }
+
+        Image imagen = icono.getImage();
+
+        Image imagenEscalada = imagen.getScaledInstance(
+                350,
+                320,
+                Image.SCALE_SMOOTH);
+
+        imagenSombra.setIcon(new ImageIcon(imagenEscalada));
+        imagenSombra.setText("");
+
+        imagenSombra.revalidate();
+        imagenSombra.repaint();
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        imagenSombra.setIcon(null);
+        imagenSombra.setText("ERROR AL CARGAR IMAGEN");
+        imagenSombra.setHorizontalAlignment(SwingConstants.CENTER);
+        imagenSombra.setForeground(Color.RED);
     }
+}
 
     //------------------ FONDO DE LA SOMBRA --------------------
     public void cambiarFondoPapel(String rutaImagen) {
@@ -554,8 +575,8 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
         return maxVidas;
     }
 
-    //------------------- INICIALIZAR VIDAS (reconstrucción) -----------------
-    // Este método reconstruye el arreglo de corazones con el valor real,
+    //------------------- INICIALIZAR VIDAS  -----------------
+    // Este método reconstruye el arreglo de corazones con el valor real
     public void inicializarVidas(int nuevoMaxVidas) {
         if (nuevoMaxVidas < 1) {
             nuevoMaxVidas = 1;
@@ -575,17 +596,16 @@ public abstract class HiddenFox extends JFrame implements JuegoBase {
 
         int xInicial = 70;
         int yInicial = 25;
-        int espaciado = 65;
-        int tamano = 60;
+        int espaciado = 55;
+        int tamano = 50;
 
+        // Todos los corazones (de 1 a 10) en UNA sola línea, tamaño fijo
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon = new JLabel(corazonFinal);
             corazon.setBounds(
-                    xInicial + (columna * espaciado),
-                    yInicial + (fila * espaciado),
+                    xInicial + (i * espaciado),
+                    yInicial,
                     tamano, tamano);
 
             corazones[i] = corazon;

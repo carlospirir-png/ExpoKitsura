@@ -1,6 +1,7 @@
 package main.Menu;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 
 public class SalirDelJuego extends JFrame {
@@ -23,6 +24,16 @@ public class SalirDelJuego extends JFrame {
         }
 
         getContentPane().setBackground(new Color(145, 191, 75));
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("Salir del juego");
         setSize(520, 320);
         setLocationRelativeTo(null);
@@ -90,7 +101,4 @@ public class SalirDelJuego extends JFrame {
         getContentPane().add(btnRegresar);
     }
 
-    public static void main(String[] args) {
-        new SalirDelJuego();
-    }
 }

@@ -14,7 +14,17 @@ public class PistasAudio extends JFrame {
     private Font fuente1;
     private Font fuente2;
     private DecoracionBotones btnSalir, btnRepetir;
-    private Clip clip;
+
+    // ---------------- REPRODUCCIÓN DE AUDIO (MP3 vía mp3spi) ----------------
+    // Se reemplaza Clip por SourceDataLine porque los archivos MP3 decodificados
+    // por mp3spi casi siempre reportan duración "no especificada"
+    // (AudioSystem.NOT_SPECIFIED), y Clip.open(AudioInputStream) falla con eso.
+    // SourceDataLine reproduce el audio en bloques (streaming), lo cual sí
+    // funciona con el stream ya decodificado a PCM.
+    private SourceDataLine lineaAudio;
+    private Thread hiloReproduccion;
+    private volatile boolean reproduciendo = false;
+
     private String rutaAudio;
 
     public PistasAudio(String rutaAudio) {
@@ -36,9 +46,19 @@ public class PistasAudio extends JFrame {
         }
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Pistas de Audio");
         setSize(700, 450);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         fondo.setLayout(null);
@@ -117,38 +137,112 @@ public class PistasAudio extends JFrame {
         fondo.add(mascotaAudifonos);
     }
 
+    //---------------- DETENER AUDIO ----------------
+    // Señaliza al hilo de reproducción que debe detenerse y cierra la línea.
+    // El propio hilo (en reproducirAudio) es responsable de cerrar el
+    // AudioInputStream una vez que termina su bucle de lectura.
     public void detenerAudio() {
-        if (clip != null) {
-            clip.stop();
-            clip.close();
-            clip = null;
+
+        reproduciendo = false;
+
+        if (hiloReproduccion != null) {
+            hiloReproduccion.interrupt();
+        }
+
+        if (lineaAudio != null) {
+            lineaAudio.stop();
+            lineaAudio.close();
+            lineaAudio = null;
         }
     }
 
+    //---------------- REPRODUCIR AUDIO (MP3 vía mp3spi + SourceDataLine) ----------------
     public void reproducirAudio() {
 
-        try {
+        // Si ya había una reproducción en curso (por ejemplo, se presionó
+        // REPETIR mientras el audio sonaba), se detiene primero.
+        detenerAudio();
 
-            if (clip != null) {
-                clip.stop();
-                clip.close();
-            }
-            System.out.println("Ruta en BD: " + rutaAudio);
-            System.out.println(getClass().getResource(rutaAudio));
+        System.out.println("Ruta en BD: " + rutaAudio);
 
-            URL url = getClass().getResource(rutaAudio);
+        URL url = getClass().getResource(rutaAudio);
 
-            System.out.println("URL encontrada: " + url);
+        System.out.println("URL encontrada: " + url);
 
-            AudioInputStream audio = AudioSystem.getAudioInputStream(url);
-
-            clip = AudioSystem.getClip();
-            clip.open(audio);
-            clip.start();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (url == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se encontró el archivo de audio:\n" + rutaAudio);
+            return;
         }
+
+        reproduciendo = true;
+
+        hiloReproduccion = new Thread(() -> {
+
+            AudioInputStream streamOriginal = null;
+            AudioInputStream streamDecodificado = null;
+
+            try {
+                // 1. Abrir el stream del archivo (mp3spi lo reconoce gracias
+                //    a los .jar mp3spi/jlayer/tritonus-share agregados al proyecto)
+                streamOriginal = AudioSystem.getAudioInputStream(url);
+                AudioFormat formatoBase = streamOriginal.getFormat();
+
+                // 2. Definir el formato PCM al que se va a decodificar
+                AudioFormat formatoDecodificado = new AudioFormat(
+                        AudioFormat.Encoding.PCM_SIGNED,
+                        formatoBase.getSampleRate(),
+                        16,
+                        formatoBase.getChannels(),
+                        formatoBase.getChannels() * 2,
+                        formatoBase.getSampleRate(),
+                        false);
+
+                // 3. Obtener el stream ya convertido a PCM
+                streamDecodificado = AudioSystem.getAudioInputStream(
+                        formatoDecodificado, streamOriginal);
+
+                // 4. Abrir la línea de reproducción con el formato decodificado
+                lineaAudio = AudioSystem.getSourceDataLine(formatoDecodificado);
+                lineaAudio.open(formatoDecodificado);
+                lineaAudio.start();
+
+                byte[] buffer = new byte[4096];
+                int bytesLeidos;
+
+                while (reproduciendo
+                        && (bytesLeidos = streamDecodificado.read(buffer, 0, buffer.length)) != -1) {
+                    lineaAudio.write(buffer, 0, bytesLeidos);
+                }
+
+                if (reproduciendo) {
+                    // Terminó porque el audio llegó a su fin (no porque lo detuvieron)
+                    lineaAudio.drain();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (lineaAudio != null) {
+                        lineaAudio.stop();
+                        lineaAudio.close();
+                    }
+                    if (streamDecodificado != null) {
+                        streamDecodificado.close();
+                    }
+                    if (streamOriginal != null) {
+                        streamOriginal.close();
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                reproduciendo = false;
+            }
+        });
+
+        hiloReproduccion.start();
     }
 
 }

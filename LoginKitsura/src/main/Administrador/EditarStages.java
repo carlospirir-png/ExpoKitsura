@@ -1,6 +1,7 @@
 package main.Administrador;
 
 import java.awt.*;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,6 +45,15 @@ public class EditarStages extends JFrame {
 
         fondo = new FondoPanelSemi("/Multimedia/utiles/fondos/interfaces/fondoDosK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
 
         setTitle("Editar Stages");
         setSize(1920, 1080);
@@ -98,8 +108,9 @@ public class EditarStages extends JFrame {
     /**
      * Traduce (minijuego, categoría, dificultad) elegidos en PedirMCN hacia
      * id_minijuego, id_categoria (local 1-3 dentro del minijuego), id_nivel y
-     * dificultad numérica, uniendo Minijuego -> Categoria -> Configuracion_nivel.
-     * Este es el único contexto que la ventana va a mostrar/permitir editar.
+     * dificultad numérica, uniendo Minijuego -> Categoria ->
+     * Configuracion_nivel. Este es el único contexto que la ventana va a
+     * mostrar/permitir editar.
      */
     private void resolverContextoDesdeDatos() throws SQLException {
         String sql = "SELECT m.id_minijuego, c.id_categoria, cn.id_nivel, cn.dificultad "
@@ -108,8 +119,7 @@ public class EditarStages extends JFrame {
                 + "JOIN Minijuego m ON c.id_minijuego = m.id_minijuego "
                 + "WHERE m.nombre = ? AND c.nombre = ? AND cn.dificultad = ?";
 
-        try (Connection con = new Conexion().getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new Conexion().getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             if (con == null) {
                 throw new SQLException("No se pudo establecer conexión con la base de datos.");
@@ -140,10 +150,14 @@ public class EditarStages extends JFrame {
             throw new SQLException("La dificultad llegó vacía desde la base de datos.");
         }
         return switch (dificultad) {
-            case "Fácil" -> 1;
-            case "Intermedio" -> 2;
-            case "Difícil" -> 3;
-            default -> throw new SQLException("Dificultad desconocida: '" + dificultad + "'.");
+            case "Fácil" ->
+                1;
+            case "Intermedio" ->
+                2;
+            case "Difícil" ->
+                3;
+            default ->
+                throw new SQLException("Dificultad desconocida: '" + dificultad + "'.");
         };
     }
 
@@ -203,7 +217,9 @@ public class EditarStages extends JFrame {
 
         btnConfirmar.setFont(fuente2.deriveFont(22f));
         btnConfirmar.setBounds(560, 665, 440, 55);
-        btnConfirmar.addActionListener(e -> abrirEdicionDePreguntaSeleccionada());
+        btnConfirmar.addActionListener(e -> {abrirEdicionDePreguntaSeleccionada();
+        dispose();
+        });
         panelSemi.add(btnConfirmar);
 
         btnSalir = new DecoracionBotones("VOLVER",
@@ -213,28 +229,37 @@ public class EditarStages extends JFrame {
 
         btnSalir.setFont(fuente2.deriveFont(20F));
         btnSalir.setBounds(1680, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e
+                -> {
+            new AdminStages(datos);
+            dispose();
+        });
         fondo.add(btnSalir);
     }
 
     /**
      * Carga en la tabla ÚNICAMENTE las preguntas que pertenecen al id_nivel
-     * resuelto desde la selección hecha en Pedir M,C,N. Cualquier pregunta de
-     * otro minijuego, categoría o dificultad queda fuera y nunca se muestra.
+     * resuelto desde la selección hecha en Pedir M,C,N, junto con su respuesta
+     * correcta (la que tiene es_correcta = TRUE en Opcion_respuesta). Cualquier
+     * pregunta de otro minijuego, categoría o dificultad queda fuera y nunca se
+     * muestra.
      */
     private void cargarPreguntas() {
-        String sql = "SELECT id_pregunta, pregunta FROM Pregunta "
-                + "WHERE id_nivel = ? AND estado = 'activo' ORDER BY id_pregunta";
+        String sql = "SELECT p.id_pregunta, p.pregunta, o.texto_opcion AS respuesta_correcta "
+                + "FROM Pregunta p "
+                + "LEFT JOIN Opcion_respuesta o "
+                + "       ON o.id_pregunta = p.id_pregunta AND o.es_correcta = TRUE "
+                + "WHERE p.id_nivel = ? AND p.estado = 'activo' "
+                + "ORDER BY p.id_pregunta";
 
-        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"ID", "Pregunta"}, 0) {
+        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"ID", "Pregunta", "Respuesta correcta"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        try (Connection con = new Conexion().getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = new Conexion().getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
             if (con == null) {
                 throw new SQLException("No se pudo establecer conexión con la base de datos.");
@@ -243,7 +268,11 @@ public class EditarStages extends JFrame {
             ps.setInt(1, idNivel);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    modelo.addRow(new Object[]{rs.getInt("id_pregunta"), rs.getString("pregunta")});
+                    modelo.addRow(new Object[]{
+                        rs.getInt("id_pregunta"),
+                        rs.getString("pregunta"),
+                        rs.getString("respuesta_correcta") // puede venir null si aún no tiene opciones cargadas
+                    });
                 }
             }
         } catch (SQLException ex) {
@@ -254,6 +283,11 @@ public class EditarStages extends JFrame {
         }
 
         tablaPreguntas.setModel(modelo);
+
+        // Ajuste de anchos para que la columna de pregunta/respuesta se lea bien
+        tablaPreguntas.getColumnModel().getColumn(0).setPreferredWidth(60);
+        tablaPreguntas.getColumnModel().getColumn(1).setPreferredWidth(800);
+        tablaPreguntas.getColumnModel().getColumn(2).setPreferredWidth(400);
 
         if (modelo.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this,
@@ -277,8 +311,8 @@ public class EditarStages extends JFrame {
 
     /**
      * Abre la interfaz de edición del minijuego ya resuelto (a partir de la
-     * selección hecha en Pedir M,C,N). Nunca se ofrece la posibilidad de
-     * editar preguntas de otro minijuego/categoría/nivel.
+     * selección hecha en Pedir M,C,N). Nunca se ofrece la posibilidad de editar
+     * preguntas de otro minijuego/categoría/nivel.
      */
     private void abrirInterfazSegunMinijuego(int idPregunta) {
         switch (idMinijuego) {

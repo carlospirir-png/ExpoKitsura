@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
-import main.Administrador.VidasDAO;
 
 // Clase controladora que gestiona la lógica del minijuego "MaulwurfRennt       ".
 // Conecta la interfaz gráfica, el estado de la sesión y las consultas a la base de datos.
@@ -24,13 +23,32 @@ public class JuegoMaulwurfRennt implements JuegoBase {
     private final int idCategoria;
     private final int idMinijuego = 3;
 
+    // NUEVO: indica si la sesión actual es de un invitado. Cuando es true,
+    // este minijuego NO escribe absolutamente nada en la base de datos
+    // (ni Partida, ni Detalle_partida, ni Estadistica), a diferencia de
+    // Hidden Fox y Fox Jump!, que al no poder modificarse siguen usando la
+    // cuenta compartida "Invitado" (Sesion.ID_INVITADO) como red de
+    // seguridad para no violar la FK de Partida.id_usuario.
+    private final boolean esInvitado;
+
     // Variables de estado del flujo de juego: vidas, puntuación, tiempo acumulado y progresión de niveles.
     // "vidas" ya no arranca fija en 3: se calcula en el constructor a partir de VidasDAO.
     private int vidas;
     // Tope máximo de vidas configurado por el administrador (para saber si la
     // partida fue "perfecta" y para dibujar la cantidad correcta de corazones).
     private int maxVidas;
+
+    // "puntos" es el puntaje VISIBLE en pantalla: sube con aciertos y baja
+    // con la penalización de -10 por cada error (puede llegar a 0).
     private int puntos = 0;
+
+    // "puntosGanadosTotales" es un acumulador independiente que SOLO
+    // suma (nunca resta ni se resetea a 0). Es el valor real que se manda a
+    // Partida.puntuacion y a Estadistica al terminar la partida, para que
+    // los aciertos obtenidos antes de perder no se pierdan si la
+    // penalización de un error deja "puntos" en 0 justo al momento de morir.
+    private int puntosGanadosTotales = 0;
+
     private int tiempoTotalJugado = 0;
     private int nivel = 1;
     private int preguntasContestadas = 0;
@@ -53,6 +71,9 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         this.idUsuario = idUsuario;
         this.idCategoria = idCategoria;
 
+        // NUEVO: se consulta una sola vez si la sesión actual es invitado.
+        this.esInvitado = Sesion.isEsInvitado();
+
         // Se consulta a la base de datos (VidasAdmin -> VidasDAO) cuántas vidas
         // corresponden a este minijuego/categoría en dificultad "Fácil" (con la
         // que siempre arranca la partida). Antes este valor venía fijo en 3.
@@ -64,11 +85,18 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         partidaDAO = new PartidaDAO_MaulwurfRennt();
         ayudaDAO = new AyudaDAO_MaulwurfRennt();
 
-        // Registra el inicio de la partida en la base de datos y obtiene su ID asignado.
-        idPartida = partidaDAO.crearPartida(
-                idUsuario,
-                idMinijuego,
-                vidas);
+        // NUEVO: si es invitado, NO se crea ninguna fila en Partida.
+        // idPartida queda en -1, y todos los demás puntos de guardado
+        // (guardarDetalle, finalizarPartida, actualizarEstadisticas)
+        // quedan protegidos con "if (!esInvitado)" más abajo.
+        if (esInvitado) {
+            idPartida = -1;
+        } else {
+            idPartida = partidaDAO.crearPartida(
+                    idUsuario,
+                    idMinijuego,
+                    vidas);
+        }
 
         iniciarNivel();
         registrarEventos();
@@ -105,6 +133,10 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         preguntasNivel = 0;
 
+        // La ayuda solo tiene sentido en la categoría "Científicos Matemáticos"
+        // (idCategoria == 9), sin importar el nivel de dificultad.
+        boolean necesitaAyuda = (idCategoria == 9);
+
         switch (nivel) {
 
             case 1:
@@ -126,10 +158,12 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.actualizarNivel(3);
                 vista.actualizarDificultad("Difícil");
                 vista.mostrarTopos(7);
-                vista.cambiarColorFondo(new Color(255, 180, 80));
+                vista.cambiarColorFondo(new Color(238, 151, 151));
                 vista.actualizarCategoria(obtenerNombreCategoria());
                 break;
         }
+
+        vista.mostrarBotonAyuda(necesitaAyuda);
 
         cargarPregunta();
     }
@@ -198,6 +232,10 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         }
 
         iniciarTemporizador();
+
+        // NUEVO: cada nueva pregunta reactiva el botón de ayuda (con su
+        // texto original), para que la pista vuelva a estar disponible.
+        vista.restaurarBotonAyuda();
 
         preguntaActual = preguntaDAO.obtenerPreguntaAleatoria(
                 idCategoria,
@@ -276,6 +314,9 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         }
 
         vista.getBtnAyuda().addActionListener(e -> mostrarAyuda());
+
+        // NOTA: no hay botón de estadísticas aquí. Las estadísticas son
+        // GLOBALES y se acceden una sola vez desde MenuPrincipal.
     }
 
     // Recupera la opción ligada al topo golpeado y evalúa si corresponde a la respuesta correcta o incorrecta.
@@ -299,20 +340,31 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         int puntosGanados = calcularPuntosPorTiempo();
 
+        // Tiempo real que tardó el jugador en responder esta pregunta.
+        int tiempoUsado = tiempoMaximoPregunta - tiempoRestante;
+        if (tiempoUsado < 0) {
+            tiempoUsado = tiempoMaximoPregunta;
+        }
+
         puntos += puntosGanados;
+        puntosGanadosTotales += puntosGanados;
+
         vista.actualizarPuntos(puntos);
         preguntasContestadas++;
         preguntasNivel++;
 
         vista.actualizarProgreso(preguntasNivel, 5);
 
-        partidaDAO.guardarDetalle(
-                idPartida,
-                preguntaActual.getIdPregunta(),
-                puntosGanados,
-                0,
-                true
-        );
+        // NUEVO: si es invitado, no se guarda ningún detalle en BD.
+        if (!esInvitado) {
+            partidaDAO.guardarDetalle(
+                    idPartida,
+                    preguntaActual.getIdPregunta(),
+                    puntosGanados,
+                    tiempoUsado,
+                    true
+            );
+        }
 
         if (timer != null) {
             timer.stop();
@@ -320,10 +372,6 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         vista.mostrarMensaje("¡Respuesta correcta!");
         vista.restaurarTodosLosTopos();
-
-        if (timer != null) {
-            timer.start();
-        }
 
         comprobarNivel();
     }
@@ -333,6 +381,11 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         vidas--;
 
+        // Esta penalización de -10 SOLO afecta el puntaje visible en
+        // pantalla (feedback inmediato al jugador). NO afecta
+        // "puntosGanadosTotales", que es lo que realmente se guarda en
+        // Estadistica -- así los aciertos ya ganados en esta partida no
+        // desaparecen aunque "puntos" quede en 0 justo antes de perder.
         if (puntos >= 10) {
             puntos -= 10;
         } else {
@@ -341,13 +394,22 @@ public class JuegoMaulwurfRennt implements JuegoBase {
         vista.actualizarPuntos(puntos);
         vista.actualizarVidas(vidas);
 
-        partidaDAO.guardarDetalle(
-                idPartida,
-                preguntaActual.getIdPregunta(),
-                -10,
-                0,
-                false
-        );
+        // Tiempo real que tardó el jugador en responder esta pregunta
+        int tiempoUsado = tiempoMaximoPregunta - tiempoRestante;
+        if (tiempoUsado < 0) {
+            tiempoUsado = tiempoMaximoPregunta;
+        }
+
+        // NUEVO: si es invitado, no se guarda ningún detalle en BD.
+        if (!esInvitado) {
+            partidaDAO.guardarDetalle(
+                    idPartida,
+                    preguntaActual.getIdPregunta(),
+                    0,
+                    tiempoUsado,
+                    false
+            );
+        }
 
         if (vidas <= 0) {
             terminarJuego("abandonada");
@@ -384,7 +446,19 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         if (opcion == JOptionPane.OK_OPTION) {
 
+            // NOTA: al igual que en responderIncorrecto(), esta penalización
+            // por usar pista solo afecta el puntaje visible ("puntos"), no
+            // "puntosGanadosTotales". Usar una pista no debería borrar
+            // aciertos ya ganados del acumulado que se guarda en BD.
             puntos = Math.max(0, puntos - 10);
+            vista.actualizarPuntos(puntos);
+
+            // NUEVO: al confirmar el uso de la pista, se deshabilita el
+            // botón de ayuda y se cambia su texto para que el jugador sepa
+            // que ya la usó en esta pregunta (no puede volver a usarla
+            // hasta que se cargue la siguiente).
+            vista.desactivarBotonAyuda();
+
             String pista = ayudaDAO.obtenerPistaTexto(preguntaActual.getIdPregunta());
             PistasTexto ventana = new PistasTexto(pista);
 
@@ -440,17 +514,21 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
         tiempoTotalJugado = calcularTiempoJugado();
 
-        partidaDAO.finalizarPartida(
-                idPartida,
-                puntos,
-                tiempoTotalJugado,
-                estado);
+        // NUEVO: si es invitado, no se toca la base de datos en absoluto --
+        // ni Partida (nunca se creó, idPartida == -1), ni Estadistica.
+        if (!esInvitado) {
+            partidaDAO.finalizarPartida(
+                    idPartida,
+                    puntosGanadosTotales,
+                    tiempoTotalJugado,
+                    estado);
 
-        partidaDAO.actualizarEstadisticas(
-                idUsuario,
-                idMinijuego,
-                puntos,
-                tiempoTotalJugado);
+            partidaDAO.actualizarEstadisticas(
+                    idUsuario,
+                    idMinijuego,
+                    puntosGanadosTotales,
+                    tiempoTotalJugado);
+        }
 
         if (estado.equals("completada")) {
 
@@ -458,23 +536,24 @@ public class JuegoMaulwurfRennt implements JuegoBase {
 
                 System.out.println("Entró a Victoria Perfecta");
 
-                VictoriaPerfecta vp = new VictoriaPerfecta(e -> {
-                }, this);
+                VictoriaPerfecta vp = new VictoriaPerfecta(this);
 
                 vista.setContentPane(vp.getFondo());
                 vista.revalidate();
                 vista.repaint();
+                
+                vp.dispose();
 
             } else {
 
                 System.out.println("Entró a Victoria");
 
-                Victoria v = new Victoria(e -> {
-                }, this);
+                Victoria v = new Victoria(this);
 
                 vista.setContentPane(v.getFondo());
                 vista.revalidate();
                 vista.repaint();
+                v.dispose();
             }
 
         } else {

@@ -43,13 +43,15 @@ public class PartidaDAO_MaulwurfRennt {
             ps.setInt(5, 0); // Tiempo inicial por defecto.
             ps.setString(6, "en_curso");
 
+            System.out.println("DEBUG: Intentando crear partida con id_usuario = " + idUsuario);
             ps.executeUpdate();
 
-            ResultSet rs = ps.getGeneratedKeys();
-
-            // Recupera la clave numérica generada para la partida actual.
-            if (rs.next()) {
-                idPartida = rs.getInt(1);
+            // NUEVO: try-with-resources también para el ResultSet de las llaves generadas.
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                // Recupera la clave numérica generada para la partida actual.
+                if (rs.next()) {
+                    idPartida = rs.getInt(1);
+                }
             }
 
         } catch (Exception e) {
@@ -115,6 +117,8 @@ public class PartidaDAO_MaulwurfRennt {
     // Acumula las métricas de la partida finalizada en el registro histórico del usuario, evaluando y actualizando además su récord personal de puntuación.
     public void actualizarEstadisticas(int idUsuario, int idMinijuego, int puntuacion, int tiempo) {
 
+        // NUEVO: try-with-resources también para Connection completo del método,
+        // ya que aquí se abren varios PreparedStatement dentro del mismo bloque.
         try (Connection con = conexion.getConnection()) {
 
             String buscar = """
@@ -124,16 +128,25 @@ public class PartidaDAO_MaulwurfRennt {
                     AND id_minijuego=?
                     """;
 
-            PreparedStatement psBuscar = con.prepareStatement(buscar);
-            psBuscar.setInt(1, idUsuario);
-            psBuscar.setInt(2, idMinijuego);
+            int mejorExistente = -1; // -1 indica "no existe fila todavía"
 
-            ResultSet rs = psBuscar.executeQuery();
+            // NUEVO: PreparedStatement y ResultSet de la búsqueda ahora se
+            // cierran automáticamente al salir de este bloque.
+            try (PreparedStatement psBuscar = con.prepareStatement(buscar)) {
+                psBuscar.setInt(1, idUsuario);
+                psBuscar.setInt(2, idMinijuego);
+
+                try (ResultSet rs = psBuscar.executeQuery()) {
+                    if (rs.next()) {
+                        mejorExistente = rs.getInt("mejor_puntuacion");
+                    }
+                }
+            }
 
             // Bloque de actualización: Si el usuario ya registra estadísticas previas en este minijuego, se modifican los acumuladores.
-            if (rs.next()) {
+            if (mejorExistente != -1) {
 
-                int mejor = rs.getInt("mejor_puntuacion");
+                int mejor = mejorExistente;
 
                 // Evalúa si la puntuación obtenida en la última partida supera la marca histórica del jugador.
                 if (puntuacion > mejor) {
@@ -150,14 +163,15 @@ public class PartidaDAO_MaulwurfRennt {
                         AND id_minijuego=?
                         """;
 
-                PreparedStatement ps = con.prepareStatement(update);
-                ps.setInt(1, mejor);
-                ps.setInt(2, puntuacion);
-                ps.setInt(3, tiempo);
-                ps.setInt(4, idUsuario);
-                ps.setInt(5, idMinijuego);
+                try (PreparedStatement ps = con.prepareStatement(update)) {
+                    ps.setInt(1, mejor);
+                    ps.setInt(2, puntuacion);
+                    ps.setInt(3, tiempo);
+                    ps.setInt(4, idUsuario);
+                    ps.setInt(5, idMinijuego);
 
-                ps.executeUpdate();
+                    ps.executeUpdate();
+                }
 
             // Bloque de inserción: Si es la primera vez que el usuario completa el minijuego, se genera un registro nuevo desde cero.
             } else {
@@ -175,15 +189,16 @@ public class PartidaDAO_MaulwurfRennt {
                         VALUES(?,?,?,?,?,?)
                         """;
 
-                PreparedStatement ps = con.prepareStatement(insert);
-                ps.setInt(1, idUsuario);
-                ps.setInt(2, idMinijuego);
-                ps.setInt(3, puntuacion);
-                ps.setInt(4, puntuacion);
-                ps.setInt(5, 1);
-                ps.setInt(6, tiempo);
+                try (PreparedStatement ps = con.prepareStatement(insert)) {
+                    ps.setInt(1, idUsuario);
+                    ps.setInt(2, idMinijuego);
+                    ps.setInt(3, puntuacion);
+                    ps.setInt(4, puntuacion);
+                    ps.setInt(5, 1);
+                    ps.setInt(6, tiempo);
 
-                ps.executeUpdate();
+                    ps.executeUpdate();
+                }
             }
 
         } catch (Exception e) {

@@ -1,12 +1,13 @@
-// ============== FOX JUMP ==============
+// ==================== FOX JUMP ==================== 
 package main.Usuario;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import javax.swing.*;
-import main.Administrador.VidasDAO;
+import main.Menu.DecoracionBotones;
 import main.conexion.Conexion;
 
 // CLASE PRINCIPAL DEL MINIJUEGO FOX JUMP!
@@ -23,19 +24,10 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     // ── SISTEMA DE VIDAS DINAMICO ────────────────────────────────────────────
     // CAMBIA ESTE VALOR PARA QUE EL JUEGO TENGA MAS O MENOS VIDAS/CORAZONES.
-    // ESTE ES EL TOPE ABSOLUTO: "vidas" NUNCA PUEDE SUPERAR ESTE NUMERO,
-    // SIN IMPORTAR DESDE DONDE SE INTENTE SUMAR VIDAS (VER agregarVidas()).
     private int maxVidas;
 
     // ES LA VARIABLE QUE CONTIENE LA INFORMACIÓN DE LA BASE DE DATOS
-    // BUG CORREGIDO: antes se declaraba sin inicializar y provocaba un
-    // NullPointerException apenas se abría el minijuego (vidasDAO.obtenerVidas
-    // se llamaba sobre un objeto null en el constructor).
     private VidasDAO vidasDAO = new VidasDAO();
-
-    // CANTIDAD DE CORAZONES POR FILA. SI MAX_VIDAS NO ES MULTIPLO EXACTO,
-    // LA ULTIMA FILA SIMPLEMENTE QUEDA INCOMPLETA (SE ACOMODAN LOS QUE SOBREN).
-    private static final int CORAZONES_POR_FILA = 5;
 
     // ARREGLO DE LABELS DE CORAZONES, GENERADO DINAMICAMENTE SEGUN MAX_VIDAS
     private JLabel[] corazones;
@@ -46,7 +38,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     private JLabel mascota, florMascota;
     private JLabel panelLago, nenufarFlor;
     private JLabel nenufarVerdadero, nenufarFalso;
-    private JButton btnAyuda;
+    private DecoracionBotones btnAyuda;
     private int puntajeTotal = 0;
     private int tiempoTotalJugado = 0;
     private int tiempoMaximoPregunta;
@@ -77,7 +69,14 @@ public class FoxJump extends JFrame implements JuegoBase {
 
     // ── CONEXION A BASE DE DATOS 
     // CONSULTAS SQL DEL JUEGO
-    private Connection con;
+    private final Connection con;
+
+    // ── PERSISTENCIA DE LA PARTIDA (NUEVO) ────────────────────────────────
+    // Id del minijuego "Fox Jump!" según la tabla Minijuego (INSERT inicial: 2 = Fox Jump!)
+    private static final int ID_MINIJUEGO = 2;
+
+    // Id de la partida en curso (fila de la tabla Partida). -1 mientras no se ha creado.
+    private int idPartida = -1;
 
     // ── SISTEMA DE DIFICULTAD
     // REGISTROS DISTINTOS EN Configuracion_nivel
@@ -132,28 +131,43 @@ public class FoxJump extends JFrame implements JuegoBase {
     // SE RESETEA A false EN cargarPregunta() PARA CADA NUEVA PREGUNTA
     private boolean pistaMostradaEnPreguntaActual = false;
 
+    private final EstadisticaDAO estadisticaDAO = new EstadisticaDAO();
+    private int idUsuario = Sesion.getIdUsuarioActual();
+
+    // EVITA GUARDAR LA MISMA PARTIDA DOS VECES (p.ej. si dos rutas de fin
+    // de juego se disparan casi al mismo tiempo)
+    private boolean estadisticasGuardadas = false;
+
+    // NUEVO: indica si la sesión actual es de un invitado.
+    private boolean esInvitado;
+
     // CONSTRUCTOR***********
     /**
-     * INICIALIZA EL JUEGO CON LA CATEGORIA RECIBIDA DESDE EL MENU. 1. CREAR
+     * INICIALIZA EL JUEGO CON LA CATEGORIA RECIBIDA DESDE EL MENU.1. CREAR
      * TODOS LOS COMPONENTES GRAFICOS 2. REGISTRAR LISTENERS DE VENTANA (PARA
      * PAUSAR AL MINIMIZAR) 3. HACER VISIBLE EL FRAME 4. CONECTAR A LA BD Y
      * CARGAR LA PRIMERA PREGUNTA 5. CARGA TODAS LAS FUENTES
+     *
+     * @param categoria
      */
     public FoxJump(String categoria) {
-
+        
         this.categoriaSeleccionada = categoria;
 
-        // EL JUEFO COMIENZA EN FÁCIL, CUANDO SE QUIERE PASAR A OTRO NIVEL, SE VA ACTUALIZAR EL VALOR
-        // BUG CORREGIDO: el nombre debe coincidir EXACTAMENTE con el de la tabla Minijuego
-        // ("Fox Jump!", con espacio). Antes decía "FoxJump!" y nunca encontraba coincidencia,
-        // por lo que siempre caía en el valor por defecto sin avisar del error.
         maxVidas = vidasDAO.obtenerVidas("Fox Jump!", categoriaSeleccionada, "Fácil");
 
         if (maxVidas < 1) {
             maxVidas = 3;
         }
+                //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
 
-        // OBTENER LAS VIDAS
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
         vidas = maxVidas;
 
         cargarFuentes();
@@ -164,13 +178,13 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         setTitle("Fox Jump!");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         crearComponentes();
 
-        // PAUSAR EL COUNTDOWN SI EL USUARIO MINIMIZA LA VENTANA
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowIconified(java.awt.event.WindowEvent e) {
@@ -185,8 +199,6 @@ public class FoxJump extends JFrame implements JuegoBase {
             }
         });
 
-        // TIENE LA MISMA ACCION  PARA CUANDO EL COMPONENTE SE OCULTA 
-        // (POR EJEMPLO AL NAVEGAR ENTRE PANELES SIN CERRAR EL FRAME)
         addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentHidden(java.awt.event.ComponentEvent e) {
@@ -203,10 +215,23 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         setVisible(true);
 
-        // LA CONEXION SE ESTABLECE DESPUES DE setVisible() PARA QUE EL FRAME
         con = new Conexion().getConnection();
 
         if (con != null) {
+
+            // NUEVO: se consulta una sola vez si la sesión es invitado.
+            esInvitado = Sesion.isEsInvitado();
+            idUsuario = Sesion.getIdUsuarioActual();
+
+            // NUEVO: si es invitado, NO se crea ninguna fila en Partida.
+            if (!esInvitado) {
+                idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
+
+                if (idPartida == -1) {
+                    System.out.println("ADVERTENCIA: no se pudo crear el registro de la partida de Fox Jump! en la base de datos.");
+                }
+            }
+
             resolverIdNivel();
             cargarPregunta();
         } else {
@@ -254,11 +279,11 @@ public class FoxJump extends JFrame implements JuegoBase {
         if (maxVidas < 1) {
             maxVidas = 3;
         }
-        // El jugador inicia con el máximo de vidas configurado
-        vidas = maxVidas;
-        
+
+        vidas = Math.min(vidas, maxVidas);
+
         reconstruirCorazones();
-        
+
         // CONSULTA QUE CRUZA TRES TABLAS PARA ENCONTRAR EL NIVEL CORRECTO
         // SE FILTRA POR NOMBRE DEL MINIJUEGO, NOMBRE DE CATEGORIA Y DIFICULTAD
         String sqlNivel = """
@@ -315,7 +340,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         finJuegoActivo = false;
 
         // ACTUALIZAR LAS ETIQUETAS DE INFORMACION EN PANTALLA
-        nivelLabel.setText("Nivel: Fox Jump!");
         dificultadLabel.setText("Dificultad: " + difStr);
         categoriaLabel.setText("Categoría: " + categoriaSeleccionada);
 
@@ -327,7 +351,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             case INTERMEDIO ->
                 new Color(239, 218, 154);
             case DIFICIL ->
-                new Color(218, 77, 88);
+                new Color(227, 157, 139);
         };
         fondo.setBackground(colorFondo);
     }
@@ -355,6 +379,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         pistaMostradaEnPreguntaActual = false;
         btnAyuda.setEnabled(true);
         btnAyuda.setText("¿Necesitas ayuda?");
+        btnAyuda.setFont(fuente2.deriveFont(18f));
 
         // SI NO HAY PREGUNTAS VISTAS, SE USA "0" PARA QUE LA SINTAXIS SEA VALIDA
         String exclusion = preguntasVistas.isEmpty()
@@ -517,6 +542,14 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
         finJuegoActivo = true;
 
+        // NUEVO: solo se cierra la partida en BD si NO es invitado.
+        if (!esInvitado) {
+            guardarFinDePartida("completada");
+        }
+        // NUEVO: se cierra la partida como "completada" en la base de datos
+        // y se actualiza la estadística acumulada del usuario.
+        guardarFinDePartida("completada");
+        guardarEstadisticasPartida(true); // victoria = completada
         detenerCountdown();
         bloquearNenufares();
 
@@ -549,13 +582,13 @@ public class FoxJump extends JFrame implements JuegoBase {
 
             // SI CONSERVO TODAS LAS VIDAS = VICTORIA PERFECTA, SINO = VICTORIA NORMAL
             if (vidas == maxVidas) {
-                VictoriaPerfecta vp = new VictoriaPerfecta(e2 -> {
-                }, this);
+                VictoriaPerfecta vp = new VictoriaPerfecta(this);
                 fadeTo(() -> setContentPane(vp.getFondo()), 400);
+                vp.dispose();
             } else {
-                Victoria v = new Victoria(e2 -> {
-                }, this);
+                Victoria v = new Victoria(this);
                 fadeTo(() -> setContentPane(v.getFondo()), 400);
+                v.dispose();
             }
         }).start();
     }
@@ -611,6 +644,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         idPreguntaActual = 0;
         finJuegoActivo = false;
         procesandoRespuesta = false;
+        estadisticasGuardadas = false; // <-- NUEVO
         puntajeTotal = 0;
         tiempoTotalJugado = 0;
         preguntasVistas.clear();
@@ -622,6 +656,22 @@ public class FoxJump extends JFrame implements JuegoBase {
         pistaMostradaEnPreguntaActual = false;
         btnAyuda.setEnabled(true);
         btnAyuda.setText("¿Necesitas ayuda?");
+        btnAyuda.setFont(fuente2.deriveFont(18f));
+
+        // NUEVO: al jugar de nuevo es una partida distinta de la anterior,
+        // así que se crea un nuevo registro en la tabla Partida.
+        idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
+        if (idPartida == -1) {
+            System.out.println("ADVERTENCIA: no se pudo crear el registro de la nueva partida de Fox Jump! en la base de datos.");
+        }
+
+        // NUEVO: al jugar de nuevo, si es invitado, sigue sin crear partida.
+        if (!esInvitado) {
+            idPartida = crearPartida(idUsuario, ID_MINIJUEGO, maxVidas);
+            if (idPartida == -1) {
+                System.out.println("ADVERTENCIA: no se pudo crear el registro de la nueva partida de Fox Jump! en la base de datos.");
+            }
+        }
 
         // RESOLVER EL NIVEL INICIAL Y CARGAR LA PRIMERA PREGUNTA
         resolverIdNivel();
@@ -947,20 +997,22 @@ public class FoxJump extends JFrame implements JuegoBase {
 
         correctasTotales++;
 
-        // CALCULAR CUANTOS SEGUNDOS TARDO EL JUGADOR EN RESPONDER
         int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
         if (tiempoUsado < 0) {
             tiempoUsado = tiempoMaximoPregunta;
         }
 
-        puntajeTotal += calcularPuntosPorTiempo(tiempoUsado, tiempoMaximoPregunta);
+        int puntosGanados = calcularPuntosPorTiempo(tiempoUsado, tiempoMaximoPregunta);
+        puntajeTotal += puntosGanados;
 
-        // INTENTAR SUBIR DE DIFICULTAD (SI LLEGO A 5 CORRECTAS)
-        // SI SUBIO, LA SIGUIENTE PREGUNTA SE CARGA DESDE continuarDespuesDeDificultad()
+        // NUEVO: solo se persiste si NO es invitado.
+        if (!esInvitado && idPartida != -1) {
+            registrarDetalle(idPartida, idPreguntaActual, puntosGanados, tiempoUsado, true);
+        }
+
         boolean subio = intentarSubirDificultad();
 
         if (!subio) {
-            // MOSTRAR PROGRESO HACIA EL SIGUIENTE NIVEL Y CONTINUAR
             String msg = "¡Correcto! ("
                     + correctasTotales + "/" + CORRECTAS_SUBIR
                     + " para subir)";
@@ -969,11 +1021,18 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
     }
 
-    /**
-     * MANEJA LA LOGICA POSTERIOR A UNA RESPUESTA INCORRECTA: MUESTRA EL MENSAJE
-     * DE ERROR Y LLAMA A perderVida().
-     */
     private void procesarRespuestaIncorrecta() {
+
+        int tiempoUsado = tiempoMaximoPregunta - segundosRestantes;
+        if (tiempoUsado < 0) {
+            tiempoUsado = tiempoMaximoPregunta;
+        }
+
+        // NUEVO: solo se persiste si NO es invitado.
+        if (!esInvitado && idPartida != -1) {
+            registrarDetalle(idPartida, idPreguntaActual, 0, tiempoUsado, false);
+        }
+
         JOptionPane.showMessageDialog(this, "¡Incorrecto!");
         perderVida();
     }
@@ -1029,22 +1088,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         return subio;
     }
 
-    // =========================================================================
-    // SISTEMA DE VIDAS
-    // =========================================================================
-    /**
-     * DESCUENTA UNA VIDA Y ACTUALIZA EL CORAZON CORRESPONDIENTE.
-     *
-     * EL ORDEN DE LOS CORAZONES ROTOS ES DE DERECHA A IZQUIERDA. COMO
-     * corazones[] SE LLENA DE IZQUIERDA A DERECHA (INDICE 0 = PRIMER CORAZON),
-     * Y vidas VA BAJANDO DESDE MAX_VIDAS HASTA 0, EL INDICE DEL CORAZON QUE SE
-     * ROMPE EN CADA PASO ES SIEMPRE EL NUEVO VALOR DE vidas (DESPUES DE RESTAR
-     * 1). ESTO FUNCIONA SIN IMPORTAR CUANTAS VIDAS TENGA EL JUEGO (MAX_VIDAS).
-     *
-     * CUANDO vidas LLEGA A 0, SE MUESTRA LA PANTALLA DE DERROTA CON UNA ESPERA
-     * DE 400ms PARA QUE EL JUGADOR VEA EL ULTIMO CORAZON ROMPERSE ANTES DE
-     * SALIR.
-     */
     private void perderVida() {
 
         vidas--;
@@ -1055,6 +1098,7 @@ public class FoxJump extends JFrame implements JuegoBase {
         }
 
         if (vidas <= 0) {
+            guardarEstadisticasPartida(false); // abandonada
             bloquearNenufares();
             new javax.swing.Timer(400, e -> {
                 ((javax.swing.Timer) e.getSource()).stop();
@@ -1149,6 +1193,24 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     /**
+     * GUARDA EL RESULTADO DE LA PARTIDA ACTUAL EN Partida Y ACTUALIZA
+     * Estadistica. SE LLAMA DESDE LAS 3 RUTAS DE FIN DE JUEGO: VICTORIA, VIDAS
+     * AGOTADAS Y TIEMPO AGOTADO. EL FLAG estadisticasGuardadas GARANTIZA QUE
+     * SOLO SE GUARDE UNA VEZ POR PARTIDA.
+     *
+     * @param victoria TRUE SI LA PARTIDA TERMINO EN "completada", FALSE SI
+     * TERMINO EN "abandonada" (VIDAS O TIEMPO AGOTADO)
+     */
+    private void guardarEstadisticasPartida(boolean victoria) {
+        if (estadisticasGuardadas) {
+            return;
+        }
+        estadisticasGuardadas = true;
+        estadisticaDAO.guardarPartida(
+                idUsuario, "Fox Jump!", puntajeTotal, tiempoTotalJugado, maxVidas, victoria);
+    }
+
+    /**
      * CARGA LAS FUENTES PERSONALIZADAS DESDE LOS RECURSOS DEL PROYECTO. SI
      * ALGUNA FALLA, SE USA ARIAL COMO RESPALDO PARA NO ROMPER LA UI.
      *
@@ -1165,6 +1227,132 @@ public class FoxJump extends JFrame implements JuegoBase {
             fuente1 = new Font("Arial", Font.BOLD, 20);
             fuente2 = new Font("Arial", Font.PLAIN, 20);
         }
+    }
+
+    // =========================================================================
+    // PERSISTENCIA DE LA PARTIDA (NUEVO)
+    // =========================================================================
+    /*Estos métodos guardan el progreso del jugador en las tablas Partida,
+      Detalle_partida y Estadistica. Se mantienen dentro de FoxJump (en vez
+      de un DAO aparte) porque esta clase ya maneja todas sus consultas SQL
+      directamente con el campo "con", sin separación de capas. Si en algún
+      momento se extraen a una clase compartida (por ejemplo para reutilizar
+      con Maulwurf Rennt), la firma de estos métodos puede copiarse tal cual
+      a un DAO independiente.*/
+    //------------------------ C R E A R   P A R T I D A
+    private int crearPartida(int idUsuario, int idMinijuego, int vidasInicialesSnapshot) {
+
+        String sql
+                = "INSERT INTO Partida (id_usuario, id_minijuego, vidas_iniciales_snapshot) "
+                + "VALUES (?, ?, ?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, idUsuario);
+            ps.setInt(2, idMinijuego);
+            ps.setInt(3, vidasInicialesSnapshot);
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+
+        return -1;
+    }
+
+    //------------------------ R E G I S T R A R   D E T A L L E
+    private void registrarDetalle(int idPartida, int idPregunta, int puntosObtenidos,
+            int tiempoRespuesta, boolean respondioCorrectamente) {
+
+        String sql
+                = "INSERT INTO Detalle_partida "
+                + "(id_partida, id_pregunta, puntos_obtenidos, tiempo_respuesta, respondio_correctamente) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idPartida);
+            ps.setInt(2, idPregunta);
+            ps.setInt(3, puntosObtenidos);
+            ps.setInt(4, tiempoRespuesta);
+            ps.setBoolean(5, respondioCorrectamente);
+
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+    }
+
+    //------------------------ F I N A L I Z A R   P A R T I D A
+    // estado esperado: "completada" | "abandonada"
+    private void finalizarPartida(int idPartida, int puntuacion, int tiempoJugado, String estado) {
+
+        String sql
+                = "UPDATE Partida "
+                + "SET puntuacion = ?, tiempo_jugado = ?, estado = ? "
+                + "WHERE id_partida = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, puntuacion);
+            ps.setInt(2, tiempoJugado);
+            ps.setString(3, estado);
+            ps.setInt(4, idPartida);
+
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+    }
+
+    //------------------------ A C T U A L I Z A R   E S T A D Í S T I C A
+    private void actualizarEstadistica(int idUsuario, int idMinijuego, int puntuacion, int tiempoJugado) {
+
+        String sql
+                = "INSERT INTO Estadistica "
+                + "(id_usuario, id_minijuego, mejor_puntuacion, puntuacion_total, partidas_jugadas, tiempo_total) "
+                + "VALUES (?, ?, ?, ?, 1, ?) "
+                + "ON DUPLICATE KEY UPDATE "
+                + "mejor_puntuacion = GREATEST(mejor_puntuacion, VALUES(mejor_puntuacion)), "
+                + "puntuacion_total = puntuacion_total + VALUES(puntuacion_total), "
+                + "partidas_jugadas = partidas_jugadas + 1, "
+                + "tiempo_total = tiempo_total + VALUES(tiempo_total)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idUsuario);
+            ps.setInt(2, idMinijuego);
+            ps.setInt(3, puntuacion);
+            ps.setInt(4, puntuacion);
+            ps.setInt(5, tiempoJugado);
+
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            mostrarError(ex);
+        }
+    }
+
+    //------------------------ G U A R D A R   F I N   D E   P A R T I D A
+    // Centraliza el cierre de la partida (victoria, derrota por vidas o por
+    // tiempo) para no repetir la lógica en cada punto de salida del juego.
+    private void guardarFinDePartida(String estado) {
+
+        if (idPartida == -1) {
+            System.out.println("ADVERTENCIA: no hay idPartida válido, no se guardó el resultado final de Fox Jump!.");
+            return;
+        }
+
+        finalizarPartida(idPartida, puntajeTotal, tiempoTotalJugado, estado);
+        actualizarEstadistica(idUsuario, ID_MINIJUEGO, puntajeTotal, tiempoTotalJugado);
     }
 
     // =========================================================================
@@ -1227,21 +1415,18 @@ public class FoxJump extends JFrame implements JuegoBase {
             iconoCorazonRoto = null;
         }
 
-        // ── VIDAS (CORAZONES) DINAMICAS SEGUN MAX_VIDAS, ACOMODADAS EN FILAS ────
-        // SI CAMBIAS MAX_VIDAS O CORAZONES_POR_FILA, AQUI SE RECALCULA SOLO
-        // LA CANTIDAD Y POSICION DE CADA CORAZON, SIN TOCAR NADA MAS DEL CODIGO.
+        // ── VIDAS (CORAZONES) DINAMICAS SEGUN MAX_VIDAS, EN UNA SOLA FILA ───────
+        // SI CAMBIA MAX_VIDAS, AQUI SE RECALCULA SOLO LA CANTIDAD DE CORAZONES,
+        // SIEMPRE EN LA MISMA LINEA (DE 1 A 10), SIN TOCAR NADA MAS DEL CODIGO.
         // EL TOPE REAL DE VIDAS LO IMPONE MAX_VIDAS EN TODA LA CLASE
         // (perderVida() NUNCA BAJA DE 0, Y agregarVidas() NUNCA SUBE DE MAX_VIDAS).
         corazones = new JLabel[maxVidas];
         int xInicialCorazon = 70;
         int yInicialCorazon = 20;
         int espaciadoX = 55;
-        int espaciadoY = 55;
         int tamanoCorazon = 50;
 
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
 
             JLabel corazon;
             if (iconoCorazonLleno != null) {
@@ -1252,16 +1437,18 @@ public class FoxJump extends JFrame implements JuegoBase {
                 corazon.setForeground(Color.RED);
             }
             corazon.setBounds(
-                    xInicialCorazon + (columna * espaciadoX),
-                    yInicialCorazon + (fila * espaciadoY),
+                    xInicialCorazon + (i * espaciadoX),
+                    yInicialCorazon,
                     tamanoCorazon, tamanoCorazon);
             corazones[i] = corazon;
             fondo.add(corazon);
         }
 
         // ── BOTON DE AYUDA ────────────────────────────────────────────────────
-        // SE BAJA UN POCO PARA NO CHOCAR CON LAS DOS FILAS DE CORAZONES
-        btnAyuda = new JButton("¿Necesitas ayuda?");
+        btnAyuda = new DecoracionBotones("¿Necesitas ayuda?",
+                //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_APAGADO, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO); //MOUSE DENTRO   
         btnAyuda.setBounds(60, 140, 280, 55);
         btnAyuda.setFocusPainted(false);
         btnAyuda.setFont(fuente2.deriveFont(18f));
@@ -1353,7 +1540,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             nenufarVerdadero.setBackground(Color.GREEN);
         }
         JLabel lblIzq = new JLabel("Verdadero", SwingConstants.CENTER);
-        lblIzq.setFont(fuente1.deriveFont(Font.BOLD, 22f));
+        lblIzq.setFont(fuente1.deriveFont(Font.BOLD, 45f));
         lblIzq.setBounds(0, 60, 240, 90);
         nenufarVerdadero.add(lblIzq);
         nenufarVerdadero.setBounds(180, 140, 240, 180);
@@ -1400,7 +1587,7 @@ public class FoxJump extends JFrame implements JuegoBase {
             nenufarFalso.setBackground(Color.GREEN);
         }
         JLabel lblDer = new JLabel("Falso", SwingConstants.CENTER);
-        lblDer.setFont(fuente1.deriveFont(Font.BOLD, 22f));
+        lblDer.setFont(fuente1.deriveFont(Font.BOLD, 45f));
         lblDer.setBounds(0, 60, 240, 90);
         nenufarFalso.add(lblDer);
         nenufarFalso.setBounds(650, 140, 240, 180);
@@ -1431,12 +1618,6 @@ public class FoxJump extends JFrame implements JuegoBase {
         panelLago.add(nenufarFalso);
 
         // ── TEXTO  INFORMATIVO (ESQUINA INFERIOR IZQUIERDA) ───────────────
-        nivelLabel = new JLabel("Nivel: Fox Jump!");
-        nivelLabel.setBounds(80, 740, 300, 40);
-        nivelLabel.setFont(fuente2.deriveFont(25f));
-        nivelLabel.setForeground(Color.BLACK);
-        fondo.add(nivelLabel);
-
         dificultadLabel = new JLabel("Dificultad: Fácil");
         dificultadLabel.setBounds(80, 790, 300, 40);
         dificultadLabel.setFont(fuente2.deriveFont(25f));
@@ -1492,24 +1673,24 @@ public class FoxJump extends JFrame implements JuegoBase {
         int xInicialCorazon = 70;
         int yInicialCorazon = 20;
         int espaciadoX = 55;
-        int espaciadoY = 55;
         int tamanoCorazon = 50;
 
         for (int i = 0; i < maxVidas; i++) {
-            int fila = i / CORAZONES_POR_FILA;
-            int columna = i % CORAZONES_POR_FILA;
+
+            boolean lleno = i < vidas;
+            ImageIcon iconoAUsar = lleno ? iconoCorazonLleno : iconoCorazonRoto;
 
             JLabel corazon;
-            if (iconoCorazonLleno != null) {
-                corazon = new JLabel(iconoCorazonLleno);
+            if (iconoAUsar != null) {
+                corazon = new JLabel(iconoAUsar);
             } else {
                 corazon = new JLabel("♥");
                 corazon.setFont(fuente1.deriveFont(40f));
-                corazon.setForeground(Color.RED);
+                corazon.setForeground(lleno ? Color.RED : Color.GRAY);
             }
             corazon.setBounds(
-                    xInicialCorazon + (columna * espaciadoX),
-                    yInicialCorazon + (fila * espaciadoY),
+                    xInicialCorazon + (i * espaciadoX),
+                    yInicialCorazon,
                     tamanoCorazon, tamanoCorazon);
             corazones[i] = corazon;
             fondo.add(corazon);
@@ -1579,6 +1760,12 @@ public class FoxJump extends JFrame implements JuegoBase {
      * ROMPERSE.
      */
     private void mostrarHaPerdido() {
+
+        // NUEVO: solo se cierra la partida en BD si NO es invitado.
+        if (!esInvitado) {
+            guardarFinDePartida("abandonada");
+        }
+
         fadeTo(() -> {
             new SeAcaboVidas(this, e -> {
             }).setVisible(true);
@@ -1592,6 +1779,15 @@ public class FoxJump extends JFrame implements JuegoBase {
      */
     private void mostrarTiempoAgotado() {
         bloquearNenufares();
+
+        // NUEVO: solo se persiste y cierra si NO es invitado.
+        if (!esInvitado) {
+            if (idPartida != -1 && idPreguntaActual != 0) {
+                registrarDetalle(idPartida, idPreguntaActual, 0, tiempoMaximoPregunta, false);
+            }
+            guardarFinDePartida("abandonada");
+        }
+
         fadeTo(() -> {
             new SeAcaboTiempo(this, e -> {
             }).setVisible(true);

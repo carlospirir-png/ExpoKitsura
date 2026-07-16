@@ -3,6 +3,7 @@ package main.Administrador;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +34,7 @@ public class M1_crearNuevo extends JFrame {
     private DecoracionBotones btnCargarSombra;
     private DecoracionBotones btnSalir;
     private DecoracionBotones btnSiguiente;
+    private DecoracionBotones btnEliminar;
 
     // Paneles donde se muestra la vista previa de la imagen cargada
     private JPanel areaColor;
@@ -56,6 +58,9 @@ public class M1_crearNuevo extends JFrame {
     private static final String[] NOMBRES_DIFICULTAD = {"Fácil", "Intermedio", "Difícil"};
 
     // --- Rutas de las imágenes ya copiadas a la carpeta del proyecto ---
+    // IMPORTANTE: ahora estas rutas son ABSOLUTAS EN DISCO (no de classpath),
+    // porque las imágenes que sube el admin en tiempo de ejecución nunca
+    // pasan por un "build" que las incluya en el classpath del programa.
     private String rutaImagenColor;
     private String rutaImagenSombra;
 
@@ -64,20 +69,54 @@ public class M1_crearNuevo extends JFrame {
 
     private static final int ID_MINIJUEGO = 1; // Hidden Fox
 
-    // Carpeta base donde se copian los recursos multimedia del proyecto
-    // TODO: ajusta esta ruta a la ubicación real de tu carpeta de recursos
-    private static final String CARPETA_BASE_MULTIMEDIA = "resources/Multimedia/Minijuegos/Minijuego_1";
+    // Selección hecha previamente en PedirMCN (minijuego, categoría, nivel).
+    // Se guarda ÚNICAMENTE para poder propagarla de vuelta si el admin
+    // presiona "VOLVER" (así AdminStages no pierde el contexto). Puede ser
+    // null si esta ventana se abrió sin pasar por Pedir M,C,N (por ejemplo,
+    // usando el constructor de compatibilidad M1_crearNuevo()).
+    private final DatosConfiguracion datos;
 
+    // Carpeta base FIJA en disco donde se guardan los recursos multimedia
+    // subidos por el admin. Se ubica junto al directorio de ejecución del
+    // programa, FUERA del classpath/Source Packages, para no depender de
+    // ningún Clean & Build. Ajusta esta ruta si prefieres otra ubicación
+    // (por ejemplo, una carpeta fija tipo "C:/KitsuraAssets").
+    private static final Path CARPETA_BASE_MULTIMEDIA = Paths.get(
+            System.getProperty("user.dir"),
+            "assets_admin", "Multimedia", "Minijuegos", "Minijuego_1");
+
+    /**
+     * Constructor de compatibilidad (sin contexto de Pedir M,C,N). Si algo
+     * más en el proyecto todavía llama a "new M1_crearNuevo()" a secas, esto
+     * evita que deje de compilar, pero el botón VOLVER en ese caso reabrirá
+     * AdminStages sin selección previa. Se recomienda usar siempre el
+     * constructor con (DatosConfiguracion, Integer).
+     */
     public M1_crearNuevo() {
-        this(null);
+        this(null, null);
     }
 
     /**
-     * Abre la pantalla en modo EDICIÓN, cargando desde la BD la categoría,
-     * dificultad, imágenes y respuestas de la pregunta indicada. Pasa null (o
-     * usa el constructor vacío) para el modo "crear nuevo".
+     * Constructor de compatibilidad para abrir directamente en modo edición
+     * sin contexto de Pedir M,C,N.
      */
     public M1_crearNuevo(Integer idPreguntaExistente) {
+        this(null, idPreguntaExistente);
+    }
+
+    /**
+     * Abre la pantalla, opcionalmente en modo EDICIÓN, cargando desde la BD
+     * la categoría, dificultad, imágenes y respuestas de la pregunta
+     * indicada. Pasa null en idPreguntaExistente para el modo "crear nuevo".
+     *
+     * @param datos selección hecha en Pedir M,C,N (puede ser null si no
+     * aplica). Se guarda solo para poder propagarla de vuelta a AdminStages
+     * cuando el admin presione "VOLVER", sin perder el contexto ya elegido.
+     * @param idPreguntaExistente id de la pregunta a editar, o null para
+     * crear una pregunta nueva.
+     */
+    public M1_crearNuevo(DatosConfiguracion datos, Integer idPreguntaExistente) {
+        this.datos = datos;
         try {
             // LettersForLearners
             fuente1 = Font.createFont(
@@ -95,6 +134,16 @@ public class M1_crearNuevo extends JFrame {
         }
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
+        //------------- ÍCONO ------------------
+        //se obtiene la imagen del logo con getResource
+        URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
+
+        //se instancia el ícono con la imagen
+        ImageIcon icono = new ImageIcon(iconUrl);
+
+        //Se coloca el ícono al JFrame
+        setIconImage(icono.getImage());
+
         setTitle("M1-Crear nuevo");
         setSize(1980, 1080);
         setLocationRelativeTo(null);
@@ -124,6 +173,7 @@ public class M1_crearNuevo extends JFrame {
         try {
             cargarPreguntaExistente(idPregunta);
             setTitle("M1-Editar pregunta #" + idPregunta);
+            actualizarEstadoBotonEliminar();
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this,
@@ -146,7 +196,7 @@ public class M1_crearNuevo extends JFrame {
         panelTitulo.add(lblTituloSeccion);
 
         JLabel staticMascotaTablet = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroLupa.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         staticMascotaTablet.setIcon(new ImageIcon(imgEscalada));
         staticMascotaTablet.setBounds(20, 240, 600, 600);
@@ -160,6 +210,20 @@ public class M1_crearNuevo extends JFrame {
         btnSiguiente.setBounds(150, 810, 240, 40);
         btnSiguiente.addActionListener(e -> guardarNivelYAvanzar());
         fondo.add(btnSiguiente);
+
+        // -- BOTON ELIMINAR --
+        // Solo tiene efecto real cuando hay una pregunta cargada en modo
+        // edición (idPreguntaEnEdicion != null). Se deja siempre visible,
+        // pero si se presiona sin una pregunta cargada, se avisa y no hace
+        // nada (ver actualizarEstadoBotonEliminar/eliminarPreguntaActual).
+        btnEliminar = new DecoracionBotones("ELIMINAR",
+                DecoracionBotones.ROJO, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
+                DecoracionBotones.ROSA, DecoracionBotones.ROJO, DecoracionBotones.ROJO); //MOUSE DENTRO
+        btnEliminar.setFont(fuente2.deriveFont(15f));
+        btnEliminar.setBounds(410, 810, 240, 40);
+        btnEliminar.addActionListener(e -> eliminarPreguntaActual());
+        fondo.add(btnEliminar);
+        actualizarEstadoBotonEliminar();
 
         // --- EL PANEL SEMI-TRANSPARENTE ---
         FondoPanelSemi panelFormulario = new FondoPanelSemi(new Color(0, 0, 0, 120));
@@ -277,14 +341,31 @@ public class M1_crearNuevo extends JFrame {
         panelFormulario.add(txtIncorrecta3);
 
         // --- BOTÓN VOLVER---
+        // IMPORTANTE: se propaga "datos" para que AdminStages no pierda la
+        // selección de Minijuego/Categoría/Nivel hecha en Pedir M,C,N.
         btnSalir = new DecoracionBotones("VOLVER",
                 DecoracionBotones.AZUL, DecoracionBotones.GRIS, DecoracionBotones.AMARILLO, //MOUSE FUERA
                 DecoracionBotones.CELESTE, DecoracionBotones.AZUL, DecoracionBotones.AZUL); //MOUSE DENTRO
 
         btnSalir.setFont(fuente2.deriveFont(15f));
         btnSalir.setBounds(1695, 950, 210, 45);
-        btnSalir.addActionListener(e -> dispose());
+        btnSalir.addActionListener(e -> {
+            new AdminStages(datos);
+            dispose();
+        });
         fondo.add(btnSalir);
+    }
+
+    /**
+     * Habilita/deshabilita visualmente el botón ELIMINAR según si hay o no
+     * una pregunta cargada en modo edición. En modo "crear nuevo" (sin
+     * idPreguntaEnEdicion) no tiene sentido eliminar nada todavía.
+     */
+    private void actualizarEstadoBotonEliminar() {
+        if (btnEliminar == null) {
+            return;
+        }
+        btnEliminar.setEnabled(idPreguntaEnEdicion != null);
     }
 
     // ------------------------------------------------------------------
@@ -292,8 +373,9 @@ public class M1_crearNuevo extends JFrame {
     // ------------------------------------------------------------------
     /**
      * Abre un JFileChooser, muestra la vista previa en el panel correspondiente
-     * y copia el archivo a la carpeta del proyecto siguiendo la convención de
-     * nombres usada en el script SQL (N{nivel}_C1_M1_S_/_C_ + nombre original).
+     * y copia el archivo a la carpeta FIJA en disco (fuera del classpath),
+     * siguiendo la misma convención de nombres usada en el script SQL
+     * (N{nivel}_C1_M1_S_/_C_ + nombre original).
      */
     private void cargarImagen(boolean esColor) {
         JFileChooser chooser = new JFileChooser();
@@ -308,16 +390,16 @@ public class M1_crearNuevo extends JFrame {
         File archivoOriginal = chooser.getSelectedFile();
 
         try {
-            String rutaRelativa = copiarImagenAlProyecto(archivoOriginal, esColor);
+            String rutaAbsoluta = copiarImagenAlProyecto(archivoOriginal, esColor);
             ImageIcon icono = new ImageIcon(archivoOriginal.getAbsolutePath());
             Image escalada = icono.getImage().getScaledInstance(420, 240, Image.SCALE_SMOOTH);
 
             if (esColor) {
                 previewColor.setIcon(new ImageIcon(escalada));
-                rutaImagenColor = rutaRelativa;
+                rutaImagenColor = rutaAbsoluta;
             } else {
                 previewSombra.setIcon(new ImageIcon(escalada));
-                rutaImagenSombra = rutaRelativa;
+                rutaImagenSombra = rutaAbsoluta;
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -328,11 +410,13 @@ public class M1_crearNuevo extends JFrame {
     }
 
     /**
-     * Copia la imagen seleccionada a:
+     * Copia la imagen seleccionada a una carpeta FIJA EN DISCO:
      * CARPETA_BASE_MULTIMEDIA/Categoria_{cat}_M1/Nivel_{niv}_C{cat}_M1/Imagen_N{niv}_C{cat}_M1/(Sombra|Color)_N{niv}_C{cat}_M1/
      * usando la categoría y dificultad elegidas en los combos, y devuelve la
-     * ruta relativa que se guardará en la BD (columna imagen_sombra /
-     * imagen_color).
+     * RUTA ABSOLUTA que se guardará en la BD (columna imagen_sombra /
+     * imagen_color). Esta ruta se lee luego con new File(ruta) / new
+     * ImageIcon(ruta), NO con getClass().getResource(), porque el archivo
+     * nunca pasa a formar parte del classpath compilado del proyecto.
      *
      * IMPORTANTE: selecciona la Categoría y Dificultad ANTES de cargar las
      * imágenes, ya que la ruta de guardado depende de esa selección.
@@ -345,20 +429,18 @@ public class M1_crearNuevo extends JFrame {
         String tipoCarpeta = esColor ? "Color_N" + nivelLocal + "_" + sufijo : "Sombra_N" + nivelLocal + "_" + sufijo;
         String prefijo = esColor ? "N" + nivelLocal + "_" + sufijo + "_C_" : "N" + nivelLocal + "_" + sufijo + "_S_";
 
-        Path carpetaDestino = Paths.get(
-                CARPETA_BASE_MULTIMEDIA,
-                "Categoria_" + idCategoria + "_M1",
-                "Nivel_" + nivelLocal + "_" + sufijo,
-                "Imagen_N" + nivelLocal + "_" + sufijo,
-                tipoCarpeta);
+        Path carpetaDestino = CARPETA_BASE_MULTIMEDIA
+                .resolve("Categoria_" + idCategoria + "_M1")
+                .resolve("Nivel_" + nivelLocal + "_" + sufijo)
+                .resolve("Imagen_N" + nivelLocal + "_" + sufijo)
+                .resolve(tipoCarpeta);
         Files.createDirectories(carpetaDestino);
 
         String nombreArchivo = prefijo + archivoOriginal.getName();
         Path destino = carpetaDestino.resolve(nombreArchivo);
         Files.copy(archivoOriginal.toPath(), destino, StandardCopyOption.REPLACE_EXISTING);
 
-        return "/Multimedia/Minijuegos/Minijuego_1/Categoria_" + idCategoria + "_M1/Nivel_" + nivelLocal + "_"
-                + sufijo + "/Imagen_N" + nivelLocal + "_" + sufijo + "/" + tipoCarpeta + "/" + nombreArchivo;
+        return destino.toAbsolutePath().toString();
     }
 
     private int getIdCategoriaSeleccionada() {
@@ -456,24 +538,39 @@ public class M1_crearNuevo extends JFrame {
     }
 
     /**
-     * Carga la imagen ya guardada como recurso del proyecto (Source Packages,
-     * ej. Multimedia.Minijuegos.Minijuego_1.Categoria_1_M1...) a partir de la
-     * ruta almacenada en la BD (columna imagen_color / imagen_sombra), para
-     * mostrarla como vista previa. Si el recurso no se encuentra, deja el
-     * espacio vacío en vez de fallar.
+     * Carga la imagen ya guardada a partir de la RUTA ABSOLUTA EN DISCO
+     * almacenada en la BD (columna imagen_color / imagen_sombra), para
+     * mostrarla como vista previa. Si el archivo no se encuentra en disco,
+     * deja el espacio vacío en vez de fallar.
+     *
+     * NOTA: si tienes preguntas antiguas guardadas con rutas de classpath
+     * (formato "/Multimedia/..."), este método también intenta resolverlas
+     * como recurso del proyecto para no romper la vista previa de esos
+     * registros previos.
      */
     private ImageIcon cargarPreviewDesdeRutaGuardada(String rutaAlmacenada) {
         if (rutaAlmacenada == null || rutaAlmacenada.isBlank()) {
             return null;
         }
-        java.net.URL recurso = getClass().getResource(rutaAlmacenada);
-        if (recurso == null) {
-            System.err.println("No se encontró la imagen como recurso del proyecto: " + rutaAlmacenada);
-            return null;
+
+        // Caso 1: ruta absoluta en disco (formato nuevo, imágenes subidas por el admin)
+        File archivo = new File(rutaAlmacenada);
+        if (archivo.exists()) {
+            ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+            Image escalada = icono.getImage().getScaledInstance(420, 240, Image.SCALE_SMOOTH);
+            return new ImageIcon(escalada);
         }
-        ImageIcon icono = new ImageIcon(recurso);
-        Image escalada = icono.getImage().getScaledInstance(420, 240, Image.SCALE_SMOOTH);
-        return new ImageIcon(escalada);
+
+        // Caso 2: ruta de classpath antigua (imágenes precompiladas en Source Packages)
+        java.net.URL recurso = getClass().getResource(rutaAlmacenada);
+        if (recurso != null) {
+            ImageIcon icono = new ImageIcon(recurso);
+            Image escalada = icono.getImage().getScaledInstance(420, 240, Image.SCALE_SMOOTH);
+            return new ImageIcon(escalada);
+        }
+
+        System.err.println("No se encontró la imagen ni en disco ni como recurso del proyecto: " + rutaAlmacenada);
+        return null;
     }
 
     // ------------------------------------------------------------------
@@ -608,6 +705,77 @@ public class M1_crearNuevo extends JFrame {
         ps.setString(2, texto);
         ps.setBoolean(3, esCorrecta);
         ps.executeUpdate();
+    }
+
+    // ------------------------------------------------------------------
+    //  ELIMINAR PREGUNTA
+    // ------------------------------------------------------------------
+    /**
+     * Elimina la pregunta actualmente cargada en modo edición (junto con sus
+     * opciones de respuesta y ayudas asociadas, gracias al ON DELETE CASCADE
+     * definido en el esquema: Opcion_respuesta y Ayuda referencian a
+     * Pregunta). Pide confirmación antes de borrar, ya que es una acción
+     * irreversible.
+     *
+     * Si no hay ninguna pregunta cargada (idPreguntaEnEdicion == null, es
+     * decir estamos en modo "crear nuevo"), se avisa y no se hace nada.
+     */
+    private void eliminarPreguntaActual() {
+        if (idPreguntaEnEdicion == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No hay ninguna pregunta cargada para eliminar. "
+                    + "Selecciona una pregunta existente desde 'Editar Stages'.",
+                    "Nada que eliminar", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Seguro que deseas eliminar la pregunta #" + idPreguntaEnEdicion + "?\n"
+                + "Esta acción no se puede deshacer.",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try (Connection con = new Conexion().getConnection()) {
+            if (con == null) {
+                throw new SQLException("No se pudo establecer conexión con la base de datos.");
+            }
+
+            try (PreparedStatement psDelete = con.prepareStatement(
+                    "DELETE FROM Pregunta WHERE id_pregunta = ?")) {
+                psDelete.setInt(1, idPreguntaEnEdicion);
+                int filasAfectadas = psDelete.executeUpdate();
+
+                if (filasAfectadas == 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "No se encontró la pregunta #" + idPreguntaEnEdicion + " en la base de datos "
+                            + "(puede que ya haya sido eliminada).",
+                            "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Pregunta #" + idPreguntaEnEdicion + " eliminada correctamente.",
+                            "Eliminado", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error al eliminar la pregunta: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Tras eliminar, la ventana ya no tiene una pregunta válida cargada:
+        // se limpia el formulario y se cierra, ya que no tiene sentido seguir
+        // "editando" algo que ya no existe en la BD.
+        limpiarFormularioParaSiguientePregunta();
+        idPreguntaEnEdicion = null;
+        actualizarEstadoBotonEliminar();
+        dispose();
     }
 
     private void limpiarFormularioParaSiguientePregunta() {
