@@ -407,15 +407,9 @@ public class RegistroUsuario extends JFrame {
             return false;
         }
     }
-<<<<<<< HEAD
-    public static void main(String[] args) {
-        new RegistroUsuario();
-    }
-=======
-
+                 
     public static void main(String[] args) {
         new RegistroUsuario();
     }
 
->>>>>>> 4130457a911d0254da11acfcf01ac5fae96e975b
 }
