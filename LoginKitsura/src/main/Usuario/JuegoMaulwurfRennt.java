@@ -158,7 +158,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.actualizarNivel(3);
                 vista.actualizarDificultad("Difícil");
                 vista.mostrarTopos(7);
-                vista.cambiarColorFondo(new Color(238, 151, 151));
+                vista.cambiarColorFondo(new Color(227, 157, 139));
                 vista.actualizarCategoria(obtenerNombreCategoria());
                 break;
         }
