@@ -199,7 +199,7 @@ public class PuntuacionesAdmin extends JFrame {
         try {
 
             ImageIcon iconMascota = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/Zorro_samurai.png"));
 
             Image img = iconMascota.getImage().getScaledInstance(
                     550,

@@ -2,16 +2,10 @@ package main.Administrador;
 
 import java.awt.*;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import javax.swing.*;
-import main.Menu.FondoPanel;
-import main.Menu.DecoracionBotones;
-import main.Menu.FondoPanelSemi;
-import main.Usuario.IniciarSesion;
+import main.Menu.*;
 import main.conexion.Conexion;
 
 public class PedirMCN extends JFrame {
@@ -197,7 +191,7 @@ public class PedirMCN extends JFrame {
 
         // MASCOTA
         JLabel mascotaControl = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/PAPEL_INSTRUCCIONES.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(650, 650, Image.SCALE_SMOOTH);
         mascotaControl.setIcon(new ImageIcon(imgEscalada));
         mascotaControl.setBounds(200, 180, 650, 650);

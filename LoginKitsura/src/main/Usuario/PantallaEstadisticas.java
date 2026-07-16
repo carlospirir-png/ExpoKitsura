@@ -85,6 +85,7 @@ public class PantallaEstadisticas extends JFrame {
 
         setTitle("Tabla Global");
         setSize(1920, 1080);
+        setResizable(false);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -161,7 +162,7 @@ public class PantallaEstadisticas extends JFrame {
 
         fondo.add(txtUltimaPartida);
 
-        lblUltimoJuego = new JLabel("Ultima Partida");
+        lblUltimoJuego = new JLabel("Ultimo Juego");
         lblUltimoJuego.setFont(fuente2.deriveFont(36f));
         lblUltimoJuego.setBounds(540, 790, 340, 50);
         lblUltimoJuego.setForeground(new Color(196, 221, 227));

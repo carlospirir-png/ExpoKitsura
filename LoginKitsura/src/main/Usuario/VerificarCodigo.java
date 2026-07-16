@@ -151,14 +151,11 @@ public class VerificarCodigo extends JFrame {
         
         //---------------- MASCOTA ----------------
         JLabel mascota = new JLabel();
-        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png")); 
+        ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/Zorro_banderrilla.png")); 
         Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         mascota.setIcon(new ImageIcon(mascotaEscalada));
         mascota.setBounds(420, 70, 300, 300);
         fondo.add(mascota);
     }
     
-    public static void main(String[] args) {
-        new VerificarCodigo("123@gmail.com");
-    }
 }

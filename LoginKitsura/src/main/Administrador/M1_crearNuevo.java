@@ -196,7 +196,7 @@ public class M1_crearNuevo extends JFrame {
         panelTitulo.add(lblTituloSeccion);
 
         JLabel staticMascotaTablet = new JLabel();
-        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/REGISTRARSE_USUARIO-PARTIDA_MINIJUEGO-TABLETA.png"));
+        ImageIcon iconMascota = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/zorroLupa.png"));
         Image imgEscalada = iconMascota.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
         staticMascotaTablet.setIcon(new ImageIcon(imgEscalada));
         staticMascotaTablet.setBounds(20, 240, 600, 600);

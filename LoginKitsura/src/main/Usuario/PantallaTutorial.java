@@ -50,6 +50,7 @@ public class PantallaTutorial extends JFrame {
 
         setTitle("Tutorial");
         setSize(600, 420);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);

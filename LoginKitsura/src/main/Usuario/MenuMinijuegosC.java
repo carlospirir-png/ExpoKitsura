@@ -25,8 +25,10 @@ public class MenuMinijuegosC extends JFrame {
     private String textoCategoria1;
     private String textoCategoria2;
     private String textoCategoria3;
+    
+    private String mascotaImagen;
 
-    public MenuMinijuegosC(String titulo, String categoria1, String categoria2, String categoria3) {
+    public MenuMinijuegosC(String titulo, String categoria1, String categoria2, String categoria3, String mascotaImagen) {
         try {
             fuente1 = Font.createFont(
                     Font.TRUETYPE_FONT,
@@ -43,6 +45,7 @@ public class MenuMinijuegosC extends JFrame {
         this.textoCategoria1 = categoria1;
         this.textoCategoria2 = categoria2;
         this.textoCategoria3 = categoria3;
+        this.mascotaImagen = mascotaImagen;
 
         lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
 
@@ -75,6 +78,7 @@ public class MenuMinijuegosC extends JFrame {
 
         setTitle("Categorías de Minijuego");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -97,18 +101,10 @@ public class MenuMinijuegosC extends JFrame {
         ComoJugar();
         fondo.add(btnComoJugar);
 
-        //---------------- MASCOTA ----------------
-        mascota = new JLabel();
-        try {
-            ImageIcon mascotaIcon = new ImageIcon(getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
-            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
-            mascota.setIcon(new ImageIcon(mascotaEscalada));
-        } catch (Exception e) {
-            mascota.setText("~");
-        }
-        mascota.setBounds(150, 280, 600, 600);
-        fondo.add(mascota);
-
+        //---------------- MASCOTA ----------------    
+        
+        cambiarMascota(mascotaImagen);
+        
         //---------------- PANEL TÍTULO ----------------
         FondoPanelSemi panelTitulo = new FondoPanelSemi(new Color(0, 0, 0, 150));
         panelTitulo.setLayout(null);
@@ -168,8 +164,21 @@ public class MenuMinijuegosC extends JFrame {
             JOptionPane.showMessageDialog(this, "Instrucciones del minijuego...");
         });
     }
+    
+    public void cambiarMascota(String rutaImagen){
+        mascota = new JLabel();
+        try {
+            ImageIcon mascotaIcon = new ImageIcon(getClass().getResource(rutaImagen));
+            Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+            mascota.setIcon(new ImageIcon(mascotaEscalada));
+        } catch (Exception e) {
+            mascota.setText("~");
+        }
+        mascota.setBounds(150, 280, 600, 600);
+        fondo.add(mascota);
+    }
 
     public static void main(String[] args) {
-        new MenuMinijuegosC("Menu Minijuego", "Categoria 1", "Categoria 2", "Categoria 3");
+        new MenuMinijuegosC("Menu Minijuego", "Categoria 1", "Categoria 2", "Categoria 3", "/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png");
     }
 }

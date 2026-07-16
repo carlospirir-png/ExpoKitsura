@@ -47,6 +47,7 @@ public class MenuMinijuegoC2 extends JFrame {
 
         setTitle("Fox Jump!");
         setSize(1880, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -94,7 +95,7 @@ public class MenuMinijuegoC2 extends JFrame {
         JLabel mascota = new JLabel();
         try {
             ImageIcon mascotaIcon = new ImageIcon(
-                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/MINIJUEGO-CONTROL.png"));
+                    getClass().getResource("/Multimedia/utiles/mascotaKitsura/imagen/KitsuraFlotador.png"));
             Image mascotaEscalada = mascotaIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
             mascota.setIcon(new ImageIcon(mascotaEscalada));
         } catch (Exception e) {
