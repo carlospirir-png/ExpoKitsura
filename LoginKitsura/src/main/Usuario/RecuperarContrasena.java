@@ -94,16 +94,33 @@ public class RecuperarContrasena extends JFrame {
 
             btnAceptar.setEnabled(false);
 
-            SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
                 @Override
-                protected Void doInBackground() {
-                    EnvioCorreo.enviarCodigo(correo);
-                    return null;
+                protected Boolean doInBackground() {
+                    return EnvioCorreo.enviarCodigo(correo);
                 }
 
                 @Override
                 protected void done() {
                     btnAceptar.setEnabled(true);
+                    btnAceptar.setFont(fuente2.deriveFont(15f));
+                    boolean enviado;
+                    try {
+                        enviado = get();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        enviado = false;
+                    }
+
+                    if (!enviado) {
+                        JOptionPane.showMessageDialog(
+                                RecuperarContrasena.this,
+                                "No existe ninguna cuenta registrada con ese correo electrónico.",
+                                "Correo no encontrado",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     JOptionPane.showMessageDialog(
                             RecuperarContrasena.this,
                             "✔ Código enviado correctamente.\n\nRevisa tu bandeja de entrada.",

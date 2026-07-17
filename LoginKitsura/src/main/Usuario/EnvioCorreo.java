@@ -2,8 +2,14 @@ package main.Usuario;
 
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Random;
+
+import main.conexion.Conexion;
 
 public class EnvioCorreo {
 
@@ -11,7 +17,45 @@ public class EnvioCorreo {
     private static final String EMAIL_REMITENTE = "kitsuragt@gmail.com";
     private static final String PASSWORD_APP = "jmlq fhxd dqcg unsf";
 
-    public static void enviarCodigo(String destinatario) {
+    /**
+     * Verifica si el correo pertenece a una cuenta existente (y activa) en KITSURA_DB.
+     * Ajusta el nombre de la tabla/columnas si tu esquema usa otros (ej. "email" en vez de "correo").
+     */
+    public static boolean existeCuentaConCorreo(String correo) {
+        String sql = "SELECT id_usuario FROM Usuario WHERE correo = ? AND estado = 'activo'";
+
+        Connection con = new Conexion().getConnection();
+        if (con == null) {
+            // getConnection() ya imprime el error; aquí solo evitamos el NullPointerException
+            return false;
+        }
+
+        try (Connection c = con;
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, correo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Intenta enviar el código de verificación.
+     * @return true si el correo existe como cuenta activa y el envío fue exitoso.
+     *         false si el correo no está registrado, o si ocurrió un error al enviar.
+     */
+    public static boolean enviarCodigo(String destinatario) {
+        if (!existeCuentaConCorreo(destinatario)) {
+            // No se envía nada si el correo no corresponde a una cuenta registrada
+            return false;
+        }
+
         codigoGenerado = String.valueOf(100000 + new Random().nextInt(900000));
 
         Properties props = new Properties();
@@ -43,9 +87,11 @@ public class EnvioCorreo {
             mensaje.setContent(multipart);
 
             Transport.send(mensaje);
+            return true;
 
         } catch (MessagingException | java.io.UnsupportedEncodingException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
