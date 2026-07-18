@@ -158,7 +158,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.actualizarNivel(3);
                 vista.actualizarDificultad("Difícil");
                 vista.mostrarTopos(7);
-                vista.cambiarColorFondo(new Color(255, 180, 80));
+                vista.cambiarColorFondo(new Color(227, 157, 139));
                 vista.actualizarCategoria(obtenerNombreCategoria());
                 break;
         }
@@ -541,6 +541,8 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.setContentPane(vp.getFondo());
                 vista.revalidate();
                 vista.repaint();
+                
+                vp.dispose();
 
             } else {
 
@@ -551,6 +553,7 @@ public class JuegoMaulwurfRennt implements JuegoBase {
                 vista.setContentPane(v.getFondo());
                 vista.revalidate();
                 vista.repaint();
+                v.dispose();
             }
 
         } else {

@@ -85,7 +85,7 @@ public class FoxJump extends JFrame implements JuegoBase {
     }
 
     // CANTIDAD DE RESPUESTAS CORRECTAS NECESARIAS PARA SUBIR DE DIFICULTAD
-    private static final int CORRECTAS_SUBIR = 1;
+    private static final int CORRECTAS_SUBIR = 5;
 
     // DIFICULTAD EN LA QUE EMPIEZA Y VA CAMBIANDO LA PARTIDA
     private Dificultad dificultadActual = Dificultad.FACIL;
@@ -584,9 +584,11 @@ public class FoxJump extends JFrame implements JuegoBase {
             if (vidas == maxVidas) {
                 VictoriaPerfecta vp = new VictoriaPerfecta(this);
                 fadeTo(() -> setContentPane(vp.getFondo()), 400);
+                vp.dispose();
             } else {
                 Victoria v = new Victoria(this);
                 fadeTo(() -> setContentPane(v.getFondo()), 400);
+                v.dispose();
             }
         }).start();
     }
