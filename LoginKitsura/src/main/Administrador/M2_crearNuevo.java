@@ -73,10 +73,6 @@ public class M2_crearNuevo extends JFrame {
         inicializarVentana();
     }
 
-    // Constructor de respaldo solo para pruebas rápidas (main), simulando una selección de PedirMCN
-    public M2_crearNuevo() {
-        this(new DatosConfiguracion("Fox Jump!", "Animales", "Fácil"));
-    }
 
     /*------------------------------------------------------------------
       Traduce (minijuego, categoría, dificultad) -> id_nivel real,
@@ -360,7 +356,7 @@ public class M2_crearNuevo extends JFrame {
             if (opcion == JOptionPane.YES_OPTION) {
                 limpiarFormulario();
             } else {
-                dispose();
+               new  MenuAdmin();
             }
         }
     }
@@ -463,7 +459,5 @@ public class M2_crearNuevo extends JFrame {
         btnFalso.mouseFuera();
     }
 
-    public static void main(String[] args) {
-        new M2_crearNuevo();
-    }
+
 }
