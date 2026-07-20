@@ -38,13 +38,8 @@ public class VerificarCodigo extends JFrame {
         fondo = new FondoPanel("/Multimedia/utiles/fondos/interfaces/fondoTresK.png");
         setContentPane(fondo);
         //------------- ÍCONO ------------------
-        //se obtiene la imagen del logo con getResource
         URL iconUrl = getClass().getResource("/Multimedia/utiles/logotipo/logofK.png");
-
-        //se instancia el ícono con la imagen
         ImageIcon icono = new ImageIcon(iconUrl);
-
-        //Se coloca el ícono al JFrame
         setIconImage(icono.getImage());
 
         setTitle("Recuperar Contraseña - Verificar");
@@ -71,7 +66,7 @@ public class VerificarCodigo extends JFrame {
         panelContenedor.add(lblTitulo);
 
         //---------------- S U B T I T U L O / I N F O ----------------
-        JLabel lblInfo = new JLabel("Se generó un código de recuperación.", SwingConstants.CENTER);
+        JLabel lblInfo = new JLabel("Revisa tu correo e ingresa el código.", SwingConstants.CENTER);
         lblInfo.setFont(fuente1.deriveFont(22F)); 
         lblInfo.setForeground(Color.WHITE); 
         lblInfo.setBounds(20, 60, 360, 30);
@@ -123,18 +118,21 @@ public class VerificarCodigo extends JFrame {
             if(codigoIngresado.isEmpty()){
                 JOptionPane.showMessageDialog(
                         this,
-                        "Ingrese el código de recuperación.");
+                        "Ingrese el código de recuperación.",
+                        "Campo vacío",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            if(codigoIngresado.equals(RecuperarContrasena.getCodigoRecuperacion())){
+            if(EnvioCorreo.verificarCodigo(codigoIngresado)){
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Código correcto.");
+                        "✔ Código verificado correctamente.",
+                        "Verificación exitosa",
+                        JOptionPane.INFORMATION_MESSAGE);
 
-                // Aquí abrirá la ventana para cambiar contraseña
-                // new NuevaContrasena();
+                EnvioCorreo.limpiarCodigo();
 
                 new NuevaContrasena(correo);
                 dispose();
@@ -143,7 +141,9 @@ public class VerificarCodigo extends JFrame {
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "Código incorrecto.");
+                        "✘ Código incorrecto.\n\nVerifica el código enviado a tu correo e intenta nuevamente.",
+                        "Error de verificación",
+                        JOptionPane.ERROR_MESSAGE);
 
             }
 

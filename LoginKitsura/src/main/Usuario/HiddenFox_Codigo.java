@@ -170,12 +170,14 @@ public class HiddenFox_Codigo extends HiddenFox implements JuegoBase {
                     fadeTo(() -> {
                         setContentPane(vp.getFondo());
                     }, 400);
+                    vp.dispose();
                 } else {
                     Victoria v = new Victoria(this);
 
                     fadeTo(() -> {
                         setContentPane(v.getFondo());
                     }, 400);
+                    v.dispose();
                 }
             }
         }

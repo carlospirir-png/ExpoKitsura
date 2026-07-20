@@ -5,6 +5,7 @@ import java.awt.*;
 import java.net.URL;
 import javax.swing.Timer;
 import javax.swing.*;
+import main.Menu.DecoracionBotones;
 
 // Clase principal que gestiona la interfaz gráfica del minijuego "MaulwurfRennt".
 public class MaulwurfRennt extends JFrame {
@@ -155,7 +156,10 @@ public class MaulwurfRennt extends JFrame {
         }
 
         // Botón de ayuda.
-        btnAyuda = new JButton("¿Necesitas ayuda?");
+        btnAyuda = new DecoracionBotones("¿Necesitas ayuda?",
+        //ColorBase             ColorBorde              ColorLetra
+                DecoracionBotones.AMARILLO_APAGADO, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO, //MOUSE FUERA
+                DecoracionBotones.AMARILLO_MOSTAZA, DecoracionBotones.AMARILLO, DecoracionBotones.NEGRO); //MOUSE DENTRO 
         btnAyuda.setFont(fuente2.deriveFont(18f));
         btnAyuda.setBounds(60, 120, 280, 55);
         fondo.add(btnAyuda);
@@ -676,6 +680,21 @@ public class MaulwurfRennt extends JFrame {
 // solo tiene sentido en "Científicos Matemáticos", que sí tiene preguntas teóricas.
     public void mostrarBotonAyuda(boolean mostrar) {
         btnAyuda.setVisible(mostrar);
+    }
+
+    // NUEVO: deshabilita el botón de ayuda y cambia su texto para indicar
+    // que la pista de la pregunta actual ya fue utilizada.
+    public void desactivarBotonAyuda() {
+        btnAyuda.setEnabled(false);
+        btnAyuda.setText("Pista ya utilizada");
+    }
+
+    // NUEVO: restaura el botón de ayuda a su estado y texto original.
+    // Se invoca cada vez que se carga una nueva pregunta, para que la
+    // pista vuelva a estar disponible en la siguiente ronda.
+    public void restaurarBotonAyuda() {
+        btnAyuda.setEnabled(true);
+        btnAyuda.setText("¿Necesitas ayuda?");
     }
 
     // Despliega un cuadro de diálogo emergente (JOptionPane) con un mensaje.

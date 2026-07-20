@@ -217,7 +217,9 @@ public class EditarStages extends JFrame {
 
         btnConfirmar.setFont(fuente2.deriveFont(22f));
         btnConfirmar.setBounds(560, 665, 440, 55);
-        btnConfirmar.addActionListener(e -> abrirEdicionDePreguntaSeleccionada());
+        btnConfirmar.addActionListener(e -> {abrirEdicionDePreguntaSeleccionada();
+        dispose();
+        });
         panelSemi.add(btnConfirmar);
 
         btnSalir = new DecoracionBotones("VOLVER",
